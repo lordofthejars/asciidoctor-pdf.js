@@ -4,16 +4,18 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.9">
+<meta name="generator" content="Asciidoctor 2.0.7">
+<meta name="author" content="Alex Soto">
 <title>Quarkus Cheat-Sheet</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
-/* Uncomment @import statement to use as custom stylesheet */
+/* Uncomment @import statement when using as custom stylesheet */
 /*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
 article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section{display:block}
-audio,video{display:inline-block}
+audio,canvas,video{display:inline-block}
 audio:not([controls]){display:none;height:0}
+script{display:none!important}
 html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
 a{background:none}
 a:focus{outline:thin dotted}
@@ -218,8 +220,8 @@ table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font
 .literalblock pre,.listingblock>.content>pre{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;overflow-x:auto;padding:1em;font-size:.8125em}
 @media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
 @media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
-.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
 .literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
+.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
 .listingblock>.content{position:relative}
 .listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
 .listingblock:hover code[data-lang]::before{display:block}
@@ -262,8 +264,7 @@ pre.pygments .lineno::before{content:"";margin-right:-.125em}
 .quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;text-align:left;margin-right:0}
 table.tableblock{max-width:100%;border-collapse:separate}
 p.tableblock:last-child{margin-bottom:0}
-td.tableblock>.content>:last-child{margin-bottom:-1.25em}
-td.tableblock>.content>:last-child.sidebarblock{margin-bottom:0}
+td.tableblock>.content{margin-bottom:-1.25em}
 table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
 table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
 table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
@@ -438,39 +439,33 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <body class="article">
 <div id="header">
 <h1>Quarkus Cheat-Sheet</h1>
+<div class="details">
+<span id="author" class="author">Alex Soto</span><br>
+<span id="email" class="email"><a href="https://twitter.com/alexsotob" class="bare">https://twitter.com/alexsotob</a></span><br>
+</div>
 </div>
 <div id="content">
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>Alex Soto &lt;<a href="https://twitter.com/alexsotob&gt;" class="bare">https://twitter.com/alexsotob&gt;</a>;
-:authorbio: Java Champion and SW Engineer at Red Hat
-:pdf-width: 508mm
-:pdf-height: 361mm</p>
-</div>
-</div>
-</div>
 <div class="sect1">
-<h2 id="_what_is_quarkus"><a class="link" href="#_what_is_quarkus">What is Quarkus?</a></h2>
+<h2 id="_what_is_quarkus"><a class="anchor" href="#_what_is_quarkus"></a><a class="link" href="#_what_is_quarkus">What is Quarkus?</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Quarkus (<a href="https://quarkus.io/" class="bare">https://quarkus.io/</a>) is a Kubernetes Native Java stack tailored for GraalVM &amp; OpenJDK HotSpot, crafted from the best of breed Java libraries and standards.
+<p><a href="https://quarkus.io/">Quarkus</a> is a Kubernetes Native Java stack tailored for GraalVM &amp; OpenJDK HotSpot, crafted from the best of breed Java libraries and standards.
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
 </div>
 <div class="paragraph">
-<p>Cheat-sheet tested with <strong>Quarkus v0.14.0</strong>.</p>
+<p>Cheat-sheet tested with <strong>Quarkus 0.15.0</strong>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_getting_started"><a class="link" href="#_getting_started">Getting Started</a></h2>
+<h2 id="_getting_started"><a class="anchor" href="#_getting_started"></a><a class="link" href="#_getting_started">Getting Started</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Quarkus comes with a Maven archetype to scaffold a very simple starting project.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">mvn io.quarkus:quarkus-maven-plugin:0.14.0:create \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:0.15.0:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=getting-started \
     -DclassName="org.acme.quickstart.GreetingResource" \
@@ -482,7 +477,7 @@ Also focused on developer experience, making things just work with little to no 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Path("/hello")
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Path("/hello")
 public class GreetingResource {
 
     @GET
@@ -496,7 +491,7 @@ public class GreetingResource {
 </div>
 </div>
 <div class="sect1">
-<h2 id="_extensions"><a class="link" href="#_extensions">Extensions</a></h2>
+<h2 id="_extensions"><a class="anchor" href="#_extensions"></a><a class="link" href="#_extensions">Extensions</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Quarkus comes with extensions to integrate with some libraries such as JSON-B, Camel or MicroProfile spec.
@@ -504,7 +499,7 @@ To list all available extensions just run:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">./mvnw quarkus:list-extensions</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:list-extensions</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -512,7 +507,7 @@ To list all available extensions just run:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">./mvnw quarkus:add-extension -Dextensions=""</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension -Dextensions=""</code></pre>
 </div>
 </div>
 <div class="admonitionblock tip">
@@ -527,18 +522,17 @@ To list all available extensions just run:</p>
 </tr>
 </table>
 </div>
-<div style="page-break-after: always;"></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_application_lifecycle"><a class="link" href="#_application_lifecycle">Application Lifecycle</a></h2>
+<h2 id="_application_lifecycle"><a class="anchor" href="#_application_lifecycle"></a><a class="link" href="#_application_lifecycle">Application Lifecycle</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>You can be notified when the application starts/stops by observing <code>StartupEvent</code> and <code>ShutdownEvent</code> events.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@ApplicationScoped
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ApplicationScoped
 public class ApplicationLifecycle {
     void onStart(@Observes StartupEvent event) {}
     void onStop(@Observes ShutdownEvent event) {}
@@ -548,14 +542,14 @@ public class ApplicationLifecycle {
 </div>
 </div>
 <div class="sect1">
-<h2 id="_adding_configuration_parameters"><a class="link" href="#_adding_configuration_parameters">Adding Configuration Parameters</a></h2>
+<h2 id="_adding_configuration_parameters"><a class="anchor" href="#_adding_configuration_parameters"></a><a class="link" href="#_adding_configuration_parameters">Adding Configuration Parameters</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>To add configuration to your application, Quarkus relies on MicroProfile Config spec (<a href="https://github.com/eclipse/microprofile-config" class="bare">https://github.com/eclipse/microprofile-config</a>).</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@ConfigProperty(name = "greetings.message")
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperty(name = "greetings.message")
 String message;
 
 @ConfigProperty(name = "greetings.message",
@@ -567,17 +561,33 @@ Optional&lt;String&gt; optionalMessage;</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Properties can be set as environment variable, system property or in <code>src/main/resources/application.properties</code>.</p>
+<p>Properties can be set as:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Environment variables.</p>
+</li>
+<li>
+<p>System properties.</p>
+</li>
+<li>
+<p>Resources <code>src/main/resources/application.properties</code>.</p>
+</li>
+<li>
+<p>External config directory under the current working directory: <code>config/application.properties</code>.</p>
+</li>
+</ul>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">greetings.message = Hello World</code></pre>
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">greetings.message = Hello World</code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_injection"><a class="link" href="#_injection">Injection</a></h2>
+<h2 id="_injection"><a class="anchor" href="#_injection"></a><a class="link" href="#_injection">Injection</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Quarkus is based on CDI 2.0 to implement injection of code.
@@ -585,7 +595,7 @@ It is not fully supported and only a subset of the specification is implemented 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@ApplicationScoped
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ApplicationScoped
 public class GreetingService {
 
     public String message(String message) {
@@ -599,7 +609,7 @@ public class GreetingService {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Inject
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
 GreetingService greetingService;</code></pre>
 </div>
 </div>
@@ -618,14 +628,14 @@ Quarkus is designed with Substrate VM in mind. For this reason, we encourage you
 </div>
 </div>
 <div class="sect1">
-<h2 id="_json_marshallingunmarshalling"><a class="link" href="#_json_marshallingunmarshalling">JSON Marshalling/Unmarshalling</a></h2>
+<h2 id="_json_marshallingunmarshalling"><a class="anchor" href="#_json_marshallingunmarshalling"></a><a class="link" href="#_json_marshallingunmarshalling">JSON Marshalling/Unmarshalling</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>To work with <code>JSON-B</code> you need to add a dependency:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">./mvnw quarkus:add-extension
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
   -Dextensions="io.quarkus:quarkus-resteasy-jsonb"</code></pre>
 </div>
 </div>
@@ -634,7 +644,7 @@ Quarkus is designed with Substrate VM in mind. For this reason, we encourage you
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">public class Sauce {
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class Sauce {
     private String name;
     private long scovilleHeatUnits;
 
@@ -647,7 +657,7 @@ Quarkus is designed with Substrate VM in mind. For this reason, we encourage you
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
+<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
 	"name":"Blair's Ultra Death",
 	"scovilleHeatUnits": 1100000
 }</code></pre>
@@ -658,7 +668,7 @@ Quarkus is designed with Substrate VM in mind. For this reason, we encourage you
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@POST
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@POST
 @Consumes(MediaType.APPLICATION_JSON)
 public Response create(Sauce sauce) {
     // Create Sauce
@@ -670,26 +680,501 @@ public Response create(Sauce sauce) {
 </div>
 </div>
 <div class="sect1">
-<h2 id="_persistence"><a class="link" href="#_persistence">Persistence</a></h2>
+<h2 id="_validator"><a class="anchor" href="#_validator"></a><a class="link" href="#_validator">Validator</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Quarkus works with JPA(Hibernate) as persistence solution.
-But also provides an Active Record pattern (<a href="https://en.wikipedia.org/wiki/Active_record_pattern" class="bare">https://en.wikipedia.org/wiki/Active_record_pattern</a>) implementation under Panache project.</p>
-</div>
-<div class="paragraph">
-<p>To use database access you need to add Quarkus JDBC drivers instead of the original ones.
-At this time <code>H2</code>, <code>MariaDB</code> and <code>PostgreSQL</code> drivers are supported.</p>
+<p>Quarkus uses <a href="https://hibernate.org/validator/">Hibernate Validator</a> to validate input/output of REST services and business services using Bean validation spec.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">./mvnw quarkus:add-extension
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="io.quarkus:quarkus-hibernate-validator"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Annotate POJO objects with validator annotations such as: <code>@NotNull</code>, <code>@Digits</code>, <code>@NotBlank</code>, <code>@Min</code>, <code>@Max</code>, &#8230;&#8203;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class Sauce {
+
+    @NotBlank(message = "Name may not be blank")
+    private String name;
+    @Min(0)
+    private long scovilleHeatUnits;
+
+    // getter/setters
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To validate that an object is valid you need to annotate where is used with <code>@Valid</code> annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public Response create(@Valid Sauce sauce) {}</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+If a validation error is triggered, a violation report is generated and serialized as JSON. If you want to manipulate the output, you need to catch in the code the <code>ConstraintViolationException</code> exception.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>Create Your Custom Constraints</strong></p>
+</div>
+<div class="paragraph">
+<p>First you need to create the custom annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR,
+            PARAMETER, TYPE_USE })
+@Retention(RUNTIME)
+@Documented
+@Constraint(validatedBy = { NotExpiredValidator.class})
+public @interface NotExpired {
+
+    String message() default "Sauce must not be expired";
+    Class&lt;?&gt;[] groups() default { };
+    Class&lt;? extends Payload&gt;[] payload() default { };
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You need to implement the validator logic in a class that implements <code>ConstraintValidator</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class NotExpiredValidator
+    implements ConstraintValidator&lt;NotExpired, LocalDate&gt;
+    {
+
+    @Override
+    public boolean isValid(LocalDate value,
+                        ConstraintValidatorContext ctx) {
+        if ( value == null ) {
+            return true;
+        }
+        LocalDate today = LocalDate.now();
+        return ChronoUnit.YEARS.between(today, value) &gt; 0;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And use it normally:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@NotExpired
+@JsonbDateFormat(value = "yyyy-MM-dd")
+private LocalDate expired;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Manual Validation</strong></p>
+</div>
+<div class="paragraph">
+<p>You can call the validation process manually instead of relaying to <code>@Valid</code> by injecting <code>Validator</code> class.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+Validator validator;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And use it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">Set&lt;ConstraintViolation&lt;Sauce&gt;&gt; violations =
+            validator.validate(sauce);</code></pre>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_logging"><a class="anchor" href="#_logging"></a><a class="link" href="#_logging">Logging</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can configure how Quarkus logs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.log.console.enable=true
+quarkus.log.console.level=DEBUG
+quarkus.log.console.color=false
+quarkus.log.category."com.lordofthejars".level=DEBUG</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Prefix is <code>quarkus.log</code>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>console.enable</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>true</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Console logging enabled.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>console.format</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c{3.}] (%t) %s%e%n</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Format pattern to use for logging.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>console.level</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>INFO</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Minimum log level.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>console.color</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>INFO</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Allow color rendering.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>file.enable</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>false</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>File logging enabled.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>file.format</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>%d{yyyy-MM-dd HH:mm:ss,SSS} %h %N[%i] %-5p [%c{3.}] (%t) %s%e%n</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Format pattern to use for logging.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>file.level</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>ALL</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Minimum log level.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>file.path</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>quarkus.log</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The path to log file.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>category."&lt;category-name&gt;".level</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>INFO</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Minimum level category.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>level</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>INFO</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Default minimum level.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rest_client"><a class="anchor" href="#_rest_client"></a><a class="link" href="#_rest_client">Rest Client</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Quarkus implements <a href="https://github.com/eclipse/microprofile-rest-client">MicroProfile Rest Client</a> spec:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="io.quarkus:quarkus-smallrye-rest-client"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To get content from <a href="http://worldclockapi.com/api/json/cet/now" class="bare">http://worldclockapi.com/api/json/cet/now</a> you need to create a service interface:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Path("/api")
+@RegisterRestClient
+public interface WorldClockService {
+
+    @GET @Path("/json/cet/now")
+    @Produces(MediaType.APPLICATION_JSON)
+    WorldClock getNow();
+
+    @GET
+    @Path("/json/{where}/now")
+    @Produces(MediaType.APPLICATION_JSON)
+    WorldClock getSauce(@BeanParam
+                    WorldClockOptions worldClockOptions);
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class WorldClockOptions {
+    @HeaderParam("Authorization")
+    String auth;
+
+    @PathParam("where")
+    String where;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And configure the hostname at <code>application.properties</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="proeprties" class="language-proeprties hljs">org.acme.quickstart.WorldClockService/mp-rest/url=
+        http://worldclockapi.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Injecting the client:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+@RestClient
+WorldClockService worldClockService;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If invokation happens within a JAX-RS resource class, you can propagate headers from incoming request to the outgoing request by using next configuartion property.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">org.eclipse.microprofile.rest.client.propagateHeaders=
+            Authorization,MyCustomHeader</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+You can still use the JAX-RS client without any problem <code>ClientBuilder.newClient().target(&#8230;&#8203;)</code>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>Adding headers</strong></p>
+</div>
+<div class="paragraph">
+<p>You can customize the headers passed by implementing MicroProfile <code>ClientHeadersFactory</code> annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@RegisterForReflection
+public class BaggageHeadersFactory
+                implements ClientHeadersFactory {
+    @Override
+    public MultivaluedMap&lt;String, String&gt; update(
+        MultivaluedMap&lt;String, String&gt; incomingHeaders,
+        MultivaluedMap&lt;String, String&gt; outgoingHeaders) {}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And registering it in the client using <code>RegisterClientHeaders</code> annotation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@RegisterClientHeaders(BaggageHeadersFactory.class)
+@RegisterRestClient
+public interface WorldClockService {}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or statically set:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@GET
+@ClientHeaderParam(name="X-Log-Level", value="ERROR")
+Response getNow();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Asynchronous</strong></p>
+</div>
+<div class="paragraph">
+<p>A method on client interface can return a <code>CompletionStage</code> class to be executed asynchronously.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@GET @Path("/json/cet/now")
+@Produces(MediaType.APPLICATION_JSON)
+CompletionStage&lt;WorldClock&gt; getNow();</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testing"><a class="anchor" href="#_testing"></a><a class="link" href="#_testing">Testing</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Quarkus archetype adds test dependencies with JUnit 5 and Rest-Assured library to test REST endpoints.</p>
+</div>
+<div class="paragraph">
+<p>To package and run the application for testing:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@QuarkusTest
+public class GreetingResourceTest {
+
+    @Test
+    public void testHelloEndpoint() {
+        given()
+          .when().get("/hello")
+          .then()
+             .statusCode(200)
+             .body(is("hello"));
+    }
+}</code></pre>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+<div class="paragraph">
+<p>Test port can be modified by using <code>quarkus.http.test-port</code> configuration property.</p>
+</div>
+<div class="paragraph">
+<p>You can also inject the URL where Quarkus is started:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@TestHTTPResource("index.html")
+URL url;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you need to provide an alternative implementation of a service (for testing purposes) you can do it by using CDI <code>@Alternative</code> annotation using it in the test service placed at <code>src/test/java</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Alternative
+@Priority(1)
+@ApplicationScoped
+public class MockExternalService extends ExternalService {}</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">
+This does not work when using native image testing.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To test native executables you can annotate the test with <code>@SubstrateTest</code>.</p>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_persistence"><a class="anchor" href="#_persistence"></a><a class="link" href="#_persistence">Persistence</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Quarkus works with JPA(Hibernate) as persistence solution.
+But also provides an <a href="https://en.wikipedia.org/wiki/Active_record_pattern">Active Record pattern</a> implementation under Panache project.</p>
+</div>
+<div class="paragraph">
+<p>To use database access you need to add Quarkus JDBC drivers instead of the original ones.
+At this time <code>H2</code>, <code>MariaDB</code>, <code>MSSQL</code> and <code>PostgreSQL</code> drivers are supported.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
   -Dextensions="io.quarkus:quarkus-hibernate-orm-panache,
                 io.quarkus:quarkus-jdbc-mariadb"</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Entity
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Entity
 public class Developer extends PanacheEntity {
 
     // id field is implicit
@@ -703,7 +1188,7 @@ public class Developer extends PanacheEntity {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">quarkus.datasource.url=jdbc:mariadb://localhost:3306/mydb
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.datasource.url=jdbc:mariadb://localhost:3306/mydb
 quarkus.datasource.driver=org.mariadb.jdbc.Driver
 quarkus.datasource.username=developer
 quarkus.datasource.password=developer
@@ -715,7 +1200,7 @@ quarkus.hibernate-orm.database.generation=update</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">// Insert
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">// Insert
 Developer developer = new Developer();
 developer.name = "Alex";
 developer.persist();
@@ -735,6 +1220,7 @@ developer.delete();
 long numberOfDeleted = Developer.delete("name", "Alex");</code></pre>
 </div>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>Remember to annotate methods with <code>@Transactional</code> annotation to make changes persisted in the database.</p>
 </div>
@@ -932,474 +1418,338 @@ Panache also supports <em>DAO</em> pattern by providing <code>PanacheRepository&
 </div>
 </div>
 <div class="sect1">
-<h2 id="_rest_client"><a class="link" href="#_rest_client">Rest Client</a></h2>
+<h2 id="_flyway"><a class="anchor" href="#_flyway"></a><a class="link" href="#_flyway">Flyway</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Quarkus implements MicroProfile Rest Client (<a href="https://github.com/eclipse/microprofile-rest-client" class="bare">https://github.com/eclipse/microprofile-rest-client</a>) spec:</p>
+<p>Quarkus integrates with <a href="https://flywaydb.org/">Flyway</a> to help you on database schema migrations.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">./mvnw quarkus:add-extension
-  -Dextensions="io.quarkus:quarkus-smallrye-rest-client"</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="io.quarkus:quarkus-flyway"</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To get content from <a href="http://worldclockapi.com/api/json/cet/now" class="bare">http://worldclockapi.com/api/json/cet/now</a> you need to create a service interface:</p>
+<p>Then place migration files to the migrations folder (<code>classpath:db/migration</code>).</p>
+</div>
+<div class="paragraph">
+<p>You can inject <code>org.flywaydb.core.Flyway</code> to programmatically execute the migration.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Path("/api")
-@RegisterRestClient
-public interface WorldClockService {
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+Flyway flyway;
 
-    @GET @Path("/json/cet/now")
-    @Produces(MediaType.APPLICATION_JSON)
-    WorldClock getNow();
-
-    @GET
-    @Path("/json/{where}/now")
-    @Produces(MediaType.APPLICATION_JSON)
-    WorldClock getSauce(@BeanParam
-                            WorldClockOptions worldClockOptions);
-
-}</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">public class WorldClockOptions {
-    @HeaderParam("Authorization")
-    String auth;
-
-    @PathParam("where")
-    String where;
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>And configure the hostname at <code>application.properties</code>:</p>
-</div>
-<div style="page-break-after: always;"></div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-proeprties" data-lang="proeprties">org.acme.quickstart.WorldClockService/mp-rest/url=
-        http://worldclockapi.com</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Injecting the client:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Inject
-@RestClient
-WorldClockService worldClockService;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If invokation happens within a JAX-RS resource class, you can propagate headers from incoming request to the outgoing request by using next configuartion property.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">org.eclipse.microprofile.rest.client.propagateHeaders=
-            Authorization,MyCustomHeader</code></pre>
-</div>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Tip</div>
-</td>
-<td class="content">
-You can still use the JAX-RS client without any problem <code>ClientBuilder.newClient().target(&#8230;&#8203;)</code>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p><strong>Adding headers</strong></p>
-</div>
-<div class="paragraph">
-<p>You can customize the headers passed by implementing MicroProfile <code>ClientHeadersFactory</code> annotation:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@RegisterForReflection
-public class BaggageHeadersFactory
-                implements ClientHeadersFactory {
-    @Override
-    public MultivaluedMap&lt;String, String&gt; update(
-        MultivaluedMap&lt;String, String&gt; incomingHeaders,
-        MultivaluedMap&lt;String, String&gt; clientOutgoingHeaders) {}
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>And registering it in the client using <code>RegisterClientHeaders</code> annotation.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@RegisterClientHeaders(BaggageHeadersFactory.class)
-@RegisterRestClient
-public interface WorldClockService {}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Or statically set:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@GET
-@ClientHeaderParam(name="X-Log-Level", value="ERROR")
-Response getNow();</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Asynchronous</strong></p>
-</div>
-<div class="paragraph">
-<p>A method on client interface can return a <code>CompletionStage</code> class to be executed asynchronously.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@GET @Path("/json/cet/now")
-@Produces(MediaType.APPLICATION_JSON)
-CompletionStage&lt;WorldClock&gt; getNow();</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_fault_tolerance"><a class="link" href="#_fault_tolerance">Fault Tolerance</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Quarkus uses MicroProfile Fault Tolerance (<a href="https://github.com/eclipse/microprofile-fault-tolerance" class="bare">https://github.com/eclipse/microprofile-fault-tolerance</a>) spec:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">./mvnw quarkus:add-extension
-  -Dextensions="io.quarkus:quarkus-smallrye-fault-tolerance"</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>MicroProfile Fault Tolerance spec uses CDI interceptor and it can be used in several elements such as CDI bean, JAX-RS resource or MicroProfile Rest Client.</p>
-</div>
-<div class="paragraph">
-<p>To do automatic <strong>retries</strong> on a method:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Path("/api")
-@RegisterRestClient
-public interface WorldClockService {
-
-    @GET @Path("/json/cet/now")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Retry(maxRetries = 2)
-    WorldClock getNow();
-
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You can set fallback code in case of an error by using <code>@Fallback</code> annotation:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Retry(maxRetries = 1)
-@Fallback(fallbackMethod = "fallbackMethod")
-WorldClock getNow(){}
-
-public String fallbackMethod() {
-    return "It could beworse";
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><code>fallbackMethod</code> must have the same parameters and return type as the annotated method.</p>
-</div>
-<div class="paragraph">
-<p>You can also set logic into a class that implements <code>FallbackHandler</code> interface:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">public class RecoverFallback
-            implements FallbackHandler&lt;String&gt; {
-    @Override
-    public String handle(ExecutionContext context) {
-        return "It could be worse";
-    }
-}</code></pre>
+flyway.migrate();</code></pre>
 </div>
 </div>
 <div style="page-break-after: always;"></div>
 <div class="paragraph">
-<p>And set it in the annotation as value <code>@Fallback(RecoverFallback.class)</code>.</p>
-</div>
-<div class="paragraph">
-<p>In case you want to use <strong>circuit breaker</strong> pattern:</p>
+<p>Or can be automatically executed by setting <code>migrate-at-start</code> property to <code>true</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@CircuitBreaker(requestVolumeThreshold = 4,
-                failureRatio=0.75,
-                delay = 1000)
-WorldClock getNow(){}</code></pre>
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.flyway.migrate-at-start=true</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>If 3 <code>(4 x 0.75)</code> failures occur among the rolling window of 4 consecutive invocations then the circuit is opened for 1000 ms and then be back to half open.
-If the invocation succeeds then the circuit is back to closed again.</p>
+<p>List of Flyway parameters</p>
 </div>
 <div class="paragraph">
-<p>You can use <strong>bulkahead</strong> pattern to limit the number of concurrent access to the same resource.
-If the operation is synchronous it uses a semaphore approach, if it is asynchronous a thread-pool one.
-When a request cannot be processed <code>BulkheadException</code> is thrown.
-It can be used together with any other fault tolerance annotation.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Bulkhead(5)
-@Retry(maxRetries = 4,
-       delay = 1000,
-       retryOn = BulkheadException.class)
-WorldClock getNow(){}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Fault tolerance annotations:</p>
+<p><code>quarkus.</code> as prefix is skipped in the next table.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Annotation</th>
-<th class="tableblock halign-left valign-top">Properties</th>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>@Timeout</code></p>
+<p><code>flyway.migrate-at-start</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>unit</code></p>
+<p><code>false</code></p>
 </div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Flyway migration automatically.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>@Retry</code></p>
+<p><code>flyway.locations</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>maxRetries</code>, <code>delay</code>, <code>delayUnit</code>, <code>maxDuration</code>, <code>durationUnit</code>, <code>jitter</code>, <code>jitterDelayUnit</code>, <code>retryOn</code>, <code>abortOn</code></p>
+<p><code>classpath:db/migration</code></p>
 </div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CSV locations to scan recursively for migrations. Supported prefixes <code>classpath</code> and <code>filesystem</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>@Fallback</code></p>
+<p><code>flyway.connect-retries</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>fallbackMethod</code></p>
+<p>0</p>
 </div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The maximum number of retries when attempting to connect.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>@Bulkhead</code></p>
+<p><code>flyway.schemas</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>waitingTaskQueue</code> (only valid in asynchronous)</p>
+<p>none</p>
 </div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CSV case-sensitive list of schemas managed.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>@CircuitBreaker</code></p>
+<p><code>flyway.table</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>failOn</code>, <code>delay</code>, <code>delayUnit</code>, <code>requestVolumeThreshold</code>, <code>failureRatio</code>, <code>successThreshold</code></p>
+<p><code>flyway_schema_history</code></p>
 </div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of Flyway’s schema history table.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>@Asynchronous</code></p>
+<p><code>flyway.sql-migration-prefix</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>V</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prefix for versioned SQL migrations.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>flyway.repeatable-sql-migration-prefix</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>R</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prefix for repeatable SQL migrations.</p></td>
 </tr>
 </tbody>
 </table>
 <div style="page-break-after: always;"></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reactive_programming"><a class="anchor" href="#_reactive_programming"></a><a class="link" href="#_reactive_programming">Reactive Programming</a></h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>You can override annotation parameters via configuration file using property <code>[classname/methodname/]annotation/parameter</code>:</p>
+<p>Quarkus implements <a href="https://github.com/eclipse/microprofile-reactive-streams-operators">MicroProfile Reactive spec</a> and uses RXJava2 to provide reactive programming model.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">org.acme.quickstart.WorldClock/getNow/Retry/maxDuration=30
-# Class scope
-org.acme.quickstart.WorldClock/Retry/maxDuration=3000
-# Global
-Retry/maxDuration=3000</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="
+    io.quarkus:quarkus-smallrye-reactive-streams-operators"</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You can also enable/disable policies using special parameter <code>enabled</code>.</p>
+<p>Asynchronous HTTP endpoint is implemented by returning Java <code>CompletionStage</code>.
+You can create this class either manually or using MicroProfile Reactive Streams spec:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">org.acme.quickstart.WorldClock/getNow/Retry/enabled=false
-# Disable everything except fallback
-MP_Fault_Tolerance_NonFallback_Enabled=false</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@GET
+@Path("/reactive")
+@Produces(MediaType.TEXT_PLAIN)
+public CompletionStage&lt;String&gt; getHello() {
+    return ReactiveStreams.of("h", "e", "l", "l", "o")
+    .map(String::toUpperCase)
+    .toList()
+    .run()
+    .thenApply(list -&gt; list.toString());
+}</code></pre>
 </div>
 </div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Tip</div>
-</td>
-<td class="content">
-MicroProfile Fault Tolerance integrats with MicroProfile Metrics spec. You can disable it by setting <code>MP_Fault_Tolerance_Metrics_Enabled</code> to false.
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>Creating streams is also easy, you just need to return <code>Publisher</code> object.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@GET
+@Path("/stream")
+@Produces(MediaType.SERVER_SENT_EVENTS)
+public Publisher&lt;String&gt; publishers() {
+        return Flowable
+        .interval(500, TimeUnit.MILLISECONDS)
+        .map(s -&gt; atomicInteger.getAndIncrement())
+        .map(i -&gt; Integer.toString(i));
+}</code></pre>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_validator"><a class="link" href="#_validator">Validator</a></h2>
+<h2 id="_reactive_messaging"><a class="anchor" href="#_reactive_messaging"></a><a class="link" href="#_reactive_messaging">Reactive Messaging</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Quarkus uses Hibernate Validator (<a href="https://hibernate.org/validator/" class="bare">https://hibernate.org/validator/</a>) to validate input/output of REST services and business services using Bean validation spec.</p>
+<p>Quarkus relies on MicroProfile Reactive Messaging spec (<a href="https://github.com/eclipse/microprofile-reactive-messaging" class="bare">https://github.com/eclipse/microprofile-reactive-messaging</a>) to implement reactive messaging streams.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">./mvnw quarkus:add-extension
-  -Dextensions="io.quarkus:quarkus-hibernate-validator"</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn quarkus:add-extension
+    -Dextensions="
+        io.quarkus:quarkus-smallrye-reactive-messaging"</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Annotate POJO objects with validator annotations such as: <code>@NotNull</code>, <code>@Digits</code>, <code>@NotBlank</code>, <code>@Min</code>, <code>@Max</code>, &#8230;&#8203;</p>
+<p>You can just start using in-memory streams by using <code>@Incoming</code> to produce data and <code>@Outgoing</code> to consume data.</p>
+</div>
+<div class="paragraph">
+<p>Produce every 5 seconds one piece of data.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">public class Sauce {
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ApplicationScoped
+public class ProducerData {
 
-    @NotBlank(message = "Name may not be blank")
-    private String name;
-    @Min(0)
-    private long scovilleHeatUnits;
-
-    // getter/setters
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To validate that an object is valid you need to annotate where is used with <code>@Valid</code> annotation:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">public Response create(@Valid Sauce sauce) {}</code></pre>
-</div>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Tip</div>
-</td>
-<td class="content">
-If a validation error is triggered, a violation report is generated and serialized as JSON. If you want to manipulate the output, you need to catch in the code the <code>ConstraintViolationException</code> exception.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p><strong>Create Your Custom Constraints</strong></p>
-</div>
-<div class="paragraph">
-<p>First you need to create the custom annotation:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR,
-            PARAMETER, TYPE_USE })
-@Retention(RUNTIME)
-@Documented
-@Constraint(validatedBy = { NotExpiredValidator.class})
-public @interface NotExpired {
-
-    String message() default "Sauce must not be expired";
-    Class&lt;?&gt;[] groups() default { };
-    Class&lt;? extends Payload&gt;[] payload() default { };
-
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You need to implement the validator logic in a class that implements <code>ConstraintValidator</code>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">public class NotExpiredValidator
-    implements ConstraintValidator&lt;NotExpired, LocalDate&gt;
-    {
-
-    @Override
-    public boolean isValid(LocalDate value,
-                            ConstraintValidatorContext ctx) {
-        if ( value == null ) {
-            return true;
-        }
-        LocalDate today = LocalDate.now();
-        return ChronoUnit.YEARS.between(today, value) &gt; 0;
+    @Outgoing("my-in-memory")
+    public Flowable&lt;Integer&gt; generate() {
+        return Flowable.interval(5, TimeUnit.SECONDS)
+                .map(tick -&gt; random.nextInt(100));
     }
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>And use it normally:</p>
+<p>Consumes generated data from <code>my-in-memory</code> stream.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@NotExpired
-@JsonbDateFormat(value = "yyyy-MM-dd")
-private LocalDate expired;</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ApplicationScoped
+public class ConsumerData {
+    @Incoming("my-in-memory")
+    public void randomNumber(int randomNumber) {
+        System.out.println("Received " + randomNumber);
+    }
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p><strong>Manual Validation</strong></p>
-</div>
-<div class="paragraph">
-<p>You can call the validation process manually instead of relaying to <code>@Valid</code> by injecting <code>Validator</code> class.</p>
+<p>You can also inject an stream as a field:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Inject
-Validator validator;</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+@Stream("my-in-memory") Publisher&lt;Integer&gt; randomRumbers;</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>And use it:</p>
+<p>Possible return types:</p>
+</div>
+<div class="paragraph">
+<p><strong>Kafka</strong></p>
+</div>
+<div class="paragraph">
+<p>To integrate with Kafka you need to add next extensions:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">Set&lt;ConstraintViolation&lt;Sauce&gt;&gt; violations =
-            validator.validate(sauce);</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn quarkus:add-extension
+    -Dextensions="
+    io.quarkus:quarkus-smallrye-reactive-messaging-kafka,
+    io.quarkus:quarkus-vertx"</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Then <code>@Outgoing</code>, <code>@Incoming</code> or <code>@Stream</code> can be used.</p>
+</div>
+<div class="paragraph">
+<p>Kafka configuration schema: <code>smallrye.messaging.[sink|source].{stream-name}.&lt;property&gt;=&lt;value&gt;</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">smallrye.messaging.source.prices.type=
+    io.smallrye.reactive.messaging.kafka.Kafka
+smallrye.messaging.source.prices.topic=
+    prices
+smallrye.messaging.source.prices.bootstrap.servers=
+    localhost:9092
+smallrye.messaging.source.prices.key.deserializer=
+    org.apache.kafka.common.serialization.StringDeserializer
+smallrye.messaging.source.prices.value.deserializer=
+    org.apache.kafka.common.serialization.IntegerDeserializer
+smallrye.messaging.source.prices.group.id=
+    my-group-id</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A complete list of supported properties are in Kafka site. For <a href="https://kafka.apache.org/documentation/#producerconfigs">producer</a> and for <a href="https://kafka.apache.org/documentation/#consumerconfigs">consumer</a></p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">
+If the stream is not configured then it is assumed to be an in-memory stream.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_jwt"><a class="link" href="#_jwt">JWT</a></h2>
+<h2 id="_reactive_postgresql_client"><a class="anchor" href="#_reactive_postgresql_client"></a><a class="link" href="#_reactive_postgresql_client">Reactive PostgreSQL Client</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can use Reactive PostgreSQL to execute queries to PostreSQL database in a reactive way, instead of using JDBC way.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="io.quarkus:quarkus-smallrye-health"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Database configuration is the same as shown in <a href="#_persistence">Persistence</a> section, but URL is different as it is not a <em>jdbc</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.datasource.url=
+    vertx-reactive:postgresql://host:5431/db</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then you can inject <code>io.reactiverse.axle.pgclient.PgPool</code> class.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+PgPool client;
+
+CompletionStage&lt;JsonArray&gt; =
+    client.query("SELECT * FROM table")
+    .thenApply(pgRowSet -&gt; {
+        JsonArray jsonArray = new JsonArray();
+        PgIterator iterator = pgRowSet.iterator();
+        return jsonArray;
+    })</code></pre>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_jwt"><a class="anchor" href="#_jwt"></a><a class="link" href="#_jwt">JWT</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Quarkus implements <a href="https://github.com/eclipse/microprofile-jwt-auth">MicroProfile JWT RBAC spec</a>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">mvn quarkus:add-extension
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn quarkus:add-extension
     -Dextensions="io.quarkus:quarkus-smallrye-jwt"</code></pre>
 </div>
 </div>
@@ -1411,7 +1761,7 @@ Validator validator;</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Inject
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
 JsonWebToken jwt;
 
 @Inject
@@ -1431,7 +1781,7 @@ Set&lt;String&gt; groups;</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">mp.jwt.verify.publickey.location=
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">mp.jwt.verify.publickey.location=
     META-INF/resources/publicKey.pem
 mp.jwt.verify.issuer=
     https://quarkus.io/using-jwt-rbac</code></pre>
@@ -1450,7 +1800,7 @@ mp.jwt.verify.issuer=
 <tr>
 <th class="tableblock halign-left valign-top">Parameter</th>
 <th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top"> Description</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
@@ -1533,7 +1883,7 @@ If you need to inject claim values in scope with a lifetime greater than <code>@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Inject
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
 @Claim(standard = Claims.iat)
 private Instance&lt;Long&gt; providerIAT;</code></pre>
 </div>
@@ -1546,163 +1896,265 @@ private Instance&lt;Long&gt; providerIAT;</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@RolesAllowed("Subscriber")</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@RolesAllowed("Subscriber")</code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_reactive_programming"><a class="link" href="#_reactive_programming">Reactive Programming</a></h2>
+<h2 id="_keycloak"><a class="anchor" href="#_keycloak"></a><a class="link" href="#_keycloak">Keycloak</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Quarkus implements <a href="https://github.com/eclipse/microprofile-reactive-streams-operators">MicroProfile Reactive spec</a> and uses RXJava2 to provide reactive programming model.</p>
+<p>Quarkus can use <a href="https://www.keycloak.org/">Keycloak</a> to protect resources using bearer token issued by Keycloak server.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">./mvnw quarkus:add-extension
-  -Dextensions="
-    io.quarkus:quarkus-smallrye-reactive-streams-operators"</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn quarkus:add-extension
+    -Dextensions="io.quarkus:quarkus-keycloak"</code></pre>
 </div>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
-<p>Asynchronous HTTP endpoint is implemented by returning Java <code>CompletionStage</code>.
-You can create this class either manually or using MicroProfile Reactive Streams spec:</p>
+<p>You can get token information by injecting <code>KeycloakSecurityContext</code> object.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@GET
-@Path("/reactive")
-@Produces(MediaType.TEXT_PLAIN)
-public CompletionStage&lt;String&gt; getHello() {
-    return ReactiveStreams.of("h", "e", "l", "l", "o")
-    .map(String::toUpperCase)
-    .toList()
-    .run()
-    .thenApply(list -&gt; list.toString());
-}</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+KeycloakSecurityContext keycloakSecurityContext;</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Creating streams is also easy, you just need to return <code>Publisher</code> object.</p>
+<p>You can also protect resources with security annotations.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@GET
-@Path("/stream")
-@Produces(MediaType.SERVER_SENT_EVENTS)
-public Publisher&lt;String&gt; publishers() {
-        return Flowable
-        .interval(500, TimeUnit.MILLISECONDS)
-        .map(s -&gt; atomicInteger.getAndIncrement())
-        .map(i -&gt; Integer.toString(i));
-}</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@GET
+@RolesAllowed("admin")</code></pre>
 </div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_reactive_messaging"><a class="link" href="#_reactive_messaging">Reactive Messaging</a></h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>Quarkus relies on MicroProfile Reactive Messaging spec (<a href="https://github.com/eclipse/microprofile-reactive-messaging" class="bare">https://github.com/eclipse/microprofile-reactive-messaging</a>) to implement reactive messaging streams.</p>
+<p>Configure application to Keycloak service in <code>application.properties</code> file.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">mvn quarkus:add-extension
-    -Dextensions="io.quarkus:quarkus-smallrye-reactive-messaging"</code></pre>
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.keycloak.realm=quarkus
+quarkus.keycloak.auth-server-url=http://localhost:8180/auth
+quarkus.keycloak.resource=backend-service
+quarkus.keycloak.bearer-only=true
+quarkus.keycloak.credentials.secret=secret
+quarkus.keycloak.policy-enforcer.enable=true
+quarkus.keycloak.policy-enforcer.enforcement-mode=PERMISSIVE</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You can just start using in-memory streams by using <code>@Incoming</code> to produce data and <code>@Outgoing</code> to consume data.</p>
+<p>You can see all possible <a href="https://www.keycloak.org/docs/latest/securing_apps/index.html#_java_adapter_config">Configuration parameters here</a>.</p>
 </div>
-<div class="paragraph">
-<p>Produce every 5 seconds one piece of data.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@ApplicationScoped
-public class ProducerData {
-
-    @Outgoing("my-in-memory")
-    public Flowable&lt;Integer&gt; generate() {
-        return Flowable.interval(5, TimeUnit.SECONDS)
-                .map(tick -&gt; random.nextInt(100));
-    }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Consumes generated data from <code>my-in-memory</code> stream.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@ApplicationScoped
-public class ConsumerData {
-    @Incoming("my-in-memory")
-    public void randomNumber(int randomNumber) {
-        System.out.println("Received " + randomNumber);
-    }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You can also inject an stream as a field:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Inject
-@Stream("my-in-memory") Publisher&lt;Integer&gt; randomRumbers;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Possible return types:</p>
-</div>
-<div class="paragraph">
-<p><strong>Kafka</strong></p>
-</div>
-<div class="paragraph">
-<p>To integrate with Kafka you need to add next extensions:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">mvn quarkus:add-extension
-    -Dextensions="io.quarkus:quarkus-smallrye-reactive-messaging-kafka,
-                  io.quarkus:quarkus-vert"</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Then <code>@Outgoing</code>, <code>@Incoming</code> or <code>@Stream</code> can be set with Kafka streams.</p>
-</div>
-<div class="paragraph">
-<p>You need also need to configure Kafka connector following next schema: <code>smallrye.messaging.[sink|source].{stream-name}.&lt;property&gt;=&lt;value&gt;</code></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">smallrye.messaging.source.prices.type=
-    io.smallrye.reactive.messaging.kafka.Kafka
-smallrye.messaging.source.prices.topic=
-    prices
-smallrye.messaging.source.prices.bootstrap.servers=
-    localhost:9092
-smallrye.messaging.source.prices.key.deserializer=
-    org.apache.kafka.common.serialization.StringDeserializer
-smallrye.messaging.source.prices.value.deserializer=
-    org.apache.kafka.common.serialization.IntegerDeserializer
-smallrye.messaging.source.prices.group.id=
-    my-group-id</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>A complete list of supported properties are in Kafka site. For <a href="https://kafka.apache.org/documentation/#producerconfigs">producer</a> and for <a href="https://kafka.apache.org/documentation/#consumerconfigs">consumer</a></p>
-</div>
-<div class="admonitionblock important">
+<div class="admonitionblock tip">
 <table>
 <tr>
 <td class="icon">
-<div class="title">Important</div>
+<div class="title">Tip</div>
 </td>
 <td class="content">
-If the stream is not configured then it is assumed to be an in-memory stream.
+you can also use <code>src/main/resources/keycloak.json</code> standard Keycloak configuration file.
+</td>
+</tr>
+</table>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fault_tolerance"><a class="anchor" href="#_fault_tolerance"></a><a class="link" href="#_fault_tolerance">Fault Tolerance</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Quarkus uses <a href="https://github.com/eclipse/microprofile-fault-tolerance" class="bare">https://github.com/eclipse/microprofile-fault-tolerance</a>[MicroProfile Fault Tolerance spec:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="io.quarkus:quarkus-smallrye-fault-tolerance"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>MicroProfile Fault Tolerance spec uses CDI interceptor and it can be used in several elements such as CDI bean, JAX-RS resource or MicroProfile Rest Client.</p>
+</div>
+<div class="paragraph">
+<p>To do automatic <strong>retries</strong> on a method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Path("/api")
+@RegisterRestClient
+public interface WorldClockService {
+
+    @GET @Path("/json/cet/now")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Retry(maxRetries = 2)
+    WorldClock getNow();
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can set fallback code in case of an error by using <code>@Fallback</code> annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Retry(maxRetries = 1)
+@Fallback(fallbackMethod = "fallbackMethod")
+WorldClock getNow(){}
+
+public String fallbackMethod() {
+    return "It could beworse";
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>fallbackMethod</code> must have the same parameters and return type as the annotated method.</p>
+</div>
+<div class="paragraph">
+<p>You can also set logic into a class that implements <code>FallbackHandler</code> interface:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class RecoverFallback
+            implements FallbackHandler&lt;String&gt; {
+    @Override
+    public String handle(ExecutionContext context) {
+        return "It could be worse";
+    }
+}</code></pre>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+<div class="paragraph">
+<p>And set it in the annotation as value <code>@Fallback(RecoverFallback.class)</code>.</p>
+</div>
+<div class="paragraph">
+<p>In case you want to use <strong>circuit breaker</strong> pattern:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@CircuitBreaker(requestVolumeThreshold = 4,
+                failureRatio=0.75,
+                delay = 1000)
+WorldClock getNow(){}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If 3 <code>(4 x 0.75)</code> failures occur among the rolling window of 4 consecutive invocations then the circuit is opened for 1000 ms and then be back to half open.
+If the invocation succeeds then the circuit is back to closed again.</p>
+</div>
+<div class="paragraph">
+<p>You can use <strong>bulkahead</strong> pattern to limit the number of concurrent access to the same resource.
+If the operation is synchronous it uses a semaphore approach, if it is asynchronous a thread-pool one.
+When a request cannot be processed <code>BulkheadException</code> is thrown.
+It can be used together with any other fault tolerance annotation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Bulkhead(5)
+@Retry(maxRetries = 4,
+       delay = 1000,
+       retryOn = BulkheadException.class)
+WorldClock getNow(){}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Fault tolerance annotations:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Annotation</th>
+<th class="tableblock halign-left valign-top">Properties</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>@Timeout</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>unit</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>@Retry</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>maxRetries</code>, <code>delay</code>, <code>delayUnit</code>, <code>maxDuration</code>, <code>durationUnit</code>, <code>jitter</code>, <code>jitterDelayUnit</code>, <code>retryOn</code>, <code>abortOn</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>@Fallback</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>fallbackMethod</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>@Bulkhead</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>waitingTaskQueue</code> (only valid in asynchronous)</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>@CircuitBreaker</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>failOn</code>, <code>delay</code>, <code>delayUnit</code>, <code>requestVolumeThreshold</code>, <code>failureRatio</code>, <code>successThreshold</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>@Asynchronous</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+</tr>
+</tbody>
+</table>
+<div style="page-break-after: always;"></div>
+<div class="paragraph">
+<p>You can override annotation parameters via configuration file using property <code>[classname/methodname/]annotation/parameter</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">org.acme.quickstart.WorldClock/getNow/Retry/maxDuration=30
+# Class scope
+org.acme.quickstart.WorldClock/Retry/maxDuration=3000
+# Global
+Retry/maxDuration=3000</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also enable/disable policies using special parameter <code>enabled</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">org.acme.quickstart.WorldClock/getNow/Retry/enabled=false
+# Disable everything except fallback
+MP_Fault_Tolerance_NonFallback_Enabled=false</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+MicroProfile Fault Tolerance integrats with MicroProfile Metrics spec. You can disable it by setting <code>MP_Fault_Tolerance_Metrics_Enabled</code> to false.
 </td>
 </tr>
 </table>
@@ -1710,17 +2162,17 @@ If the stream is not configured then it is assumed to be an in-memory stream.
 </div>
 </div>
 <div class="sect1">
-<h2 id="_observability"><a class="link" href="#_observability">Observability</a></h2>
+<h2 id="_observability"><a class="anchor" href="#_observability"></a><a class="link" href="#_observability">Observability</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><strong>Health Checks</strong></p>
 </div>
 <div class="paragraph">
-<p>Quarkus relies on MicroProfile Health spec (<a href="https://github.com/eclipse/microprofile-health" class="bare">https://github.com/eclipse/microprofile-health</a>) to provide health checks.</p>
+<p>Quarkus relies on <a href="https://github.com/eclipse/microprofile-health">MicroProfile Health</a> spec to provide health checks.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">./mvnw quarkus:add-extension
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
   -Dextensions="io.quarkus:quarkus-smallrye-health"</code></pre>
 </div>
 </div>
@@ -1729,7 +2181,7 @@ If the stream is not configured then it is assumed to be an in-memory stream.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
+<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
     "outcome": "UP",
     "checks": [
     ]
@@ -1741,7 +2193,7 @@ If the stream is not configured then it is assumed to be an in-memory stream.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Health
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Health
 public class DatabaseHealthCheck implements HealthCheck {
     @Override
     public HealthCheckResponse call() {
@@ -1767,7 +2219,7 @@ public class DatabaseHealthCheck implements HealthCheck {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
+<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
     "outcome": "UP",
     "checks": [
         {
@@ -1785,20 +2237,20 @@ public class DatabaseHealthCheck implements HealthCheck {
 <p><strong>Metrics</strong></p>
 </div>
 <div class="paragraph">
-<p>Quarkus can utilize the MicroProfile Metrics spec (<a href="https://github.com/eclipse/microprofile-metrics" class="bare">https://github.com/eclipse/microprofile-metrics</a>) to provide metrics support.</p>
+<p>Quarkus can utilize the <a href="https://github.com/eclipse/microprofile-metrics">MicroProfile Metrics spec</a> to provide metrics support.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">./mvnw quarkus:add-extension
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
   -Dextensions="io.quarkus:quarkus-smallrye-metrics"</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The metrics can be read remotely using JSON format or the OpenMetrics format.
-By just adding the extension, an endpoint is registered at <code>/metrics</code> providing default metrics.</p>
+<p>The metrics can be read with JSON or the OpenMetrics format.
+An endpoint is registered automatically at <code>/metrics</code> providing default metrics.</p>
 </div>
 <div class="paragraph">
-<p>MicroProfile Metrics comes with some annotations to add specific monitoring values:</p>
+<p>MicroProfile Metrics annotations:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1817,7 +2269,7 @@ By just adding the extension, an endpoint is registered at <code>/metrics</code>
 <p><code>@Timed</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Marking a method, constructor, or class as timed.</p>
+<p>Method, constructor, or class as timed.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -1825,7 +2277,7 @@ By just adding the extension, an endpoint is registered at <code>/metrics</code>
 <p><code>@Metered</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Marking a method, constructor, or class as metered.</p>
+<p>Method, constructor, or class as metered.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -1833,7 +2285,7 @@ By just adding the extension, an endpoint is registered at <code>/metrics</code>
 <p><code>@Counted</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Marking a method, constructor, or class as counted.</p>
+<p>Method, constructor, or class as counted.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -1841,7 +2293,7 @@ By just adding the extension, an endpoint is registered at <code>/metrics</code>
 <p><code>@Gauge</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Marking a method or field as a gauge.</p>
+<p>Method or field as a gauge.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -1856,7 +2308,7 @@ By just adding the extension, an endpoint is registered at <code>/metrics</code>
 </table>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@GET
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@GET
 //...
 @Timed(name = "checksTimer",
 description = "A measure of how long it takes
@@ -1870,7 +2322,7 @@ public String hello() {}</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Gauge(name = "hottestSauce", unit = MetricUnits.NONE,
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Gauge(name = "hottestSauce", unit = MetricUnits.NONE,
 description = "Hottest Sauce so far.")
 public Long hottestSauce() {}</code></pre>
 </div>
@@ -1880,7 +2332,7 @@ public Long hottestSauce() {}</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Inject
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
 @Metric(name = "histogram")
 Histogram historgram;</code></pre>
 </div>
@@ -1889,11 +2341,11 @@ Histogram historgram;</code></pre>
 <p><strong>Tracing</strong></p>
 </div>
 <div class="paragraph">
-<p>Quarkus can utilize the MicroProfile OpenTracing spec (<a href="https://github.com/eclipse/microprofile-opentracing" class="bare">https://github.com/eclipse/microprofile-opentracing</a>) to provide tracing support.</p>
+<p>Quarkus can utilize the <a href="https://github.com/eclipse/microprofile-opentracing">MicroProfile OpenTracing</a> spec to provide tracing support.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">./mvnw quarkus:add-extension
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
   -Dextensions="io.quarkus:quarkus-smallrye-opentracing"</code></pre>
 </div>
 </div>
@@ -1908,12 +2360,13 @@ Histogram historgram;</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">quarkus.jaeger.service-name=myservice
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.jaeger.service-name=myservice
 quarkus.jaeger.sampler-type=const
 quarkus.jaeger.sampler-param=1
 quarkus.jaeger.endpoint=http://localhost:14268/api/traces</code></pre>
 </div>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p><code>@Traced</code> annotation can be set to disable tracing at class or method level.</p>
 </div>
@@ -1922,16 +2375,17 @@ quarkus.jaeger.endpoint=http://localhost:14268/api/traces</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Inject
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
 Tracer tracer;
 
 tracer.activeSpan().setBaggageItem("key", "value");</code></pre>
 </div>
 </div>
+<div style="page-break-after: always;"></div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_cloud"><a class="link" href="#_cloud">Cloud</a></h2>
+<h2 id="_cloud"><a class="anchor" href="#_cloud"></a><a class="link" href="#_cloud">Cloud</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><strong>Native</strong></p>
@@ -1942,7 +2396,7 @@ The common use case is creating a Docker image so you can execute the next comma
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">./mvnw package -Pnative -Dnative-image.docker-build=true
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw package -Pnative -Dnative-image.docker-build=true
 
 docker build -f src/main/docker/Dockerfile.native
                     -t quarkus/getting-started .
@@ -1950,14 +2404,17 @@ docker run -i --rm -p 8080:8080 quarkus/getting-started</code></pre>
 </div>
 </div>
 <div class="paragraph">
+<p>To configure native application, you can create a <code>config</code> directory at the same place as the native file and place an <code>application.properties</code> file inside. <code>config/application.properties</code>.</p>
+</div>
+<div class="paragraph">
 <p><strong>Kubernetes</strong></p>
 </div>
 <div class="paragraph">
-<p>Quarks can use ap4k (<a href="https://github.com/ap4k/ap4k" class="bare">https://github.com/ap4k/ap4k</a>) to generate Kubernetes resources.</p>
+<p>Quarks can use <a href="https://github.com/ap4k/ap4k">ap4k</a> to generate Kubernetes resources.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">./mvnw quarkus:add-extensions
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extensions
     -Dextensions="io.quarkus:quarkus-kubernetes"</code></pre>
 </div>
 </div>
@@ -1974,7 +2431,7 @@ docker run -i --rm -p 8080:8080 quarkus/getting-started</code></pre>
 <tr>
 <th class="tableblock halign-left valign-top">Property</th>
 <th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top"> Description</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
@@ -2005,218 +2462,62 @@ docker run -i --rm -p 8080:8080 quarkus/getting-started</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_logging"><a class="link" href="#_logging">Logging</a></h2>
+<h2 id="_amazon_lambda"><a class="anchor" href="#_amazon_lambda"></a><a class="link" href="#_amazon_lambda">Amazon Lambda</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You can configure how Quarkus logs:</p>
+<p>Quarkus integrates with Amazon Lambda.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">quarkus.log.console.enable=true
-quarkus.log.console.level=DEBUG
-quarkus.log.console.color=false
-
-quarkus.log.category."com.lordofthejars".level=DEBUG</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="io.quarkus:quarkus-amazon-lambda"</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Prefix is <code>quarkus.log</code>.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top"> Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>console.enable</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>true</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Console logging enabled.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>console.format</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c{3.}] (%t) %s%e%n</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Format pattern to use for logging.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>console.level</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>INFO</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Minimum log level.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>console.color</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>INFO</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Allow color rendering.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>file.enable</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>false</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>File logging enabled.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>file.format</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>%d{yyyy-MM-dd HH:mm:ss,SSS} %h %N[%i] %-5p [%c{3.}] (%t) %s%e%n</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Format pattern to use for logging.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>file.level</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>ALL</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Minimum log level.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>file.path</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>quarkus.log</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The path to log file.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>category."&lt;category-name&gt;".level</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>INFO</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Minimum level category.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>level</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>INFO</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Default minimum level.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_testing"><a class="link" href="#_testing">Testing</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>When you generate the Quarkus project with the archetype, test dependencies with JUnit 5 are registered automatically, but also the Rest-Assured library to test RESt endpoints.</p>
-</div>
-<div class="paragraph">
-<p>To package and run the application for testing:</p>
+<p>And then implement <code>com.amazonaws.services.lambda.runtime.RequestHandler</code> interface.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@QuarkusTest
-public class GreetingResourceTest {
-
-    @Test
-    public void testHelloEndpoint() {
-        given()
-          .when().get("/hello")
-          .then()
-             .statusCode(200)
-             .body(is("hello"));
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class TestLambda
+        implements RequestHandler&lt;MyInput, MyOutput&gt; {
+    @Override
+    public MyInput handleRequest(MyOutput input,
+                                    Context context) {
+        // ...
     }
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Test port can be modified by using <code>quarkus.http.test-port</code> configuration property.</p>
+<p><strong>Test</strong></p>
 </div>
 <div class="paragraph">
-<p>You can also inject the URL where Quarkus is started:</p>
+<p>You can write tests for Amazon lambdas:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@TestHTTPResource("index.html")
-URL url;</code></pre>
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+  &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+  &lt;artifactId&gt;quarkus-test-amazon-lambda&lt;/artifactId&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>If you need to provide an alternative implementation of a service (for testing purposes) you can do it by using CDI <code>@Alternative</code> annotation using it in the test service placed at <code>src/test/java</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Alternative
-@Priority(1)
-@ApplicationScoped
-public class MockExternalService extends ExternalService {}</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Test
+public void testLambda() {
+    MyInput in = new MyInput();
+    in.setGreeting("Hello");
+    in.setName("Stu");
+    MyOutput out = LambdaClient.invoke(MyOutput.class, in);
+}</code></pre>
 </div>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Important</div>
-</td>
-<td class="content">
-This does not work when using native image testing.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>To test native executables you can annotate the test with <code>@SubstrateTest</code>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_resources"><a class="link" href="#_resources">Resources</a></h2>
+<h2 id="_resources"><a class="anchor" href="#_resources"></a><a class="link" href="#_resources">Resources</a></h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
@@ -2231,10 +2532,8 @@ This does not work when using native image testing.
 </div>
 </div>
 </div>
-<div id="footer">
-<div id="footer-text">
-Last updated 2019-05-14 11:14:43 +0200
-</div>
-</div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+<script>hljs.initHighlighting()</script>
 </body>
 </html>
