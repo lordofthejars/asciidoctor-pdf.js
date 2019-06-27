@@ -176,6 +176,29 @@ public class DeveloperRepository
 ----
 // end::update_2_12[]
 
+// tag::update_4_4[]
+*Flushing*
+
+You can force flush operation by calling `.flush()` or `.persistAndFlush()` to make it in a single call.
+
+IMPORTANT: This flush is less efficient and you still need to commit transaction.
+// end::update_4_4[]
+
+// tag::update_4_3[]
+*Testing*
+
+There is a Quarkus Test Resource that starts and stops H2 server before and after test suite.
+
+Add dependency? Probably yes xxxxxxxxxxxx
+
+[source, java]
+----
+@QuarkusTestResource(H2DatabaseTestResource.class)
+public class FlywayTestResources {
+}
+----
+
+// end::update_4_3[]
 == Flyway
 // tag::update_1_7[]
 Quarkus integrates with https://flywaydb.org/[Flyway] to help you on database schema migrations.
