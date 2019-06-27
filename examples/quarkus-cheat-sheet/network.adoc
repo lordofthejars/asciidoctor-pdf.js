@@ -1,4 +1,98 @@
-== HTTP Filters
+== JAX-RS
+// tag::update_4_1[]
+Quarkus uses JAX-RS to define https://github.com/jax-rs[REST-ful web APIs].
+
+[source, java]
+----
+@Path("/book")
+public class BookResource {
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Book> getAllBooks() {}
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createBook(Book book) {}
+
+    @DELETE
+    @Path("{isbn}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteBook(
+        @PathParam("isbn") String isbn) {}
+    
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("search")
+    public Response searchBook(
+        @QueryParam("description") String description) {}
+}
+----
+
+To get information from request:
+
+|===	
+|Property | Description | Example
+
+a|`@PathParam`
+|Gets content from request URI.
+a|`/book/{id} @PathParam("id")`
+
+a|`@QueryParam`
+|Gets query parameter.
+|`/book?desc="" @QueryParam("desc)`
+
+a|`@FormParam`
+|Gets form parameter.
+|
+
+a|`@MatrixParam`
+|Get URI matrix parameter.
+a|`/book;author=mkyong;country=malaysia`
+
+a|`@CookieParam`
+|Gets cookie param by name.
+|
+
+a|`@HeaderParam`
+|Gets header parameter by name.
+|
+|===
+
+Valid HTTP method annotations provided by the spec are: `@GET`, `@POST`, `@PUT`, `@DELETE`, `@PATCH`, `@HEAD` and `@OPTIONS`.
+
+You can create new annotations that bind to HTTP methods not defined by the spec.
+
+[source, java]
+----
+@Target({ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@HttpMethod("LOCK")
+public @interface LOCK {
+}
+
+@LOCK
+public void lockIt() {}
+}
+----
+
+*Injecting *
+
+Using `@Context` annotation to inject JAX-RS and Servlet information.
+
+[source, java]
+----
+@GET
+public String getBase(@Context UriInfo uriInfo) {
+    return uriInfo.getBaseUri();
+}
+----
+
+Possible injectable objects: `SecurityContext`, `Request`, `Application`, `Configuration`, `Providers`, `ResourceContext`, `ServletConfig`, `ServletContext`, `HttpServletRequest`, `HttpServletResponse`, `HttpHeaders`, `URiInfo`, `SseEventSink` and `Sse`.
+// end::update_4_1[]
+
+*HTTP Filters*
 // tag::update_3_3[]
 HTTP request and response can be intercepted to manipulate the metadata (ie headers, parameters, media type, ...) or abort a request.
 You only need to implement the next `ContainerRequestFilter` and `ContainerResponseFilter` JAX-RS interfaces respectively.
