@@ -111,8 +111,6 @@ developer.delete();
 long numberOfDeleted = Developer.delete("name", "Alex");
 ----
 
-<<<
-
 Remember to annotate methods with `@Transactional` annotation to make changes persisted in the database.
 
 If queries start with the keyword `from` then they are treated as _HQL_ query, if not then next short form is supported:
@@ -214,7 +212,7 @@ If entities are defined in external JAR, you need to enable in these projects th
 *DAO pattern*
 
 // tag::update_2_12[]
-Panache also supports _DAO_ pattern by providing `PanacheRepository<TYPE>` interface.
+Also supports _DAO_ pattern with `PanacheRepository<TYPE>`.
 
 [source, java]
 ----
@@ -228,16 +226,17 @@ public class DeveloperRepository
 ----
 // end::update_2_12[]
 
-// tag::update_4_4[]
 *Flushing*
 
+// tag::update_4_4[]
 You can force flush operation by calling `.flush()` or `.persistAndFlush()` to make it in a single call.
 
 IMPORTANT: This flush is less efficient and you still need to commit transaction.
 // end::update_4_4[]
 
-// tag::update_4_3[]
 *Testing*
+
+// tag::update_4_3[]
 
 There is a Quarkus Test Resource that starts and stops H2 server before and after test suite.
 

@@ -161,7 +161,7 @@ a|`exposed-headers`
 
 == Fault Tolerance
 // tag::update_1_2[]
-Quarkus uses https://github.com/eclipse/microprofile-fault-tolerance[MicroProfile Fault Tolerance spec:
+Quarkus uses https://github.com/eclipse/microprofile-fault-tolerance[MicroProfile Fault Tolerance] spec:
 
 [source, bash]
 ----
@@ -226,6 +226,8 @@ WorldClock getNow(){}
 
 If 3 `(4 x 0.75)` failures occur among the rolling window of 4 consecutive invocations then the circuit is opened for 1000 ms and then be back to half open.
 If the invocation succeeds then the circuit is back to closed again.
+
+<<<
 
 You can use *bulkahead* pattern to limit the number of concurrent access to the same resource. 
 If the operation is synchronous it uses a semaphore approach, if it is asynchronous a thread-pool one.
@@ -437,8 +439,6 @@ public String hello() {}
 description = "Hottest Sauce so far.")
 public Long hottestSauce() {}
 ----
-
-<<<
 
 Injecting a histogram using `@Metric`.
 

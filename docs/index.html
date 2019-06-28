@@ -606,9 +606,6 @@ public String getBase(@Context UriInfo uriInfo) {
 <summary class="title">Quarkus Test Resource</summary>
 <div class="content">
 <div class="paragraph">
-<p><strong>Quarkus Test Resource</strong></p>
-</div>
-<div class="paragraph">
 <p>You can execute some logic before the first test run (<code>start</code>) and execute some logic at the end of the test suite (<code>stop</code>).</p>
 </div>
 <div class="paragraph">
@@ -660,9 +657,6 @@ public class MyTest {
 <summary class="title">H2 Quarkus Test Resource</summary>
 <div class="content">
 <div class="paragraph">
-<p><strong>Testing</strong></p>
-</div>
-<div class="paragraph">
 <p>There is a Quarkus Test Resource that starts and stops H2 server before and after test suite.</p>
 </div>
 <div class="paragraph">
@@ -684,9 +678,6 @@ public class FlywayTestResources {
 <summary class="title">Flushing</summary>
 <div class="content">
 <div class="paragraph">
-<p><strong>Flushing</strong></p>
-</div>
-<div class="paragraph">
 <p>You can force flush operation by calling <code>.flush()</code> or <code>.persistAndFlush()</code> to make it in a single call.</p>
 </div>
 <div class="admonitionblock important">
@@ -701,6 +692,210 @@ This flush is less efficient and you still need to commit transaction.
 </tr>
 </table>
 </div>
+</div>
+</details>
+<details>
+<summary class="title">Fabric8 Kubernetes Client</summary>
+<div class="content">
+<div class="paragraph">
+<p>Quarkus integrates with <a href="https://github.com/fabric8io/kubernetes-client">Fabric8 Kubernetes Client</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="terminal" class="language-terminal hljs">./mvnw quarkus:add-extension
+    -Dextensions="quarkus-kubernetes-client"</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Currently you need to create a Kubernates Client producer by yourself, but this is gonna be improved in near future versions:
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Dependent
+public class KubernetesClientProducer {
+
+    @Produces
+    public KubernetesClient kubernetesClient() {
+        Config config = new ConfigBuilder()
+            .withMasterUrl("https://mymaster.com")
+            .build();
+        return new DefaultKubernetesClient(config);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And inject it on code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+KubernetesClient client;
+
+ServiceList myServices = client.services().list();
+
+Service myservice = client.services()
+        .inNamespace("default")
+        .withName("myservice")
+        .get();
+
+CustomResourceDefinitionList crds = client
+        .customResourceDefinitions()
+        .list();
+
+dummyCRD = new CustomResourceDefinitionBuilder()
+        ...
+        .build()
+client.customResourceDefinitions()
+        .create(dummyCRD);</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">DataSource Properties</summary>
+<div class="content">
+<div class="paragraph">
+<p>List of datasource parameters.</p>
+</div>
+<div class="paragraph">
+<p><code>quarkus.datasource</code> as prefix is skipped in the next table.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>driver</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>url</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>username</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>password</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>min-size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Integer</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>max-size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Integer</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>initial-size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Integer</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>background-validation-interval</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>java.time.Duration</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>acquisition-timeout</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>java.time.Duration</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>leak-detection-interval</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>java.time.Duration</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>idle-removal-interval</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>java.time.Duration</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>transaction-isolation-level</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>io.quarkus.agroal.runtime.TransactionIsolationLevel</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>enable-metrics</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>xa</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code></p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </details>
 </div>
@@ -2337,7 +2532,7 @@ Create a file <code>/META-INF/services/org.eclipse.microprofile.config.spi.Conve
 <summary class="title">DAO pattern</summary>
 <div class="content">
 <div class="paragraph">
-<p>Panache also supports <em>DAO</em> pattern by providing <code>PanacheRepository&lt;TYPE&gt;</code> interface.</p>
+<p>Also supports <em>DAO</em> pattern with <code>PanacheRepository&lt;TYPE&gt;</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2373,7 +2568,7 @@ public class DeveloperRepository
 <summary class="title">Fault Tolerance</summary>
 <div class="content">
 <div class="paragraph">
-<p>Quarkus uses <a href="https://github.com/eclipse/microprofile-fault-tolerance" class="bare">https://github.com/eclipse/microprofile-fault-tolerance</a>[MicroProfile Fault Tolerance spec:</p>
+<p>Quarkus uses <a href="https://github.com/eclipse/microprofile-fault-tolerance">MicroProfile Fault Tolerance</a> spec:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2447,6 +2642,7 @@ WorldClock getNow(){}</code></pre>
 <p>If 3 <code>(4 x 0.75)</code> failures occur among the rolling window of 4 consecutive invocations then the circuit is opened for 1000 ms and then be back to half open.
 If the invocation succeeds then the circuit is back to closed again.</p>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>You can use <strong>bulkahead</strong> pattern to limit the number of concurrent access to the same resource.
 If the operation is synchronous it uses a semaphore approach, if it is asynchronous a thread-pool one.
@@ -3284,11 +3480,11 @@ you can also use <code>src/main/resources/keycloak.json</code> standard Keycloak
     @Override
     public MyInput handleRequest(MyOutput input,
                                     Context context) {
-        // ...
     }
 }</code></pre>
 </div>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p><strong>Test</strong></p>
 </div>
@@ -4017,7 +4213,6 @@ quarkus.log.category."com.lordofthejars".level=DEBUG</code></pre>
 </tr>
 </tbody>
 </table>
-<div style="page-break-after: always;"></div>
 </div>
 <div class="sect2">
 <h3 id="_rest_client"><a class="anchor" href="#_rest_client"></a><a class="link" href="#_rest_client">Rest Client</a></h3>
@@ -4030,6 +4225,7 @@ quarkus.log.category."com.lordofthejars".level=DEBUG</code></pre>
   -Dextensions="io.quarkus:quarkus-smallrye-rest-client"</code></pre>
 </div>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>To get content from <a href="http://worldclockapi.com/api/json/cet/now" class="bare">http://worldclockapi.com/api/json/cet/now</a> you need to create a service interface:</p>
 </div>
@@ -4160,9 +4356,6 @@ CompletionStage&lt;WorldClock&gt; getNow();</code></pre>
 <div class="paragraph">
 <p>Quarkus archetype adds test dependencies with JUnit 5 and Rest-Assured library to test REST endpoints.</p>
 </div>
-<div class="paragraph">
-<p>To package and run the application for testing:</p>
-</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@QuarkusTest
@@ -4180,7 +4373,7 @@ public class GreetingResourceTest {
 </div>
 </div>
 <div class="paragraph">
-<p>Test port can be modified by using <code>quarkus.http.test-port</code> configuration property.</p>
+<p>Test port can be set in <code>quarkus.http.test-port</code> property.</p>
 </div>
 <div class="paragraph">
 <p>You can also inject the URL where Quarkus is started:</p>
@@ -4269,11 +4462,12 @@ This does not work when using native image testing.
 <div class="paragraph">
 <p>A stereotype annotation <code>io.quarkus.test.Mock</code> is provided declaring <code>@Alternative</code>, <code>@Priority(1)</code> and <code>@Dependent</code>.</p>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p><strong>Native Testing</strong></p>
 </div>
 <div class="paragraph">
-<p>To test native executables you can annotate the test with <code>@SubstrateTest</code>.</p>
+<p>To test native executables annotate the test with <code>@SubstrateTest</code>.</p>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -4318,6 +4512,138 @@ quarkus.hibernate-orm.database.generation=update</code></pre>
 </div>
 </div>
 <div class="paragraph">
+<p>List of datasource parameters.</p>
+</div>
+<div class="paragraph">
+<p><code>quarkus.datasource</code> as prefix is skipped in the next table.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>driver</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>url</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>username</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>password</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>min-size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Integer</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>max-size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Integer</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>initial-size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Integer</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>background-validation-interval</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>java.time.Duration</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>acquisition-timeout</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>java.time.Duration</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>leak-detection-interval</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>java.time.Duration</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>idle-removal-interval</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>java.time.Duration</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>transaction-isolation-level</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>io.quarkus.agroal.runtime.TransactionIsolationLevel</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>enable-metrics</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>xa</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code></p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
 <p>Database operations:</p>
 </div>
 <div class="listingblock">
@@ -4342,7 +4668,6 @@ developer.delete();
 long numberOfDeleted = Developer.delete("name", "Alex");</code></pre>
 </div>
 </div>
-<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>Remember to annotate methods with <code>@Transactional</code> annotation to make changes persisted in the database.</p>
 </div>
@@ -4556,7 +4881,7 @@ long numberOfDeleted = Developer.delete("name", "Alex");</code></pre>
 <p><strong>DAO pattern</strong></p>
 </div>
 <div class="paragraph">
-<p>Panache also supports <em>DAO</em> pattern by providing <code>PanacheRepository&lt;TYPE&gt;</code> interface.</p>
+<p>Also supports <em>DAO</em> pattern with <code>PanacheRepository&lt;TYPE&gt;</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5960,7 +6285,7 @@ public class LoggingFilter
 <div class="sect2">
 <h3 id="_fault_tolerance"><a class="anchor" href="#_fault_tolerance"></a><a class="link" href="#_fault_tolerance">Fault Tolerance</a></h3>
 <div class="paragraph">
-<p>Quarkus uses <a href="https://github.com/eclipse/microprofile-fault-tolerance" class="bare">https://github.com/eclipse/microprofile-fault-tolerance</a>[MicroProfile Fault Tolerance spec:</p>
+<p>Quarkus uses <a href="https://github.com/eclipse/microprofile-fault-tolerance">MicroProfile Fault Tolerance</a> spec:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6034,6 +6359,7 @@ WorldClock getNow(){}</code></pre>
 <p>If 3 <code>(4 x 0.75)</code> failures occur among the rolling window of 4 consecutive invocations then the circuit is opened for 1000 ms and then be back to half open.
 If the invocation succeeds then the circuit is back to closed again.</p>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>You can use <strong>bulkahead</strong> pattern to limit the number of concurrent access to the same resource.
 If the operation is synchronous it uses a semaphore approach, if it is asynchronous a thread-pool one.
@@ -6342,7 +6668,6 @@ description = "Hottest Sauce so far.")
 public Long hottestSauce() {}</code></pre>
 </div>
 </div>
-<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>Injecting a histogram using <code>@Metric</code>.</p>
 </div>
@@ -6479,8 +6804,66 @@ docker run -i --rm -p 8080:8080 quarkus/getting-started</code></pre>
 <div class="sect2">
 <h3 id="_kubernetes_client"><a class="anchor" href="#_kubernetes_client"></a><a class="link" href="#_kubernetes_client">Kubernetes Client</a></h3>
 <div class="paragraph">
-<div class="title">/mvnw quarkus:add-extension -Dextensions="quarkus-kubernetes-client"</div>
-<p>xxxxxxxxxxxxxxxxxxxxxxx</p>
+<p>Quarkus integrates with <a href="https://github.com/fabric8io/kubernetes-client">Fabric8 Kubernetes Client</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="terminal" class="language-terminal hljs">./mvnw quarkus:add-extension
+    -Dextensions="quarkus-kubernetes-client"</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Currently you need to create a Kubernates Client producer by yourself, but this is gonna be improved in near future versions:
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Dependent
+public class KubernetesClientProducer {
+
+    @Produces
+    public KubernetesClient kubernetesClient() {
+        Config config = new ConfigBuilder()
+            .withMasterUrl("https://mymaster.com")
+            .build();
+        return new DefaultKubernetesClient(config);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And inject it on code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+KubernetesClient client;
+
+ServiceList myServices = client.services().list();
+
+Service myservice = client.services()
+        .inNamespace("default")
+        .withName("myservice")
+        .get();
+
+CustomResourceDefinitionList crds = client
+        .customResourceDefinitions()
+        .list();
+
+dummyCRD = new CustomResourceDefinitionBuilder()
+        ...
+        .build()
+client.customResourceDefinitions()
+        .create(dummyCRD);</code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -6504,11 +6887,11 @@ docker run -i --rm -p 8080:8080 quarkus/getting-started</code></pre>
     @Override
     public MyInput handleRequest(MyOutput input,
                                     Context context) {
-        // ...
     }
 }</code></pre>
 </div>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p><strong>Test</strong></p>
 </div>

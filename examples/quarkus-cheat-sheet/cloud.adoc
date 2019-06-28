@@ -54,7 +54,7 @@ Quarkus integrates with https://github.com/fabric8io/kubernetes-client[Fabric8 K
     -Dextensions="quarkus-kubernetes-client"
 ----
 
-IMPORTANT: Currently you need to develop a Kubernates Client producer by yourself, but this is gonna be improved in near future versions:
+IMPORTANT: Currently you need to create a Kubernates Client producer by yourself, but this is gonna be improved in near future versions:
 
 [source, java]
 ----
@@ -116,10 +116,11 @@ public class TestLambda
     @Override
     public MyInput handleRequest(MyOutput input, 
                                     Context context) {
-        // ...
     }
 }
 ----
+
+<<<
 
 *Test*
 
