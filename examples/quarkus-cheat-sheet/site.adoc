@@ -41,6 +41,12 @@ include::persistence.adoc[tag=update_4_3]
 include::persistence.adoc[tag=update_4_4]
 ====
 
+.Fabric8 Kubernetes Client
+[%collapsible]
+====
+include::cloud.adoc[tag=update_4_5]
+====
+
 === Version 0.17.0
 
 .Hibernate Search

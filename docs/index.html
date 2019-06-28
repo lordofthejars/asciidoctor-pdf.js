@@ -464,6 +464,247 @@ Also focused on developer experience, making things just work with little to no 
 <h2 id="whatsnew"><a class="anchor" href="#whatsnew"></a><a class="link" href="#whatsnew">What&#8217;s New in Cheat-Sheet</a></h2>
 <div class="sectionbody">
 <div class="sect2">
+<h3 id="_version_0_18_0"><a class="anchor" href="#_version_0_18_0"></a><a class="link" href="#_version_0_18_0">Version 0.18.0</a></h3>
+<details>
+<summary class="title">JAX-RS</summary>
+<div class="content">
+<div class="paragraph">
+<p>Quarkus uses JAX-RS to define <a href="https://github.com/jax-rs">REST-ful web APIs</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Path("/book")
+public class BookResource {
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List&lt;Book&gt; getAllBooks() {}
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createBook(Book book) {}
+
+    @DELETE
+    @Path("{isbn}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteBook(
+        @PathParam("isbn") String isbn) {}
+
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("search")
+    public Response searchBook(
+        @QueryParam("description") String description) {}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To get information from request:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>@PathParam</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gets content from request URI.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>/book/{id} @PathParam("id")</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>@QueryParam</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gets query parameter.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/book?desc="" @QueryParam("desc)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>@FormParam</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gets form parameter.</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>@MatrixParam</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get URI matrix parameter.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>/book;author=mkyong;country=malaysia</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>@CookieParam</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gets cookie param by name.</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>@HeaderParam</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gets header parameter by name.</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Valid HTTP method annotations provided by the spec are: <code>@GET</code>, <code>@POST</code>, <code>@PUT</code>, <code>@DELETE</code>, <code>@PATCH</code>, <code>@HEAD</code> and <code>@OPTIONS</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can create new annotations that bind to HTTP methods not defined by the spec.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Target({ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@HttpMethod("LOCK")
+public @interface LOCK {
+}
+
+@LOCK
+public void lockIt() {}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Injecting</strong></p>
+</div>
+<div class="paragraph">
+<p>Using <code>@Context</code> annotation to inject JAX-RS and Servlet information.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@GET
+public String getBase(@Context UriInfo uriInfo) {
+    return uriInfo.getBaseUri();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Possible injectable objects: <code>SecurityContext</code>, <code>Request</code>, <code>Application</code>, <code>Configuration</code>, <code>Providers</code>, <code>ResourceContext</code>, <code>ServletConfig</code>, <code>ServletContext</code>, <code>HttpServletRequest</code>, <code>HttpServletResponse</code>, <code>HttpHeaders</code>, <code>URiInfo</code>, <code>SseEventSink</code> and <code>Sse</code>.</p>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Quarkus Test Resource</summary>
+<div class="content">
+<div class="paragraph">
+<p><strong>Quarkus Test Resource</strong></p>
+</div>
+<div class="paragraph">
+<p>You can execute some logic before the first test run (<code>start</code>) and execute some logic at the end of the test suite (<code>stop</code>).</p>
+</div>
+<div class="paragraph">
+<p>You need to create a class implementing <code>QuarkusTestResourceLifecycleManager</code> interface and register it in the test via <code>@QuarkusTestResource</code> annotation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class MyCustomTestResource
+    implements QuarkusTestResourceLifecycleManager {
+
+    @Override
+    public Map&lt;String, String&gt; start() {
+        // return system properties that
+        // should be set for the running test
+        return Collections.emptyMap();
+    }
+
+    @Override
+    public synchronized void stop() {
+    }
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Returning new system properties implies running parallel tests in different JVMs.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>And the usage:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@QuarkusTestResource(MyCustomTestResource.class)
+public class MyTest {
+}</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">H2 Quarkus Test Resource</summary>
+<div class="content">
+<div class="paragraph">
+<p><strong>Testing</strong></p>
+</div>
+<div class="paragraph">
+<p>There is a Quarkus Test Resource that starts and stops H2 server before and after test suite.</p>
+</div>
+<div class="paragraph">
+<p>Register next dependency <code>io.quarkus:quarkus-test-h2:test</code>.</p>
+</div>
+<div class="paragraph">
+<p>And annotate the test:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@QuarkusTestResource(H2DatabaseTestResource.class)
+public class FlywayTestResources {
+}</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Flushing</summary>
+<div class="content">
+<div class="paragraph">
+<p><strong>Flushing</strong></p>
+</div>
+<div class="paragraph">
+<p>You can force flush operation by calling <code>.flush()</code> or <code>.persistAndFlush()</code> to make it in a single call.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+This flush is less efficient and you still need to commit transaction.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</details>
+</div>
+<div class="sect2">
 <h3 id="_version_0_17_0"><a class="anchor" href="#_version_0_17_0"></a><a class="link" href="#_version_0_17_0">Version 0.17.0</a></h3>
 <details>
 <summary class="title">Hibernate Search</summary>
@@ -998,7 +1239,7 @@ public class DatabaseHealthCheck {
 <summary class="title">Mock annotaiton</summary>
 <div class="content">
 <div class="paragraph">
-<p>A stereotype annotation <code>io.quarkus.test.Mock</code> is provided  declaring <code>@Alternative</code>, <code>@Priority(1)</code> and <code>@Dependent</code>.</p>
+<p>A stereotype annotation <code>io.quarkus.test.Mock</code> is provided declaring <code>@Alternative</code>, <code>@Priority(1)</code> and <code>@Dependent</code>.</p>
 </div>
 </div>
 </details>
@@ -3090,6 +3331,7 @@ public void testLambda() {
 <ul class="sectlevel1">
 <li><a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a>
 <ul class="sectlevel2">
+<li><a href="#_version_0_18_0">Version 0.18.0</a></li>
 <li><a href="#_version_0_17_0">Version 0.17.0</a></li>
 <li><a href="#_version_0_16_0">Version 0.16.0</a></li>
 <li><a href="#_version_0_15_0">Version 0.15.0</a></li>
@@ -3117,11 +3359,12 @@ public void testLambda() {
 <li><a href="#_reactive_postgresql_client">Reactive PostgreSQL Client</a></li>
 <li><a href="#_jwt">JWT</a></li>
 <li><a href="#_keycloak">Keycloak</a></li>
-<li><a href="#_http_filters">HTTP Filters</a></li>
+<li><a href="#_jax_rs">JAX-RS</a></li>
 <li><a href="#_cors_filter">CORS Filter</a></li>
 <li><a href="#_fault_tolerance">Fault Tolerance</a></li>
 <li><a href="#_observability">Observability</a></li>
 <li><a href="#_cloud">Cloud</a></li>
+<li><a href="#_kubernetes_client">Kubernetes Client</a></li>
 <li><a href="#_amazon_lambda">Amazon Lambda</a></li>
 <li><a href="#_apache_camel">Apache Camel</a></li>
 <li><a href="#_websockets">WebSockets</a></li>
@@ -3949,6 +4192,55 @@ URL url;</code></pre>
 </div>
 </div>
 <div class="paragraph">
+<p><strong>Quarkus Test Resource</strong></p>
+</div>
+<div class="paragraph">
+<p>You can execute some logic before the first test run (<code>start</code>) and execute some logic at the end of the test suite (<code>stop</code>).</p>
+</div>
+<div class="paragraph">
+<p>You need to create a class implementing <code>QuarkusTestResourceLifecycleManager</code> interface and register it in the test via <code>@QuarkusTestResource</code> annotation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class MyCustomTestResource
+    implements QuarkusTestResourceLifecycleManager {
+
+    @Override
+    public Map&lt;String, String&gt; start() {
+        // return system properties that
+        // should be set for the running test
+        return Collections.emptyMap();
+    }
+
+    @Override
+    public synchronized void stop() {
+    }
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Returning new system properties implies running parallel tests in different JVMs.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>And the usage:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@QuarkusTestResource(MyCustomTestResource.class)
+public class MyTest {
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p><strong>Mocking</strong></p>
 </div>
 <div class="paragraph">
@@ -3975,7 +4267,7 @@ This does not work when using native image testing.
 </table>
 </div>
 <div class="paragraph">
-<p>A stereotype annotation <code>io.quarkus.test.Mock</code> is provided  declaring <code>@Alternative</code>, <code>@Priority(1)</code> and <code>@Dependent</code>.</p>
+<p>A stereotype annotation <code>io.quarkus.test.Mock</code> is provided declaring <code>@Alternative</code>, <code>@Priority(1)</code> and <code>@Dependent</code>.</p>
 </div>
 <div class="paragraph">
 <p><strong>Native Testing</strong></p>
@@ -4274,6 +4566,43 @@ public class DeveloperRepository
    public Person findByName(String name){
      return find("name", name).firstResult();
    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Flushing</strong></p>
+</div>
+<div class="paragraph">
+<p>You can force flush operation by calling <code>.flush()</code> or <code>.persistAndFlush()</code> to make it in a single call.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+This flush is less efficient and you still need to commit transaction.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>Testing</strong></p>
+</div>
+<div class="paragraph">
+<p>There is a Quarkus Test Resource that starts and stops H2 server before and after test suite.</p>
+</div>
+<div class="paragraph">
+<p>Register next dependency <code>io.quarkus:quarkus-test-h2:test</code>.</p>
+</div>
+<div class="paragraph">
+<p>And annotate the test:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@QuarkusTestResource(H2DatabaseTestResource.class)
+public class FlywayTestResources {
 }</code></pre>
 </div>
 </div>
@@ -5394,7 +5723,142 @@ you can also use <code>src/main/resources/keycloak.json</code> standard Keycloak
 <div style="page-break-after: always;"></div>
 </div>
 <div class="sect2">
-<h3 id="_http_filters"><a class="anchor" href="#_http_filters"></a><a class="link" href="#_http_filters">HTTP Filters</a></h3>
+<h3 id="_jax_rs"><a class="anchor" href="#_jax_rs"></a><a class="link" href="#_jax_rs">JAX-RS</a></h3>
+<div class="paragraph">
+<p>Quarkus uses JAX-RS to define <a href="https://github.com/jax-rs">REST-ful web APIs</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Path("/book")
+public class BookResource {
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List&lt;Book&gt; getAllBooks() {}
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createBook(Book book) {}
+
+    @DELETE
+    @Path("{isbn}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteBook(
+        @PathParam("isbn") String isbn) {}
+
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("search")
+    public Response searchBook(
+        @QueryParam("description") String description) {}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To get information from request:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>@PathParam</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gets content from request URI.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>/book/{id} @PathParam("id")</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>@QueryParam</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gets query parameter.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/book?desc="" @QueryParam("desc)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>@FormParam</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gets form parameter.</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>@MatrixParam</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get URI matrix parameter.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>/book;author=mkyong;country=malaysia</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>@CookieParam</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gets cookie param by name.</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>@HeaderParam</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gets header parameter by name.</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Valid HTTP method annotations provided by the spec are: <code>@GET</code>, <code>@POST</code>, <code>@PUT</code>, <code>@DELETE</code>, <code>@PATCH</code>, <code>@HEAD</code> and <code>@OPTIONS</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can create new annotations that bind to HTTP methods not defined by the spec.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Target({ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@HttpMethod("LOCK")
+public @interface LOCK {
+}
+
+@LOCK
+public void lockIt() {}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Injecting</strong></p>
+</div>
+<div class="paragraph">
+<p>Using <code>@Context</code> annotation to inject JAX-RS and Servlet information.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@GET
+public String getBase(@Context UriInfo uriInfo) {
+    return uriInfo.getBaseUri();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Possible injectable objects: <code>SecurityContext</code>, <code>Request</code>, <code>Application</code>, <code>Configuration</code>, <code>Providers</code>, <code>ResourceContext</code>, <code>ServletConfig</code>, <code>ServletContext</code>, <code>HttpServletRequest</code>, <code>HttpServletResponse</code>, <code>HttpHeaders</code>, <code>URiInfo</code>, <code>SseEventSink</code> and <code>Sse</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>HTTP Filters</strong></p>
+</div>
 <div class="paragraph">
 <p>HTTP request and response can be intercepted to manipulate the metadata (ie headers, parameters, media type, &#8230;&#8203;) or abort a request.
 You only need to implement the next <code>ContainerRequestFilter</code> and <code>ContainerResponseFilter</code> JAX-RS interfaces respectively.</p>
@@ -6010,6 +6474,13 @@ docker run -i --rm -p 8080:8080 quarkus/getting-started</code></pre>
 </table>
 <div class="paragraph">
 <p>Generated resource is integrated with <a href="#_observability">MicroProfile Health annotations</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_kubernetes_client"><a class="anchor" href="#_kubernetes_client"></a><a class="link" href="#_kubernetes_client">Kubernetes Client</a></h3>
+<div class="paragraph">
+<div class="title">/mvnw quarkus:add-extension -Dextensions="quarkus-kubernetes-client"</div>
+<p>xxxxxxxxxxxxxxxxxxxxxxx</p>
 </div>
 </div>
 <div class="sect2">

@@ -604,7 +604,8 @@ public class MyCustomTestResource
 
     @Override
     public Map<String, String> start() {
-        // return system properties that should be set for the running test
+        // return system properties that 
+        // should be set for the running test
         return Collections.emptyMap();
     }
 
@@ -624,8 +625,6 @@ And the usage:
 public class MyTest {
 }
 ----
-
-QuarkusUnitTest xxxxxxxxxxxxxxxxxxxxx
 
 // end::update_4_2[]
 *Mocking* 

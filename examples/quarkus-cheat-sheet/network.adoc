@@ -77,7 +77,7 @@ public void lockIt() {}
 }
 ----
 
-*Injecting *
+*Injecting*
 
 Using `@Context` annotation to inject JAX-RS and Servlet information.
 
@@ -93,6 +93,7 @@ Possible injectable objects: `SecurityContext`, `Request`, `Application`, `Confi
 // end::update_4_1[]
 
 *HTTP Filters*
+
 // tag::update_3_3[]
 HTTP request and response can be intercepted to manipulate the metadata (ie headers, parameters, media type, ...) or abort a request.
 You only need to implement the next `ContainerRequestFilter` and `ContainerResponseFilter` JAX-RS interfaces respectively.

@@ -45,8 +45,57 @@ a|Project name
 Generated resource is integrated with <<Observability, MicroProfile Health annotations>>.
 
 == Kubernetes Client
+// tag::update_4_5[]
+Quarkus integrates with https://github.com/fabric8io/kubernetes-client[Fabric8 Kubernetes Client].
 
-xxxxxxxxxxxxxxxxxxxxxxx
+[source, terminal]
+----
+./mvnw quarkus:add-extension 
+    -Dextensions="quarkus-kubernetes-client"
+----
+
+IMPORTANT: Currently you need to develop a Kubernates Client producer by yourself, but this is gonna be improved in near future versions:
+
+[source, java]
+----
+@Dependent
+public class KubernetesClientProducer {
+
+    @Produces
+    public KubernetesClient kubernetesClient() {
+        Config config = new ConfigBuilder()
+            .withMasterUrl("https://mymaster.com")
+            .build();
+        return new DefaultKubernetesClient(config);
+    }
+}
+----
+
+And inject it on code:
+
+[source, java]
+----
+@Inject
+KubernetesClient client;
+
+ServiceList myServices = client.services().list();
+
+Service myservice = client.services()
+        .inNamespace("default")
+        .withName("myservice")
+        .get();
+
+CustomResourceDefinitionList crds = client
+        .customResourceDefinitions()
+        .list();
+
+dummyCRD = new CustomResourceDefinitionBuilder()
+        ...
+        .build()
+client.customResourceDefinitions()
+        .create(dummyCRD);
+----
+// end::update_4_5[]
 
 == Amazon Lambda
 // tag::update_1_10[]
