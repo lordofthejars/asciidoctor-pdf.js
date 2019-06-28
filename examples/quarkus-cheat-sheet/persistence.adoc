@@ -35,6 +35,58 @@ quarkus.datasource.password=developer
 quarkus.hibernate-orm.database.generation=update
 ----
 
+// tag::update_4_6[]
+List of datasource parameters.
+
+`quarkus.datasource` as prefix is skipped in the next table.
+
+|===
+|Parameter|Type
+
+a|`driver`
+a|`String`
+
+a|`url`
+a|`String`
+
+a|`username`
+a|`String`
+
+a|`password`
+a|`String`
+
+a|`min-size`
+a|`Integer`
+
+a|`max-size`
+a|`Integer`
+
+a|`initial-size`
+a|`Integer`
+
+a|`background-validation-interval`
+a|`java.time.Duration`
+
+a|`acquisition-timeout`
+a|`java.time.Duration`
+
+a|`leak-detection-interval`
+a|`java.time.Duration`
+
+a|`idle-removal-interval`
+a|`java.time.Duration`
+
+a|`transaction-isolation-level`
+a|`io.quarkus.agroal.runtime.TransactionIsolationLevel`
+
+a|`enable-metrics`
+a|`Boolean`
+
+a|`xa`
+a|`Boolean`
+|===
+// end::update_4_6[]
+
 Database operations:
 
 [source, java]

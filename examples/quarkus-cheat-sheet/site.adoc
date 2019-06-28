@@ -47,6 +47,12 @@ include::persistence.adoc[tag=update_4_4]
 include::cloud.adoc[tag=update_4_5]
 ====
 
+.DataSource Properties
+[%collapsible]
+====
+include::persistence.adoc[tag=update_4_6]
+====
+
 === Version 0.17.0
 
 .Hibernate Search
