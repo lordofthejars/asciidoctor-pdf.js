@@ -464,6 +464,42 @@ Also focused on developer experience, making things just work with little to no 
 <h2 id="whatsnew"><a class="anchor" href="#whatsnew"></a><a class="link" href="#whatsnew">What&#8217;s New in Cheat-Sheet</a></h2>
 <div class="sectionbody">
 <div class="sect2">
+<h3 id="_version_0_19_0"><a class="anchor" href="#_version_0_19_0"></a><a class="link" href="#_version_0_19_0">Version 0.19.0</a></h3>
+<details>
+<summary class="title">Exception Mapper</summary>
+<div class="content">
+<div class="paragraph">
+<p>You can map exceptions to produce a custom output by implementing <code>ExceptionMapper</code> interface:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Provider
+public class ErrorMapper
+    implements ExceptionMapper&lt;Exception&gt; {
+
+    @Override
+    public Response toResponse(Exception exception) {
+        int code = 500;
+        if (exception instanceof WebApplicationException) {
+            code = ((WebApplicationException) exception)
+                .getResponse().getStatus();
+        }
+        return Response.status(code)
+            .entity(
+                Json.createObjectBuilder()
+                .add("error", exception.getMessage())
+                .add("code", code)
+                .build()
+            )
+            .build();
+        }
+    }</code></pre>
+</div>
+</div>
+</div>
+</details>
+</div>
+<div class="sect2">
 <h3 id="_version_0_18_0"><a class="anchor" href="#_version_0_18_0"></a><a class="link" href="#_version_0_18_0">Version 0.18.0</a></h3>
 <details>
 <summary class="title">JAX-RS</summary>
@@ -3527,6 +3563,7 @@ public void testLambda() {
 <ul class="sectlevel1">
 <li><a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a>
 <ul class="sectlevel2">
+<li><a href="#_version_0_19_0">Version 0.19.0</a></li>
 <li><a href="#_version_0_18_0">Version 0.18.0</a></li>
 <li><a href="#_version_0_17_0">Version 0.17.0</a></li>
 <li><a href="#_version_0_16_0">Version 0.16.0</a></li>
@@ -6210,6 +6247,35 @@ public class LoggingFilter
     }
 
 }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Exception Mapper</strong>
+You can map exceptions to produce a custom output by implementing <code>ExceptionMapper</code> interface:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Provider
+public class ErrorMapper
+    implements ExceptionMapper&lt;Exception&gt; {
+
+    @Override
+    public Response toResponse(Exception exception) {
+        int code = 500;
+        if (exception instanceof WebApplicationException) {
+            code = ((WebApplicationException) exception)
+                .getResponse().getStatus();
+        }
+        return Response.status(code)
+            .entity(
+                Json.createObjectBuilder()
+                .add("error", exception.getMessage())
+                .add("code", code)
+                .build()
+            )
+            .build();
+        }
+    }</code></pre>
 </div>
 </div>
 </div>

@@ -15,6 +15,14 @@ In this page you can either read what has been added in each version of the chea
 [[whatsnew]]
 == What's New in Cheat-Sheet
 
+=== Version 0.19.0
+
+.Exception Mapper
+[%collapsible]
+====
+include::network.adoc[tag=update_5_1]
+====
+
 === Version 0.18.0
 
 .JAX-RS

@@ -123,6 +123,36 @@ public class LoggingFilter
 ----
 // end::update_3_3[]
 
+*Exception Mapper*
+// tag::update_5_1[]
+You can map exceptions to produce a custom output by implementing `ExceptionMapper` interface:
+
+[source, java]
+----
+@Provider
+public class ErrorMapper 
+    implements ExceptionMapper<Exception> {
+
+    @Override
+    public Response toResponse(Exception exception) {
+        int code = 500;
+        if (exception instanceof WebApplicationException) {
+            code = ((WebApplicationException) exception)
+                .getResponse().getStatus();
+        }
+        return Response.status(code)
+            .entity(
+                Json.createObjectBuilder()
+                .add("error", exception.getMessage())
+                .add("code", code)
+                .build()
+            )
+            .build();
+        }
+    }
+----
+// end::update_5_1[]
+
 == CORS Filter
 // tag::update_2_11[]
 Quarkus comes with a CORS filter that can be enabled via configuration:

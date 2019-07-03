@@ -2034,6 +2034,33 @@ public class LoggingFilter
 }</code></pre>
 </div>
 </div>
+<p class=""><strong>Exception Mapper</strong>
+You can map exceptions to produce a custom output by implementing <code>ExceptionMapper</code> interface:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Provider
+public class ErrorMapper
+    implements ExceptionMapper&lt;Exception&gt; {
+
+    @Override
+    public Response toResponse(Exception exception) {
+        int code = 500;
+        if (exception instanceof WebApplicationException) {
+            code = ((WebApplicationException) exception)
+                .getResponse().getStatus();
+        }
+        return Response.status(code)
+            .entity(
+                Json.createObjectBuilder()
+                .add("error", exception.getMessage())
+                .add("code", code)
+                .build()
+            )
+            .build();
+        }
+    }</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
