@@ -87,6 +87,68 @@ a|`Boolean`
 |===
 // end::update_4_6[]
 
+// tag::update_5_3[]
+Hibernate configuration properties.
+Prefix `quarkus.hibernate-orm` is skipped.
+
+|===
+|Parameter|Description|Default
+
+a|`dialect`
+|Class name of the Hibernate ORM dialect.
+a|Not necessary to set.
+
+a|`dialect.storage-engine`
+|The storage engine when the dialect supports multiple storage engines.
+a|Not necessary to set.
+
+a|`sql-load-script`
+|Name of the file containing the SQL statements to execute when starts.
+a|`import.sql`
+
+a|`batch-fetch-size`
+|The size of the batches.
+a|-1 disabled.
+
+a|`query.query-plan-cache-max-size`
+|The maximum size of the query plan cache.
+a|
+
+a|`query.default-null-ordering`
+|
+a|
+
+a|
+|
+a|
+
+a|
+|
+a|
+
+a|
+|
+a|
+
+a|
+|
+a|
+
+a|
+|
+a|
+
+a|
+|
+a|
+
+a|
+|
+a|
+|===
+
+// end::update_5_3[]
+
 Database operations:
 
 [source, java]
@@ -225,6 +287,19 @@ public class DeveloperRepository
 }
 ----
 // end::update_2_12[]
+
+*EntityManager*
+// tag::update_5_2[]
+You can inject `EntityManager` in your classes:
+
+[source, java]
+----
+@Inject
+EntityManager em;
+
+em.persist(car);
+----
+// end::update_5_2[]
 
 *Flushing*
 

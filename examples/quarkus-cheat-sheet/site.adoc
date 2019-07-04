@@ -23,6 +23,12 @@ In this page you can either read what has been added in each version of the chea
 include::network.adoc[tag=update_5_1]
 ====
 
+.EntityManager Injection
+[%collapsible]
+====
+include::persistence.adoc[tag=update_5_2]
+====
+
 === Version 0.18.0
 
 .JAX-RS
