@@ -92,7 +92,7 @@ Hibernate configuration properties.
 Prefix `quarkus.hibernate-orm` is skipped.
 
 |===
-|Parameter|Description|Default
+|Parameter|Description|Values[Default]
 
 a|`dialect`
 |Class name of the Hibernate ORM dialect.
@@ -115,38 +115,53 @@ a|`query.query-plan-cache-max-size`
 a|
 
 a|`query.default-null-ordering`
-|
+a|Default precedence of null values in `ORDER BY`. `none`, `first`, `last`.
+a|[`none`], `first`, `last`.
+
+a|`database.generation`
+|Database schema is generation.
+a|[`none`], `create`, `drop-and-create`, `drop`, `update`.
+
+a|`database.generation.halt-on-error`
+|Stop on the first error when applying the schema.
+a|[`flase`], `true`
+
+a|`database.default-catalog`
+|Default catalog.
 a|
 
-a|
-|
-a|
-
-a|
-|
+a|`database.default-schema`
+|Default Schema.
 a|
 
-a|
-|
-a|
-
-a|
-|
+a|`database.charset`
+|Charset.
 a|
 
-a|
-|
-a|
-
-a|
-|
+a|`jdbc.timezone`
+|Time Zone JDBC driver.
 a|
 
+a|`jdbc.statement-fetch-size`
+|Number of rows fetched at a time.
 a|
-|
+
+a|`jdbc.statement-batch-size`
+|Number of updates sent at a time.
 a|
+
+a|`log.sql`
+|Show SQL logs
+a|[`false`], `true`
+
+a|`log.jdbc-warnings`
+|Collect and show JDBC warnings.
+a|[`false`], `true`
+
+a|`statistics`
+|Enable statiscs collection.
+a|[`false`], `true`
 |===
-
 // end::update_5_3[]
 
 Database operations:

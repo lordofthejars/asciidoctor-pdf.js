@@ -29,6 +29,12 @@ include::network.adoc[tag=update_5_1]
 include::persistence.adoc[tag=update_5_2]
 ====
 
+.Hibernate Configuration
+[%collapsible]
+====
+include::persistence.adoc[tag=update_5_3]
+====
+
 === Version 0.18.0
 
 .JAX-RS

@@ -498,6 +498,188 @@ public class ErrorMapper
 </div>
 </div>
 </details>
+<details>
+<summary class="title">EntityManager Injection</summary>
+<div class="content">
+<div class="paragraph">
+<p>You can inject <code>EntityManager</code> in your classes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+EntityManager em;
+
+em.persist(car);</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Hibernate Configuration</summary>
+<div class="content">
+<div class="paragraph">
+<p>Hibernate configuration properties.
+Prefix <code>quarkus.hibernate-orm</code> is skipped.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Values[Default]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>dialect</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class name of the Hibernate ORM dialect.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Not necessary to set.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>dialect.storage-engine</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The storage engine when the dialect supports multiple storage engines.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Not necessary to set.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>sql-load-script</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the file containing the SQL statements to execute when starts.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>import.sql</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>batch-fetch-size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The size of the batches.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>-1 disabled.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>query.query-plan-cache-max-size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The maximum size of the query plan cache.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>query.default-null-ordering</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Default precedence of null values in <code>ORDER BY</code>. <code>none</code>, <code>first</code>, <code>last</code>.</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>[<code>none</code>], <code>first</code>, <code>last</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>database.generation</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database schema is generation.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>[<code>none</code>], <code>create</code>, <code>drop-and-create</code>, <code>drop</code>, <code>update</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>database.generation.halt-on-error</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stop on the first error when applying the schema.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>[<code>flase</code>], <code>true</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>database.default-catalog</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default catalog.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>database.default-schema</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default Schema.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>database.charset</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Charset.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>jdbc.timezone</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time Zone JDBC driver.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>jdbc.statement-fetch-size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of rows fetched at a time.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>jdbc.statement-batch-size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of updates sent at a time.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>log.sql</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Show SQL logs</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>[<code>false</code>], <code>true</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>log.jdbc-warnings</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Collect and show JDBC warnings.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>[<code>false</code>], <code>true</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>statistics</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable statiscs collection.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>[<code>false</code>], <code>true</code></p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</details>
 </div>
 <div class="sect2">
 <h3 id="_version_0_18_0"><a class="anchor" href="#_version_0_18_0"></a><a class="link" href="#_version_0_18_0">Version 0.18.0</a></h3>
@@ -4681,6 +4863,167 @@ quarkus.hibernate-orm.database.generation=update</code></pre>
 </tbody>
 </table>
 <div class="paragraph">
+<p>Hibernate configuration properties.
+Prefix <code>quarkus.hibernate-orm</code> is skipped.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Values[Default]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>dialect</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class name of the Hibernate ORM dialect.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Not necessary to set.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>dialect.storage-engine</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The storage engine when the dialect supports multiple storage engines.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Not necessary to set.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>sql-load-script</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the file containing the SQL statements to execute when starts.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>import.sql</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>batch-fetch-size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The size of the batches.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>-1 disabled.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>query.query-plan-cache-max-size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The maximum size of the query plan cache.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>query.default-null-ordering</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Default precedence of null values in <code>ORDER BY</code>. <code>none</code>, <code>first</code>, <code>last</code>.</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>[<code>none</code>], <code>first</code>, <code>last</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>database.generation</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database schema is generation.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>[<code>none</code>], <code>create</code>, <code>drop-and-create</code>, <code>drop</code>, <code>update</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>database.generation.halt-on-error</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stop on the first error when applying the schema.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>[<code>flase</code>], <code>true</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>database.default-catalog</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default catalog.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>database.default-schema</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default Schema.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>database.charset</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Charset.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>jdbc.timezone</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time Zone JDBC driver.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>jdbc.statement-fetch-size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of rows fetched at a time.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>jdbc.statement-batch-size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of updates sent at a time.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>log.sql</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Show SQL logs</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>[<code>false</code>], <code>true</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>log.jdbc-warnings</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Collect and show JDBC warnings.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>[<code>false</code>], <code>true</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>statistics</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable statiscs collection.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>[<code>false</code>], <code>true</code></p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
 <p>Database operations:</p>
 </div>
 <div class="listingblock">
@@ -4929,6 +5272,18 @@ public class DeveloperRepository
      return find("name", name).firstResult();
    }
 }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>EntityManager</strong>
+You can inject <code>EntityManager</code> in your classes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+EntityManager em;
+
+em.persist(car);</code></pre>
 </div>
 </div>
 <div class="paragraph">
