@@ -680,6 +680,61 @@ Prefix <code>quarkus.hibernate-orm</code> is skipped.</p>
 </table>
 </div>
 </details>
+<details>
+<summary class="title">CDI Produces and Qualifiers</summary>
+<div class="content">
+<div class="paragraph">
+<p>You can also create factory of object by using <code>@javax.enterprise.inject.Produces</code> annotation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Produces
+@ApplicationScoped
+Message message() {
+    Message m = new Message();
+    m.setMsn("Hello");
+    return m;
+}
+
+@Inject
+Message msg;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Qualifiers</strong></p>
+</div>
+<div class="paragraph">
+<p>You can use qualifiers to return different implementations of same interface or to customize configuration of bean.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Qualifier
+@Retention(RUNTIME)
+@Target({TYPE, METHOD, FIELD, PARAMETER})
+public @interface Quote {
+    @Nonbinding String value();
+}
+
+@Produces
+@Quote("")
+Message message(InjectionPoint msg) {
+    Message m = new Message();
+    m.setMsn(
+        msg.getAnnotated()
+        .getAnnotation(Quote.class)
+        .value()
+    );
+
+    return m;
+}
+
+@Inject
+@Quote("Aloha Beach")
+Message message;</code></pre>
+</div>
+</div>
+</div>
+</details>
 </div>
 <div class="sect2">
 <h3 id="_version_0_18_0"><a class="anchor" href="#_version_0_18_0"></a><a class="link" href="#_version_0_18_0">Version 0.18.0</a></h3>
@@ -4118,6 +4173,57 @@ Quarkus is designed with Substrate VM in mind. For this reason, we encourage you
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p><strong>Produces</strong>
+You can also create factory of object by using <code>@javax.enterprise.inject.Produces</code> annotation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Produces
+@ApplicationScoped
+Message message() {
+    Message m = new Message();
+    m.setMsn("Hello");
+    return m;
+}
+
+@Inject
+Message msg;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Qualifiers</strong></p>
+</div>
+<div class="paragraph">
+<p>You can use qualifiers to return different implementations of same interface or to customize configuration of bean.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Qualifier
+@Retention(RUNTIME)
+@Target({TYPE, METHOD, FIELD, PARAMETER})
+public @interface Quote {
+    @Nonbinding String value();
+}
+
+@Produces
+@Quote("")
+Message message(InjectionPoint msg) {
+    Message m = new Message();
+    m.setMsn(
+        msg.getAnnotated()
+        .getAnnotation(Quote.class)
+        .value()
+    );
+
+    return m;
+}
+
+@Inject
+@Quote("Aloha Beach")
+Message message;</code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">

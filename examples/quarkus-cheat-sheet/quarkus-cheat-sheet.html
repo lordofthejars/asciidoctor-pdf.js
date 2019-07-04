@@ -296,6 +296,51 @@ Quarkus is designed with Substrate VM in mind. For this reason, we encourage you
 </tr>
 </table>
 </div>
+<p class=""><strong>Produces</strong>
+You can also create factory of object by using <code>@javax.enterprise.inject.Produces</code> annotation.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Produces
+@ApplicationScoped
+Message message() {
+    Message m = new Message();
+    m.setMsn("Hello");
+    return m;
+}
+
+@Inject
+Message msg;</code></pre>
+</div>
+</div>
+<p class=""><strong>Qualifiers</strong></p>
+<p class="">You can use qualifiers to return different implementations of same interface or to customize configuration of bean.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Qualifier
+@Retention(RUNTIME)
+@Target({TYPE, METHOD, FIELD, PARAMETER})
+public @interface Quote {
+    @Nonbinding String value();
+}
+
+@Produces
+@Quote("")
+Message message(InjectionPoint msg) {
+    Message m = new Message();
+    m.setMsn(
+        msg.getAnnotated()
+        .getAnnotation(Quote.class)
+        .value()
+    );
+
+    return m;
+}
+
+@Inject
+@Quote("Aloha Beach")
+Message message;</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">

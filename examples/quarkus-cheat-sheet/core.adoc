@@ -238,6 +238,57 @@ GreetingService greetingService;
 
 IMPORTANT: Quarkus is designed with Substrate VM in mind. For this reason, we encourage you to use _package-private_ scope instead of _private_.
 
+
+*Produces*
+// tag::update_5_4[]
+You can also create factory of object by using `@javax.enterprise.inject.Produces` annotation.
+
+[source, java]
+----
+@Produces
+@ApplicationScoped
+Message message() {
+    Message m = new Message();
+    m.setMsn("Hello");
+    return m;
+}
+
+@Inject
+Message msg;
+----
+
+*Qualifiers*
+
+You can use qualifiers to return different implementations of same interface or to customize configuration of bean.
+
+[source, java]
+----
+@Qualifier
+@Retention(RUNTIME)
+@Target({TYPE, METHOD, FIELD, PARAMETER})
+public @interface Quote {
+    @Nonbinding String value();
+}
+
+@Produces
+@Quote("")
+Message message(InjectionPoint msg) {
+    Message m = new Message();
+    m.setMsn(
+        msg.getAnnotated()
+        .getAnnotation(Quote.class)
+        .value()
+    );
+
+    return m;
+}
+
+@Inject
+@Quote("Aloha Beach")
+Message message;
+----
+// end::update_5_4[]
+
 == JSON Marshalling/Unmarshalling
 
 To work with `JSON-B` you need to add a dependency:

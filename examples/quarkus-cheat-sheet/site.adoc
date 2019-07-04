@@ -35,6 +35,12 @@ include::persistence.adoc[tag=update_5_2]
 include::persistence.adoc[tag=update_5_3]
 ====
 
+.CDI Produces and Qualifiers
+[%collapsible]
+====
+include::core.adoc[tag=update_5_4]
+====
+
 === Version 0.18.0
 
 .JAX-RS
