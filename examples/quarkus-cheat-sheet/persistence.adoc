@@ -405,6 +405,18 @@ a|`V`
 a|`flyway.repeatable-sql-migration-prefix`
 a|`R`
 |Prefix for repeatable SQL migrations.
+
+a|`flyway.baseline-on-migrate`
+a|
+|Only migrations above *baseline-version* will then be applied.
+
+a|`flyway.baseline-version`
+a|Version to tag an existing schema with when executing baseline.
+|1
+
+a|`flyway.baseline-description`
+a|`Flyway Baseline`
+|Description to tag an existing schema with when executing baseline
 |===
 // end::update_1_7[]
 
