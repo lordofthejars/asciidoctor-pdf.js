@@ -41,6 +41,12 @@ include::persistence.adoc[tag=update_5_3]
 include::core.adoc[tag=update_5_4]
 ====
 
+.Tests and Interceptors
+[%collapsible]
+====
+include::core.adoc[tag=update_5_5]
+====
+
 === Version 0.18.0
 
 .JAX-RS
