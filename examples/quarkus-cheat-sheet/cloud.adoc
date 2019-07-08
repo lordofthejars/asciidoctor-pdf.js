@@ -20,7 +20,7 @@ To configure native application, you can create a `config` directory at the same
 
 *Kubernetes*
 
-Quarks can use https://github.com/ap4k/ap4k[ap4k] to generate Kubernetes resources.
+Quarks can use https://github.com/dekorateio/dekorate[Dekorate] to generate Kubernetes resources.
 
 [source, bash]
 ----
