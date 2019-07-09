@@ -46,7 +46,7 @@ Generated resource is integrated with <<Observability, MicroProfile Health annot
 
 == Kubernetes Client
 // tag::update_4_5[]
-Quarkus integrates with https://github.com/fabric8io/kubernetes-client[Fabric8 Kubernetes Client].
+Quarkus integrates with https://github.com/fabric8io/kubernetes-client[Fabric8 Kubernetes Client, window="_blank"].
 
 [source, terminal]
 ----

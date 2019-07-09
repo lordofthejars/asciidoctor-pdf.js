@@ -1,6 +1,6 @@
 == Reactive Programming
 
-Quarkus implements https://github.com/eclipse/microprofile-reactive-streams-operators[MicroProfile Reactive spec] and uses RXJava2 to provide reactive programming model.
+Quarkus implements https://github.com/eclipse/microprofile-reactive-streams-operators[MicroProfile Reactive spec, window="_blank"] and uses RXJava2 to provide reactive programming model.
 
 [source, bash]
 ----
@@ -43,7 +43,7 @@ public Publisher<String> publishers() {
 
 == Reactive Messaging
 // tag::update_1_4[]
-Quarkus relies on MicroProfile https://github.com/eclipse/microprofile-reactive-messaging[Reactive Messaging spec] to implement reactive messaging streams.
+Quarkus relies on MicroProfile https://github.com/eclipse/microprofile-reactive-messaging[Reactive Messaging spec, window="_blank"] to implement reactive messaging streams.
 
 [source, bash]
 ----
@@ -188,7 +188,7 @@ mp.messaging.incoming.prices.value.deserializer=
     org.apache.kafka.common.serialization.IntegerDeserializer
 ----
 
-A complete list of supported properties are in Kafka site. For the https://kafka.apache.org/documentation/#producerconfigs[producer] and for https://kafka.apache.org/documentation/#consumerconfigs[consumer]
+A complete list of supported properties are in Kafka site. For the https://kafka.apache.org/documentation/#producerconfigs[producer, window="_blank"] and for https://kafka.apache.org/documentation/#consumerconfigs[consumer, window="_blank"]
 
 _JSON-B Serializer/Deserializer_
 
@@ -251,7 +251,7 @@ mp.messaging.incoming.prices.durable=
     true
 ----
 
-A complete list of supported properties for https://smallrye.io/smallrye-reactive-messaging/#_interacting_using_amqp[AMQP].
+A complete list of supported properties for https://smallrye.io/smallrye-reactive-messaging/#_interacting_using_amqp[AMQP, window="_blank"].
 
 *MQTT*
 

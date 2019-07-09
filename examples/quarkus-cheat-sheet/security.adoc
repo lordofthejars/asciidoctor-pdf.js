@@ -1,6 +1,6 @@
 == JWT
 // tag::update_1_5[]
-Quarkus implements https://github.com/eclipse/microprofile-jwt-auth[MicroProfile JWT RBAC spec].
+Quarkus implements https://github.com/eclipse/microprofile-jwt-auth[MicroProfile JWT RBAC spec, window="_blank"].
 
 [source, bash]
 ----
@@ -100,7 +100,7 @@ JWT `groups` claim is directly mapped to roles to be used in security annotation
 
 == Keycloak
 // tag::update_1_9[]
-Quarkus can use https://www.keycloak.org/[Keycloak] to protect resources using bearer token issued by Keycloak server.
+Quarkus can use https://www.keycloak.org/[Keycloak, window="_blank"] to protect resources using bearer token issued by Keycloak server.
 
 [source, bash]
 ----
@@ -139,7 +139,7 @@ quarkus.keycloak.policy-enforcer.enable=true
 quarkus.keycloak.policy-enforcer.enforcement-mode=PERMISSIVE
 ----
 
-You can see all possible https://www.keycloak.org/docs/latest/securing_apps/index.html#_java_adapter_config[Configuration parameters here].
+You can see all possible https://www.keycloak.org/docs/latest/securing_apps/index.html#_java_adapter_config[Configuration parameters here, window="_blank"].
 
 TIP: you can also use `src/main/resources/keycloak.json` standard Keycloak configuration file.
 // end::update_1_9[]

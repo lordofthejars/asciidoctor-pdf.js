@@ -1,6 +1,6 @@
 == Apache Camel
 // tag::update_2_1[]
-Quarkus integrates wih https://camel.apache.org[Apache Camel].
+Quarkus integrates wih https://camel.apache.org[Apache Camel, window="_blank"].
 
 [source, bash]
 ----
@@ -123,7 +123,7 @@ public class ChatSocket {
 
 == OpenAPI
 // tag::update_2_3[]
-Quarkus can expose its API description as https://swagger.io/specification/[OpenAPI] spec and test it using https://swagger.io/tools/swagger-ui/[Swagger UI].
+Quarkus can expose its API description as https://swagger.io/specification/[OpenAPI, window="_blank"] spec and test it using https://swagger.io/tools/swagger-ui/[Swagger UI, window="_blank"].
 
 [source, bash]
 ----
@@ -346,7 +346,7 @@ morning.check.cron.expr=0 15 10 * * ?
 
 == Kogito
 // tag::update_3_9[]
-Quarkus integrates with http://www.kiegroup.org/[Kogito], a next-generation business automation toolkit from Drools and jBPM projects for adding business automation capabilities.
+Quarkus integrates with http://www.kiegroup.org/[Kogito, window="_blank"], a next-generation business automation toolkit from Drools and jBPM projects for adding business automation capabilities.
 
 To start using it you only need to add the next extension:
 

@@ -2,6 +2,7 @@
 :version: 0.18.0
 :source-highlighter: highlightjs
 :sectlinks:
+:linkattrs:
 :sectanchors:
 :toc: macro
 :nofooter:

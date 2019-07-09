@@ -65,7 +65,7 @@ public class ApplicationLifecycle {
 
 == Adding Configuration Parameters
 
-To add configuration to your application, Quarkus relies on MicroProfile Config spec (https://github.com/eclipse/microprofile-config).
+To add configuration to your application, Quarkus relies on https://github.com/eclipse/microprofile-config[MicroProfile Config, window="_blank"] spec.
 
 [source, java]
 ----
@@ -215,7 +215,7 @@ com.acme.config.CustomInstantConverter
 == Injection
 
 Quarkus is based on CDI 2.0 to implement injection of code.
-It is not fully supported and only a subset of the https://quarkus.io/guides/cdi-reference[specification is implemented].
+It is not fully supported and only a subset of the https://quarkus.io/guides/cdi-reference[specification is implemented, window="_blank"].
 
 [source, java]
 ----
@@ -336,7 +336,7 @@ public Response create(Sauce sauce) {
 
 == Validator
 
-Quarkus uses https://hibernate.org/validator/[Hibernate Validator] to validate input/output of REST services and business services using Bean validation spec.
+Quarkus uses https://hibernate.org/validator/[Hibernate Validator, window="_blank"] to validate input/output of REST services and business services using Bean validation spec.
 
 [source, bash]
 ----
@@ -493,7 +493,7 @@ a|Default minimum level.
 
 == Rest Client
 
-Quarkus implements https://github.com/eclipse/microprofile-rest-client[MicroProfile Rest Client] spec:
+Quarkus implements https://github.com/eclipse/microprofile-rest-client[MicroProfile Rest Client, window="_blank"] spec:
 
 [source, bash]
 ----
@@ -713,7 +713,7 @@ public @interface TransactionalQuarkusTest {
 @TransactionalQuarkusTest
 public class TestStereotypeTestCase {}
 ----
-// end::end::update_5_5[]
+// end::update_5_5[]
 
 *Native Testing*
 

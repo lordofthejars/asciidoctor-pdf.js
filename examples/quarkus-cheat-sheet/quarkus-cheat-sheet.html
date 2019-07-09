@@ -107,7 +107,7 @@ public class ApplicationLifecycle {
 <div class="sect1">
 <h2 id="_adding_configuration_parameters"><a class="anchor" href="#_adding_configuration_parameters"></a><a class="link" href="#_adding_configuration_parameters">Adding Configuration Parameters</a></h2>
 <div class="sectionbody">
-<p class="">To add configuration to your application, Quarkus relies on MicroProfile Config spec (<a href="https://github.com/eclipse/microprofile-config" class="bare">https://github.com/eclipse/microprofile-config</a>).</p>
+<p class="">To add configuration to your application, Quarkus relies on <a href="https://github.com/eclipse/microprofile-config" target="_blank" rel="noopener">MicroProfile Config</a> spec.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperty(name = "greetings.message")
@@ -265,7 +265,7 @@ Create a file <code>/META-INF/services/org.eclipse.microprofile.config.spi.Conve
 <h2 id="_injection"><a class="anchor" href="#_injection"></a><a class="link" href="#_injection">Injection</a></h2>
 <div class="sectionbody">
 <p class="">Quarkus is based on CDI 2.0 to implement injection of code.
-It is not fully supported and only a subset of the <a href="https://quarkus.io/guides/cdi-reference">specification is implemented</a>.</p>
+It is not fully supported and only a subset of the <a href="https://quarkus.io/guides/cdi-reference" target="_blank" rel="noopener">specification is implemented</a>.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ApplicationScoped
@@ -390,7 +390,7 @@ public Response create(Sauce sauce) {
 <div class="sect1">
 <h2 id="_validator"><a class="anchor" href="#_validator"></a><a class="link" href="#_validator">Validator</a></h2>
 <div class="sectionbody">
-<p class="">Quarkus uses <a href="https://hibernate.org/validator/">Hibernate Validator</a> to validate input/output of REST services and business services using Bean validation spec.</p>
+<p class="">Quarkus uses <a href="https://hibernate.org/validator/" target="_blank" rel="noopener">Hibernate Validator</a> to validate input/output of REST services and business services using Bean validation spec.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
@@ -573,7 +573,7 @@ quarkus.log.category."com.lordofthejars".level=DEBUG</code></pre>
 <div class="sect1">
 <h2 id="_rest_client"><a class="anchor" href="#_rest_client"></a><a class="link" href="#_rest_client">Rest Client</a></h2>
 <div class="sectionbody">
-<p class="">Quarkus implements <a href="https://github.com/eclipse/microprofile-rest-client">MicroProfile Rest Client</a> spec:</p>
+<p class="">Quarkus implements <a href="https://github.com/eclipse/microprofile-rest-client" target="_blank" rel="noopener">MicroProfile Rest Client</a> spec:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
@@ -780,6 +780,22 @@ This does not work when using native image testing.
 </div>
 <p class="">A stereotype annotation <code>io.quarkus.test.Mock</code> is provided declaring <code>@Alternative</code>, <code>@Priority(1)</code> and <code>@Dependent</code>.</p>
 <div class="page-break"></div>
+<p class=""><strong>Interceptors</strong>
+Tests are actually full CDI beans, so you can apply CDI interceptors:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@QuarkusTest
+@Stereotype
+@Transactional
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface TransactionalQuarkusTest {
+}
+
+@TransactionalQuarkusTest
+public class TestStereotypeTestCase {}</code></pre>
+</div>
+</div>
 <p class=""><strong>Native Testing</strong></p>
 <p class="">To test native executables annotate the test with <code>@SubstrateTest</code>.</p>
 <div class="page-break"></div>
@@ -1272,6 +1288,21 @@ flyway.migrate();</code></pre>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>R</code></p></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Prefix for repeatable SQL migrations.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>flyway.baseline-on-migrate</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Only migrations above <strong>baseline-version</strong> will then be applied.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>flyway.baseline-version</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Version to tag an existing schema with when executing baseline.</p></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>flyway.baseline-description</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>Flyway Baseline</code></p></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Description to tag an existing schema with when executing baseline</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -1541,7 +1572,7 @@ quarkus.hibernate-search.elasticsearch.
 <div class="sect1">
 <h2 id="_reactive_programming"><a class="anchor" href="#_reactive_programming"></a><a class="link" href="#_reactive_programming">Reactive Programming</a></h2>
 <div class="sectionbody">
-<p class="">Quarkus implements <a href="https://github.com/eclipse/microprofile-reactive-streams-operators">MicroProfile Reactive spec</a> and uses RXJava2 to provide reactive programming model.</p>
+<p class="">Quarkus implements <a href="https://github.com/eclipse/microprofile-reactive-streams-operators" target="_blank" rel="noopener">MicroProfile Reactive spec</a> and uses RXJava2 to provide reactive programming model.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
@@ -1584,7 +1615,7 @@ public Publisher&lt;String&gt; publishers() {
 <div class="sect1">
 <h2 id="_reactive_messaging"><a class="anchor" href="#_reactive_messaging"></a><a class="link" href="#_reactive_messaging">Reactive Messaging</a></h2>
 <div class="sectionbody">
-<p class="">Quarkus relies on MicroProfile <a href="https://github.com/eclipse/microprofile-reactive-messaging">Reactive Messaging spec</a> to implement reactive messaging streams.</p>
+<p class="">Quarkus relies on MicroProfile <a href="https://github.com/eclipse/microprofile-reactive-messaging" target="_blank" rel="noopener">Reactive Messaging spec</a> to implement reactive messaging streams.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn quarkus:add-extension
@@ -1708,7 +1739,7 @@ mp.messaging.incoming.prices.value.deserializer=
     org.apache.kafka.common.serialization.IntegerDeserializer</code></pre>
 </div>
 </div>
-<p class="">A complete list of supported properties are in Kafka site. For the <a href="https://kafka.apache.org/documentation/#producerconfigs">producer</a> and for <a href="https://kafka.apache.org/documentation/#consumerconfigs">consumer</a></p>
+<p class="">A complete list of supported properties are in Kafka site. For the <a href="https://kafka.apache.org/documentation/#producerconfigs" target="_blank" rel="noopener">producer</a> and for <a href="https://kafka.apache.org/documentation/#consumerconfigs" target="_blank" rel="noopener">consumer</a></p>
 <p class=""><em>JSON-B Serializer/Deserializer</em></p>
 <p class="">You can use JSON-B to serialize/deserialize objects.</p>
 <div class="listingblock">
@@ -1761,7 +1792,7 @@ mp.messaging.incoming.prices.durable=
     true</code></pre>
 </div>
 </div>
-<p class="">A complete list of supported properties for <a href="https://smallrye.io/smallrye-reactive-messaging/#_interacting_using_amqp">AMQP</a>.</p>
+<p class="">A complete list of supported properties for <a href="https://smallrye.io/smallrye-reactive-messaging/#_interacting_using_amqp" target="_blank" rel="noopener">AMQP</a>.</p>
 <p class=""><strong>MQTT</strong></p>
 <p class="">To integrate with MQTT you need to add next extensions:</p>
 <div class="listingblock">
@@ -1888,7 +1919,7 @@ CompletionStage&lt;JsonArray&gt; =
 <div class="sect1">
 <h2 id="_jwt"><a class="anchor" href="#_jwt"></a><a class="link" href="#_jwt">JWT</a></h2>
 <div class="sectionbody">
-<p class="">Quarkus implements <a href="https://github.com/eclipse/microprofile-jwt-auth">MicroProfile JWT RBAC spec</a>.</p>
+<p class="">Quarkus implements <a href="https://github.com/eclipse/microprofile-jwt-auth" target="_blank" rel="noopener">MicroProfile JWT RBAC spec</a>.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn quarkus:add-extension
@@ -2010,7 +2041,7 @@ private Instance&lt;Long&gt; providerIAT;</code></pre>
 <div class="sect1">
 <h2 id="_keycloak"><a class="anchor" href="#_keycloak"></a><a class="link" href="#_keycloak">Keycloak</a></h2>
 <div class="sectionbody">
-<p class="">Quarkus can use <a href="https://www.keycloak.org/">Keycloak</a> to protect resources using bearer token issued by Keycloak server.</p>
+<p class="">Quarkus can use <a href="https://www.keycloak.org/" target="_blank" rel="noopener">Keycloak</a> to protect resources using bearer token issued by Keycloak server.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn quarkus:add-extension
@@ -2044,7 +2075,7 @@ quarkus.keycloak.policy-enforcer.enable=true
 quarkus.keycloak.policy-enforcer.enforcement-mode=PERMISSIVE</code></pre>
 </div>
 </div>
-<p class="">You can see all possible <a href="https://www.keycloak.org/docs/latest/securing_apps/index.html#_java_adapter_config">Configuration parameters here</a>.</p>
+<p class="">You can see all possible <a href="https://www.keycloak.org/docs/latest/securing_apps/index.html#_java_adapter_config" target="_blank" rel="noopener">Configuration parameters here</a>.</p>
 <div class="admonitionblock tip">
 <table>
 <tr>
@@ -2063,7 +2094,7 @@ you can also use <code>src/main/resources/keycloak.json</code> standard Keycloak
 <div class="sect1">
 <h2 id="_jax_rs"><a class="anchor" href="#_jax_rs"></a><a class="link" href="#_jax_rs">JAX-RS</a></h2>
 <div class="sectionbody">
-<p class="">Quarkus uses JAX-RS to define <a href="https://github.com/jax-rs">REST-ful web APIs</a>.</p>
+<p class="">Quarkus uses JAX-RS to define <a href="https://github.com/jax-rs" target="_blank" rel="noopener">REST-ful web APIs</a>.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Path("/book")
@@ -2277,7 +2308,7 @@ public class ErrorMapper
 <div class="sect1">
 <h2 id="_fault_tolerance"><a class="anchor" href="#_fault_tolerance"></a><a class="link" href="#_fault_tolerance">Fault Tolerance</a></h2>
 <div class="sectionbody">
-<p class="">Quarkus uses <a href="https://github.com/eclipse/microprofile-fault-tolerance">MicroProfile Fault Tolerance</a> spec:</p>
+<p class="">Quarkus uses <a href="https://github.com/eclipse/microprofile-fault-tolerance" target="_blank" rel="noopener">MicroProfile Fault Tolerance</a> spec:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
@@ -2423,7 +2454,7 @@ MicroProfile Fault Tolerance integrats with MicroProfile Metrics spec. You can d
 <h2 id="_observability"><a class="anchor" href="#_observability"></a><a class="link" href="#_observability">Observability</a></h2>
 <div class="sectionbody">
 <p class=""><strong>Health Checks</strong></p>
-<p class="">Quarkus relies on <a href="https://github.com/eclipse/microprofile-health">MicroProfile Health</a> spec to provide health checks.</p>
+<p class="">Quarkus relies on <a href="https://github.com/eclipse/microprofile-health" target="_blank" rel="noopener">MicroProfile Health</a> spec to provide health checks.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
@@ -2508,7 +2539,7 @@ public class DatabaseHealthCheck {
 </div>
 <p class="">You can ping liveness or readiness health checks individually by querying <code>/health/live</code> or <code>/health/ready</code>.</p>
 <p class=""><strong>Metrics</strong></p>
-<p class="">Quarkus can utilize the <a href="https://github.com/eclipse/microprofile-metrics">MicroProfile Metrics spec</a> to provide metrics support.</p>
+<p class="">Quarkus can utilize the <a href="https://github.com/eclipse/microprofile-metrics" target="_blank" rel="noopener">MicroProfile Metrics spec</a> to provide metrics support.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
@@ -2580,7 +2611,7 @@ Histogram historgram;</code></pre>
 </div>
 </div>
 <p class=""><strong>Tracing</strong></p>
-<p class="">Quarkus can utilize the <a href="https://github.com/eclipse/microprofile-opentracing">MicroProfile OpenTracing</a> spec.</p>
+<p class="">Quarkus can utilize the <a href="https://github.com/eclipse/microprofile-opentracing" target="_blank" rel="noopener">MicroProfile OpenTracing</a> spec.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
@@ -2628,7 +2659,7 @@ docker run -i --rm -p 8080:8080 quarkus/getting-started</code></pre>
 </div>
 <p class="">To configure native application, you can create a <code>config</code> directory at the same place as the native file and place an <code>application.properties</code> file inside. <code>config/application.properties</code>.</p>
 <p class=""><strong>Kubernetes</strong></p>
-<p class="">Quarks can use <a href="https://github.com/ap4k/ap4k">ap4k</a> to generate Kubernetes resources.</p>
+<p class="">Quarks can use <a href="https://github.com/dekorateio/dekorate">Dekorate</a> to generate Kubernetes resources.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extensions
@@ -2668,7 +2699,7 @@ docker run -i --rm -p 8080:8080 quarkus/getting-started</code></pre>
 <div class="sect1">
 <h2 id="_kubernetes_client"><a class="anchor" href="#_kubernetes_client"></a><a class="link" href="#_kubernetes_client">Kubernetes Client</a></h2>
 <div class="sectionbody">
-<p class="">Quarkus integrates with <a href="https://github.com/fabric8io/kubernetes-client">Fabric8 Kubernetes Client</a>.</p>
+<p class="">Quarkus integrates with <a href="https://github.com/fabric8io/kubernetes-client" target="_blank" rel="noopener">Fabric8 Kubernetes Client</a>.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="terminal" class="language-terminal hljs">./mvnw quarkus:add-extension
@@ -2779,7 +2810,7 @@ public void testLambda() {
 <div class="sect1">
 <h2 id="_apache_camel"><a class="anchor" href="#_apache_camel"></a><a class="link" href="#_apache_camel">Apache Camel</a></h2>
 <div class="sectionbody">
-<p class="">Quarkus integrates wih <a href="https://camel.apache.org">Apache Camel</a>.</p>
+<p class="">Quarkus integrates wih <a href="https://camel.apache.org" target="_blank" rel="noopener">Apache Camel</a>.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
@@ -2912,7 +2943,7 @@ public class ChatSocket {
 <div class="sect1">
 <h2 id="_openapi"><a class="anchor" href="#_openapi"></a><a class="link" href="#_openapi">OpenAPI</a></h2>
 <div class="sectionbody">
-<p class="">Quarkus can expose its API description as <a href="https://swagger.io/specification/">OpenAPI</a> spec and test it using <a href="https://swagger.io/tools/swagger-ui/">Swagger UI</a>.</p>
+<p class="">Quarkus can expose its API description as <a href="https://swagger.io/specification/" target="_blank" rel="noopener">OpenAPI</a> spec and test it using <a href="https://swagger.io/tools/swagger-ui/" target="_blank" rel="noopener">Swagger UI</a>.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
@@ -3158,7 +3189,7 @@ void morningTask() {}</pre>
 <div class="sect1">
 <h2 id="_kogito"><a class="anchor" href="#_kogito"></a><a class="link" href="#_kogito">Kogito</a></h2>
 <div class="sectionbody">
-<p class="">Quarkus integrates with <a href="http://www.kiegroup.org/">Kogito</a>, a next-generation business automation toolkit from Drools and jBPM projects for adding business automation capabilities.</p>
+<p class="">Quarkus integrates with <a href="http://www.kiegroup.org/" target="_blank" rel="noopener">Kogito</a>, a next-generation business automation toolkit from Drools and jBPM projects for adding business automation capabilities.</p>
 <p class="">To start using it you only need to add the next extension:</p>
 <div class="listingblock">
 <div class="content">
