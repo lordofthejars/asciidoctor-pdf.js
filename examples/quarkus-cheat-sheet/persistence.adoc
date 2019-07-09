@@ -1,7 +1,7 @@
 == Persistence
 
 Quarkus works with JPA(Hibernate) as persistence solution.
-But also provides an https://en.wikipedia.org/wiki/Active_record_pattern[Active Record pattern] implementation under Panache project.
+But also provides an https://en.wikipedia.org/wiki/Active_record_pattern[Active Record pattern, window="_blank"] implementation under Panache project.
 
 To use database access you need to add Quarkus JDBC drivers instead of the original ones.
 At this time `H2`, `MariaDB`, `MSSQL` and `PostgreSQL` drivers are supported.
@@ -344,7 +344,7 @@ public class FlywayTestResources {
 
 == Flyway
 // tag::update_1_7[]
-Quarkus integrates with https://flywaydb.org/[Flyway] to help you on database schema migrations.
+Quarkus integrates with https://flywaydb.org/[Flyway, window="_blank"] to help you on database schema migrations.
 
 [source, bash]
 ----
@@ -423,7 +423,7 @@ a|`Flyway Baseline`
 == Hibernate Search
 // tag::update_3_1[]
 
-Quarkus integrates with https://www.elastic.co/products/elasticsearch[Elasticsearch] to provide a full-featured full-text search using https://hibernate.org/search/[Hibernate Search] API. 
+Quarkus integrates with https://www.elastic.co/products/elasticsearch[Elasticsearch, window="_blank"] to provide a full-featured full-text search using https://hibernate.org/search/[Hibernate Search, window="_blank"] API. 
 
 [source, bash]
 ----
