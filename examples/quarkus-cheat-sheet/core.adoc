@@ -659,7 +659,12 @@ public class MyCustomTestResource
     }
 
     @Override
-    public synchronized void stop() {
+    public void stop() {
+    }
+
+    // optional
+    @Override
+    public void inject(Object testInstance) {
     }
 }
 ----
