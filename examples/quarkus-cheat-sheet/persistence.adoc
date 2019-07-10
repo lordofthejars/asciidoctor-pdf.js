@@ -714,3 +714,159 @@ And Quarkus Maven Plugin with next configuration:
 
 Alternatively, and as not recommended way in production, you can disable SSL and Quarkus will disable Bolt SSL as well. `quarkus.ssl.native=false`.
 // end::update_5_7[]
+
+== MongoDB Client
+// tag::update_5_10[]
+Quarkus integrates with https://www.mongodb.com/[MongoDB, window="_blank"]:
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-mongodb-client"
+----
+
+[source, java]
+----
+@Inject
+com.mongodb.client.MongoClient client;
+
+@Inject
+io.quarkus.mongodb.ReactiveMongoClient client;
+----
+
+[source, properties]
+----
+quarkus.mongodb.connection-string=mongodb://localhost:27018
+quarkus.mongodb.write-concern.journal=false
+----
+
+`quarkus.mongodb` as prefix is skipped in the next table.
+
+|===	
+|Parameter | Type | Description
+
+a|`connection-string`
+a|`String`
+a|`mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database.collection][?options]]`
+
+a|`hosts`
+a|`List<String>`
+a|Addresses passed as `host:port`.
+
+a|`application-name`
+a|`String`
+|Application name.
+
+a|`max-pool-size`
+a|`Int`
+|Maximum number of connections.
+
+a|`min-pool-size`
+a|`Int`
+|Minimum number of connections.
+
+a|`max-connection-idle-time`
+a|`Duration`
+|Idle time of a pooled connection.
+
+a|`max-connection-life-time`
+a|`Duration`
+|Life time of pooled connection.
+
+a|`wait-queue-timeout`
+a|`Duration`
+|Maximum wait time for new connection.
+
+a|`maintenance-frequency`
+a|`Duration`
+|Time period between runs of maintenance job.
+
+a|`maintenance-initial-delay`
+a|`Duration`
+|Time to wait before running the first maintenance job.
+
+a|`wait-queue-multiple`
+a|`Int`
+a|Multiplied with `max-pool-size` gives max numer of threads waiting.
+
+a|`connection-timeout`
+a|`Duration`
+|
+
+a|`socket-timeout`
+a|`Duration`
+|
+
+a|`tls-insecure`
+a|`boolean [false]`
+|Insecure TLS.
+
+a|`tls`
+a|`boolean [false]`
+|Enable TLS
+
+a|`replica-set-name`
+a|`String`
+|Implies hosts given are a seed list.
+
+a|`server-selection-timeout`
+a|`Duration`
+|Time to wait for server selection.
+
+a|`local-threshold`
+a|`Duration`
+|Minimum ping time to make a server eligible.
+
+a|`heartbeat-frequency`
+a|`Duration`
+|Frequency to determine the state of servers.
+
+a|`read-preference`
+a|`primary`,`primaryPreferred`,`secondary`,`secondaryPreferred`,`nearest`
+|Read preferences.
+
+a|`max-wait-queue-size`
+a|`Int`
+|Max number of concurrent operations allowed to wait.
+
+a|`write-concern.safe`
+a|`boolean [true]`
+|Ensures are writes are ack.
+
+a|`write-concern.journal`
+a|`boolean [true]`
+|Journal writing aspect.
+
+a|`write-concern.w`
+a|`String`
+|Sets value to all write commands.
+
+a|`write-concern.retry-writes`
+a|`boolean [false]`
+|Retry writes if network fails.
+
+a|`write-concern.w-timeout`
+a|`Duration`
+|Sets timeout to all write commands.
+
+a|`credentials.username`
+a|`String`
+|Username.
+
+a|`credentials.password`
+a|`String`
+|Password.
+
+a|`credentials.auth-mechanism`
+a|`MONGO-CR`, `GSSAPI`, `PLAIN`, `MONGODB-X509`
+|
+
+a|`credentials.auth-source`
+a|`String`
+|Configures the source of the authentication credentials.
+
+a|`credentials.auth-mechanism-properties`
+a|`Map<String, String>`
+|Authentication mechanism properties.
+|===
+// end::update_5_10[]

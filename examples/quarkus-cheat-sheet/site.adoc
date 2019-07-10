@@ -71,6 +71,11 @@ include::misc.adoc[tag=update_5_8]
 include::cloud.adoc[tag=update_5_9]
 ====
 
+.MongoDB Client
+[%collapsible]
+====
+include::persistence.adoc[tag=update_5_10]
+
 === Version 0.18.0
 
 .JAX-RS
