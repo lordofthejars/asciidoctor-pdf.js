@@ -75,6 +75,7 @@ include::cloud.adoc[tag=update_5_9]
 [%collapsible]
 ====
 include::persistence.adoc[tag=update_5_10]
+====
 
 === Version 0.18.0
 

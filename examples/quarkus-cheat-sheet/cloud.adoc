@@ -101,6 +101,8 @@ client.customResourceDefinitions()
 // tag::update_5_9[]
 Quarkus provides a Kubernetes Mock test resource that starts a mock of Kubernetes API server and sets the proper environment variables needed by Kubernetes Client.
 
+Register next dependency: `io.quarkus:quarkus-test-kubernetes-client:test`.
+
 [source, java]
 ----
 @QuarkusTestResource(KubernetesMockServerTestResource.class)
@@ -152,8 +154,6 @@ public class TestLambda
     }
 }
 ----
-
-<<<
 
 *Test*
 

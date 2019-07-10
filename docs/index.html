@@ -449,14 +449,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.5/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
+<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.6/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
 </div>
 <div class="paragraph">
 <p>Quarkus (<a href="https://quarkus.io/" class="bare">https://quarkus.io/</a>) is a Kubernetes Native Java stack tailored for GraalVM &amp; OpenJDK HotSpot, crafted from the best of breed Java libraries and standards.
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
 </div>
 <div class="paragraph">
-<p>In this page you can either read what has been added in each version of the cheat-sheet individually in <a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a> section, see the full cheat-sheet as HTML <span class="icon"><i class="fa fa-html5"></i></span> <a href="#quarkuscheatsheet">Quarkus Cheat-Sheet</a> format or <span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.5/quarkus-cheat-sheet.pdf">download the full cheat-sheet as PDF</a>.</p>
+<p>In this page you can either read what has been added in each version of the cheat-sheet individually in <a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a> section, see the full cheat-sheet as HTML <span class="icon"><i class="fa fa-html5"></i></span> <a href="#quarkuscheatsheet">Quarkus Cheat-Sheet</a> format or <span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.6/quarkus-cheat-sheet.pdf">download the full cheat-sheet as PDF</a>.</p>
 </div>
 </div>
 </div>
@@ -757,6 +757,542 @@ public class TestStereotypeTestCase {}</code></pre>
 </div>
 </div>
 </details>
+<details>
+<summary class="title">Amazon DynamoDB</summary>
+<div class="content">
+<div class="paragraph">
+<p>Quarkus integrates with <a href="https://aws.amazon.com/dynamodb/" target="_blank" rel="noopener">Amazon DynamoDB</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-amazon-dynamodb"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">void onStart(@Observes StartupEvent ev) {
+    DynamoDbAsyncClient asyncClient = DynamoDbAsyncClient.create();
+    DynamoDbClient client = DynamoDbClient.create();
+}</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Neo4j</summary>
+<div class="content">
+<div class="paragraph">
+<p>Quarkus integrates with <a href="https://neo4j.com/" target="_blank" rel="noopener">Neo4j</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-neo4j"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+org.neo4j.driver.Driver driver;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Configuration properties:</p>
+</div>
+<div class="paragraph">
+<p><code>quarkus.neo4j</code> as prefix is skipped in the next table.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top"> Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>uri</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>bolt://localhost:7687</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URI of Neo4j.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>authentication.username</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>neo4j</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Username.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>authentication.password</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>neo4j</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>authentication.disabled</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>false</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disable authentication.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>As Neo4j uses SSL communication by default, to create a native executable you need to compile with next options GraalVM options:</p>
+</div>
+<div class="paragraph">
+<p><code>-H:EnableURLProtocols=http,https --enable-all-security-services -H:+JNI</code></p>
+</div>
+<div class="paragraph">
+<p>And Quarkus Maven Plugin with next configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;artifactId&gt;quarkus-maven-plugin&lt;/artifactId&gt;
+&lt;executions&gt;
+    &lt;execution&gt;
+        &lt;id&gt;native-image&lt;/id&gt;
+        &lt;goals&gt;
+            &lt;goal&gt;native-image&lt;/goal&gt;
+        &lt;/goals&gt;
+        &lt;configuration&gt;
+            &lt;enableHttpUrlHandler&gt;true&lt;/enableHttpUrlHandler&gt;
+            &lt;enableHttpsUrlHandler&gt;true&lt;/enableHttpsUrlHandler&gt;
+            &lt;enableAllSecurityServices&gt;true&lt;/enableAllSecurityServices&gt;
+            &lt;enableJni&gt;true&lt;/enableJni&gt;
+        &lt;/configuration&gt;
+    &lt;/execution&gt;
+&lt;/executions&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, and as not recommended way in production, you can disable SSL and Quarkus will disable Bolt SSL as well. <code>quarkus.ssl.native=false</code>.</p>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Apache Tika</summary>
+<div class="content">
+<div class="paragraph">
+<p>Quarkus integrets with <a href="https://tika.apache.org/" target="_blank" rel="noopener">Apache Tika</a> to detect and extract metadata/text from different file types:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-tika"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+io.quarkus.tika.TikaParser parser;
+
+@POST
+@Path("/text")
+@Consumes({ "text/plain", "application/pdf",
+            "application/vnd.oasis.opendocument.text" })
+@Produces(MediaType.TEXT_PLAIN)
+public String extractText(InputStream stream) {
+    return parser.parse(stream).getText();
+}</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Kubernetes Mock Server</summary>
+<div class="content">
+<div class="paragraph">
+<p>Quarkus provides a Kubernetes Mock test resource that starts a mock of Kubernetes API server and sets the proper environment variables needed by Kubernetes Client.</p>
+</div>
+<div class="paragraph">
+<p>Register next dependency: <code>io.quarkus:quarkus-test-kubernetes-client:test</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@QuarkusTestResource(KubernetesMockServerTestResource.class)
+@QuarkusTest
+public class KubernetesClientTest {
+
+    @MockServer
+    private KubernetesMockServer mockServer;
+
+    @Test
+    public void test() {
+        final Pod pod1 = ...
+        mockServer
+            .expect()
+            .get()
+            .withPath("/api/v1/namespaces/test/pods")
+            .andReturn(200,
+                new PodListBuilder()
+                .withNewMetadata()
+                .withResourceVersion("1")
+                .endMetadata()
+                .withItems(pod1, pod2)
+                .build())
+            .always();
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">MongoDB Client</summary>
+<div class="content">
+<div class="paragraph">
+<p>Quarkus integrates with <a href="https://www.mongodb.com/" target="_blank" rel="noopener">MongoDB</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-mongodb-client"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+com.mongodb.client.MongoClient client;
+
+@Inject
+io.quarkus.mongodb.ReactiveMongoClient client;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.mongodb.connection-string=mongodb://localhost:27018
+quarkus.mongodb.write-concern.journal=false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>quarkus.mongodb</code> as prefix is skipped in the next table.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top"> Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>connection-string</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>MongoDB connection URI.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>hosts</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>List&lt;String&gt;</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Addresses passed as <code>host:port</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>application-name</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application name.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>max-pool-size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Int</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of connections.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>min-pool-size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Int</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Minimum number of connections.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>max-connection-idle-time</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Duration</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Idle time of a pooled connection.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>max-connection-life-time</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Duration</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Life time of pooled connection.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>wait-queue-timeout</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Duration</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum wait time for new connection.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>maintenance-frequency</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Duration</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time period between runs of maintenance job.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>maintenance-initial-delay</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Duration</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time to wait before running the first maintenance job.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>wait-queue-multiple</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Int</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Multiplied with <code>max-pool-size</code> gives max numer of threads waiting.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>connection-timeout</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Duration</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>socket-timeout</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Duration</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>tls-insecure</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>boolean [false]</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Insecure TLS.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>tls</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>boolean [false]</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable TLS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>replica-set-name</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Implies hosts given are a seed list.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>server-selection-timeout</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Duration</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time to wait for server selection.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>local-threshold</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Duration</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Minimum ping time to make a server eligible.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>heartbeat-frequency</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Duration</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Frequency to determine the state of servers.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>read-preference</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>primary</code>,
+<code>primaryPreferred</code>,
+<code>secondary</code>,
+<code>secondaryPreferred</code>,
+<code>nearest</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read preferences.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>max-wait-queue-size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Int</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Max number of concurrent operations allowed to wait.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>write-concern.safe</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>boolean [true]</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ensures are writes are ack.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>write-concern.journal</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>boolean [true]</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Journal writing aspect.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>write-concern.w</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets value to all write commands.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>write-concern.retry-writes</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>boolean [false]</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Retry writes if network fails.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>write-concern.w-timeout</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Duration</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets timeout to all write commands.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>credentials.username</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Username.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>credentials.password</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>credentials.auth-mechanism</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>MONGO-CR</code>, <code>GSSAPI</code>, <code>PLAIN</code>, <code>MONGODB-X509</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>credentials.auth-source</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configures the source of the authentication credentials.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>credentials.auth-mechanism-properties</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Map&lt;String, String&gt;</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Authentication mechanism properties.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</details>
 </div>
 <div class="sect2">
 <h3 id="_version_0_18_0"><a class="anchor" href="#_version_0_18_0"></a><a class="link" href="#_version_0_18_0">Version 0.18.0</a></h3>
@@ -919,7 +1455,12 @@ public String getBase(@Context UriInfo uriInfo) {
     }
 
     @Override
-    public synchronized void stop() {
+    public void stop() {
+    }
+
+    // optional
+    @Override
+    public void inject(Object testInstance) {
     }
 }</code></pre>
 </div>
@@ -954,6 +1495,7 @@ public class MyTest {
 <div class="paragraph">
 <p>There is a Quarkus Test Resource that starts and stops H2 server before and after test suite.</p>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>Register next dependency <code>io.quarkus:quarkus-test-h2:test</code>.</p>
 </div>
@@ -1200,7 +1742,7 @@ client.customResourceDefinitions()
 <summary class="title">Hibernate Search</summary>
 <div class="content">
 <div class="paragraph">
-<p>Quarkus integrates with <a href="https://www.elastic.co/products/elasticsearch">Elasticsearch</a> to provide a full-featured full-text search using <a href="https://hibernate.org/search/">Hibernate Search</a> API.</p>
+<p>Quarkus integrates with <a href="https://www.elastic.co/products/elasticsearch" target="_blank" rel="noopener">Elasticsearch</a> to provide a full-featured full-text search using <a href="https://hibernate.org/search/" target="_blank" rel="noopener">Hibernate Search</a> API.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2791,7 +3333,7 @@ Create a file <code>/META-INF/services/org.eclipse.microprofile.config.spi.Conve
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>origins</p>
+<p><code>cors.origins</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Any request valid.</p>
@@ -2800,21 +3342,21 @@ Create a file <code>/META-INF/services/org.eclipse.microprofile.config.spi.Conve
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>methods</code></p>
+<p><code>cors.methods</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Any method valid.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CSV of methods valid.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>headers</code></p>
+<p><code>cors.headers</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Any requested header valid.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CSV of valid allowed headers.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>exposed-headers</code></p>
+<p><code>cors.exposed-headers</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CSV of valid exposed headers.</p></td>
@@ -2937,7 +3479,6 @@ WorldClock getNow(){}</code></pre>
 <p>If 3 <code>(4 x 0.75)</code> failures occur among the rolling window of 4 consecutive invocations then the circuit is opened for 1000 ms and then be back to half open.
 If the invocation succeeds then the circuit is back to closed again.</p>
 </div>
-<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>You can use <strong>bulkahead</strong> pattern to limit the number of concurrent access to the same resource.
 If the operation is synchronous it uses a semaphore approach, if it is asynchronous a thread-pool one.
@@ -3534,7 +4075,7 @@ private Instance&lt;Long&gt; providerIAT;</code></pre>
 <summary class="title">Flyway</summary>
 <div class="content">
 <div class="paragraph">
-<p>Quarkus integrates with <a href="https://flywaydb.org/">Flyway</a> to help you on database schema migrations.</p>
+<p>Quarkus integrates with <a href="https://flywaydb.org/" target="_blank" rel="noopener">Flyway</a> to help you on database schema migrations.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3804,7 +4345,6 @@ you can also use <code>src/main/resources/keycloak.json</code> standard Keycloak
 }</code></pre>
 </div>
 </div>
-<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p><strong>Test</strong></p>
 </div>
@@ -3840,7 +4380,7 @@ public void testLambda() {
 <h2 id="quarkuscheatsheet"><a class="anchor" href="#quarkuscheatsheet"></a><a class="link" href="#quarkuscheatsheet">Quarkus Cheat-Sheet</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.5/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
+<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.6/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
 </div>
 <div id="toc" class="toc">
 <div id="toctitle" class="title">Table of Contents</div>
@@ -3870,6 +4410,9 @@ public void testLambda() {
 <li><a href="#_persistence">Persistence</a></li>
 <li><a href="#_flyway">Flyway</a></li>
 <li><a href="#_hibernate_search">Hibernate Search</a></li>
+<li><a href="#_amazon_dynamodb">Amazon DynamoDB</a></li>
+<li><a href="#_neo4j">Neo4j</a></li>
+<li><a href="#_mongodb_client">MongoDB Client</a></li>
 <li><a href="#_reactive_programming">Reactive Programming</a></li>
 <li><a href="#_reactive_messaging">Reactive Messaging</a></li>
 <li><a href="#_kafka_streams">Kafka Streams</a></li>
@@ -3889,6 +4432,7 @@ public void testLambda() {
 <li><a href="#_mail_sender">Mail Sender</a></li>
 <li><a href="#_scheduled_tasks">Scheduled Tasks</a></li>
 <li><a href="#_kogito">Kogito</a></li>
+<li><a href="#_apache_tika">Apache Tika</a></li>
 <li><a href="#_resources">Resources</a></li>
 </ul>
 </li>
@@ -3901,7 +4445,7 @@ public void testLambda() {
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
 </div>
 <div class="paragraph">
-<p>Cheat-sheet tested with <strong>Quarkus 0.18.0</strong>.</p>
+<p>Cheat-sheet tested with <strong>Quarkus 0.19.0</strong>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -3911,7 +4455,7 @@ Also focused on developer experience, making things just work with little to no 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:0.18.0:create \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:0.19.0:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=getting-started \
     -DclassName="org.acme.quickstart.GreetingResource" \
@@ -4778,7 +5322,12 @@ URL url;</code></pre>
     }
 
     @Override
-    public synchronized void stop() {
+    public void stop() {
+    }
+
+    // optional
+    @Override
+    public void inject(Object testInstance) {
     }
 }</code></pre>
 </div>
@@ -4831,10 +5380,10 @@ This does not work when using native image testing.
 </tr>
 </table>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>A stereotype annotation <code>io.quarkus.test.Mock</code> is provided declaring <code>@Alternative</code>, <code>@Priority(1)</code> and <code>@Dependent</code>.</p>
 </div>
-<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p><strong>Interceptors</strong>
 Tests are actually full CDI beans, so you can apply CDI interceptors:</p>
@@ -4865,7 +5414,7 @@ public class TestStereotypeTestCase {}</code></pre>
 <h3 id="_persistence"><a class="anchor" href="#_persistence"></a><a class="link" href="#_persistence">Persistence</a></h3>
 <div class="paragraph">
 <p>Quarkus works with JPA(Hibernate) as persistence solution.
-But also provides an <a href="https://en.wikipedia.org/wiki/Active_record_pattern">Active Record pattern</a> implementation under Panache project.</p>
+But also provides an <a href="https://en.wikipedia.org/wiki/Active_record_pattern" target="_blank" rel="noopener">Active Record pattern</a> implementation under Panache project.</p>
 </div>
 <div class="paragraph">
 <p>To use database access you need to add Quarkus JDBC drivers instead of the original ones.
@@ -5481,6 +6030,7 @@ This flush is less efficient and you still need to commit transaction.
 <div class="paragraph">
 <p>There is a Quarkus Test Resource that starts and stops H2 server before and after test suite.</p>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>Register next dependency <code>io.quarkus:quarkus-test-h2:test</code>.</p>
 </div>
@@ -5498,7 +6048,7 @@ public class FlywayTestResources {
 <div class="sect2">
 <h3 id="_flyway"><a class="anchor" href="#_flyway"></a><a class="link" href="#_flyway">Flyway</a></h3>
 <div class="paragraph">
-<p>Quarkus integrates with <a href="https://flywaydb.org/">Flyway</a> to help you on database schema migrations.</p>
+<p>Quarkus integrates with <a href="https://flywaydb.org/" target="_blank" rel="noopener">Flyway</a> to help you on database schema migrations.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5642,7 +6192,7 @@ flyway.migrate();</code></pre>
 <div class="sect2">
 <h3 id="_hibernate_search"><a class="anchor" href="#_hibernate_search"></a><a class="link" href="#_hibernate_search">Hibernate Search</a></h3>
 <div class="paragraph">
-<p>Quarkus integrates with <a href="https://www.elastic.co/products/elasticsearch">Elasticsearch</a> to provide a full-featured full-text search using <a href="https://hibernate.org/search/">Hibernate Search</a> API.</p>
+<p>Quarkus integrates with <a href="https://www.elastic.co/products/elasticsearch" target="_blank" rel="noopener">Elasticsearch</a> to provide a full-featured full-text search using <a href="https://hibernate.org/search/" target="_blank" rel="noopener">Hibernate Search</a> API.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5982,6 +6532,469 @@ quarkus.hibernate-search.elasticsearch.
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>For <code>java.math.BigDecimal</code> or <code>java.math.BigInteger</code> that you need higher precision.</p>
 </div></div></td>
+</tr>
+</tbody>
+</table>
+<div style="page-break-after: always;"></div>
+</div>
+<div class="sect2">
+<h3 id="_amazon_dynamodb"><a class="anchor" href="#_amazon_dynamodb"></a><a class="link" href="#_amazon_dynamodb">Amazon DynamoDB</a></h3>
+<div class="paragraph">
+<p>Quarkus integrates with <a href="https://aws.amazon.com/dynamodb/" target="_blank" rel="noopener">Amazon DynamoDB</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-amazon-dynamodb"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">void onStart(@Observes StartupEvent ev) {
+    DynamoDbAsyncClient asyncClient = DynamoDbAsyncClient.create();
+    DynamoDbClient client = DynamoDbClient.create();
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_neo4j"><a class="anchor" href="#_neo4j"></a><a class="link" href="#_neo4j">Neo4j</a></h3>
+<div class="paragraph">
+<p>Quarkus integrates with <a href="https://neo4j.com/" target="_blank" rel="noopener">Neo4j</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-neo4j"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+org.neo4j.driver.Driver driver;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Configuration properties:</p>
+</div>
+<div class="paragraph">
+<p><code>quarkus.neo4j</code> as prefix is skipped in the next table.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top"> Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>uri</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>bolt://localhost:7687</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URI of Neo4j.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>authentication.username</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>neo4j</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Username.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>authentication.password</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>neo4j</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>authentication.disabled</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>false</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disable authentication.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>As Neo4j uses SSL communication by default, to create a native executable you need to compile with next options GraalVM options:</p>
+</div>
+<div class="paragraph">
+<p><code>-H:EnableURLProtocols=http,https --enable-all-security-services -H:+JNI</code></p>
+</div>
+<div class="paragraph">
+<p>And Quarkus Maven Plugin with next configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;artifactId&gt;quarkus-maven-plugin&lt;/artifactId&gt;
+&lt;executions&gt;
+    &lt;execution&gt;
+        &lt;id&gt;native-image&lt;/id&gt;
+        &lt;goals&gt;
+            &lt;goal&gt;native-image&lt;/goal&gt;
+        &lt;/goals&gt;
+        &lt;configuration&gt;
+            &lt;enableHttpUrlHandler&gt;true&lt;/enableHttpUrlHandler&gt;
+            &lt;enableHttpsUrlHandler&gt;true&lt;/enableHttpsUrlHandler&gt;
+            &lt;enableAllSecurityServices&gt;true&lt;/enableAllSecurityServices&gt;
+            &lt;enableJni&gt;true&lt;/enableJni&gt;
+        &lt;/configuration&gt;
+    &lt;/execution&gt;
+&lt;/executions&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, and as not recommended way in production, you can disable SSL and Quarkus will disable Bolt SSL as well. <code>quarkus.ssl.native=false</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mongodb_client"><a class="anchor" href="#_mongodb_client"></a><a class="link" href="#_mongodb_client">MongoDB Client</a></h3>
+<div class="paragraph">
+<p>Quarkus integrates with <a href="https://www.mongodb.com/" target="_blank" rel="noopener">MongoDB</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-mongodb-client"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+com.mongodb.client.MongoClient client;
+
+@Inject
+io.quarkus.mongodb.ReactiveMongoClient client;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.mongodb.connection-string=mongodb://localhost:27018
+quarkus.mongodb.write-concern.journal=false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>quarkus.mongodb</code> as prefix is skipped in the next table.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top"> Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>connection-string</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>MongoDB connection URI.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>hosts</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>List&lt;String&gt;</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Addresses passed as <code>host:port</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>application-name</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application name.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>max-pool-size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Int</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of connections.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>min-pool-size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Int</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Minimum number of connections.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>max-connection-idle-time</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Duration</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Idle time of a pooled connection.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>max-connection-life-time</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Duration</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Life time of pooled connection.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>wait-queue-timeout</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Duration</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum wait time for new connection.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>maintenance-frequency</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Duration</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time period between runs of maintenance job.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>maintenance-initial-delay</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Duration</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time to wait before running the first maintenance job.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>wait-queue-multiple</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Int</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Multiplied with <code>max-pool-size</code> gives max numer of threads waiting.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>connection-timeout</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Duration</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>socket-timeout</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Duration</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>tls-insecure</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>boolean [false]</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Insecure TLS.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>tls</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>boolean [false]</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable TLS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>replica-set-name</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Implies hosts given are a seed list.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>server-selection-timeout</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Duration</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time to wait for server selection.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>local-threshold</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Duration</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Minimum ping time to make a server eligible.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>heartbeat-frequency</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Duration</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Frequency to determine the state of servers.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>read-preference</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>primary</code>,
+<code>primaryPreferred</code>,
+<code>secondary</code>,
+<code>secondaryPreferred</code>,
+<code>nearest</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read preferences.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>max-wait-queue-size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Int</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Max number of concurrent operations allowed to wait.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>write-concern.safe</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>boolean [true]</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ensures are writes are ack.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>write-concern.journal</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>boolean [true]</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Journal writing aspect.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>write-concern.w</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets value to all write commands.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>write-concern.retry-writes</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>boolean [false]</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Retry writes if network fails.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>write-concern.w-timeout</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Duration</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets timeout to all write commands.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>credentials.username</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Username.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>credentials.password</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>credentials.auth-mechanism</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>MONGO-CR</code>, <code>GSSAPI</code>, <code>PLAIN</code>, <code>MONGODB-X509</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>credentials.auth-source</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configures the source of the authentication credentials.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>credentials.auth-mechanism-properties</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Map&lt;String, String&gt;</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Authentication mechanism properties.</p></td>
 </tr>
 </tbody>
 </table>
@@ -6868,7 +7881,7 @@ public class ErrorMapper
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>origins</p>
+<p><code>cors.origins</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Any request valid.</p>
@@ -6877,21 +7890,21 @@ public class ErrorMapper
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>methods</code></p>
+<p><code>cors.methods</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Any method valid.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CSV of methods valid.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>headers</code></p>
+<p><code>cors.headers</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Any requested header valid.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CSV of valid allowed headers.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>exposed-headers</code></p>
+<p><code>cors.exposed-headers</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CSV of valid exposed headers.</p></td>
@@ -6976,7 +7989,6 @@ WorldClock getNow(){}</code></pre>
 <p>If 3 <code>(4 x 0.75)</code> failures occur among the rolling window of 4 consecutive invocations then the circuit is opened for 1000 ms and then be back to half open.
 If the invocation succeeds then the circuit is back to closed again.</p>
 </div>
-<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>You can use <strong>bulkahead</strong> pattern to limit the number of concurrent access to the same resource.
 If the operation is synchronous it uses a semaphore approach, if it is asynchronous a thread-pool one.
@@ -7482,6 +8494,41 @@ client.customResourceDefinitions()
         .create(dummyCRD);</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p><strong>Testing</strong>
+Quarkus provides a Kubernetes Mock test resource that starts a mock of Kubernetes API server and sets the proper environment variables needed by Kubernetes Client.</p>
+</div>
+<div class="paragraph">
+<p>Register next dependency: <code>io.quarkus:quarkus-test-kubernetes-client:test</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@QuarkusTestResource(KubernetesMockServerTestResource.class)
+@QuarkusTest
+public class KubernetesClientTest {
+
+    @MockServer
+    private KubernetesMockServer mockServer;
+
+    @Test
+    public void test() {
+        final Pod pod1 = ...
+        mockServer
+            .expect()
+            .get()
+            .withPath("/api/v1/namespaces/test/pods")
+            .andReturn(200,
+                new PodListBuilder()
+                .withNewMetadata()
+                .withResourceVersion("1")
+                .endMetadata()
+                .withItems(pod1, pod2)
+                .build())
+            .always();
+    }
+}</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_amazon_lambda"><a class="anchor" href="#_amazon_lambda"></a><a class="link" href="#_amazon_lambda">Amazon Lambda</a></h3>
@@ -7508,7 +8555,6 @@ client.customResourceDefinitions()
 }</code></pre>
 </div>
 </div>
-<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p><strong>Test</strong></p>
 </div>
@@ -8046,6 +9092,33 @@ void morningTask() {}</pre>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
   -Dextensions="kogito"</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_apache_tika"><a class="anchor" href="#_apache_tika"></a><a class="link" href="#_apache_tika">Apache Tika</a></h3>
+<div class="paragraph">
+<p>Quarkus integrets with <a href="https://tika.apache.org/" target="_blank" rel="noopener">Apache Tika</a> to detect and extract metadata/text from different file types:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-tika"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+io.quarkus.tika.TikaParser parser;
+
+@POST
+@Path("/text")
+@Consumes({ "text/plain", "application/pdf",
+            "application/vnd.oasis.opendocument.text" })
+@Produces(MediaType.TEXT_PLAIN)
+public String extractText(InputStream stream) {
+    return parser.parse(stream).getText();
+}</code></pre>
 </div>
 </div>
 </div>

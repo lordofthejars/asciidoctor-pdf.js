@@ -330,6 +330,8 @@ IMPORTANT: This flush is less efficient and you still need to commit transaction
 
 There is a Quarkus Test Resource that starts and stops H2 server before and after test suite.
 
+<<<
+
 Register next dependency `io.quarkus:quarkus-test-h2:test`.
 
 And annotate the test:
@@ -628,6 +630,8 @@ a| For `java.math.BigDecimal` or `java.math.BigInteger` that you need higher pre
 |===
 // end::update_3_1[]
 
+<<<
+
 == Amazon DynamoDB
 // tag::update_5_6[]
 Quarkus integrates with https://aws.amazon.com/dynamodb/[Amazon DynamoDB, window="_blank"]:
@@ -747,7 +751,7 @@ quarkus.mongodb.write-concern.journal=false
 
 a|`connection-string`
 a|`String`
-a|`mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database.collection][?options]]`
+a|MongoDB connection URI.
 
 a|`hosts`
 a|`List<String>`
@@ -822,7 +826,12 @@ a|`Duration`
 |Frequency to determine the state of servers.
 
 a|`read-preference`
-a|`primary`,`primaryPreferred`,`secondary`,`secondaryPreferred`,`nearest`
+a|
+`primary`,
+`primaryPreferred`,
+`secondary`,
+`secondaryPreferred`,
+`nearest`
 |Read preferences.
 
 a|`max-wait-queue-size`
