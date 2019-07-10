@@ -47,6 +47,12 @@ include::core.adoc[tag=update_5_4]
 include::core.adoc[tag=update_5_5]
 ====
 
+.Amazon DynamoDB
+[%collapsible]
+====
+include::persistence.adoc[tag=update_5_6]
+====
+
 === Version 0.18.0
 
 .JAX-RS
