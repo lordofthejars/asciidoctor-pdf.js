@@ -53,6 +53,24 @@ include::core.adoc[tag=update_5_5]
 include::persistence.adoc[tag=update_5_6]
 ====
 
+.Neo4j
+[%collapsible]
+====
+include::persistence.adoc[tag=update_5_7]
+====
+
+.Apache Tika
+[%collapsible]
+====
+include::misc.adoc[tag=update_5_8]
+====
+
+.Kubernetes Mock Server
+[%collapsible]
+====
+include::cloud.adoc[tag=update_5_9]
+====
+
 === Version 0.18.0
 
 .JAX-RS

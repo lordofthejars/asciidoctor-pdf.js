@@ -355,5 +355,30 @@ To start using it you only need to add the next extension:
 ./mvnw quarkus:add-extension 
   -Dextensions="kogito"
 ----
-
 // end::update_3_9[]
+
+== Apache Tika
+// tag::update_5_8[]
+Quarkus integrets with https://tika.apache.org/[Apache Tika, window="_blank"] to detect and extract metadata/text from different file types:
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-tika"
+----
+
+[source, java]
+----
+@Inject
+io.quarkus.tika.TikaParser parser;
+
+@POST
+@Path("/text")
+@Consumes({ "text/plain", "application/pdf", 
+            "application/vnd.oasis.opendocument.text" })
+@Produces(MediaType.TEXT_PLAIN)
+public String extractText(InputStream stream) {
+    return parser.parse(stream).getText();
+}
+----
+// end::update_5_8[]

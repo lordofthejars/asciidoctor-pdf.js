@@ -97,6 +97,39 @@ client.customResourceDefinitions()
 ----
 // end::update_4_5[]
 
+*Testing*
+// tag::update_5_9[]
+Quarkus provides a Kubernetes Mock test resource that starts a mock of Kubernetes API server and sets the proper environment variables needed by Kubernetes Client.
+
+[source, java]
+----
+@QuarkusTestResource(KubernetesMockServerTestResource.class)
+@QuarkusTest
+public class KubernetesClientTest {
+    
+    @MockServer
+    private KubernetesMockServer mockServer;
+
+    @Test
+    public void test() {
+        final Pod pod1 = ...
+        mockServer
+            .expect()
+            .get()
+            .withPath("/api/v1/namespaces/test/pods")
+            .andReturn(200,
+                new PodListBuilder()
+                .withNewMetadata()
+                .withResourceVersion("1")
+                .endMetadata()
+                .withItems(pod1, pod2)
+                .build())
+            .always();
+    }
+}
+----
+// end::update_5_9[]
+
 == Amazon Lambda
 // tag::update_1_10[]
 Quarkus integrates with Amazon Lambda.
