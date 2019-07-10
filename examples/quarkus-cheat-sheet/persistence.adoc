@@ -627,3 +627,90 @@ a|`@ScaledNumberField`
 a| For `java.math.BigDecimal` or `java.math.BigInteger` that you need higher precision.
 |===
 // end::update_3_1[]
+
+== Amazon DynamoDB
+// tag::update_5_6[]
+Quarkus integrates with https://aws.amazon.com/dynamodb/[Amazon DynamoDB, window="_blank"]:
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-amazon-dynamodb"
+----
+
+[source, java]
+----
+void onStart(@Observes StartupEvent ev) {
+    DynamoDbAsyncClient asyncClient = DynamoDbAsyncClient.create();
+    DynamoDbClient client = DynamoDbClient.create();
+}
+----
+// end::update_5_6[]
+
+== Neo4j
+// tag::update_5_7[]
+Quarkus integrates with https://neo4j.com/[Neo4j, window="_blank"]:
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-neo4j"
+----
+
+[source, java]
+----
+@Inject
+org.neo4j.driver.Driver driver;
+----
+
+Configuration properties:
+
+`quarkus.neo4j` as prefix is skipped in the next table.
+
+|===	
+|Parameter | Default | Description
+
+a|`uri`
+a|`bolt://localhost:7687`
+|URI of Neo4j.
+
+a|`authentication.username`
+a|`neo4j`
+|Username.
+
+a|`authentication.password`
+a|`neo4j`
+|Password.
+
+a|`authentication.disabled`
+a|`false`
+|Disable authentication.
+|===
+
+As Neo4j uses SSL communication by default, to create a native executable you need to compile with next options GraalVM options:
+
+`-H:EnableURLProtocols=http,https --enable-all-security-services -H:+JNI`
+
+And Quarkus Maven Plugin with next configuration:
+
+[source, xml]
+----
+<artifactId>quarkus-maven-plugin</artifactId>
+<executions>
+    <execution>
+        <id>native-image</id>
+        <goals>
+            <goal>native-image</goal>
+        </goals>
+        <configuration>
+            <enableHttpUrlHandler>true</enableHttpUrlHandler>
+            <enableHttpsUrlHandler>true</enableHttpsUrlHandler>
+            <enableAllSecurityServices>true</enableAllSecurityServices>
+            <enableJni>true</enableJni>                
+        </configuration>
+    </execution>
+</executions>
+----
+
+Alternatively, and as not recommended way in production, you can disable SSL and Quarkus will disable Bolt SSL as well. `quarkus.ssl.native=false`.
+// end::update_5_7[]
