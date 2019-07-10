@@ -171,19 +171,19 @@ a|`cors`
 a|`false`
 |Enable CORS.
 
-a|origins
+a|`cors.origins`
 a|Any request valid.
 |CSV of origins allowed.
 
-a|`methods`
+a|`cors.methods`
 |Any method valid.
 |CSV of methods valid.
 
-a|`headers`
+a|`cors.headers`
 |Any requested header valid.
 |CSV of valid allowed headers.
 
-a|`exposed-headers`
+a|`cors.exposed-headers`
 |
 |CSV of valid exposed headers.
 |===
