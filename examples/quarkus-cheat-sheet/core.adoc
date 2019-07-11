@@ -117,7 +117,7 @@ Default profiles are:
 * `test`: Activated when running tests.
 * `prod`: The default profile when not running in development or test mode
 
-You can create custom profile names by enabling the profile either setting `quarkus-profile` system property or `QUARKUS_PROFILE` environment variable.
+You can create custom profile names by enabling the profile either setting `quarkus.profile` system property or `QUARKUS_PROFILE` environment variable.
 
 [source, properties]
 ----

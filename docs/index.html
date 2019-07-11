@@ -884,7 +884,18 @@ org.neo4j.driver.Driver driver;</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Alternatively, and as not recommended way in production, you can disable SSL and Quarkus will disable Bolt SSL as well. <code>quarkus.ssl.native=false</code>.</p>
+<p>Alternatively, and as a not recommended way in production, you can disable SSL and Quarkus will disable Bolt SSL as well. <code>quarkus.ssl.native=false</code>.</p>
+</div>
+<div class="paragraph">
+<p>If you are using NEO4J 4.0, you can use fully reactive.
+Add next depenency management <code>io.projectreactor:reactor-bom:Californium-SR4:pom:import</code> and dependency: <code>io.projectreactor:reactor-core</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public Publisher&lt;String&gt; get() {
+        return Flux.using(driver::rxSession, ...);
+}</code></pre>
+</div>
 </div>
 </div>
 </details>
@@ -3249,7 +3260,7 @@ Create a file <code>/META-INF/services/org.eclipse.microprofile.config.spi.Conve
 </ul>
 </div>
 <div class="paragraph">
-<p>You can create custom profile names by enabling the profile either setting <code>quarkus-profile</code> system property or <code>QUARKUS_PROFILE</code> environment variable.</p>
+<p>You can create custom profile names by enabling the profile either setting <code>quarkus.profile</code> system property or <code>QUARKUS_PROFILE</code> environment variable.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4445,7 +4456,7 @@ public void testLambda() {
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
 </div>
 <div class="paragraph">
-<p>Cheat-sheet tested with <strong>Quarkus 0.19.0</strong>.</p>
+<p>Cheat-sheet tested with <strong>Quarkus 0.19.1</strong>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -4455,7 +4466,7 @@ Also focused on developer experience, making things just work with little to no 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:0.19.0:create \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:0.19.1:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=getting-started \
     -DclassName="org.acme.quickstart.GreetingResource" \
@@ -4627,7 +4638,7 @@ Optional&lt;String&gt; optionalMessage;</code></pre>
 </ul>
 </div>
 <div class="paragraph">
-<p>You can create custom profile names by enabling the profile either setting <code>quarkus-profile</code> system property or <code>QUARKUS_PROFILE</code> environment variable.</p>
+<p>You can create custom profile names by enabling the profile either setting <code>quarkus.profile</code> system property or <code>QUARKUS_PROFILE</code> environment variable.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6661,7 +6672,18 @@ org.neo4j.driver.Driver driver;</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Alternatively, and as not recommended way in production, you can disable SSL and Quarkus will disable Bolt SSL as well. <code>quarkus.ssl.native=false</code>.</p>
+<p>Alternatively, and as a not recommended way in production, you can disable SSL and Quarkus will disable Bolt SSL as well. <code>quarkus.ssl.native=false</code>.</p>
+</div>
+<div class="paragraph">
+<p>If you are using NEO4J 4.0, you can use fully reactive.
+Add next depenency management <code>io.projectreactor:reactor-bom:Californium-SR4:pom:import</code> and dependency: <code>io.projectreactor:reactor-core</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public Publisher&lt;String&gt; get() {
+        return Flux.using(driver::rxSession, ...);
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">

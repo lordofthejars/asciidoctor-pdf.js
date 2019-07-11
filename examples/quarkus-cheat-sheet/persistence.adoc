@@ -716,7 +716,17 @@ And Quarkus Maven Plugin with next configuration:
 </executions>
 ----
 
-Alternatively, and as not recommended way in production, you can disable SSL and Quarkus will disable Bolt SSL as well. `quarkus.ssl.native=false`.
+Alternatively, and as a not recommended way in production, you can disable SSL and Quarkus will disable Bolt SSL as well. `quarkus.ssl.native=false`.
+
+If you are using Neo4j 4.0, you can use fully reactive. 
+Add next depenency management `io.projectreactor:reactor-bom:Californium-SR4:pom:import` and dependency: `io.projectreactor:reactor-core`.
+
+[source, java]
+----
+public Publisher<String> get() {
+        return Flux.using(driver::rxSession, ...);
+}
+----
 // end::update_5_7[]
 
 == MongoDB Client

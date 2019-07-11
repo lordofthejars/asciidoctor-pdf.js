@@ -15,7 +15,7 @@
 <div class="sectionbody">
 <p class=""><a href="https://quarkus.io/">Quarkus</a> is a Kubernetes Native Java stack tailored for GraalVM &amp; OpenJDK HotSpot, crafted from the best of breed Java libraries and standards.
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
-<p class="">Cheat-sheet tested with <strong>Quarkus 0.19.0</strong>.</p>
+<p class="">Cheat-sheet tested with <strong>Quarkus 0.19.1</strong>.</p>
 </div>
 </div>
 <div class="sect1">
@@ -24,7 +24,7 @@ Also focused on developer experience, making things just work with little to no 
 <p class="">Quarkus comes with a Maven archetype to scaffold a very simple starting project.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:0.19.0:create \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:0.19.1:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=getting-started \
     -DclassName="org.acme.quickstart.GreetingResource" \
@@ -179,7 +179,7 @@ Optional&lt;String&gt; optionalMessage;</code></pre>
 </li>
 </ul>
 </div>
-<p class="">You can create custom profile names by enabling the profile either setting <code>quarkus-profile</code> system property or <code>QUARKUS_PROFILE</code> environment variable.</p>
+<p class="">You can create custom profile names by enabling the profile either setting <code>quarkus.profile</code> system property or <code>QUARKUS_PROFILE</code> environment variable.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.http.port=9090
@@ -1671,7 +1671,16 @@ org.neo4j.driver.Driver driver;</code></pre>
 &lt;/executions&gt;</code></pre>
 </div>
 </div>
-<p class="">Alternatively, and as not recommended way in production, you can disable SSL and Quarkus will disable Bolt SSL as well. <code>quarkus.ssl.native=false</code>.</p>
+<p class="">Alternatively, and as a not recommended way in production, you can disable SSL and Quarkus will disable Bolt SSL as well. <code>quarkus.ssl.native=false</code>.</p>
+<p class="">If you are using NEO4J 4.0, you can use fully reactive.
+Add next depenency management <code>io.projectreactor:reactor-bom:Californium-SR4:pom:import</code> and dependency: <code>io.projectreactor:reactor-core</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public Publisher&lt;String&gt; get() {
+        return Flux.using(driver::rxSession, ...);
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -3587,7 +3596,7 @@ public String extractText(InputStream stream) {
 <div class="author-bio">Java Champion and SW Engineer at Red Hat</div>
 </div>
 
-<div class="author-bio">0.19.0</div>
+<div class="author-bio">0.19.1</div>
 <img src="./redhat/assets/by-nc-sa.png"/>
 </div>
 
