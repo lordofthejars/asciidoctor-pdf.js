@@ -241,7 +241,7 @@ IMPORTANT: Quarkus is designed with Substrate VM in mind. For this reason, we en
 
 *Produces*
 // tag::update_5_4[]
-You can also create factory of object by using `@javax.enterprise.inject.Produces` annotation.
+You can also create a factory of an object by using `@javax.enterprise.inject.Produces` annotation.
 
 [source, java]
 ----
@@ -259,7 +259,7 @@ Message msg;
 
 *Qualifiers*
 
-You can use qualifiers to return different implementations of same interface or to customize configuration of bean.
+You can use qualifiers to return different implementations of the same interface or to customize the configuration of the bean.
 
 [source, java]
 ----
