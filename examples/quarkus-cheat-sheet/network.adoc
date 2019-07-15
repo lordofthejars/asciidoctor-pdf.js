@@ -396,18 +396,19 @@ public class DatabaseHealthCheck {
     @ApplicationScoped
     @Liveness
     HealthCheck check1() {
-      return () -> HealthCheckResponse
-                    .named("successful-live").up()
-                    .build();
+      return io.smallrye.health.HealthStatus
+                                .up("successful-live");
     }
+
     @Produces
     @ApplicationScoped
     @Readiness
     HealthCheck check2() {
-      return () -> HealthCheckResponse
-                    .named("successful-read").up()
-                    .build();
+      return HealthStatus
+                .state("successful-read", this::isReady)
     }
+
+    private boolean isReady() {}
 }
 ----
 
