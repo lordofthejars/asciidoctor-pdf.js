@@ -23,6 +23,30 @@ In this page you can either read what has been added in each version of the chea
 include::core.adoc[tag=update_6_1]
 ====
 
+.Custom Context Path
+[%collapsible]
+====
+include::core.adoc[tag=update_6_2]
+====
+
+.Test Coverage
+[%collapsible]
+====
+include::core.adoc[tag=update_6_3]
+====
+
+.Transactions
+[%collapsible]
+====
+include::persistence.adoc[tag=update_6_4]
+====
+
+.Kubernetes Client Configuration
+[%collapsible]
+====
+include::cloud.adoc[tag=update_6_5]
+====
+
 === Version 0.19.0
 
 .Exception Mapper

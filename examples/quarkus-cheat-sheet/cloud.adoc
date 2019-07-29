@@ -54,7 +54,101 @@ Quarkus integrates with https://github.com/fabric8io/kubernetes-client[Fabric8 K
     -Dextensions="quarkus-kubernetes-client"
 ----
 
-IMPORTANT: Currently you need to create a Kubernates Client producer by yourself, but this is gonna be improved in near future versions:
+// tag::update_6_5[]
+List of Kubernetes client parameters.
+
+`quarkus.kubernetes-client` as prefix is skipped in the next table.
+
+|===	
+| Property | Default | Description
+
+a|`trust-certs`
+a|`false`
+|Trust self-signed certificates.
+
+a|`master-url`
+a|
+|URL of Kubernetes API server.
+
+a|`namesapce`
+a|
+|Default namespace to use.
+
+a|`ca-cert-file`
+a|
+|CA certificate data.
+
+a|`client-cert-file`
+a|
+|Client certificate file.
+
+a|`client-cert-data`
+a|
+|Client certificate data.
+
+a|`client-key-data`
+a|
+|Client key data.
+
+a|`client-key-algorithm`
+a|
+|Client key algorithm.
+
+a|`client-key-passphrase`
+a|
+|Client key passphrase.
+
+a|`username`
+a|
+|Username.
+
+a|`password`
+a|
+|Password.
+
+a|`watch-reconnect-interval`
+a|`PT1S`
+|Watch reconnect interval.
+
+a|`watch-reconnect-limit`
+a|`-1`
+|Maximum reconnect attempts.
+
+a|`connection-timeout`
+a|`PT10S`
+|Maximum amount of time to wait for a connection.
+
+a|`request-timeout`
+a|`PT10S`
+|Maximum amount of time to wait for a request.
+
+a|`rolling-timeout`
+a|`PT15M`
+|Maximum amount of time to wait for a rollout.
+
+a|`http-proxy`
+a|
+|HTTP proxy used to access the Kubernetes.
+
+a|`https-proxy`
+a|``
+|HTTPS proxy used to access the Kubernetes.
+
+a|`proxy-username`
+a|
+|Proxy username.
+
+a|`proxy-password`
+a|
+|Proxy password.
+
+a|`no-proxy`
+a|
+|IP addresses or hosts to exclude from proxying
+|===
+// end::update_6_5[]
+
+Or programmatically:
 
 [source, java]
 ----

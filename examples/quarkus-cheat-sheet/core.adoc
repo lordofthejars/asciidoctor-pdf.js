@@ -212,6 +212,12 @@ com.acme.config.CustomInstantConverter
 ----
 // end::update_2_8[]
 
+== Custom Context Path
+// tag::update_6_2[]
+By default Undertow will serve content from under the root context. 
+If you want to change this you can use the `quarkus.servlet.context-path` config key to set the context path.
+// end::update_6_2[]
+
 == Injection
 
 Quarkus is based on CDI 2.0 to implement injection of code.
@@ -753,10 +759,10 @@ public class TestStereotypeTestCase {}
 // end::update_5_5[]
 
 *Test Coverage*
-// tag:update_6_xx[]
+// tag:update_6_3[]
 Due the nature of Quarkus to calculate correctly the coverage information with JaCoCo, you might need offline instrumentation.
 I recommend reading this document xxxxxyyyyyzzzz to understand how JaCoCo and Quarkus works and how you can configure JaCoCo to get correct data.
-// end::update_6_xx[]
+// end::update_6_3[]
 
 *Native Testing*
 

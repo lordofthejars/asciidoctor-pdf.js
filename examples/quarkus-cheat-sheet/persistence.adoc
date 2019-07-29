@@ -345,7 +345,7 @@ public class FlywayTestResources {
 // end::update_4_3[]
 
 *Transactions*
-// tag::update_6_xx[]
+// tag::update_6_4[]
 The easiest way to define your transaction boundaries is to use the `@Transactional` annotation as a declarative approach.
 
 Transactions are mandatory in case of none idempotent operations.
@@ -391,7 +391,7 @@ transaction.begin();
 transaction.commit();
 transaction.rollback();
 ----
-// end::update_6_xx[]
+// end::update_6_4[]
 
 == Flyway
 // tag::update_1_7[]
@@ -738,6 +738,30 @@ a|`neo4j`
 a|`authentication.disabled`
 a|`false`
 |Disable authentication.
+
+a|`pool.metrics-enabled`
+a|`false`
+|Enable metrics.
+
+a|`pool.log-leaked-sessions`
+a|`false`
+|Enable leaked sessions logging.
+
+a|`pool.max-connection-pool-size`
+a|`100`
+|Max amount of connections.
+
+a|`pool.max-connection-lifetime`
+a|`1H`
+|Pooled connections older will be closed and removed from the pool.
+
+a|`pool.connection-acquisition-timeout`
+a|`1M`
+|Timout for connection adquisation.
+
+a|`pool.idle-time-before-connection-test`
+a|`-1`
+|Pooled connections idled in the pool for longer than this timeout will be tested before they are used.
 |===
 
 As Neo4j uses SSL communication by default, to create a native executable you need to compile with next options GraalVM options:
