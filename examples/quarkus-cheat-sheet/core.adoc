@@ -334,6 +334,32 @@ public Response create(Sauce sauce) {
 }
 ----
 
+// tag::udpate_6_1[]
+To work with `Jackson` you need to add:
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-resteasy-jackson"
+----
+
+If you don't want to use the default `ObjectMapper` you can customize by:
+
+[source, java]
+----
+@ApplicationScoped
+public class CustomObjectMapperConfig {
+    @Singleton
+    @Produces
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        // perform configuration
+        return objectMapper;
+    }
+}
+----
+// end::update_6_1[]
+
 == Validator
 
 Quarkus uses https://hibernate.org/validator/[Hibernate Validator, window="_blank"] to validate input/output of REST services and business services using Bean validation spec.
@@ -665,6 +691,12 @@ public class MyCustomTestResource
     // optional
     @Override
     public void inject(Object testInstance) {
+    }
+
+    // optional
+    @Override
+    public int order() {
+        return 0;
     }
 }
 ----
