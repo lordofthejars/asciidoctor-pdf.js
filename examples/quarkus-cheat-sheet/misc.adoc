@@ -285,8 +285,10 @@ a|`mailer.key-store-password`
 |
 |Key store password.
 |===
-
 // tag::update_3_7[]
+// tag::update_6_x[]
+*IMPORTANT:*  if you enable SSL for the mailer and you want to build a native executable, you will need to enable the SSL support `quarkus.ssl.native=true`. 
+// end::update_6_x[]
 
 *Testing*
 

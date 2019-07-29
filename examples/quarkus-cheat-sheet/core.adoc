@@ -752,6 +752,12 @@ public class TestStereotypeTestCase {}
 ----
 // end::update_5_5[]
 
+*Test Coverage*
+// tag:update_6_xx[]
+Due the nature of Quarkus to calculate correctly the coverage information with JaCoCo, you might need offline instrumentation.
+I recommend reading this document xxxxxyyyyyzzzz to understand how JaCoCo and Quarkus works and how you can configure JaCoCo to get correct data.
+// end::update_6_xx[]
+
 *Native Testing*
 
 To test native executables annotate the test with `@SubstrateTest`.

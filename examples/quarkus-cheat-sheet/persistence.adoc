@@ -344,6 +344,55 @@ public class FlywayTestResources {
 ----
 // end::update_4_3[]
 
+*Transactions*
+// tag::update_6_xx[]
+The easiest way to define your transaction boundaries is to use the `@Transactional` annotation as a declarative approach.
+
+Transactions are mandatory in case of none idempotent operations.
+
+[source, java]
+----
+@Transactional
+public void createDeveloper() {}
+----
+
+You can control how the transaction is started:
+
+* `@Transactional(REQUIRED)` (default): starts a transaction if none was started, stays with the existing one otherwise.
+
+* `@Transactional(REQUIRES_NEW)`: starts a transaction if none was started; if an existing one was started, suspends it and starts a new one for the boundary of that method.
+
+* `@Transactional(MANDATORY)`: fails if no transaction was started ; works within the existing transaction otherwise.
+
+* `@Transactional(SUPPORTS)`: if a transaction was started, joins it ; otherwise works with no transaction.
+
+* `@Transactional(NOT_SUPPORTED)`: if a transaction was started, suspends it and works with no transaction for the boundary of the method; otherwise works with no transaction.
+
+* `@Transactional(NEVER)`: if a transaction was started, raises an exception; otherwise works with no transaction.
+
+You can configure the default transaction timeout using `quarkus.transaction-manager.default-transaction-timeout` configuration property. By default it is set to 60 seconds.
+
+You can set a timeout property, in seconds, that applies to transactions created within the annotated method by using `@TransactionConfiguration` annotation.
+
+[source, java]
+----
+@Transactional
+@TransactionConfiguration(timeout=40)
+public void createDeveloper() {}
+----
+
+If you want more control over transactions you can inject `UserTransaction` and use a programmatic way.
+
+[source, java]
+----
+@Inject UserTransaction transaction
+
+transaction.begin();
+transaction.commit();
+transaction.rollback();
+----
+// end::update_6_xx[]
+
 == Flyway
 // tag::update_1_7[]
 Quarkus integrates with https://flywaydb.org/[Flyway, window="_blank"] to help you on database schema migrations.
