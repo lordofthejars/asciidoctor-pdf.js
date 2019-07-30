@@ -148,6 +148,29 @@ quarkus.swagger-ui.path=/my-custom-path
 ----
 // end::update_2_3[]
 
+// tag::update_6_6[]
+You can customize the output by using Open API v3 annotations.
+
+[source, java]
+----
+@Schema(name="Developers", description="POJO that represents a developer.")
+public class Developer {
+    @Schema(required = true, example = "Alex")
+    private String name;
+}
+
+@POST
+@Path("/developer")
+@Operation(summary = "Create deeloper",
+           description = "This can only be done by administrator.")
+public Response createDeveloper(
+        @RequestBody(description = "Created developer object", required = true,
+            content = @Content(schema = @Schema(implementation = Developer.class))) Developer developer)
+----
+
+All possible annotations can be seen at https://github.com/eclipse/microprofile-open-api/tree/master/api/src/main/java/org/eclipse/microprofile/openapi/annotations[org.eclipse.microprofile.openapi.annotations, window="_blank"] package.
+// end::update_6_6[]
+
 == Mail Sender
 // tag::update_2_5[]
 You can send emails by using Quarkus Mailer extension:

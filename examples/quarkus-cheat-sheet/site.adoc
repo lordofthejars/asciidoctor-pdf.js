@@ -47,6 +47,12 @@ include::persistence.adoc[tag=update_6_4]
 include::cloud.adoc[tag=update_6_5]
 ====
 
+.Customization of OpenAPI v3 output
+[%collapsible]
+====
+include::misc.adoc[tag=update_6_6]
+====
+
 === Version 0.19.0
 
 .Exception Mapper
