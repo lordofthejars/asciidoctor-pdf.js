@@ -137,6 +137,10 @@ quarkus.keycloak.bearer-only=true
 quarkus.keycloak.credentials.secret=secret
 quarkus.keycloak.policy-enforcer.enable=true
 quarkus.keycloak.policy-enforcer.enforcement-mode=PERMISSIVE
+quarkus.keycloak.enable-cors=true
+quarkus.keycloak.cors-max-age=1000
+quarkus.keycloak.cors-allowed-methods=POST, PUT, DELETE, GET
+quarkus.keycloak.cors-exposed-headers=WWW-Authenticate
 ----
 
 You can see all possible https://www.keycloak.org/docs/latest/securing_apps/index.html#_java_adapter_config[Configuration parameters here, window="_blank"].
