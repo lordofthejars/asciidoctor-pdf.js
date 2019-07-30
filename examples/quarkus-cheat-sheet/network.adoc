@@ -434,22 +434,22 @@ MicroProfile Metrics annotations:
 | Annotation | Description
 
 a|`@Timed`
-a|Method, constructor, or class as timed.
+a|Tracks the duration.
 
 a|`@Metered`
-a|Method, constructor, or class as metered.
+a|Tracks the frequency of invocations.
 
 a|`@Counted`
-a|Method, constructor, or class as counted.
+a|Counts number of invocations.
 
 a|`@Gauge`
-a|Method or field as a gauge.
+a|Samples the value of the annotated object.
 
 a|`@ConcurrentGauge`
-a|Method, constructor, or class for parallel invocation.
+a|Gauge to count parallel invocations.
 
 a|`@Metric`
-a|Requesting that a metric be injected or registered.
+a|Used to inject a metric. Valid types `Meter`, `Timer`, `Counter`, `Histogram`. `Gauge` only on producer methods/fields.
 |===
 
 [source, java]
