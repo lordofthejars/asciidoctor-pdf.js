@@ -125,8 +125,35 @@ quarkus.http.port=9090
 %staging.quarkus.http.port=9999
 ----
 
-And enable it `quarkus-profile=staging`.
+And enable it `quarkus.profile=staging`.
 // end::update_2_9[]
+
+// tag::update_6_7[]
+You can also set it in the build tool:
+
+[source, xml]
+----
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-surefire-plugin</artifactId>
+<version>${surefire-plugin.version}</version>
+<configuration>
+    <systemPropertyVariables>
+        <quarkus.test.profile>foo</quarkus.test.profile>
+        <buildDirectory>${project.build.directory}</buildDirectory>
+    </systemPropertyVariables>
+</configuration>
+----
+
+TIP: Same for `maven-failsafe-plugin`.
+
+[source, groovy]
+----
+test {
+    useJUnitPlatform()
+    systemProperty "quarkus.test.profile", "foo"
+}
+----
+// end::update_6_7[]
 
 // tag::update_2_6[]
 *Custom Loader*

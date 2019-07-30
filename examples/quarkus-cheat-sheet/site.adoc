@@ -53,6 +53,12 @@ include::cloud.adoc[tag=update_6_5]
 include::misc.adoc[tag=update_6_6]
 ====
 
+.Build Tool and Profiles
+[%collapsible]
+====
+include::core.adoc[tag=update_6_7]
+====
+
 === Version 0.19.0
 
 .Exception Mapper
