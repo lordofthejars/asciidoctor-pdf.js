@@ -197,6 +197,8 @@ If queries start with the keyword `from` then they are treated as _HQL_ query, i
 * `<columnName>` which expands to `from EntityName where <columnName>=?`
 * `<query>` which is expanded to `from EntityName where <query>`
 
+<<<
+
 *Static Methods*
 
 |===	
@@ -331,8 +333,6 @@ IMPORTANT: This flush is less efficient and you still need to commit transaction
 
 There is a Quarkus Test Resource that starts and stops H2 server before and after test suite.
 
-<<<
-
 Register next dependency `io.quarkus:quarkus-test-h2:test`.
 
 And annotate the test:
@@ -347,7 +347,7 @@ public class FlywayTestResources {
 
 *Transactions*
 // tag::update_6_4[]
-The easiest way to define your transaction boundaries is to use the `@Transactional` annotation as a declarative approach.
+The easiest way to define your transaction boundaries is to use the `@Transactional` annotation.
 
 Transactions are mandatory in case of none idempotent operations.
 
@@ -357,7 +357,7 @@ Transactions are mandatory in case of none idempotent operations.
 public void createDeveloper() {}
 ----
 
-You can control how the transaction is started:
+You can control the transaction scope:
 
 * `@Transactional(REQUIRED)` (default): starts a transaction if none was started, stays with the existing one otherwise.
 
@@ -372,6 +372,8 @@ You can control how the transaction is started:
 * `@Transactional(NEVER)`: if a transaction was started, raises an exception; otherwise works with no transaction.
 
 You can configure the default transaction timeout using `quarkus.transaction-manager.default-transaction-timeout` configuration property. By default it is set to 60 seconds.
+
+<<<
 
 You can set a timeout property, in seconds, that applies to transactions created within the annotated method by using `@TransactionConfiguration` annotation.
 
@@ -562,7 +564,7 @@ public class LibraryResource {
 
 *IMPORTANT* If you are importing data without using Hibernate ORM, you need to index data by using `Search.getSearchSession(em).createIndexer()` `.startAndWait()` at startup time.
 
-You need to configure the extension in `application.properties`:
+Configure the extension in `application.properties`:
 
 [source, properties]
 ----
@@ -679,8 +681,6 @@ a|`@ScaledNumberField`
 a| For `java.math.BigDecimal` or `java.math.BigInteger` that you need higher precision.
 |===
 // end::update_3_1[]
-
-<<<
 
 == Amazon DynamoDB
 // tag::update_5_6[]
@@ -932,7 +932,7 @@ a|`boolean [true]`
 
 a|`write-concern.w`
 a|`String`
-|Sets value to all write commands.
+|Value to all write commands.
 
 a|`write-concern.retry-writes`
 a|`boolean [false]`
@@ -940,7 +940,7 @@ a|`boolean [false]`
 
 a|`write-concern.w-timeout`
 a|`Duration`
-|Sets timeout to all write commands.
+|Timeout to all write commands.
 
 a|`credentials.username`
 a|`String`
@@ -956,7 +956,7 @@ a|`MONGO-CR`, `GSSAPI`, `PLAIN`, `MONGODB-X509`
 
 a|`credentials.auth-source`
 a|`String`
-|Configures the source of the authentication credentials.
+|Source of the authentication credentials.
 
 a|`credentials.auth-mechanism-properties`
 a|`Map<String, String>`

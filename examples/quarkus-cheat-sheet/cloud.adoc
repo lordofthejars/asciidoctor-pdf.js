@@ -72,7 +72,7 @@ a|
 
 a|`namesapce`
 a|
-|Default namespace to use.
+|Default namespace.
 
 a|`ca-cert-file`
 a|
@@ -190,6 +190,8 @@ client.customResourceDefinitions()
         .create(dummyCRD);
 ----
 // end::update_4_5[]
+
+<<<
 
 *Testing*
 // tag::update_5_9[]

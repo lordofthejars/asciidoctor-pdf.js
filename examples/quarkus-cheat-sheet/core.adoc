@@ -367,7 +367,7 @@ public Response create(Sauce sauce) {
 }
 ----
 
-// tag::udpate_6_1[]
+// tag::update_6_1[]
 To work with `Jackson` you need to add:
 
 [source, bash]
@@ -376,7 +376,7 @@ To work with `Jackson` you need to add:
   -Dextensions="quarkus-resteasy-jackson"
 ----
 
-If you don't want to use the default `ObjectMapper` you can customize by:
+If you don't want to use the default `ObjectMapper` you can customize it by:
 
 [source, java]
 ----
@@ -418,7 +418,7 @@ public class Sauce {
 }
 ----
 
-To validate that an object is valid you need to annotate where is used with `@Valid` annotation:
+To validate an object use `@Valid` annotation:
 
 [source, java]
 ----
@@ -838,6 +838,8 @@ public class MyTest {
 
 If you need to provide an alternative implementation of a service (for testing purposes) you can do it by using CDI `@Alternative` annotation using it in the test service placed at `src/test/java`:
 
+<<<
+
 [source, java]
 ----
 @Alternative
@@ -847,8 +849,6 @@ public class MockExternalService extends ExternalService {}
 ----
 
 IMPORTANT: This does not work when using native image testing.
-
-<<<
 
 // tag::update_3_6[]
 A stereotype annotation `io.quarkus.test.Mock` is provided declaring `@Alternative`, `@Priority(1)` and `@Dependent`.
@@ -875,9 +875,9 @@ public class TestStereotypeTestCase {}
 // end::update_5_5[]
 
 *Test Coverage*
-// tag:update_6_3[]
+// tag::update_6_3[]
 Due the nature of Quarkus to calculate correctly the coverage information with JaCoCo, you might need offline instrumentation.
-I recommend reading this document xxxxxyyyyyzzzz to understand how JaCoCo and Quarkus works and how you can configure JaCoCo to get correct data.
+I recommend reading https://quarkus.io/guides/tests-with-coverage-guide[this document, window="_blank"] to understand how JaCoCo and Quarkus works and how you can configure JaCoCo to get correct data.
 // end::update_6_3[]
 
 *Native Testing*

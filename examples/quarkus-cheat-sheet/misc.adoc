@@ -162,10 +162,13 @@ public class Developer {
 @POST
 @Path("/developer")
 @Operation(summary = "Create deeloper",
-           description = "This can only be done by administrator.")
+           description = "Only be done by admin.")
 public Response createDeveloper(
-        @RequestBody(description = "Created developer object", required = true,
-            content = @Content(schema = @Schema(implementation = Developer.class))) Developer developer)
+        @RequestBody(description = "Developer object", 
+            required = true,
+            content = @Content(schema = 
+            @Schema(implementation = Developer.class))) 
+                Developer developer)
 ----
 
 All possible annotations can be seen at https://github.com/eclipse/microprofile-open-api/tree/master/api/src/main/java/org/eclipse/microprofile/openapi/annotations[org.eclipse.microprofile.openapi.annotations, window="_blank"] package.
@@ -180,6 +183,8 @@ You can send emails by using Quarkus Mailer extension:
 ./mvnw quarkus:add-extension 
   -Dextensions="io.quarkus:quarkus-mailer"
 ----
+
+<<<
 
 You can inject two possible classes `io.quarkus.mailer.Mailer` for synchronous API or `io.quarkus.mailer.ReactiveMailer` for asynchronous API.
 
@@ -333,8 +338,6 @@ List<Mail> sent = mailbox
 // end::update_3_7[]
 
 // end::update_2_5[]
-
-<<<
 
 == Scheduled Tasks
 // tag::update_3_2[]
