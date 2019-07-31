@@ -768,6 +768,7 @@ A stereotype annotation `io.quarkus.test.Mock` is provided declaring `@Alternati
 
 *Interceptors*
 // tag::update_5_5[]
+
 Tests are actually full CDI beans, so you can apply CDI interceptors:
 
 [source, java]
