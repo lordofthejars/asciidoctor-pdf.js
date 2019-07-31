@@ -541,6 +541,94 @@ a|`file.path`
 a|`quarkus.log`
 a|The path to log file.
 
+a|`file.rotation.max-file-size`
+a|
+a|The maximum file size of the log file.
+
+a|`file.rotation.max-backup-index`
+a|`1`
+|The maximum number of backups to keep.
+
+a|`file.rotation.file-suffix`
+a|
+|Rotating log file suffix.
+
+a|`file.rotation.rotate-on-boot`
+a|`true`
+|Indicates rotate logs at bootup.
+
+a|`file.async`
+a|`false`
+|Log asynchronously.
+
+a|`file.async.queue-length`
+a|`512`
+|The queue length to use before flushing writing.
+
+a|`file.async.overflow`
+a|`BLOCK`
+|Action when queue is full.
+
+a|`syslog.enable`
+a|`false`
+|syslog logging is enabled.
+
+a|`syslog.format`
+a|`%d{yyyy-MM-dd HH:mm:ss,SSS} %h %N[%i] %-5p [%c{3.}] (%t) %s%e%n`
+|The format pattern to use for logging to syslog.
+
+a|`syslog.level`
+a|`ALL`
+|The minimum log level to write to syslog.
+
+a|`syslog.endpoint`
+a|`localhost:514`
+|The IP address and port of the syslog server.
+
+a|`syslog.app-name`
+a|Current process name.
+|The app name used when formatting the message in RFC5424 format.
+
+a|`syslog.hostname`
+a|Current hostname.
+|The name of the host the messages are being sent from.
+
+a|`syslog.facility`
+a|`USER_LEVEL`
+|Priority of the message as defined by RFC-5424 and RFC-3164.
+
+a|`syslog.syslog-type`
+a|`RFC5424`
+|The syslog type of format message.
+
+a|`syslog.protocol`
+a|`TCP`
+|Protocol used.
+
+a|`syslog.use-counting-framing`
+a|`false`
+|Message prefixed with the size of the message.
+
+a|`syslog.truncate`
+a|`true`
+|Message should be truncated.
+
+a|`syslog.block-on-reconnect`
+a|`true`
+|Block when attempting to reconnect.
+
+a|`syslog.async`
+a|`false`
+|Log asynchronously.
+
+a|`syslog.async.queue-length`
+a|`512`
+|The queue length to use before flushing writing.
+
+a|`syslog.async.overflow`
+a|`BLOCK`
+|Action when queue is full.
+
 a|`category."<category-name>".level`
 a|`INFO`
 a|Minimum level category.
@@ -557,7 +645,7 @@ Quarkus implements https://github.com/eclipse/microprofile-rest-client[MicroProf
 [source, bash]
 ----
 ./mvnw quarkus:add-extension 
-  -Dextensions="io.quarkus:quarkus-smallrye-rest-client"
+  -Dextensions="io.quarkus:quarkus-rest-client"
 ----
 
 <<<

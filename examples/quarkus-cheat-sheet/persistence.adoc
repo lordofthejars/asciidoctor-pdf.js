@@ -104,6 +104,7 @@ a|Not necessary to set.
 
 a|`sql-load-script`
 |Name of the file containing the SQL statements to execute when starts.
+`no-file` force Hibernate to skip SQL import.
 a|`import.sql`
 
 a|`batch-fetch-size`

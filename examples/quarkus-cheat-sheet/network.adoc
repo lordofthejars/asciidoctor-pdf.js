@@ -89,7 +89,7 @@ public String getBase(@Context UriInfo uriInfo) {
 }
 ----
 
-Possible injectable objects: `SecurityContext`, `Request`, `Application`, `Configuration`, `Providers`, `ResourceContext`, `ServletConfig`, `ServletContext`, `HttpServletRequest`, `HttpServletResponse`, `HttpHeaders`, `URiInfo`, `SseEventSink` and `Sse`.
+Possible injectable objects: `SecurityContext`, `Request`, `Application`, `Configuration`, `Providers`, `ResourceContext`, `ServletConfig`, `ServletContext`, `HttpServletRequest`, `HttpServletResponse`, `HttpHeaders`, `Urinfo`, `SseEventSink` and `Sse`.
 // end::update_4_1[]
 
 *HTTP Filters*
