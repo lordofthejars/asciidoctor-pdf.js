@@ -147,3 +147,56 @@ You can see all possible https://www.keycloak.org/docs/latest/securing_apps/inde
 
 TIP: you can also use `src/main/resources/keycloak.json` standard Keycloak configuration file.
 // end::update_1_9[]
+
+== OAuth2
+// tag::update_6_8[]
+Quarkus integrates with OAuth2 to be used in case of opaque tokens (none JWT) and its validation against an introspection endpoint.
+
+[source, bash]
+----
+mvn quarkus:add-extension 
+    -Dextensions="security-oauth2"
+----
+
+And configuration in `src/main/resources/application.properties`:
+
+[source, properties]
+----
+quarkus.oauth2.client-id=client_id
+quarkus.oauth2.client-secret=secret
+quarkus.oauth2.introspection-url=http://oauth-server/introspect
+----
+
+And you can map roles to be used in security annotations.
+
+[source, java]
+----
+@RolesAllowed("Subscriber")
+----
+
+Configuration options:
+
+|===	
+| Parameter | Default | Description
+
+a|`quarkus.oauth2.enabled`
+a|`true`
+|Determine if the OAuth2 extension is enabled.
+
+a|`quarkus.oauth2.client-id`
+a|
+|The OAuth2 client id used to validate the token.
+
+a|`quarkus.oauth2.client-secret`
+a|
+|The OAuth2 client secret used to validate the token.
+
+a|`quarkus.oauth2.introspection-url`
+a|
+|URL used to validate the token and gather the authentication claims.
+
+a|`quarkus.oauth2.role-claim`
+a|`scope`
+|The claim that is used in the endpoint response to load the roles
+|===
+// end::update_6_8[]
