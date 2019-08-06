@@ -271,7 +271,6 @@ GreetingService greetingService;
 
 IMPORTANT: Quarkus is designed with Substrate VM in mind. For this reason, we encourage you to use _package-private_ scope instead of _private_.
 
-
 *Produces*
 // tag::update_5_4[]
 You can also create a factory of an object by using `@javax.enterprise.inject.Produces` annotation.
@@ -321,6 +320,18 @@ Message message(InjectionPoint msg) {
 Message message;
 ----
 // end::update_5_4[]
+
+// tag::update_7_1[]
+*TIP*
+
+Quarkus breaks the CDI spec by allowing you to inject qualified beans without using `@Inject` annotation.
+
+[source, java]
+----
+@Quote("Aloha Beach")
+Message message;
+----
+// end::update_7_1[]
 
 == JSON Marshalling/Unmarshalling
 

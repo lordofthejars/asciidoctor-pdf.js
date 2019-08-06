@@ -315,7 +315,7 @@ org.acme.quickstart.WorldClock/getNow/Retry/enabled=false
 MP_Fault_Tolerance_NonFallback_Enabled=false
 ----
 
-TIP: MicroProfile Fault Tolerance integrats with MicroProfile Metrics spec. You can disable it by setting `MP_Fault_Tolerance_Metrics_Enabled` to false.
+TIP: MicroProfile Fault Tolerance integrates with MicroProfile Metrics spec. You can disable it by setting `MP_Fault_Tolerance_Metrics_Enabled` to false.
 // end::update_1_2[]
 
 == Observability

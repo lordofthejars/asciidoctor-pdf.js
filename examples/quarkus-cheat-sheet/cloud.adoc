@@ -194,6 +194,7 @@ client.customResourceDefinitions()
 <<<
 
 *Testing*
+
 // tag::update_5_9[]
 Quarkus provides a Kubernetes Mock test resource that starts a mock of Kubernetes API server and sets the proper environment variables needed by Kubernetes Client.
 
