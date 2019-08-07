@@ -223,8 +223,8 @@ You can set fallback code in case of an error by using `@Fallback` annotation:
 @Fallback(fallbackMethod = "fallbackMethod")
 WorldClock getNow(){}
 
-public String fallbackMethod() {
-    return "It could beworse";
+public WorldClock fallbackMethod() {
+    return new WorldClock();
 }
 ----
 
@@ -235,9 +235,9 @@ You can also set logic into a class that implements `FallbackHandler` interface:
 [source, java]
 ----
 public class RecoverFallback 
-            implements FallbackHandler<String> {
+            implements FallbackHandler<WorldClock> {
     @Override
-    public String handle(ExecutionContext context) {
+    public WorldClock handle(ExecutionContext context) {
     }
 }
 ----
