@@ -39,4 +39,7 @@ include::cloud.adoc[]
 
 <<<
 include::misc.adoc[]
+
+<<<
+include::spring.adoc[]
 include::resources.adoc[]

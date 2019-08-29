@@ -41,6 +41,18 @@ include::other.adoc[tag=update_7_3]
 include::network.adoc[tag=update_7_4]
 ====
 
+.Spring DI
+[%collapsible]
+====
+include::spring.adoc[tag=update_7_5]
+====
+
+.Spring Web
+[%collapsible]
+====
+include::spring.adoc[tag=update_7_6]
+====
+
 === Version 0.20.0
 
 .Jackson

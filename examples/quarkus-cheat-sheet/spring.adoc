@@ -1,0 +1,104 @@
+== Spring DI
+// tag::update_7_5[]
+
+Quarkus provides a compatibility layer for Spring dependency injection.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-spring-di"
+----
+
+Some examples of what you can do.
+Notive that annotations are the Spring original ones.
+
+[soure, java]
+----
+@Configuration
+public class AppConfiguration {
+
+    @Bean(name = "capitalizeFunction")
+    public StringFunction capitalizer() {
+        return String::toUpperCase;
+    }
+}
+----
+
+Or as component:
+
+[source, java]
+----
+@Component("noopFunction")
+public class NoOpSingleStringFunction 
+    implements StringFunction {
+}
+----
+
+Also as a service and injection properties from `application.properties`.
+
+[source, java]
+----
+@Service
+public class MessageProducer {
+
+    @Value("${greeting.message}")
+    String message;
+
+}
+----
+
+And you can inject using `Autowired` or constructor in a component but also in a JAX-RS resource.
+
+[source, java]
+----
+@Component
+public class GreeterBean {
+
+    private final MessageProducer messageProducer;
+
+    @Autowired
+    @Qualifier("noopFunction")
+    StringFunction noopStringFunction;
+
+    public GreeterBean(MessageProducer messageProducer) {
+        this.messageProducer = messageProducer;
+    }
+}
+----
+// end::update_7_5[]
+
+== Spring Web
+// tag::update_7_6[]
+
+Quarkus provides a compatibility layer for Spring Web.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-spring-web"
+----
+
+Specifically supports the REST related features.
+Moreover infrastructure things like `BeanPostProcessor` will not be executed.
+
+[source, java]
+----
+@RestController
+@RequestMapping("/greeting")
+public class GreetingController {
+
+    private final GreetingBean greetingBean;
+
+    public GreetingController(GreetingBean greetingBean) {
+        this.greetingBean = greetingBean;
+    }
+
+    @GetMapping("/{name}")
+    public Greeting hello(@PathVariable(name = "name") String name) {
+        return new Greeting(greetingBean.greet(name));
+    }
+}
+----
+
+Supported annotations are: `RestController`, `RequestMapping`, `GetMapping`, `PostMapping`, `PutMapping`, `DeleteMapping`, `PatchMapping`, `RequestParam, `RequestHeader`, `MatrixVariable`, `PathVariable`, `CookieValue`, `RequestBody`, `ResponseStatus`, `ExceptionHandler` and `RestControllerAdvice`.
+// end::update_7_6[]
