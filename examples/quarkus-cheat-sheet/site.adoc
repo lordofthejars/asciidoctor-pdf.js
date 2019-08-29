@@ -29,6 +29,12 @@ include::core.adoc[tag=update_7_1]
 include::reactive.adoc[tag=update_7_2]
 ====
 
+.Configuring Apache Tika
+[%collapsible]
+====
+include::other.adoc[tag=update_7_3]
+====
+
 === Version 0.20.0
 
 .Jackson

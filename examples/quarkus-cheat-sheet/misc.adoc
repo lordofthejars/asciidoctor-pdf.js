@@ -409,4 +409,20 @@ public String extractText(InputStream stream) {
     return parser.parse(stream).getText();
 }
 ----
+
+// tag::update_7_3[]
+You can configure Apache Tika from `application.properties`file by using next properties prefixed with `quarkus`:
+
+|===	
+|Parameter | Default | Description
+
+a|`tika.tika-config-path`
+a|`tika-config.xml`
+a|Path to the Tika configuration resource. 
+
+a|`tika.append-embedded-content`
+a|`true`
+a|The document may have other embedded documents. Set if autmatically append.
+|===
+// end::update_7_3[]
 // end::update_5_8[]
