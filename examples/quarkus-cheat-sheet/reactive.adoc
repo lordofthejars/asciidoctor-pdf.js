@@ -309,44 +309,56 @@ Create streaming queries with the Kafka Streams API.
   -Dextensions="kafka-streams"
 ----
 
-You need to initialize `org.apache.kafka.streams.KafkaStreams` on startup:
+// tag::update_7_2[]
+All we need to do for that is to declare a CDI producer method which returns the Kafka Streams `org.apache.kafka.streams.Topology`:
 
 [source, java]
 ----
-private KafkaStreams streams;
-
-void onStart(@Observes StartupEvent ev) {
-    Properties props = new Properties();
-    // ...
-    StreamsBuilder builder = new StreamsBuilder();
-    // ...
-    streams = new KafkaStreams(builder.build(), props);
-
-    executor = Executors.newSingleThreadExecutor();
-    executor.execute(() -> {
-        waitForTopicsToBeCreated(bootstrapServers);
-        streams.start();
-    });
-}
-
-void onStop(@Observes ShutdownEvent ev) {
-    streams.close();
-    executor.shutdown();
+@ApplicationScoped
+public class TopologyProducer {
+    @Produces
+    public Topology buildTopology() {
+        org.apache.kafka.streams.StreamsBuilder.StreamsBuilder 
+            builder = new StreamsBuilder();
+        // ...
+        builder.stream()
+            .join()
+            // ...
+            .toStream()
+            .to();
+        return builder.build();
+    }
 }
 ----
 
-And then you can use it.
+Previous example produces content to another stream.
+If you want to write interactive queries, you can use Kafka streams.
 
 [source, java]
 ----
-public List getData() {
-    return streams.allMetadataForStore("")
-                .stream()
-                .map()
-                .collect()
-}
+@Inject
+KafkaStreams streams;
 
+return streams
+        .store("stream", QueryableStoreTypes.keyValueStore());
 ----
+
+The Kafka Streams extension is configured via the Quarkus configuration file `application.properties`.
+
+[source, properties]
+----
+quarkus.kafka-streams.bootstrap-servers=localhost:9092
+quarkus.kafka-streams.application-id=temperature-aggregator
+quarkus.kafka-streams.application-server=${hostname}:8080
+quarkus.kafka-streams.topics=weather-stations,temperature-values
+
+kafka-streams.cache.max.bytes.buffering=10240
+kafka-streams.commit.interval.ms=1000
+----
+
+*IMPORTANT:* All the properties within the `kafka-streams` namespace are passed through as-is to the Kafka Streams engine. Changing their values requires a rebuild of the application.
+
+// end::update_7_2[]
 // end::update_3_10[]
 
 == Reactive PostgreSQL Client

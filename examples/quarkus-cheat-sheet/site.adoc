@@ -23,6 +23,12 @@ In this page you can either read what has been added in each version of the chea
 include::core.adoc[tag=update_7_1]
 ====
 
+.Kafka Stream support
+[%collapsible]
+====
+include::reactive.adoc[tag=update_7_2]
+====
+
 === Version 0.20.0
 
 .Jackson
