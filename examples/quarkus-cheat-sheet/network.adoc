@@ -153,8 +153,27 @@ public class ErrorMapper
 ----
 // end::update_5_1[]
 
+== GZip Support
+// tag::update_7_4[]
+
+You can configure Quarkus to use GZip in the `application.properties` file using the next properties with `quarkus.resteasy` suffix:
+
+|===	
+|Parameter | Default | Description
+
+a|`gzip.enabled`
+a|`false`
+a|EnableGZip.
+
+a|`gzip.max-input`
+a|`10M`
+a|Configure the upper limit on deflated request body.
+|===
+// end::update_7_4[]
+
 == CORS Filter
 // tag::update_2_11[]
+
 Quarkus comes with a CORS filter that can be enabled via configuration:
 
 [source, properties]
