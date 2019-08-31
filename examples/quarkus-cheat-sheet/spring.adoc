@@ -10,7 +10,7 @@ Quarkus provides a compatibility layer for Spring dependency injection.
 ----
 
 Some examples of what you can do.
-Notive that annotations are the Spring original ones.
+Notice that annotations are the Spring original ones.
 
 [soure, java]
 ----
@@ -24,7 +24,7 @@ public class AppConfiguration {
 }
 ----
 
-Or as component:
+Or as a component:
 
 [source, java]
 ----
@@ -47,7 +47,7 @@ public class MessageProducer {
 }
 ----
 
-And you can inject using `Autowired` or constructor in a component but also in a JAX-RS resource.
+And you can inject using `Autowired` or constructor in a component and in a JAX-RS resource too.
 
 [source, java]
 ----
@@ -56,8 +56,7 @@ public class GreeterBean {
 
     private final MessageProducer messageProducer;
 
-    @Autowired
-    @Qualifier("noopFunction")
+    @Autowired @Qualifier("noopFunction")
     StringFunction noopStringFunction;
 
     public GreeterBean(MessageProducer messageProducer) {
@@ -79,7 +78,7 @@ Quarkus provides a compatibility layer for Spring Web.
 ----
 
 Specifically supports the REST related features.
-Moreover infrastructure things like `BeanPostProcessor` will not be executed.
+Notice that infrastructure things like `BeanPostProcessor` will not be executed.
 
 [source, java]
 ----
@@ -94,7 +93,8 @@ public class GreetingController {
     }
 
     @GetMapping("/{name}")
-    public Greeting hello(@PathVariable(name = "name") String name) {
+    public Greeting hello(@PathVariable(name = "name") 
+                            String name) {
         return new Greeting(greetingBean.greet(name));
     }
 }

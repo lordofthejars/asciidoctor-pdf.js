@@ -124,6 +124,7 @@ public class LoggingFilter
 // end::update_3_3[]
 
 *Exception Mapper*
+
 // tag::update_5_1[]
 You can map exceptions to produce a custom output by implementing `ExceptionMapper` interface:
 

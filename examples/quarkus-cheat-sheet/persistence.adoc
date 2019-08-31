@@ -562,7 +562,7 @@ public class LibraryResource {
     }
 ----
 
-*IMPORTANT* If you are importing data without using Hibernate ORM, you need to index data by using `Search.getSearchSession(em).createIndexer()` `.startAndWait()` at startup time.
+*IMPORTANT* When not using Hibernate ORM, index data using `Search.getSearchSession(em).createIndexer()` `.startAndWait()` at startup time.
 
 Configure the extension in `application.properties`:
 
@@ -718,6 +718,8 @@ org.neo4j.driver.Driver driver;
 ----
 
 Configuration properties:
+
+<<<
 
 `quarkus.neo4j` as prefix is skipped in the next table.
 

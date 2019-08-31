@@ -32,7 +32,7 @@ include::reactive.adoc[tag=update_7_2]
 .Configuring Apache Tika
 [%collapsible]
 ====
-include::other.adoc[tag=update_7_3]
+include::misc.adoc[tag=update_7_3]
 ====
 
 .GZip support

@@ -659,8 +659,6 @@ Quarkus implements https://github.com/eclipse/microprofile-rest-client[MicroProf
   -Dextensions="io.quarkus:quarkus-rest-client"
 ----
 
-<<<
-
 To get content from http://worldclockapi.com/api/json/cet/now you need to create a service interface:
 
 [source, java]

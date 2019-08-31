@@ -1,7 +1,7 @@
 = Quarkus Cheat-Sheet
 ifndef::site[]
 Alex Soto <https://twitter.com/alexsotob>;
-:authorbio: Java Champion and SW Engineer at Red Hat
+:authorbio: Java Champion and Director of DevExp at Red Hat
 :pdf-width: 508mm
 :pdf-height: 361mm
 include::attributes.adoc[]
@@ -42,4 +42,6 @@ include::misc.adoc[]
 
 <<<
 include::spring.adoc[]
+
+<<<
 include::resources.adoc[]

@@ -15,7 +15,7 @@
 <div class="sectionbody">
 <p class=""><a href="https://quarkus.io/">Quarkus</a> is a Kubernetes Native Java stack tailored for GraalVM &amp; OpenJDK HotSpot, crafted from the best of breed Java libraries and standards.
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
-<p class="">Cheat-sheet tested with <strong>Quarkus 0.20.0</strong>.</p>
+<p class="">Cheat-sheet tested with <strong>Quarkus 0.21.1</strong>.</p>
 </div>
 </div>
 <div class="sect1">
@@ -24,7 +24,7 @@ Also focused on developer experience, making things just work with little to no 
 <p class="">Quarkus comes with a Maven archetype to scaffold a very simple starting project.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:0.20.0:create \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:0.21.1:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=getting-started \
     -DclassName="org.acme.quickstart.GreetingResource" \
@@ -379,6 +379,14 @@ Message message(InjectionPoint msg) {
 
 @Inject
 @Quote("Aloha Beach")
+Message message;</code></pre>
+</div>
+</div>
+<p class=""><strong>TIP</strong></p>
+<p class="">Quarkus breaks the CDI spec by allowing you to inject qualified beans without using <code>@Inject</code> annotation.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Quote("Aloha Beach")
 Message message;</code></pre>
 </div>
 </div>
@@ -753,7 +761,6 @@ quarkus.log.category."com.lordofthejars".level=DEBUG</code></pre>
   -Dextensions="io.quarkus:quarkus-rest-client"</code></pre>
 </div>
 </div>
-<div class="page-break"></div>
 <p class="">To get content from <a href="http://worldclockapi.com/api/json/cet/now" class="bare">http://worldclockapi.com/api/json/cet/now</a> you need to create a service interface:</p>
 <div class="listingblock">
 <div class="content">
@@ -1642,7 +1649,7 @@ You only need to implement <code>ElasticsearchAnalysisConfigurer</code> interfac
     }</code></pre>
 </div>
 </div>
-<p class=""><strong>IMPORTANT</strong> If you are importing data without using Hibernate ORM, you need to index data by using <code>Search.getSearchSession(em).createIndexer()</code> <code>.startAndWait()</code> at startup time.</p>
+<p class=""><strong>IMPORTANT</strong> When not using Hibernate ORM, index data using <code>Search.getSearchSession(em).createIndexer()</code> <code>.startAndWait()</code> at startup time.</p>
 <p class="">Configure the extension in <code>application.properties</code>:</p>
 <div class="listingblock">
 <div class="content">
@@ -1846,6 +1853,7 @@ org.neo4j.driver.Driver driver;</code></pre>
 </div>
 </div>
 <p class="">Configuration properties:</p>
+<div class="page-break"></div>
 <p class=""><code>quarkus.neo4j</code> as prefix is skipped in the next table.</p>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -2425,42 +2433,50 @@ mp.messaging.incoming.prices.auto-generated-client-id=
   -Dextensions="kafka-streams"</code></pre>
 </div>
 </div>
-<p class="">You need to initialize <code>org.apache.kafka.streams.KafkaStreams</code> on startup:</p>
+<p class="">All we need to do for that is to declare a CDI producer method which returns the Kafka Streams <code>org.apache.kafka.streams.Topology</code>:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">private KafkaStreams streams;
-
-void onStart(@Observes StartupEvent ev) {
-    Properties props = new Properties();
-    // ...
-    StreamsBuilder builder = new StreamsBuilder();
-    // ...
-    streams = new KafkaStreams(builder.build(), props);
-
-    executor = Executors.newSingleThreadExecutor();
-    executor.execute(() -&gt; {
-        waitForTopicsToBeCreated(bootstrapServers);
-        streams.start();
-    });
-}
-
-void onStop(@Observes ShutdownEvent ev) {
-    streams.close();
-    executor.shutdown();
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ApplicationScoped
+public class TopologyProducer {
+    @Produces
+    public Topology buildTopology() {
+        org.apache.kafka.streams.StreamsBuilder.StreamsBuilder
+            builder = new StreamsBuilder();
+        // ...
+        builder.stream()
+            .join()
+            // ...
+            .toStream()
+            .to();
+        return builder.build();
+    }
 }</code></pre>
 </div>
 </div>
-<p class="">And then you can use it.</p>
+<p class="">Previous example produces content to another stream.
+If you want to write interactive queries, you can use Kafka streams.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public List getData() {
-    return streams.allMetadataForStore("")
-                .stream()
-                .map()
-                .collect()
-}</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+KafkaStreams streams;
+
+return streams
+        .store("stream", QueryableStoreTypes.keyValueStore());</code></pre>
 </div>
 </div>
+<p class="">The Kafka Streams extension is configured via the Quarkus configuration file <code>application.properties</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.kafka-streams.bootstrap-servers=localhost:9092
+quarkus.kafka-streams.application-id=temperature-aggregator
+quarkus.kafka-streams.application-server=${hostname}:8080
+quarkus.kafka-streams.topics=weather-stations,temperature-values
+
+kafka-streams.cache.max.bytes.buffering=10240
+kafka-streams.commit.interval.ms=1000</code></pre>
+</div>
+</div>
+<p class=""><strong>IMPORTANT:</strong> All the properties within the <code>kafka-streams</code> namespace are passed through as-is to the Kafka Streams engine. Changing their values requires a rebuild of the application.</p>
 </div>
 </div>
 <div class="sect1">
@@ -2877,8 +2893,8 @@ public class LoggingFilter
 }</code></pre>
 </div>
 </div>
-<p class=""><strong>Exception Mapper</strong>
-You can map exceptions to produce a custom output by implementing <code>ExceptionMapper</code> interface:</p>
+<p class=""><strong>Exception Mapper</strong></p>
+<p class="">You can map exceptions to produce a custom output by implementing <code>ExceptionMapper</code> interface:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Provider
@@ -2904,6 +2920,38 @@ public class ErrorMapper
     }</code></pre>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_gzip_support"><a class="anchor" href="#_gzip_support"></a><a class="link" href="#_gzip_support">GZip Support</a></h2>
+<div class="sectionbody">
+<p class="">You can configure Quarkus to use GZip in the <code>application.properties</code> file using the next properties with <code>quarkus.resteasy</code> suffix:</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>gzip.enabled</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">EnableGZip.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>gzip.max-input</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>10M</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Configure the upper limit on deflated request body.</p></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">
@@ -2990,8 +3038,8 @@ public interface WorldClockService {
 @Fallback(fallbackMethod = "fallbackMethod")
 WorldClock getNow(){}
 
-public String fallbackMethod() {
-    return "It could beworse";
+public WorldClock fallbackMethod() {
+    return new WorldClock();
 }</code></pre>
 </div>
 </div>
@@ -3000,9 +3048,9 @@ public String fallbackMethod() {
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class RecoverFallback
-            implements FallbackHandler&lt;String&gt; {
+            implements FallbackHandler&lt;WorldClock&gt; {
     @Override
-    public String handle(ExecutionContext context) {
+    public WorldClock handle(ExecutionContext context) {
     }
 }</code></pre>
 </div>
@@ -3096,7 +3144,7 @@ MP_Fault_Tolerance_NonFallback_Enabled=false</code></pre>
 <div class="title">Tip</div>
 </td>
 <td class="content">
-MicroProfile Fault Tolerance integrats with MicroProfile Metrics spec. You can disable it by setting <code>MP_Fault_Tolerance_Metrics_Enabled</code> to false.
+MicroProfile Fault Tolerance integrates with MicroProfile Metrics spec. You can disable it by setting <code>MP_Fault_Tolerance_Metrics_Enabled</code> to false.
 </td>
 </tr>
 </table>
@@ -3532,8 +3580,8 @@ client.customResourceDefinitions()
 </div>
 </div>
 <div class="page-break"></div>
-<p class=""><strong>Testing</strong>
-Quarkus provides a Kubernetes Mock test resource that starts a mock of Kubernetes API server and sets the proper environment variables needed by Kubernetes Client.</p>
+<p class=""><strong>Testing</strong></p>
+<p class="">Quarkus provides a Kubernetes Mock test resource that starts a mock of Kubernetes API server and sets the proper environment variables needed by Kubernetes Client.</p>
 <p class="">Register next dependency: <code>io.quarkus:quarkus-test-kubernetes-client:test</code>.</p>
 <div class="listingblock">
 <div class="content">
@@ -4052,6 +4100,134 @@ public String extractText(InputStream stream) {
 }</code></pre>
 </div>
 </div>
+<p class="">You can configure Apache Tika from <code>application.properties`file by using next properties prefixed with `quarkus</code>:</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>tika.tika-config-path</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>tika-config.xml</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Path to the Tika configuration resource.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>tika.append-embedded-content</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>true</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">The document may have other embedded documents. Set if autmatically append.</p></div></td>
+</tr>
+</tbody>
+</table>
+<div class="page-break"></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_spring_di"><a class="anchor" href="#_spring_di"></a><a class="link" href="#_spring_di">Spring DI</a></h2>
+<div class="sectionbody">
+<p class="">Quarkus provides a compatibility layer for Spring dependency injection.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-spring-di"</code></pre>
+</div>
+</div>
+<p class="">Some examples of what you can do.
+Notice that annotations are the Spring original ones.</p>
+<div class="listingblock">
+<div class="content">
+<pre>@Configuration
+public class AppConfiguration {
+
+    @Bean(name = "capitalizeFunction")
+    public StringFunction capitalizer() {
+        return String::toUpperCase;
+    }
+}</pre>
+</div>
+</div>
+<p class="">Or as a component:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Component("noopFunction")
+public class NoOpSingleStringFunction
+    implements StringFunction {
+}</code></pre>
+</div>
+</div>
+<p class="">Also as a service and injection properties from <code>application.properties</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Service
+public class MessageProducer {
+
+    @Value("${greeting.message}")
+    String message;
+
+}</code></pre>
+</div>
+</div>
+<p class="">And you can inject using <code>Autowired</code> or constructor in a component and in a JAX-RS resource too.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Component
+public class GreeterBean {
+
+    private final MessageProducer messageProducer;
+
+    @Autowired @Qualifier("noopFunction")
+    StringFunction noopStringFunction;
+
+    public GreeterBean(MessageProducer messageProducer) {
+        this.messageProducer = messageProducer;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_spring_web"><a class="anchor" href="#_spring_web"></a><a class="link" href="#_spring_web">Spring Web</a></h2>
+<div class="sectionbody">
+<p class="">Quarkus provides a compatibility layer for Spring Web.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-spring-web"</code></pre>
+</div>
+</div>
+<p class="">Specifically supports the REST related features.
+Notice that infrastructure things like <code>BeanPostProcessor</code> will not be executed.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@RestController
+@RequestMapping("/greeting")
+public class GreetingController {
+
+    private final GreetingBean greetingBean;
+
+    public GreetingController(GreetingBean greetingBean) {
+        this.greetingBean = greetingBean;
+    }
+
+    @GetMapping("/{name}")
+    public Greeting hello(@PathVariable(name = "name")
+                            String name) {
+        return new Greeting(greetingBean.greet(name));
+    }
+}</code></pre>
+</div>
+</div>
+<p class="">Supported annotations are: <code>RestController</code>, <code>RequestMapping</code>, <code>GetMapping</code>, <code>PostMapping</code>, <code>PutMapping</code>, <code>DeleteMapping</code>, <code>PatchMapping</code>, <code>RequestParam, `RequestHeader</code>, <code>MatrixVariable</code>, <code>PathVariable</code>, <code>CookieValue</code>, <code>RequestBody</code>, <code>ResponseStatus</code>, <code>ExceptionHandler</code> and <code>RestControllerAdvice</code>.</p>
+<div class="page-break"></div>
 </div>
 </div>
 <div class="sect1">
@@ -4077,7 +4253,7 @@ public String extractText(InputStream stream) {
 <div class="author-bio">Java Champion and SW Engineer at Red Hat</div>
 </div>
 
-<div class="author-bio">0.20.0</div>
+<div class="author-bio">0.21.1</div>
 <img src="./redhat/assets/by-nc-sa.png"/>
 </div>
 
