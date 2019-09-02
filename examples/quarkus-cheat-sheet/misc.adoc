@@ -295,7 +295,7 @@ a|`false`
 
 a|`mailer.start-tls`
 a|`OPTIONAL`
-a|TLS security mode. `NONE`, `OPTIONAL`, `REQUIRED`.
+a|TLS security mode. `DISABLED`, `OPTIONAL`, `REQUIRED`.
 
 a|`mailer.login`
 a|`NONE`
