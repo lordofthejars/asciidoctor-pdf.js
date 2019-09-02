@@ -15,6 +15,14 @@ In this page you can either read what has been added in each version of the chea
 [[whatsnew]]
 == What's New in Cheat-Sheet
 
+=== Version 0.22.0
+
+.JGit
+[%collapsible]
+====
+include::misc.adoc[tag=update_8_1]
+====
+
 === Version 0.21.0
 
 .Injecting without @Inject

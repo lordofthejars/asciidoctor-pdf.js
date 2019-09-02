@@ -387,6 +387,7 @@ To start using it you only need to add the next extension:
 
 == Apache Tika
 // tag::update_5_8[]
+
 Quarkus integrets with https://tika.apache.org/[Apache Tika, window="_blank"] to detect and extract metadata/text from different file types:
 
 [source, bash]
@@ -426,3 +427,29 @@ a|The document may have other embedded documents. Set if autmatically append.
 |===
 // end::update_7_3[]
 // end::update_5_8[]
+
+== JGit
+// tag::update_8_1[]
+
+Quarkus integrets with https://www.eclipse.org/jgit/[JGit, window="_blank"] to integrate with Git repositories:
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-jgit"
+----
+
+And then you can start using JGit:
+
+[source, java]
+----
+try (Git git = Git.cloneRepository()
+                  .setDirectory(tmpDir)
+                  .setURI(url)
+                  .call()) {
+    return tmpDir.toString();
+}
+----
+
+*IMPORTANT:* When running in native mode, make sure to configure SSL access correctly `quarkus.ssl.native=true` (https://quarkus.io/guides/native-and-ssl-guide[Native and SSL, window="_blank"]). 
+// end::update_8_1[]
