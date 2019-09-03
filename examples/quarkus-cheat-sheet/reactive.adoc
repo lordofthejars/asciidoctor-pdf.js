@@ -379,7 +379,7 @@ quarkus.datasource.url=
     vertx-reactive:postgresql://host:5431/db
 ----
 
-Then you can inject `io.reactiverse.axle.pgclient.PgPool` class.
+Then you can inject `io.vertx.axle.pgclient.PgPool` class.
 
 [source, java]
 ----
@@ -388,9 +388,9 @@ PgPool client;
 
 CompletionStage<JsonArray> = 
     client.query("SELECT * FROM table")  
-    .thenApply(pgRowSet -> {
+    .thenApply(rowSet -> {
         JsonArray jsonArray = new JsonArray();
-        PgIterator iterator = pgRowSet.iterator();
+        PgIterator iterator = rowSet.iterator();
         return jsonArray;
     })
 ----
