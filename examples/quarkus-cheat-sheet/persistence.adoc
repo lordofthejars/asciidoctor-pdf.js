@@ -684,6 +684,8 @@ a| For `java.math.BigDecimal` or `java.math.BigInteger` that you need higher pre
 
 == Amazon DynamoDB
 // tag::update_5_6[]
+// tag::update_8_3[]
+
 Quarkus integrates with https://aws.amazon.com/dynamodb/[Amazon DynamoDB, window="_blank"]:
 
 [source, bash]
@@ -694,12 +696,239 @@ Quarkus integrates with https://aws.amazon.com/dynamodb/[Amazon DynamoDB, window
 
 [source, java]
 ----
-void onStart(@Observes StartupEvent ev) {
-    DynamoDbAsyncClient asyncClient = DynamoDbAsyncClient.create();
-    DynamoDbClient client = DynamoDbClient.create();
-}
+@Inject
+DynamoDbClient dynamoDB;
+
+@Inject
+DynamoDbAsyncClient dynamoDB;
 ----
+
+To use it as a local DynamoDB instance:
+
+[source, properties]
+----
+quarkus.dynamodb.region=
+    eu-central-1
+quarkus.dynamodb.endpoint-override=
+    http://localhost:8000
+quarkus.dynamodb.credentials.type=STATIC
+quarkus.dynamodb.credentials.static-provider
+    .access-key-id=test-key
+quarkus.dynamodb.credentials.static-provider
+.secret-access-key=test-secret
+----
+
+If you want to work with an AWS account, you’d need to set it with:
+
+[source, java]
+----
+quarkus.dynamodb.region=<YOUR_REGION>
+quarkus.dynamodb.credentials.type=DEFAULT
+----
+
+`DEFAULT` credentials provider chain: System properties `aws.accessKeyId`, `aws.secretKey` -> Env. Varables `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` -> Credentials profile `~/.aws/credentials` -> Credentials through the Amazon EC2 container service if the `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI` set -> Credentials through Amazon EC2 metadata service.
+
+Configuration parameters prefixed with `quarkus.dynamodb`:
+
+|===	
+|Parameter | Default | Description
+
+a|`region`
+a|
+a|Region that hosts DynamoDB.
+
+a|`enable-endpoint-discovery`
+a|`false`
+a|Endpoint discovery for a service API that supports endpoint discovery.
+
+a|`endpoint-override`
+a|
+a|Configure the endpoint with which the SDK should communicate.
+
+a|`credentials.type`
+a|`DEFAULT`
+a| Credentials that should be used `DEFAULT`, `STATIC`, `SYSTEM_PROPERTY`, `ENV_VARIABLE`, `PROFILE`, `CONTAINER`, `INSTANCE_PROFILE`, `PROCESS`, `ANONYMOUS`
+|===
+
+Credentials specific parameters prefixed with `quarkus.dynamodb.credentials`:
+
+|===	
+|Parameter | Default | Description
+
+3+|DEFAULT  
+
+a|`default-provider.async-credential-update-enabled`
+a|`false`
+a|Should fetch credentials async.
+
+a|`default-provider.reuse-last-provider-enabled`
+a|`true`
+a|Should reuse the last successful credentials.
+
+3+|STATIC
+
+a|`static-provider.access-key-id`
+a|
+a|AWS access key id.
+
+a|`static-provider.secret-access-key`
+a|
+a|AWS secret access key.
+
+3+|PROFILE
+
+a|`profile-provider.profile-name`
+a|`default`
+a|The name of the profile to use.
+
+3+|PROCESS
+
+a|`process-provider.command`
+a|
+a|Command to execute to retrieve credentials.
+
+a|`process-provider.process-output-limit`
+a|1024
+a|Max bytes to retrieve from process.
+
+a|`process-provider.credential-refresh-threshold`
+a|`PT15S`
+a|The amount of time between credentials expire and credentials refreshed.
+
+a|`process-provider.async-credential-update-enabled`
+a|`false`
+a|Should fetch credentials async.
+|===
+
+In case of synchronous client, the next parameters can be configured prefixed by `quarkus.dynamodb.sync-client`:
+
+|===	
+|Parameter | Default | Description
+
+a|`connection-acquisition-timeout`
+a|`10S`
+a|Connection acquisation timeout.
+
+a|`connection-max-idle-time`
+a|`60S`
+a|Max time to connection to be opened.
+
+a|`connection-timeout`
+a|
+a|Connection timeout.
+
+a|`connection-time-to-live`
+a|`0`
+a|Max time connection to be open.
+
+a|`socket-timeout`
+a|`30S`
+a|Time to wait for data.
+
+a|`max-connections`
+a|`50`
+a|Max connections.
+
+a|`expect-continue-enabled`
+a|`true`
+a|Client send an HTTP `expect-continue` handsake.
+
+a|`use-idle-connection-reaper`
+a|`true`
+a| Connections in pool should be closed asynchronously.
+
+a|`proxy.endpoint`
+a|
+a|Endpoint of the proxy server.
+
+a|`proxy.enabled`
+a|`false`
+a|Enables HTTP proxy.
+
+a|`proxy.username`
+a|
+a|Proxy username.
+
+a|`proxy.password`
+a|
+a|Proxy password.
+
+a|`proxy.ntlm-domain`
+a|
+a|For NTLM, domain name.
+
+a|`proxy.ntlm-workstation`
+a|
+a|For NTLM, workstation name.
+
+a|`proxy.preemptive-basic-authentication-enabled`
+a|
+a|Authenticate pre-emptively.
+
+a|`proxy.non-proxy-hosts`
+a|
+a|List of non proxy hosts.
+|===
+
+In case of asynchronous client, the next parameters can be configured prefixed by `quarkus.dynamodb.async-client`:
+
+|===	
+|Parameter | Default | Description
+
+a|`connection-acquisition-timeout`
+a|`10S`
+a|Connection acquisation timeout.
+
+a|`connection-max-idle-time`
+a|`60S`
+a|Max time to connection to be opened.
+
+a|`connection-timeout`
+a|
+a|Connection timeout.
+
+a|`connection-time-to-live`
+a|`0`
+a|Max time connection to be open.
+
+a|`max-concurrency`
+a|`50`
+a|Max number of concurrent connections.
+
+a|`use-idle-connection-reaper`
+a|`true`
+a|Connections in pool should be closed asynchronously.
+
+a|`read-timeout`
+a|`30S`
+a|Read timeout.
+
+a|`write-timeout`
+a|`30S`
+a|Write timeout.
+
+a|`protocol`
+a|`HTTP_1_1`
+a|Sets the HTTP protocol.
+
+a|`max-http2-streams`
+a|
+a|Max number of concurrent streams.
+
+a|`event-loop.override`
+a|`false`
+a| Enable custom event loop conf.
+
+a|`event-loop.number-of-threads`
+a|
+a|Number of threads to use in event loop.
+
+a|`event-loop.thread-name-prefix`
+a|`aws-java-sdk-NettyEventLoop`
+a| Prefix of thread names.
+|===
 // end::update_5_6[]
+// end::update_8_3[]
 
 == Neo4j
 // tag::update_5_7[]

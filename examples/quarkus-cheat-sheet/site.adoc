@@ -23,6 +23,12 @@ In this page you can either read what has been added in each version of the chea
 include::misc.adoc[tag=update_8_1]
 ====
 
+.Spring Data JPA
+[%collapsible]
+====
+include::spring.adoc[tag=update_8_2]
+====
+
 === Version 0.21.0
 
 .Injecting without @Inject
