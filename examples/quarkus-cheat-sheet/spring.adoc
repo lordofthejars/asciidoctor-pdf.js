@@ -103,6 +103,10 @@ public class GreetingController {
 Supported annotations are: `RestController`, `RequestMapping`, `GetMapping`, `PostMapping`, `PutMapping`, `DeleteMapping`, `PatchMapping`, `RequestParam, `RequestHeader`, `MatrixVariable`, `PathVariable`, `CookieValue`, `RequestBody`, `ResponseStatus`, `ExceptionHandler` and `RestControllerAdvice`.
 // end::update_7_6[]
 
+// tag::update_8_5[]
+*TIP:* If you scaffold the project with `spring-web` extension, then Spring Web annotations are sed in the generated project. `mvn io.quarkus:quarkus-maven-plugin:{version}:create ... -Dextensions="spring-web"`.
+// end::update_8_5[]
+
 == Spring Data JPA
 // tag::update_8_2[]
 
