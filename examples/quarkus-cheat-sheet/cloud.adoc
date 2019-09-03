@@ -276,3 +276,19 @@ public void testLambda() {
 }
 ----
 // end::update_1_10[]
+
+== Azure Functions
+
+// tag::update_8_6[]
+Quarkus can make a microservice be deployable to the Azure Functions.
+
+To scaffold a deployable microservice to the Azure Functions run:
+
+[source, bash]
+----
+mvn archetype:generate \
+    -DarchetypeGroupId=io.quarkus \
+    -DarchetypeArtifactId=quarkus-azure-functions-http-archetype \
+    -DarchetypeVersion={version}
+----
+// end::update_8_6[]

@@ -41,6 +41,18 @@ include::persistence.adoc[tag=update_8_3]
 include::reactive.adoc[tag=update_8_4]
 ====
 
+.Spring Web generation
+[%collapsible]
+====
+include::spring.adoc[tag=update_8_5]
+====
+
+.Azure Functions
+[%collapsible]
+====
+include::cloud.adoc[tag=update_8_6]
+====
+
 === Version 0.21.0
 
 .Injecting without @Inject
