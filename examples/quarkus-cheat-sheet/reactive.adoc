@@ -395,3 +395,91 @@ CompletionStage<JsonArray> =
     })
 ----
 // end::update_1_8[]
+
+== ActiveMQ Artemis
+
+// tag::update_8_4[]
+Quarkus uses <<Reactive Messaging>> to integrate with messaging systems, but in case you need deeper control when using https://activemq.apache.org/components/artemis/[Apache ActiveMQ Artemis, window="_blank"] there is also an extension:
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-artemis-core"
+----
+
+And then you can inject `org.apache.activemq.artemis.api.core.client.ServerLocator` instance.
+
+[source, java]
+----
+@ApplicationScoped
+public class ArtemisConsumerManager {
+
+    @Inject
+    ServerLocator serverLocator;
+
+    private ClientSessionFactory connection;
+
+    @PostConstruct
+    public void init() throws Exception {
+        connection = serverLocator.createSessionFactory();
+    }
+}
+----
+
+And configure `ServerLocator` in `application.properties`:
+
+[source, properties]
+----
+quarkus.artemis.url=tcp://localhost:61616
+----
+
+You can configure ActiveMQ Artemis in `application.properties` file by using next properties prefixed with `quarkus`:
+
+|===	
+|Parameter | Default | Description
+
+a|`artemis.url`
+a|
+a|Connection URL
+
+a|`artemis.username`
+a|
+a|Username for authentication.
+
+a|`artemis.password`
+a|
+a|Password for authentication.
+|===
+
+*Artemis JMS *
+
+If you want to use JMS with Artemis, you can do it by using its extension:
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-artemis-jms"
+----
+
+And then you can inject `javax.jms.ConnectionFactory`:
+
+[source, java]
+----
+@ApplicationScoped
+public class ArtemisConsumerManager {
+
+    @Inject
+    ConnectionFactory connectionFactory;
+
+    private Connection connection;
+
+    @PostConstruct
+    public void init() throws JMSException {
+        connection = connectionFactory.createConnection();
+        connection.start();
+    }
+}
+----
+
+*INFO:* Configuration options are the same as Artemis core.
+// end::update_8_4[]

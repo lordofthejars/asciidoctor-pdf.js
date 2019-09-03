@@ -29,6 +29,18 @@ include::misc.adoc[tag=update_8_1]
 include::spring.adoc[tag=update_8_2]
 ====
 
+.Amazon DynamoDB
+[%collapsible]
+====
+include::persistence.adoc[tag=update_8_3]
+====
+
+.ActiveMQ Artemis
+[%collapsible]
+====
+include::reactive.adoc[tag=update_8_4]
+====
+
 === Version 0.21.0
 
 .Injecting without @Inject

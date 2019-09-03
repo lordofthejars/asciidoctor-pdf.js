@@ -412,7 +412,7 @@ public String extractText(InputStream stream) {
 ----
 
 // tag::update_7_3[]
-You can configure Apache Tika from `application.properties`file by using next properties prefixed with `quarkus`:
+You can configure Apache Tika in `application.properties` file by using next properties prefixed with `quarkus`:
 
 |===	
 |Parameter | Default | Description
