@@ -53,6 +53,12 @@ include::spring.adoc[tag=update_8_5]
 include::cloud.adoc[tag=update_8_6]
 ====
 
+.Infinispan
+[%collapsible]
+====
+include::persistence.adoc[tag=update_8_7]
+====
+
 === Version 0.21.0
 
 .Injecting without @Inject
