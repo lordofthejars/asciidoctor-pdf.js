@@ -453,3 +453,10 @@ try (Git git = Git.cloneRepository()
 
 *IMPORTANT:* When running in native mode, make sure to configure SSL access correctly `quarkus.ssl.native=true` (https://quarkus.io/guides/native-and-ssl-guide[Native and SSL, window="_blank"]). 
 // end::update_8_1[]
+
+== Web Resources
+// tag::update_8_9[]
+
+You can serve web resources with Quarkus.
+You need to place web resources at `src/main/resources/META-INF/resources` and then they are accessible (ie http://localhost:8080/index.html)
+// end::update_8_9[]

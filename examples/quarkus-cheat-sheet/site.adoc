@@ -65,6 +65,12 @@ include::persistence.adoc[tag=update_8_7]
 include::reactive.adoc[tag=update_8_8]
 ====
 
+.Web Resources
+[%collapsible]
+====
+include::misc.adoc[tag=update_8_9]
+====
+
 === Version 0.21.0
 
 .Injecting without @Inject
