@@ -59,6 +59,12 @@ include::cloud.adoc[tag=update_8_6]
 include::persistence.adoc[tag=update_8_7]
 ====
 
+.Reactive MySQL client
+[%collapsible]
+====
+include::reactive.adoc[tag=update_8_8]
+====
+
 === Version 0.21.0
 
 .Injecting without @Inject
