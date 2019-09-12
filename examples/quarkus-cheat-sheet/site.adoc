@@ -71,6 +71,12 @@ include::reactive.adoc[tag=update_8_8]
 include::misc.adoc[tag=update_8_9]
 ====
 
+.Static OpenAPI documents
+[%collapsible]
+====
+include::misc.adoc[tag=update_8_10]
+====
+
 === Version 0.21.0
 
 .Injecting without @Inject

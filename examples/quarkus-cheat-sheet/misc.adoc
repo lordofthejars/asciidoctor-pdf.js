@@ -1,87 +1,6 @@
 == Apache Camel
 // tag::update_2_1[]
-Quarkus integrates wih https://camel.apache.org[Apache Camel, window="_blank"].
-
-[source, bash]
-----
-./mvnw quarkus:add-extension 
-  -Dextensions="io.quarkus:quarkus-camel-core"
-----
-
-You can inject `CamelRuntime` and `CamelContext` instances:
-
-[source, java]
-----
-@Inject
-CamelRuntime runtime;
-    
-@Inject
-CamelContext context;
-----
-
-And also observing Camel events `InitializingEvent`, `InitializedEvent`, `StartingEvent`, `StartedEvent`. `StoppingEvent`, `StoppedEvent`.
-
-[source, java]
-----
-public void init(@Observes InitializingEvent event) {
-    runtime.getContext()
-            .setUuidGenerator(new DefaultUuidGenerator());
-}
-----
-
-You can create `RouteBuilder` for routing rules:
-
-[source, java]
-----
-public class CamelRoute extends RouteBuilder {
-
-    @Override
-    public void configure() {
-        from("timer:keep-alive?" +
-                "period={{camel.timer-route.period}}")
-        .id("timer-route")
-        .setBody(constant(""))
-        .to("log:keep-alive");
-    }
-}
-----
-
-Custom properties are set in `application.properties`.
-
-[source, properties]
-----
-camel.timer-route.period=1s
-----
-
-List of Camel parameters.
-
-`quarkus.` as a prefix is skipped in the next table.
-
-|===	
-|Parameter | Default | Description
-
-a|`camel.routesUris`
-|
-|Uri to an XML with camel routes.
-
-a|`camel.deferInitPhase`
-a|`false`
-|Defer context initialization phase until runtime.
-
-a|`camel.disableJaxb`
-a|`false`
-|Disable jaxb support at runtime. Useful when routes loaded at build time.
-
-a|`camel.disableXml`
-a|`false`
-|Disable XML support in various parts of Camel.
-
-a|`camel.dumpRoutes`
-a|`false`
-|Dump loaded routes .
-|===
-
-Quarkus also comes with support for Camel in form of next extensions: `camel-aws-s3`, `camel-aws-sqs`, `camel-infinispan`, `camel-netty4-http`, `camel-salesforce`.
+Apache Camel Quarkus has its own site: https://github.com/apache/camel-quarkus
 // end::update_2_1[]
 
 == WebSockets
@@ -173,6 +92,17 @@ public Response createDeveloper(
 
 All possible annotations can be seen at https://github.com/eclipse/microprofile-open-api/tree/master/api/src/main/java/org/eclipse/microprofile/openapi/annotations[org.eclipse.microprofile.openapi.annotations, window="_blank"] package.
 // end::update_6_6[]
+
+// tag::udpate_8_10[]
+You can also serve OpenAPI Schema from static files instead of dynamically generate from annotation scanning.
+
+You need to put OpenAPIdocumentation under `META-INF` directory (ie: `META-INF/openapi.yaml`).
+
+A request to `/openapi` will serve the combined OpenAPI document from the static file and the generated from annotations.
+You can disable the scanning documents by adding next configuration property: `mp.openapi.scan.disable=true`.
+
+Other valid document paths are: `META-INF/openapi.yml`, `META-INF/openapi.json`, `WEB-INF/classes/META-INF/openapi.yml`, `WEB-INF/classes/META-INF/openapi.yaml`, `WEB-INF/classes/META-INF/openapi.json`.
+// end::udpate_8_10[]
 
 == Mail Sender
 // tag::update_2_5[]
