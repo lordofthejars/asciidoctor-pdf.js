@@ -120,6 +120,8 @@ While users are encouraged to use Hibernate ORM with Panache for Relational Data
 
 *INFO:* Of course you still need to add the JDBC driver, and configure it in `application.properties`.
 
+<<<
+
 [source, java]
 ----
 public interface FruitRepository 

@@ -77,7 +77,8 @@ a|`idle-removal-interval`
 a|`java.time.Duration`
 
 a|`transaction-isolation-level`
-a|`io.quarkus.agroal.runtime.TransactionIsolationLevel`
+a|`io.quarkus.agroal.runtime`
+`.TransactionIsolationLevel`
 
 a|`enable-metrics`
 a|`Boolean`
@@ -116,7 +117,7 @@ a|`query.query-plan-cache-max-size`
 a|
 
 a|`query.default-null-ordering`
-a|Default precedence of null values in `ORDER BY`. `none`, `first`, `last`.
+a|Default precedence of null values in `ORDER BY`.
 a|[`none`], `first`, `last`.
 
 a|`database.generation`
@@ -433,14 +434,17 @@ Initializer to set configuration settings.
 
 [source, java]
 ----
-@AutoProtoSchemaBuilder(includeClasses = { Book.class, Author.class }, schemaPackageName = "book_sample")
-interface BookContextInitializer extends SerializationContextInitializer {
+@AutoProtoSchemaBuilder(includeClasses = 
+    { Book.class, Author.class }, 
+    schemaPackageName = "book_sample")
+interface BookContextInitializer 
+        extends SerializationContextInitializer {
 }
 ----
 
 *User written based*
 
-There are three ways to create your schema and your own Marshaller:
+There are three ways to create your schema:
 
 _Protofile_
 
@@ -468,11 +472,11 @@ Setting `proto` schema directly in a produced bean.
 FileDescriptorSource bookProtoDefinition() {
     return FileDescriptorSource
         .fromString("library.proto",   
-                        "package book_sample;\n" +
-                        "message Author {\n" +
-                        "  required string name = 1;\n" +
-                        "  required string surname = 2;\n" +
-                        "}");
+                    "package book_sample;\n" +
+                    "message Author {\n" +
+                    "  required string name = 1;\n" +
+                    "  required string surname = 2;\n" +
+                    "}");
 }
 ----
 
@@ -496,8 +500,8 @@ public class AuthorMarshaller
    }
 
    @Override
-   public void writeTo(ProtoStreamWriter writer, Author author) 
-        throws IOException {
+   public void writeTo(ProtoStreamWriter writer, 
+                    Author author) throws IOException {
       writer.writeString("name", author.getName());
       writer.writeString("surname", author.getSurname());
    }
@@ -637,6 +641,8 @@ public class Author extends PanacheEntity {
 ----
 
 IMPORTANT: It is not mandatory to use Panache.
+
+<<<
 
 You need to define the analyzers and normalizers defined in annotations.
 You only need to implement `ElasticsearchAnalysisConfigurer` interface and configure it.
@@ -1075,26 +1081,27 @@ org.neo4j.driver.Driver driver;
 
 Configuration properties:
 
-<<<
-
 `quarkus.neo4j` as prefix is skipped in the next table.
 
 |===	
 |Parameter | Default | Description
 
 a|`uri`
-a|`bolt://localhost:7687`
+a|`localhost:7687`
 |URI of Neo4j.
 
-a|`authentication.username`
+a|`authentication`
+`.username`
 a|`neo4j`
 |Username.
 
-a|`authentication.password`
+a|`authentication`
+`.password`
 a|`neo4j`
 |Password.
 
-a|`authentication.disabled`
+a|`authentication`
+`.disabled`
 a|`false`
 |Disable authentication.
 
@@ -1125,6 +1132,8 @@ a|`-1`
 
 As Neo4j uses SSL communication by default, to create a native executable you need to compile with next options GraalVM options:
 
+<<<
+
 `-H:EnableURLProtocols=http,https --enable-all-security-services -H:+JNI`
 
 And Quarkus Maven Plugin with next configuration:
@@ -1139,9 +1148,12 @@ And Quarkus Maven Plugin with next configuration:
             <goal>native-image</goal>
         </goals>
         <configuration>
-            <enableHttpUrlHandler>true</enableHttpUrlHandler>
-            <enableHttpsUrlHandler>true</enableHttpsUrlHandler>
-            <enableAllSecurityServices>true</enableAllSecurityServices>
+            <enableHttpUrlHandler>true
+            </enableHttpUrlHandler>
+            <enableHttpsUrlHandler>true
+            </enableHttpsUrlHandler>
+            <enableAllSecurityServices>true
+            </enableAllSecurityServices>
             <enableJni>true</enableJni>                
         </configuration>
     </execution>

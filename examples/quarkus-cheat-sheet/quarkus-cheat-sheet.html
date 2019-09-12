@@ -949,7 +949,6 @@ public class MyTest {
 </div>
 <p class=""><strong>Mocking</strong></p>
 <p class="">If you need to provide an alternative implementation of a service (for testing purposes) you can do it by using CDI <code>@Alternative</code> annotation using it in the test service placed at <code>src/test/java</code>:</p>
-<div class="page-break"></div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Alternative
@@ -1090,7 +1089,8 @@ quarkus.hibernate-orm.database.generation=update</code></pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>transaction-isolation-level</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>io.quarkus.agroal.runtime.TransactionIsolationLevel</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>io.quarkus.agroal.runtime</code>
+<code>.TransactionIsolationLevel</code></p></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>enable-metrics</code></p></div></td>
@@ -1146,7 +1146,7 @@ Prefix <code>quarkus.hibernate-orm</code> is skipped.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>query.default-null-ordering</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Default precedence of null values in <code>ORDER BY</code>. <code>none</code>, <code>first</code>, <code>last</code>.</p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Default precedence of null values in <code>ORDER BY</code>.</p></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><p class="">[<code>none</code>], <code>first</code>, <code>last</code>.</p></div></td>
 </tr>
 <tr>
@@ -1460,6 +1460,124 @@ transaction.rollback();</code></pre>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_infinispan"><a class="anchor" href="#_infinispan"></a><a class="link" href="#_infinispan">Infinispan</a></h2>
+<div class="sectionbody">
+<p class="">Quarkus integrates with <a href="https://infinispan.org/" target="_blank" rel="noopener">Infinispan</a>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="infinispan-client"</code></pre>
+</div>
+</div>
+<p class="">Serialization uses a library called <a href="https://github.com/infinispan/protostream" target="_blank" rel="noopener">Protostream</a>.</p>
+<p class=""><strong>Annotation based</strong></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ProtoFactory
+public Author(String name, String surname) {
+    this.name = name;
+    this.surname = surname;
+}
+
+@ProtoField(number = 1)
+public String getName() {
+    return name;
+}
+
+@ProtoField(number = 2)
+public String getSurname() {
+    return surname;
+}</code></pre>
+</div>
+</div>
+<p class="">Initializer to set configuration settings.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@AutoProtoSchemaBuilder(includeClasses =
+    { Book.class, Author.class },
+    schemaPackageName = "book_sample")
+interface BookContextInitializer
+        extends SerializationContextInitializer {
+}</code></pre>
+</div>
+</div>
+<p class=""><strong>User written based</strong></p>
+<p class="">There are three ways to create your schema:</p>
+<p class=""><em>Protofile</em></p>
+<p class="">Creates a <code>.proto</code> file in the <code>META-INF</code> directory.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="proto" class="language-proto hljs">package book_sample;
+
+message Author {
+  required string name = 1;
+  required string surname = 2;
+}</code></pre>
+</div>
+</div>
+<p class="">In case of having a Collection field you need to use the <code>repeated</code> key (ie <code>repeated Author authors = 4</code>).</p>
+<p class=""><em>In code</em></p>
+<p class="">Setting <code>proto</code> schema directly in a produced bean.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Produces
+FileDescriptorSource bookProtoDefinition() {
+    return FileDescriptorSource
+        .fromString("library.proto",
+                    "package book_sample;\n" +
+                    "message Author {\n" +
+                    "  required string name = 1;\n" +
+                    "  required string surname = 2;\n" +
+                    "}");
+}</code></pre>
+</div>
+</div>
+<p class=""><em>Marshaller</em></p>
+<p class="">Using <code>org.infinispan.protostream.MessageMarshaller</code> interface.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class AuthorMarshaller
+    implements MessageMarshaller&lt;Author&gt; {
+
+   @Override
+   public String getTypeName() {
+      return "book_sample.Author";
+   }
+
+   @Override
+   public Class&lt;? extends Author&gt; getJavaClass() {
+      return Author.class;
+   }
+
+   @Override
+   public void writeTo(ProtoStreamWriter writer,
+                    Author author) throws IOException {
+      writer.writeString("name", author.getName());
+      writer.writeString("surname", author.getSurname());
+   }
+
+   @Override
+   public Author readFrom(ProtoStreamReader reader)
+        throws IOException {
+      String name = reader.readString("name");
+      String surname = reader.readString("surname");
+      return new Author(name, surname);
+   }
+}</code></pre>
+</div>
+</div>
+<p class="">And producing the marshaller:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Produces
+MessageMarshaller authorMarshaller() {
+    return new AuthorMarshaller();
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_flyway"><a class="anchor" href="#_flyway"></a><a class="link" href="#_flyway">Flyway</a></h2>
 <div class="sectionbody">
 <p class="">Quarkus integrates with <a href="https://flywaydb.org/" target="_blank" rel="noopener">Flyway</a> to help you on database schema migrations.</p>
@@ -1600,6 +1718,7 @@ It is not mandatory to use Panache.
 </tr>
 </table>
 </div>
+<div class="page-break"></div>
 <p class="">You need to define the analyzers and normalizers defined in annotations.
 You only need to implement <code>ElasticsearchAnalysisConfigurer</code> interface and configure it.</p>
 <div class="listingblock">
@@ -1828,12 +1947,325 @@ quarkus.hibernate-search.elasticsearch.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">void onStart(@Observes StartupEvent ev) {
-    DynamoDbAsyncClient asyncClient = DynamoDbAsyncClient.create();
-    DynamoDbClient client = DynamoDbClient.create();
-}</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+DynamoDbClient dynamoDB;
+
+@Inject
+DynamoDbAsyncClient dynamoDB;</code></pre>
 </div>
 </div>
+<p class="">To use it as a local DynamoDB instance:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.dynamodb.region=
+    eu-central-1
+quarkus.dynamodb.endpoint-override=
+    http://localhost:8000
+quarkus.dynamodb.credentials.type=STATIC
+quarkus.dynamodb.credentials.static-provider
+    .access-key-id=test-key
+quarkus.dynamodb.credentials.static-provider
+.secret-access-key=test-secret</code></pre>
+</div>
+</div>
+<p class="">If you want to work with an AWS account, you’d need to set it with:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">quarkus.dynamodb.region=&lt;YOUR_REGION&gt;
+quarkus.dynamodb.credentials.type=DEFAULT</code></pre>
+</div>
+</div>
+<p class=""><code>DEFAULT</code> credentials provider chain: System properties <code>aws.accessKeyId</code>, <code>aws.secretKey</code> &#8594; Env. Varables <code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code> &#8594; Credentials profile <code>~/.aws/credentials</code> &#8594; Credentials through the Amazon EC2 container service if the <code>AWS_CONTAINER_CREDENTIALS_RELATIVE_URI</code> set &#8594; Credentials through Amazon EC2 metadata service.</p>
+<p class="">Configuration parameters prefixed with <code>quarkus.dynamodb</code>:</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>region</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Region that hosts DynamoDB.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>enable-endpoint-discovery</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Endpoint discovery for a service API that supports endpoint discovery.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>endpoint-override</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Configure the endpoint with which the SDK should communicate.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>credentials.type</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>DEFAULT</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Credentials that should be used <code>DEFAULT</code>, <code>STATIC</code>, <code>SYSTEM_PROPERTY</code>, <code>ENV_VARIABLE</code>, <code>PROFILE</code>, <code>CONTAINER</code>, <code>INSTANCE_PROFILE</code>, <code>PROCESS</code>, <code>ANONYMOUS</code></p></div></td>
+</tr>
+</tbody>
+</table>
+<p class="">Credentials specific parameters prefixed with <code>quarkus.dynamodb.credentials</code>:</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="3"><p class="tableblock">DEFAULT</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>default-provider.async-credential-update-enabled</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Should fetch credentials async.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>default-provider.reuse-last-provider-enabled</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>true</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Should reuse the last successful credentials.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="3"><p class="tableblock">STATIC</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>static-provider.access-key-id</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">AWS access key id.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>static-provider.secret-access-key</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">AWS secret access key.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="3"><p class="tableblock">PROFILE</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>profile-provider.profile-name</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>default</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">The name of the profile to use.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" colspan="3"><p class="tableblock">PROCESS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>process-provider.command</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Command to execute to retrieve credentials.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>process-provider.process-output-limit</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">1024</p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Max bytes to retrieve from process.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>process-provider.credential-refresh-threshold</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>PT15S</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">The amount of time between credentials expire and credentials refreshed.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>process-provider.async-credential-update-enabled</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Should fetch credentials async.</p></div></td>
+</tr>
+</tbody>
+</table>
+<p class="">In case of synchronous client, the next parameters can be configured prefixed by <code>quarkus.dynamodb.sync-client</code>:</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>connection-acquisition-timeout</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>10S</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Connection acquisation timeout.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>connection-max-idle-time</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>60S</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Max time to connection to be opened.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>connection-timeout</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Connection timeout.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>connection-time-to-live</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>0</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Max time connection to be open.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>socket-timeout</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>30S</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Time to wait for data.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>max-connections</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>50</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Max connections.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>expect-continue-enabled</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>true</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Client send an HTTP <code>expect-continue</code> handsake.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>use-idle-connection-reaper</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>true</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Connections in pool should be closed asynchronously.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>proxy.endpoint</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Endpoint of the proxy server.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>proxy.enabled</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Enables HTTP proxy.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>proxy.username</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Proxy username.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>proxy.password</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Proxy password.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>proxy.ntlm-domain</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">For NTLM, domain name.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>proxy.ntlm-workstation</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">For NTLM, workstation name.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>proxy.preemptive-basic-authentication-enabled</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Authenticate pre-emptively.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>proxy.non-proxy-hosts</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">List of non proxy hosts.</p></div></td>
+</tr>
+</tbody>
+</table>
+<p class="">In case of asynchronous client, the next parameters can be configured prefixed by <code>quarkus.dynamodb.async-client</code>:</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>connection-acquisition-timeout</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>10S</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Connection acquisation timeout.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>connection-max-idle-time</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>60S</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Max time to connection to be opened.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>connection-timeout</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Connection timeout.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>connection-time-to-live</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>0</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Max time connection to be open.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>max-concurrency</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>50</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Max number of concurrent connections.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>use-idle-connection-reaper</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>true</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Connections in pool should be closed asynchronously.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>read-timeout</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>30S</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Read timeout.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>write-timeout</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>30S</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Write timeout.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>protocol</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>HTTP_1_1</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Sets the HTTP protocol.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>max-http2-streams</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Max number of concurrent streams.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>event-loop.override</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Enable custom event loop conf.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>event-loop.number-of-threads</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Number of threads to use in event loop.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>event-loop.thread-name-prefix</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>aws-java-sdk-NettyEventLoop</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Prefix of thread names.</p></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">
@@ -1853,7 +2285,6 @@ org.neo4j.driver.Driver driver;</code></pre>
 </div>
 </div>
 <p class="">Configuration properties:</p>
-<div class="page-break"></div>
 <p class=""><code>quarkus.neo4j</code> as prefix is skipped in the next table.</p>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1871,21 +2302,24 @@ org.neo4j.driver.Driver driver;</code></pre>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>uri</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>bolt://localhost:7687</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>localhost:7687</code></p></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">URI of Neo4j.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>authentication.username</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>authentication</code>
+<code>.username</code></p></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>neo4j</code></p></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Username.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>authentication.password</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>authentication</code>
+<code>.password</code></p></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>neo4j</code></p></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Password.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>authentication.disabled</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>authentication</code>
+<code>.disabled</code></p></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Disable authentication.</p></td>
 </tr>
@@ -1922,6 +2356,7 @@ org.neo4j.driver.Driver driver;</code></pre>
 </tbody>
 </table>
 <p class="">As Neo4j uses SSL communication by default, to create a native executable you need to compile with next options GraalVM options:</p>
+<div class="page-break"></div>
 <p class=""><code>-H:EnableURLProtocols=http,https --enable-all-security-services -H:+JNI</code></p>
 <p class="">And Quarkus Maven Plugin with next configuration:</p>
 <div class="listingblock">
@@ -1934,9 +2369,12 @@ org.neo4j.driver.Driver driver;</code></pre>
             &lt;goal&gt;native-image&lt;/goal&gt;
         &lt;/goals&gt;
         &lt;configuration&gt;
-            &lt;enableHttpUrlHandler&gt;true&lt;/enableHttpUrlHandler&gt;
-            &lt;enableHttpsUrlHandler&gt;true&lt;/enableHttpsUrlHandler&gt;
-            &lt;enableAllSecurityServices&gt;true&lt;/enableAllSecurityServices&gt;
+            &lt;enableHttpUrlHandler&gt;true
+            &lt;/enableHttpUrlHandler&gt;
+            &lt;enableHttpsUrlHandler&gt;true
+            &lt;/enableHttpsUrlHandler&gt;
+            &lt;enableAllSecurityServices&gt;true
+            &lt;/enableAllSecurityServices&gt;
             &lt;enableJni&gt;true&lt;/enableJni&gt;
         &lt;/configuration&gt;
     &lt;/execution&gt;
@@ -2486,7 +2924,7 @@ kafka-streams.commit.interval.ms=1000</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
-  -Dextensions="io.quarkus:quarkus-reactive-pg-client"</code></pre>
+  -Dextensions="quarkus-reactive-pg-client"</code></pre>
 </div>
 </div>
 <p class="">Database configuration is the same as shown in <a href="#_persistence">Persistence</a> section, but URL is different as it is not a <em>jdbc</em>.</p>
@@ -2496,7 +2934,7 @@ kafka-streams.commit.interval.ms=1000</code></pre>
     vertx-reactive:postgresql://host:5431/db</code></pre>
 </div>
 </div>
-<p class="">Then you can inject <code>io.reactiverse.axle.pgclient.PgPool</code> class.</p>
+<p class="">Then you can inject <code>io.vertx.axle.pgclient.PgPool</code> class.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
@@ -2504,13 +2942,145 @@ PgPool client;
 
 CompletionStage&lt;JsonArray&gt; =
     client.query("SELECT * FROM table")
-    .thenApply(pgRowSet -&gt; {
+    .thenApply(rowSet -&gt; {
         JsonArray jsonArray = new JsonArray();
-        PgIterator iterator = pgRowSet.iterator();
+        PgIterator iterator = rowSet.iterator();
         return jsonArray;
     })</code></pre>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reactive_mysql_client"><a class="anchor" href="#_reactive_mysql_client"></a><a class="link" href="#_reactive_mysql_client">Reactive MySQL Client</a></h2>
+<div class="sectionbody">
+<p class="">You can use Reactive MySQL to execute queries to MySQL database in a reactive way, instead of using JDBC way.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-reactive-mysql-client"</code></pre>
+</div>
+</div>
+<p class="">Database configuration is the same as shown in <a href="#_persistence">Persistence</a> section, but URL is different as it is not a <em>jdbc</em>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.datasource.url=
+    vertx-reactive:mysql://localhost:3306/db</code></pre>
+</div>
+</div>
+<p class="">Then you can inject <code>io.vertx.axle.mysqlclient.MySQLPool</code> class.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+MySQLPool client;
+
+public static CompletionStage&lt;Fruit&gt; findById(
+    MySQLPool c, Long id) {
+    return c.preparedQuery("SELECT name FROM fruits WHERE id = $1",
+                Tuple.of(id))
+            .thenApply(RowSet::iterator)
+            .thenApply(iterator -&gt; iterator.hasNext() ?
+                        from(iterator.next()) : null);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_activemq_artemis"><a class="anchor" href="#_activemq_artemis"></a><a class="link" href="#_activemq_artemis">ActiveMQ Artemis</a></h2>
+<div class="sectionbody">
+<p class="">Quarkus uses <a href="#_reactive_messaging">Reactive Messaging</a> to integrate with messaging systems, but in case you need deeper control when using <a href="https://activemq.apache.org/components/artemis/" target="_blank" rel="noopener">Apache ActiveMQ Artemis</a> there is also an extension:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-artemis-core"</code></pre>
+</div>
+</div>
+<div class="page-break"></div>
+<p class="">And then you can inject <code>org.apache.activemq.artemis.api.core.client.ServerLocator</code> instance.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ApplicationScoped
+public class ArtemisConsumerManager {
+
+    @Inject
+    ServerLocator serverLocator;
+
+    private ClientSessionFactory connection;
+
+    @PostConstruct
+    public void init() throws Exception {
+        connection = serverLocator.createSessionFactory();
+    }
+}</code></pre>
+</div>
+</div>
+<p class="">And configure <code>ServerLocator</code> in <code>application.properties</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.artemis.url=tcp://localhost:61616</code></pre>
+</div>
+</div>
+<p class="">You can configure ActiveMQ Artemis in <code>application.properties</code> file by using next properties prefixed with <code>quarkus</code>:</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>artemis.url</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Connection URL</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>artemis.username</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Username for authentication.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>artemis.password</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Password for authentication.</p></div></td>
+</tr>
+</tbody>
+</table>
+<p class=""><strong>Artemis JMS</strong></p>
+<p class="">If you want to use JMS with Artemis, you can do it by using its extension:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-artemis-jms"</code></pre>
+</div>
+</div>
+<p class="">And then you can inject <code>javax.jms.ConnectionFactory</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ApplicationScoped
+public class ArtemisConsumerManager {
+
+    @Inject
+    ConnectionFactory connectionFactory;
+
+    private Connection connection;
+
+    @PostConstruct
+    public void init() throws JMSException {
+        connection = connectionFactory.createConnection();
+        connection.start();
+    }
+}</code></pre>
+</div>
+</div>
+<p class=""><strong>INFO:</strong> Configuration options are the same as Artemis core.</p>
 <div class="page-break"></div>
 </div>
 </div>
@@ -3340,6 +3910,7 @@ quarkus.jaeger.endpoint=http://localhost:14268/api/traces</code></pre>
 </div>
 </div>
 <p class=""><code>@Traced</code> annotation can be set to disable tracing at class or method level.</p>
+<div class="page-break"></div>
 <p class=""><code>Tracer</code> class can be injected into the class.</p>
 <div class="listingblock">
 <div class="content">
@@ -3657,104 +4228,28 @@ public void testLambda() {
 }</code></pre>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_azure_functions"><a class="anchor" href="#_azure_functions"></a><a class="link" href="#_azure_functions">Azure Functions</a></h2>
+<div class="sectionbody">
+<p class="">Quarkus can make a microservice be deployable to the Azure Functions.</p>
+<p class="">To scaffold a deployable microservice to the Azure Functions run:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn archetype:generate \
+    -DarchetypeGroupId=io.quarkus \
+    -DarchetypeArtifactId=quarkus-azure-functions-http-archetype \
+    -DarchetypeVersion={version}</code></pre>
+</div>
+</div>
 <div class="page-break"></div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_apache_camel"><a class="anchor" href="#_apache_camel"></a><a class="link" href="#_apache_camel">Apache Camel</a></h2>
 <div class="sectionbody">
-<p class="">Quarkus integrates wih <a href="https://camel.apache.org" target="_blank" rel="noopener">Apache Camel</a>.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
-  -Dextensions="io.quarkus:quarkus-camel-core"</code></pre>
-</div>
-</div>
-<p class="">You can inject <code>CamelRuntime</code> and <code>CamelContext</code> instances:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
-CamelRuntime runtime;
-
-@Inject
-CamelContext context;</code></pre>
-</div>
-</div>
-<p class="">And also observing Camel events <code>InitializingEvent</code>, <code>InitializedEvent</code>, <code>StartingEvent</code>, <code>StartedEvent</code>. <code>StoppingEvent</code>, <code>StoppedEvent</code>.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public void init(@Observes InitializingEvent event) {
-    runtime.getContext()
-            .setUuidGenerator(new DefaultUuidGenerator());
-}</code></pre>
-</div>
-</div>
-<p class="">You can create <code>RouteBuilder</code> for routing rules:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class CamelRoute extends RouteBuilder {
-
-    @Override
-    public void configure() {
-        from("timer:keep-alive?" +
-                "period={{camel.timer-route.period}}")
-        .id("timer-route")
-        .setBody(constant(""))
-        .to("log:keep-alive");
-    }
-}</code></pre>
-</div>
-</div>
-<p class="">Custom properties are set in <code>application.properties</code>.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">camel.timer-route.period=1s</code></pre>
-</div>
-</div>
-<p class="">List of Camel parameters.</p>
-<p class=""><code>quarkus.</code> as a prefix is skipped in the next table.</p>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>camel.routesUris</code></p></div></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Uri to an XML with camel routes.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>camel.deferInitPhase</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Defer context initialization phase until runtime.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>camel.disableJaxb</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Disable jaxb support at runtime. Useful when routes loaded at build time.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>camel.disableXml</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Disable XML support in various parts of Camel.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>camel.dumpRoutes</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Dump loaded routes .</p></td>
-</tr>
-</tbody>
-</table>
-<p class="">Quarkus also comes with support for Camel in form of next extensions: <code>camel-aws-s3</code>, <code>camel-aws-sqs</code>, <code>camel-infinispan</code>, <code>camel-netty4-http</code>, <code>camel-salesforce</code>.</p>
+<p class="">Apache Camel Quarkus has its own site: <a href="https://github.com/apache/camel-quarkus" class="bare">https://github.com/apache/camel-quarkus</a></p>
 </div>
 </div>
 <div class="sect1">
@@ -3790,7 +4285,6 @@ public class ChatSocket {
 }</code></pre>
 </div>
 </div>
-<div class="page-break"></div>
 </div>
 </div>
 <div class="sect1">
@@ -3835,6 +4329,11 @@ public Response createDeveloper(
 </div>
 </div>
 <p class="">All possible annotations can be seen at <a href="https://github.com/eclipse/microprofile-open-api/tree/master/api/src/main/java/org/eclipse/microprofile/openapi/annotations" target="_blank" rel="noopener">org.eclipse.microprofile.openapi.annotations</a> package.</p>
+<p class="">You can also serve OpenAPI Schema from static files instead of dynamically generated from annotation scanning.</p>
+<p class="">You need to put OpenAPIdocumentation under <code>META-INF</code> directory (ie: <code>META-INF/openapi.yaml</code>).</p>
+<p class="">A request to <code>/openapi</code> will serve the combined OpenAPI document from the static file and the generated from annotations.
+You can disable the scanning documents by adding the next configuration property: <code>mp.openapi.scan.disable=true</code>.</p>
+<p class="">Other valid document paths are: <code>META-INF/openapi.yml</code>, <code>META-INF/openapi.json</code>, <code>WEB-INF/classes/META-INF/openapi.yml</code>, <code>WEB-INF/classes/META-INF/openapi.yaml</code>, <code>WEB-INF/classes/META-INF/openapi.json</code>.</p>
 </div>
 </div>
 <div class="sect1">
@@ -3847,7 +4346,6 @@ public Response createDeveloper(
   -Dextensions="io.quarkus:quarkus-mailer"</code></pre>
 </div>
 </div>
-<div class="page-break"></div>
 <p class="">You can inject two possible classes <code>io.quarkus.mailer.Mailer</code> for synchronous API or <code>io.quarkus.mailer.ReactiveMailer</code> for asynchronous API.</p>
 <div class="listingblock">
 <div class="content">
@@ -3987,7 +4485,7 @@ quarkus.mailer.password=....</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>mailer.start-tls</code></p></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>OPTIONAL</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">TLS security mode. <code>NONE</code>, <code>OPTIONAL</code>, <code>REQUIRED</code>.</p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">TLS security mode. <code>DISABLED</code>, <code>OPTIONAL</code>, <code>REQUIRED</code>.</p></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>mailer.login</code></p></div></td>
@@ -4073,6 +4571,7 @@ void morningTask() {}</pre>
   -Dextensions="kogito"</code></pre>
 </div>
 </div>
+<div class="page-break"></div>
 </div>
 </div>
 <div class="sect1">
@@ -4100,7 +4599,7 @@ public String extractText(InputStream stream) {
 }</code></pre>
 </div>
 </div>
-<p class="">You can configure Apache Tika from <code>application.properties`file by using next properties prefixed with `quarkus</code>:</p>
+<p class="">You can configure Apache Tika in <code>application.properties</code> file by using next properties prefixed with <code>quarkus</code>:</p>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -4127,6 +4626,37 @@ public String extractText(InputStream stream) {
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_jgit"><a class="anchor" href="#_jgit"></a><a class="link" href="#_jgit">JGit</a></h2>
+<div class="sectionbody">
+<p class="">Quarkus integrets with <a href="https://www.eclipse.org/jgit/" target="_blank" rel="noopener">JGit</a> to integrate with Git repositories:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-jgit"</code></pre>
+</div>
+</div>
+<p class="">And then you can start using JGit:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">try (Git git = Git.cloneRepository()
+                  .setDirectory(tmpDir)
+                  .setURI(url)
+                  .call()) {
+    return tmpDir.toString();
+}</code></pre>
+</div>
+</div>
+<p class=""><strong>IMPORTANT:</strong> When running in native mode, make sure to configure SSL access correctly <code>quarkus.ssl.native=true</code> (<a href="https://quarkus.io/guides/native-and-ssl-guide" target="_blank" rel="noopener">Native and SSL</a>).</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_web_resources"><a class="anchor" href="#_web_resources"></a><a class="link" href="#_web_resources">Web Resources</a></h2>
+<div class="sectionbody">
+<p class="">You can serve web resources with Quarkus.
+You need to place web resources at <code>src/main/resources/META-INF/resources</code> and then they are accessible (ie <a href="http://localhost:8080/index.html" class="bare">http://localhost:8080/index.html</a>)</p>
 <div class="page-break"></div>
 </div>
 </div>
@@ -4227,6 +4757,73 @@ public class GreetingController {
 </div>
 </div>
 <p class="">Supported annotations are: <code>RestController</code>, <code>RequestMapping</code>, <code>GetMapping</code>, <code>PostMapping</code>, <code>PutMapping</code>, <code>DeleteMapping</code>, <code>PatchMapping</code>, <code>RequestParam, `RequestHeader</code>, <code>MatrixVariable</code>, <code>PathVariable</code>, <code>CookieValue</code>, <code>RequestBody</code>, <code>ResponseStatus</code>, <code>ExceptionHandler</code> and <code>RestControllerAdvice</code>.</p>
+<p class=""><strong>TIP:</strong> If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:0.21.1:create &#8230;&#8203; -Dextensions="spring-web"</code>.</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_spring_data_jpa"><a class="anchor" href="#_spring_data_jpa"></a><a class="link" href="#_spring_data_jpa">Spring Data JPA</a></h2>
+<div class="sectionbody">
+<p class="">While users are encouraged to use Hibernate ORM with Panache for Relational Database access, Quarkus provides a compatibility layer for <a href="https://docs.spring.io/spring-data/jpa/docs/current/reference/html/" target="_blank" rel="noopener">Spring Data JPA</a> repositories.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-spring-data-jpa"</code></pre>
+</div>
+</div>
+<p class=""><strong>INFO:</strong> Of course you still need to add the JDBC driver, and configure it in <code>application.properties</code>.</p>
+<div class="page-break"></div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public interface FruitRepository
+        extends CrudRepository&lt;Fruit, Long&gt; {
+    List&lt;Fruit&gt; findByColor(String color);
+}</code></pre>
+</div>
+</div>
+<p class="">And then you can inject it either as shown in <a href="#_spring_di">Spring DI</a> or in <a href="#_spring_web">Spring Web</a>.</p>
+<p class="">Interfaces supported: <code>org.springframework.data.repository.Repository</code>, <code>org.springframework.data.repository.CrudRepository</code>, <code>org.springframework.data.repository.PagingAndSortingRepository</code> and <code>org.springframework.data.jpa.repository.JpaRepository</code>.</p>
+<p class=""><strong>INFO:</strong> Generated repositories are automatically annotated with <code>@Transactional</code>.</p>
+<p class="">Repository fragments is also supported:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public interface PersonRepository
+    extends JpaRepository&lt;Person, Long&gt;, PersonFragment {
+
+    void makeNameUpperCase(Person person);
+}</code></pre>
+</div>
+</div>
+<p class="">User defined queries:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Query("select m from Movie m where m.rating = ?1")
+Iterator&lt;Movie&gt; findByRating(String rating);
+
+@Modifying
+@Query("delete from Movie where rating = :rating")
+void deleteByRating(@Param("rating") String rating);</code></pre>
+</div>
+</div>
+<p class="">What is currently unsupported:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Methods of <code>org.springframework.data.repository.query.QueryByExampleExecutor</code></p>
+</li>
+<li>
+<p>QueryDSL support</p>
+</li>
+<li>
+<p>Customizing the base repository</p>
+</li>
+<li>
+<p><code>java.util.concurrent.Future</code> as return type</p>
+</li>
+<li>
+<p>Native and named queries when using <code>@Query</code></p>
+</li>
+</ul>
+</div>
 <div class="page-break"></div>
 </div>
 </div>

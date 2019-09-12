@@ -38,8 +38,6 @@ public class ChatSocket {
 ----
 // end::update_2_2[]
 
-<<<
-
 == OpenAPI
 // tag::update_2_3[]
 Quarkus can expose its API description as https://swagger.io/specification/[OpenAPI, window="_blank"] spec and test it using https://swagger.io/tools/swagger-ui/[Swagger UI, window="_blank"].
@@ -93,16 +91,16 @@ public Response createDeveloper(
 All possible annotations can be seen at https://github.com/eclipse/microprofile-open-api/tree/master/api/src/main/java/org/eclipse/microprofile/openapi/annotations[org.eclipse.microprofile.openapi.annotations, window="_blank"] package.
 // end::update_6_6[]
 
-// tag::udpate_8_10[]
-You can also serve OpenAPI Schema from static files instead of dynamically generate from annotation scanning.
+// tag::update_8_10[]
+You can also serve OpenAPI Schema from static files instead of dynamically generated from annotation scanning.
 
 You need to put OpenAPIdocumentation under `META-INF` directory (ie: `META-INF/openapi.yaml`).
 
 A request to `/openapi` will serve the combined OpenAPI document from the static file and the generated from annotations.
-You can disable the scanning documents by adding next configuration property: `mp.openapi.scan.disable=true`.
+You can disable the scanning documents by adding the next configuration property: `mp.openapi.scan.disable=true`.
 
 Other valid document paths are: `META-INF/openapi.yml`, `META-INF/openapi.json`, `WEB-INF/classes/META-INF/openapi.yml`, `WEB-INF/classes/META-INF/openapi.yaml`, `WEB-INF/classes/META-INF/openapi.json`.
-// end::udpate_8_10[]
+// end::update_8_10[]
 
 == Mail Sender
 // tag::update_2_5[]
@@ -113,8 +111,6 @@ You can send emails by using Quarkus Mailer extension:
 ./mvnw quarkus:add-extension 
   -Dextensions="io.quarkus:quarkus-mailer"
 ----
-
-<<<
 
 You can inject two possible classes `io.quarkus.mailer.Mailer` for synchronous API or `io.quarkus.mailer.ReactiveMailer` for asynchronous API.
 
@@ -314,6 +310,8 @@ To start using it you only need to add the next extension:
   -Dextensions="kogito"
 ----
 // end::update_3_9[]
+
+<<<
 
 == Apache Tika
 // tag::update_5_8[]

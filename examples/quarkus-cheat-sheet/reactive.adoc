@@ -421,12 +421,13 @@ Then you can inject `io.vertx.axle.mysqlclient.MySQLPool` class.
 @Inject
 MySQLPool client;
 
-public static CompletionStage<Fruit> findById(MySQLPool client, 
-        Long id) {
-    return client.preparedQuery("SELECT id, name FROM fruits WHERE id = $1", 
+public static CompletionStage<Fruit> findById(
+    MySQLPool c, Long id) {
+    return c.preparedQuery("SELECT name FROM fruits WHERE id = $1", 
                 Tuple.of(id))
             .thenApply(RowSet::iterator)
-            .thenApply(iterator -> iterator.hasNext() ? from(iterator.next()) : null);
+            .thenApply(iterator -> iterator.hasNext() ? 
+                        from(iterator.next()) : null);
 }
 ----
 // end::update_8_8[]
@@ -441,6 +442,8 @@ Quarkus uses <<Reactive Messaging>> to integrate with messaging systems, but in 
 ./mvnw quarkus:add-extension 
   -Dextensions="quarkus-artemis-core"
 ----
+
+<<<
 
 And then you can inject `org.apache.activemq.artemis.api.core.client.ServerLocator` instance.
 
@@ -486,7 +489,7 @@ a|
 a|Password for authentication.
 |===
 
-*Artemis JMS *
+*Artemis JMS*
 
 If you want to use JMS with Artemis, you can do it by using its extension:
 

@@ -531,6 +531,8 @@ quarkus.jaeger.endpoint=http://localhost:14268/api/traces
 
 `@Traced` annotation can be set to disable tracing at class or method level.
 
+<<<
+
 `Tracer` class can be injected into the class.
 
 [source, java]
