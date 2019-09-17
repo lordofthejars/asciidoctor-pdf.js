@@ -77,6 +77,19 @@ include::misc.adoc[tag=update_8_9]
 include::misc.adoc[tag=update_8_10]
 ====
 
+.Disable Jaeger
+[%collapsible]
+====
+include::network.adoc[tag=update_8_11]
+====
+
+.JDBC Tracer
+[%collapsible]
+====
+include::network.adoc[tag=update_8_12]
+====
+
+
 === Version 0.21.0
 
 .Injecting without @Inject

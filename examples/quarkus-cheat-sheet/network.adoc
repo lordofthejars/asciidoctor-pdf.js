@@ -543,6 +543,11 @@ Tracer tracer;
 tracer.activeSpan().setBaggageItem("key", "value");
 ----
 
+// tag::update_8_11[]
+You can disable `Jaeger` extension by using `quarkus.jaeger.enabled` property.
+// end::update_8_11[]
+
+// tag::update_8_12[]
 *Additional tracers*
 
 *JDBC Tracer*
@@ -566,3 +571,4 @@ quarkus.datasource.url=jdbc:tracing:postgresql://localhost:5432/mydatabase
 quarkus.datasource.driver=io.opentracing.contrib.jdbc.TracingDriver
 quarkus.hibernate-orm.dialect=org.hibernate.dialect.PostgreSQLDialect
 ----
+// end::update_8_12[]
