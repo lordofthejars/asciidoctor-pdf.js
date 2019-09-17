@@ -703,7 +703,6 @@ Injecting the client:
 
 [source, java]
 ----
-@Inject
 @RestClient
 WorldClockService worldClockService;
 ----

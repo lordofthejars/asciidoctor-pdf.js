@@ -132,7 +132,12 @@ public interface FruitRepository
 
 And then you can inject it either as shown in <<Spring DI>> or in <<Spring Web>>.
 
-Interfaces supported: `org.springframework.data.repository.Repository`, `org.springframework.data.repository.CrudRepository`, `org.springframework.data.repository.PagingAndSortingRepository` and `org.springframework.data.jpa.repository.JpaRepository`.
+Interfaces supported: 
+
+* `org.springframework.data.repository.Repository` 
+* `org.springframework.data.repository.CrudRepository` 
+* `org.springframework.data.repository.PagingAndSortingRepository`
+* `org.springframework.data.jpa.repository.JpaRepository`.
 
 *INFO:* Generated repositories are automatically annotated with `@Transactional`.
 

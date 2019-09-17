@@ -15,7 +15,7 @@ In this page you can either read what has been added in each version of the chea
 [[whatsnew]]
 == What's New in Cheat-Sheet
 
-=== Version 0.22.0
+=== Version 0.23.0
 
 .JGit
 [%collapsible]
@@ -75,6 +75,30 @@ include::misc.adoc[tag=update_8_9]
 [%collapsible]
 ====
 include::misc.adoc[tag=update_8_10]
+====
+
+.Disable Jaeger
+[%collapsible]
+====
+include::network.adoc[tag=update_8_11]
+====
+
+.JDBC Tracer
+[%collapsible]
+====
+include::network.adoc[tag=update_8_12]
+====
+
+.Custom Health Check Paths
+[%collapsible]
+====
+include::network.adoc[tag=update_8_13]
+====
+
+.Provided Health Check implementations
+[%collapsible]
+====
+include::network.adoc[tag=update_8_14]
 ====
 
 === Version 0.21.0

@@ -15,7 +15,7 @@
 <div class="sectionbody">
 <p class=""><a href="https://quarkus.io/">Quarkus</a> is a Kubernetes Native Java stack tailored for GraalVM &amp; OpenJDK HotSpot, crafted from the best of breed Java libraries and standards.
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
-<p class="">Cheat-sheet tested with <strong>Quarkus 0.21.1</strong>.</p>
+<p class="">Cheat-sheet tested with <strong>Quarkus 0.23.1</strong>.</p>
 </div>
 </div>
 <div class="sect1">
@@ -24,7 +24,7 @@ Also focused on developer experience, making things just work with little to no 
 <p class="">Quarkus comes with a Maven archetype to scaffold a very simple starting project.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:0.21.1:create \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:0.23.1:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=getting-started \
     -DclassName="org.acme.quickstart.GreetingResource" \
@@ -802,8 +802,7 @@ public interface WorldClockService {
 <p class="">Injecting the client:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
-@RestClient
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@RestClient
 WorldClockService worldClockService;</code></pre>
 </div>
 </div>
@@ -1000,7 +999,7 @@ I recommend reading <a href="https://quarkus.io/guides/tests-with-coverage-guide
 <p class="">Quarkus works with JPA(Hibernate) as persistence solution.
 But also provides an <a href="https://en.wikipedia.org/wiki/Active_record_pattern" target="_blank" rel="noopener">Active Record pattern</a> implementation under Panache project.</p>
 <p class="">To use database access you need to add Quarkus JDBC drivers instead of the original ones.
-At this time <code>H2</code>, <code>MariaDB</code>, <code>MSSQL</code> and <code>PostgreSQL</code> drivers are supported.</p>
+At this time <code>H2</code>, <code>MariaDB</code>, <code>MySQL</code>, <code>MSSQL</code> and <code>PostgreSQL</code> drivers are supported.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
@@ -1244,7 +1243,6 @@ long numberOfDeleted = Developer.delete("name", "Alex");</code></pre>
 </li>
 </ul>
 </div>
-<div class="page-break"></div>
 <p class=""><strong>Static Methods</strong></p>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1396,7 +1394,7 @@ This flush is less efficient and you still need to commit transaction.
 </div>
 <p class=""><strong>Testing</strong></p>
 <p class="">There is a Quarkus Test Resource that starts and stops H2 server before and after test suite.</p>
-<p class="">Register next dependency <code>io.quarkus:quarkus-test-h2:test</code>.</p>
+<p class="">Register dependency <code>io.quarkus:quarkus-test-h2:test</code>.</p>
 <p class="">And annotate the test:</p>
 <div class="listingblock">
 <div class="content">
@@ -1405,8 +1403,8 @@ public class FlywayTestResources {
 }</code></pre>
 </div>
 </div>
-<p class=""><strong>Transactions</strong>
-The easiest way to define your transaction boundaries is to use the <code>@Transactional</code> annotation.</p>
+<p class=""><strong>Transactions</strong></p>
+<p class="">The easiest way to define your transaction boundaries is to use the <code>@Transactional</code> annotation.</p>
 <p class="">Transactions are mandatory in case of none idempotent operations.</p>
 <div class="listingblock">
 <div class="content">
@@ -1438,7 +1436,6 @@ public void createDeveloper() {}</code></pre>
 </ul>
 </div>
 <p class="">You can configure the default transaction timeout using <code>quarkus.transaction-manager.default-transaction-timeout</code> configuration property. By default it is set to 60 seconds.</p>
-<div class="page-break"></div>
 <p class="">You can set a timeout property, in seconds, that applies to transactions created within the annotated method by using <code>@TransactionConfiguration</code> annotation.</p>
 <div class="listingblock">
 <div class="content">
@@ -1718,7 +1715,6 @@ It is not mandatory to use Panache.
 </tr>
 </table>
 </div>
-<div class="page-break"></div>
 <p class="">You need to define the analyzers and normalizers defined in annotations.
 You only need to implement <code>ElasticsearchAnalysisConfigurer</code> interface and configure it.</p>
 <div class="listingblock">
@@ -1975,8 +1971,62 @@ quarkus.dynamodb.credentials.static-provider
 quarkus.dynamodb.credentials.type=DEFAULT</code></pre>
 </div>
 </div>
-<p class=""><code>DEFAULT</code> credentials provider chain: System properties <code>aws.accessKeyId</code>, <code>aws.secretKey</code> &#8594; Env. Varables <code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code> &#8594; Credentials profile <code>~/.aws/credentials</code> &#8594; Credentials through the Amazon EC2 container service if the <code>AWS_CONTAINER_CREDENTIALS_RELATIVE_URI</code> set &#8594; Credentials through Amazon EC2 metadata service.</p>
+<p class=""><code>DEFAULT</code> credentials provider chain:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>System properties <code>aws.accessKeyId</code>, <code>aws.secretKey</code></p>
+</li>
+<li>
+<p>Env. Varables <code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code></p>
+</li>
+<li>
+<p>Credentials profile <code>~/.aws/credentials</code></p>
+</li>
+<li>
+<p>Credentials through the Amazon EC2 container service if the <code>AWS_CONTAINER_CREDENTIALS_RELATIVE_URI</code> set</p>
+</li>
+<li>
+<p>Credentials through Amazon EC2 metadata service.</p>
+</li>
+</ul>
+</div>
 <p class="">Configuration parameters prefixed with <code>quarkus.dynamodb</code>:</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Parameter</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Description</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>enable-endpoint-discovery</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Endpoint discovery for a service API that supports endpoint discovery.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>endpoint-override</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Configure the endpoint with which the SDK should communicate.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>api-call-timeout</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Time to complete an execution.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>interceptors</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">List of class interceptors.</p></div></td>
+</tr>
+</tbody>
+</table>
+<p class="">Configuration parameters prefixed with <code>quarkus.dynamodb.aws</code>:</p>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -1997,23 +2047,13 @@ quarkus.dynamodb.credentials.type=DEFAULT</code></pre>
 <td class="tableblock halign-left valign-top"><div class="content"><p class="">Region that hosts DynamoDB.</p></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>enable-endpoint-discovery</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Endpoint discovery for a service API that supports endpoint discovery.</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>endpoint-override</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Configure the endpoint with which the SDK should communicate.</p></div></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>credentials.type</code></p></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>DEFAULT</code></p></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><p class="">Credentials that should be used <code>DEFAULT</code>, <code>STATIC</code>, <code>SYSTEM_PROPERTY</code>, <code>ENV_VARIABLE</code>, <code>PROFILE</code>, <code>CONTAINER</code>, <code>INSTANCE_PROFILE</code>, <code>PROCESS</code>, <code>ANONYMOUS</code></p></div></td>
 </tr>
 </tbody>
 </table>
-<p class="">Credentials specific parameters prefixed with <code>quarkus.dynamodb.credentials</code>:</p>
+<p class="">Credentials specific parameters prefixed with <code>quarkus.dynamodb.aws.credentials</code>:</p>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -2182,6 +2222,26 @@ quarkus.dynamodb.credentials.type=DEFAULT</code></pre>
 <td class="tableblock halign-left valign-top"><div class="content"></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><p class="">List of non proxy hosts.</p></div></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>tls-managers-provider.type</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>system-property</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">TLS manager: <code>none</code>, <code>system-property</code>, <code>file-store</code></p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>tls-managers-provider.file-store.path</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Path to key store.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>tls-managers-provider.file-store.type</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Key store type.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>tls-managers-provider.file-store.password</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Key store password.</p></div></td>
+</tr>
 </tbody>
 </table>
 <p class="">In case of asynchronous client, the next parameters can be configured prefixed by <code>quarkus.dynamodb.async-client</code>:</p>
@@ -2238,6 +2298,46 @@ quarkus.dynamodb.credentials.type=DEFAULT</code></pre>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>write-timeout</code></p></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>30S</code></p></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><p class="">Write timeout.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>proxy.endpoint</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Endpoint of the proxy server.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>proxy.enabled</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Enables HTTP proxy.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>proxy.non-proxy-hosts</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">List of non proxy hosts.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>tls-managers-provider.type</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>system-property</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">TLS manager: <code>none</code>, <code>system-property</code>, <code>file-store</code></p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>tls-managers-provider.file-store.path</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Path to key store.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>tls-managers-provider.file-store.type</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Key store type.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>tls-managers-provider.file-store.password</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">Key store password.</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>ssl-provider</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">SSL Provider (<code>jdk</code>, <code>openssl</code>, <code>openssl-refcnt</code>).</p></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>protocol</code></p></div></td>
@@ -2356,7 +2456,6 @@ org.neo4j.driver.Driver driver;</code></pre>
 </tbody>
 </table>
 <p class="">As Neo4j uses SSL communication by default, to create a native executable you need to compile with next options GraalVM options:</p>
-<div class="page-break"></div>
 <p class=""><code>-H:EnableURLProtocols=http,https --enable-all-security-services -H:+JNI</code></p>
 <p class="">And Quarkus Maven Plugin with next configuration:</p>
 <div class="listingblock">
@@ -3790,7 +3889,6 @@ public class DatabaseHealthCheck implements HealthCheck {
 public class DatabaseHealthCheck {
 
     @Produces
-    @ApplicationScoped
     @Liveness
     HealthCheck check1() {
       return io.smallrye.health.HealthStatus
@@ -3798,7 +3896,6 @@ public class DatabaseHealthCheck {
     }
 
     @Produces
-    @ApplicationScoped
     @Readiness
     HealthCheck check2() {
       return HealthStatus
@@ -3810,6 +3907,38 @@ public class DatabaseHealthCheck {
 </div>
 </div>
 <p class="">You can ping liveness or readiness health checks individually by querying <code>/health/live</code> or <code>/health/ready</code>.</p>
+<p class="">Quarkus comes with some <code>HealthCheck</code> implementations for checking service status.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>SocketHealthCheck</strong>: checks if host is reachable using a socket.</p>
+</li>
+<li>
+<p><strong>UrlHealthCheck</strong>: checks if host is reachable using a Http URL connection.</p>
+</li>
+<li>
+<p><strong>InetAddressHealthCheck</strong>: checks if host is reachable using <code>InetAddress.isReachable</code> method.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Produces
+@Liveness
+HealthCheck check1() {
+    return new UrlHealthCheck("https://www.google.com")
+            .name("Google-Check");
+}</code></pre>
+</div>
+</div>
+<p class="">If you want to override or set manually readiness/liveness probes, you can do it by setting health properties:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.smallrye-health.root-path=/hello
+quarkus.smallrye-health.liveness-path=/customlive
+quarkus.smallrye-health.readiness-path=/customready</code></pre>
+</div>
+</div>
 <p class=""><strong>Metrics</strong></p>
 <p class="">Quarkus can utilize the <a href="https://github.com/eclipse/microprofile-metrics" target="_blank" rel="noopener">MicroProfile Metrics spec</a> to provide metrics support.</p>
 <div class="listingblock">
@@ -3910,7 +4039,6 @@ quarkus.jaeger.endpoint=http://localhost:14268/api/traces</code></pre>
 </div>
 </div>
 <p class=""><code>@Traced</code> annotation can be set to disable tracing at class or method level.</p>
-<div class="page-break"></div>
 <p class=""><code>Tracer</code> class can be injected into the class.</p>
 <div class="listingblock">
 <div class="content">
@@ -3918,6 +4046,27 @@ quarkus.jaeger.endpoint=http://localhost:14268/api/traces</code></pre>
 Tracer tracer;
 
 tracer.activeSpan().setBaggageItem("key", "value");</code></pre>
+</div>
+</div>
+<p class="">You can disable <code>Jaeger</code> extension by using <code>quarkus.jaeger.enabled</code> property.</p>
+<p class=""><strong>Additional tracers</strong></p>
+<p class=""><strong>JDBC Tracer</strong></p>
+<p class="">Adds a span for each JDBC queries.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;io.opentracing.contrib&lt;/groupId&gt;
+    &lt;artifactId&gt;opentracing-jdbc&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<p class="">Configure JDBC driver apart from tracing properties seen before:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs"># add ':tracing' to your database URL
+quarkus.datasource.url=jdbc:tracing:postgresql://localhost:5432/mydatabase
+quarkus.datasource.driver=io.opentracing.contrib.jdbc.TracingDriver
+quarkus.hibernate-orm.dialect=org.hibernate.dialect.PostgreSQLDialect</code></pre>
 </div>
 </div>
 <div class="page-break"></div>
@@ -4238,9 +4387,9 @@ public void testLambda() {
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn archetype:generate \
-    -DarchetypeGroupId=io.quarkus \
-    -DarchetypeArtifactId=quarkus-azure-functions-http-archetype \
-    -DarchetypeVersion={version}</code></pre>
+  -DarchetypeGroupId=io.quarkus \
+  -DarchetypeArtifactId=quarkus-azure-functions-http-archetype \
+  -DarchetypeVersion={version}</code></pre>
 </div>
 </div>
 <div class="page-break"></div>
@@ -4310,7 +4459,8 @@ If you want to use it in production mode you need to set <code>quarkus.swagger-u
 <p class="">You can customize the output by using Open API v3 annotations.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Schema(name="Developers", description="POJO that represents a developer.")
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Schema(name="Developers",
+        description="POJO that represents a developer.")
 public class Developer {
     @Schema(required = true, example = "Alex")
     private String name;
@@ -4403,6 +4553,7 @@ quarkus.mailer.password=....</code></pre>
 </div>
 <p class="">List of Mailer parameters.
 <code>quarkus.</code> as a prefix is skipped in the next table.</p>
+<div class="page-break"></div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -4425,7 +4576,7 @@ quarkus.mailer.password=....</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>mailer.mock</code></p></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><p class="">false in <code>prod</code>, true in <code>dev</code> and <code>test</code>.</p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Emails not sent, just printed and stored in a <code>MockMailbox</code> bean.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Emails not sent, just printed and stored in a <code>MockMailbox</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>mailer.bounce-address</code></p></div></td>
@@ -4465,7 +4616,7 @@ quarkus.mailer.password=....</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>mailer.max-pool-size</code></p></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of open connections .</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Max open connections .</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>mailer.own-host-name</code></p></div></td>
@@ -4620,6 +4771,11 @@ public String extractText(InputStream stream) {
 <td class="tableblock halign-left valign-top"><div class="content"><p class="">Path to the Tika configuration resource.</p></div></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>quarkus.tika.parsers</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">CSV of the abbreviated or full parser class to be loaded by the extension.</p></div></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>tika.append-embedded-content</code></p></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>true</code></p></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><p class="">The document may have other embedded documents. Set if autmatically append.</p></div></td>
@@ -4757,7 +4913,7 @@ public class GreetingController {
 </div>
 </div>
 <p class="">Supported annotations are: <code>RestController</code>, <code>RequestMapping</code>, <code>GetMapping</code>, <code>PostMapping</code>, <code>PutMapping</code>, <code>DeleteMapping</code>, <code>PatchMapping</code>, <code>RequestParam, `RequestHeader</code>, <code>MatrixVariable</code>, <code>PathVariable</code>, <code>CookieValue</code>, <code>RequestBody</code>, <code>ResponseStatus</code>, <code>ExceptionHandler</code> and <code>RestControllerAdvice</code>.</p>
-<p class=""><strong>TIP:</strong> If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:0.21.1:create &#8230;&#8203; -Dextensions="spring-web"</code>.</p>
+<p class=""><strong>TIP:</strong> If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:0.23.1:create &#8230;&#8203; -Dextensions="spring-web"</code>.</p>
 </div>
 </div>
 <div class="sect1">
@@ -4781,7 +4937,23 @@ public class GreetingController {
 </div>
 </div>
 <p class="">And then you can inject it either as shown in <a href="#_spring_di">Spring DI</a> or in <a href="#_spring_web">Spring Web</a>.</p>
-<p class="">Interfaces supported: <code>org.springframework.data.repository.Repository</code>, <code>org.springframework.data.repository.CrudRepository</code>, <code>org.springframework.data.repository.PagingAndSortingRepository</code> and <code>org.springframework.data.jpa.repository.JpaRepository</code>.</p>
+<p class="">Interfaces supported:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>org.springframework.data.repository.Repository</code></p>
+</li>
+<li>
+<p><code>org.springframework.data.repository.CrudRepository</code></p>
+</li>
+<li>
+<p><code>org.springframework.data.repository.PagingAndSortingRepository</code></p>
+</li>
+<li>
+<p><code>org.springframework.data.jpa.repository.JpaRepository</code>.</p>
+</li>
+</ul>
+</div>
 <p class=""><strong>INFO:</strong> Generated repositories are automatically annotated with <code>@Transactional</code>.</p>
 <p class="">Repository fragments is also supported:</p>
 <div class="listingblock">
@@ -4850,7 +5022,7 @@ void deleteByRating(@Param("rating") String rating);</code></pre>
 <div class="author-bio">Java Champion and Director of DevExp at Red Hat</div>
 </div>
 
-<div class="author-bio">0.21.1</div>
+<div class="author-bio">0.23.1</div>
 <img src="./redhat/assets/by-nc-sa.png"/>
 </div>
 

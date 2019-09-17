@@ -413,7 +413,6 @@ Since health checks are CDI beans, you can do:
 public class DatabaseHealthCheck {
     
     @Produces
-    @ApplicationScoped
     @Liveness
     HealthCheck check1() {
       return io.smallrye.health.HealthStatus
@@ -421,7 +420,6 @@ public class DatabaseHealthCheck {
     }
 
     @Produces
-    @ApplicationScoped
     @Readiness
     HealthCheck check2() {
       return HealthStatus
@@ -433,6 +431,35 @@ public class DatabaseHealthCheck {
 ----
 
 You can ping liveness or readiness health checks individually by querying `/health/live` or `/health/ready`.
+
+// tag::update_8_14[]
+Quarkus comes with some `HealthCheck` implementations for checking service status.
+
+* *SocketHealthCheck*: checks if host is reachable using a socket.
+* *UrlHealthCheck*: checks if host is reachable using a Http URL connection.
+* *InetAddressHealthCheck*: checks if host is reachable using `InetAddress.isReachable` method.
+
+[source, java]
+----
+@Produces
+@Liveness
+HealthCheck check1() {
+    return new UrlHealthCheck("https://www.google.com")
+            .name("Google-Check"); 
+}
+----
+// end::update_8_14[]
+
+// tag::update_8_13[]
+If you want to override or set manually readiness/liveness probes, you can do it by setting health properties:
+
+[source, properties]
+----
+quarkus.smallrye-health.root-path=/hello
+quarkus.smallrye-health.liveness-path=/customlive
+quarkus.smallrye-health.readiness-path=/customready
+----
+// end::update_8_13[]
 // end::update_3_4[]
 
 *Metrics*
@@ -531,8 +558,6 @@ quarkus.jaeger.endpoint=http://localhost:14268/api/traces
 
 `@Traced` annotation can be set to disable tracing at class or method level.
 
-<<<
-
 `Tracer` class can be injected into the class.
 
 [source, java]
@@ -542,3 +567,33 @@ Tracer tracer;
 
 tracer.activeSpan().setBaggageItem("key", "value");
 ----
+
+// tag::update_8_11[]
+You can disable `Jaeger` extension by using `quarkus.jaeger.enabled` property.
+// end::update_8_11[]
+
+// tag::update_8_12[]
+*Additional tracers*
+
+*JDBC Tracer*
+
+Adds a span for each JDBC queries.
+
+[source, xml]
+----
+<dependency>
+    <groupId>io.opentracing.contrib</groupId>
+    <artifactId>opentracing-jdbc</artifactId>
+</dependency>
+----
+
+Configure JDBC driver apart from tracing properties seen before:
+
+[source, properties]
+----
+# add ':tracing' to your database URL
+quarkus.datasource.url=jdbc:tracing:postgresql://localhost:5432/mydatabase
+quarkus.datasource.driver=io.opentracing.contrib.jdbc.TracingDriver
+quarkus.hibernate-orm.dialect=org.hibernate.dialect.PostgreSQLDialect
+----
+// end::update_8_12[]

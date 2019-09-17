@@ -70,7 +70,8 @@ You can customize the output by using Open API v3 annotations.
 
 [source, java]
 ----
-@Schema(name="Developers", description="POJO that represents a developer.")
+@Schema(name="Developers", 
+        description="POJO that represents a developer.")
 public class Developer {
     @Schema(required = true, example = "Alex")
     private String name;
@@ -164,6 +165,8 @@ quarkus.mailer.password=....
 List of Mailer parameters.
 `quarkus.` as a prefix is skipped in the next table.
 
+<<<
+
 |===	
 |Parameter | Default | Description
 
@@ -173,7 +176,7 @@ a|Default address.
 
 a|`mailer.mock`
 a|false in `prod`, true in `dev` and `test`.
-|Emails not sent, just printed and stored in a `MockMailbox` bean.
+|Emails not sent, just printed and stored in a `MockMailbox`.
 
 a|`mailer.bounce-address`
 |
@@ -205,7 +208,7 @@ a|`mailer.trust-all`
 
 a|`mailer.max-pool-size`
 |10
-|Maximum number of open connections .
+|Max open connections .
 
 a|`mailer.own-host-name`
 |
@@ -348,6 +351,10 @@ You can configure Apache Tika in `application.properties` file by using next pro
 a|`tika.tika-config-path`
 a|`tika-config.xml`
 a|Path to the Tika configuration resource. 
+
+a|`quarkus.tika.parsers`
+a|
+a|CSV of the abbreviated or full parser class to be loaded by the extension.
 
 a|`tika.append-embedded-content`
 a|`true`
