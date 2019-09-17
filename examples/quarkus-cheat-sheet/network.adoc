@@ -542,3 +542,27 @@ Tracer tracer;
 
 tracer.activeSpan().setBaggageItem("key", "value");
 ----
+
+*Additional tracers*
+
+*JDBC Tracer*
+
+Adds a span for each JDBC queries.
+
+[source, xml]
+----
+<dependency>
+    <groupId>io.opentracing.contrib</groupId>
+    <artifactId>opentracing-jdbc</artifactId>
+</dependency>
+----
+
+Configure JDBC driver apart from tracing properties seen before:
+
+[source, properties]
+----
+# add ':tracing' to your database URL
+quarkus.datasource.url=jdbc:tracing:postgresql://localhost:5432/mydatabase
+quarkus.datasource.driver=io.opentracing.contrib.jdbc.TracingDriver
+quarkus.hibernate-orm.dialect=org.hibernate.dialect.PostgreSQLDialect
+----
