@@ -349,6 +349,10 @@ a|`tika.tika-config-path`
 a|`tika-config.xml`
 a|Path to the Tika configuration resource. 
 
+a|`quarkus.tika.parsers`
+a|
+a|CSV of the abbreviated or full parser class to be loaded by the extension.
+
 a|`tika.append-embedded-content`
 a|`true`
 a|The document may have other embedded documents. Set if autmatically append.
