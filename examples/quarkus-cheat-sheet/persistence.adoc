@@ -861,7 +861,7 @@ quarkus.dynamodb.credentials.type=DEFAULT
 
 `DEFAULT` credentials provider chain: System properties `aws.accessKeyId`, `aws.secretKey` -> Env. Varables `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` -> Credentials profile `~/.aws/credentials` -> Credentials through the Amazon EC2 container service if the `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI` set -> Credentials through Amazon EC2 metadata service.
 
-Configuration parameters prefixed with `quarkus.dynamodb`:
+Configuration parameters prefixed with `quarkus.dynamodb.aws`:
 
 |===	
 |Parameter | Default | Description
@@ -883,7 +883,7 @@ a|`DEFAULT`
 a| Credentials that should be used `DEFAULT`, `STATIC`, `SYSTEM_PROPERTY`, `ENV_VARIABLE`, `PROFILE`, `CONTAINER`, `INSTANCE_PROFILE`, `PROCESS`, `ANONYMOUS`
 |===
 
-Credentials specific parameters prefixed with `quarkus.dynamodb.credentials`:
+Credentials specific parameters prefixed with `quarkus.dynamodb.aws.credentials`:
 
 |===	
 |Parameter | Default | Description
