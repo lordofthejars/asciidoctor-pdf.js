@@ -433,6 +433,17 @@ public class DatabaseHealthCheck {
 ----
 
 You can ping liveness or readiness health checks individually by querying `/health/live` or `/health/ready`.
+
+// tag::update_8_13[]
+If you want to override or set manually readiness/liveness probes, you can do it by setting health properties:
+
+[source, properties]
+----
+quarkus.smallrye-health.root-path=/hello
+quarkus.smallrye-health.liveness-path=/customlive
+quarkus.smallrye-health.readiness-path=/customready
+----
+// end::update_8_13[]
 // end::update_3_4[]
 
 *Metrics*
