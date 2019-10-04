@@ -15,6 +15,14 @@ In this page you can either read what has been added in each version of the chea
 [[whatsnew]]
 == What's New in Cheat-Sheet
 
+=== Version 0.24.0
+
+.Grouping Configuration Properties
+[%collapsible]
+====
+include::core.adoc[tag=update_9_1]
+====
+
 === Version 0.23.0
 
 .JGit

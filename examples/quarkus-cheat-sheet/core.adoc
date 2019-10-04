@@ -155,6 +155,66 @@ test {
 ----
 // end::update_6_7[]
 
+// tag::update_9_1[]
+*@ConfigProperties*
+
+As an alternative to injecting multiple related configuration values, you can also use the `@io.quarkus.arc.config.ConfigProperties` annotation to group properties.
+
+[source, java]
+----
+@ConfigProperties(prefix = "greeting")
+public class GreetingConfiguration {
+    private String message;
+    // getter/setter
+}
+----
+
+This class maps `greeting.message` property defined in `application.properties`.
+
+You can inject this class by using CDI `@Inject GreetingConfiguration greeting;`.
+
+Also you can use an interface approach:
+
+[source, java]
+----
+@ConfigProperties(prefix = "greeting")
+public interface GreetingConfiguration {
+    
+    @ConfigProperty(name = "message")
+    String message();
+    String getSuffix();
+----
+
+If property does not follow getter/setter naming convention you need to use `org.eclipse.microprofile.config.inject.ConfigProperty` to set it.
+
+Nested objects are also supporte:
+
+[source, java]
+----
+@ConfigProperties(prefix = "greeting")
+public class GreetingConfiguration {
+    public String message;
+    public HiddenConfig hidden;
+    
+    public static class HiddenConfig {
+        public List<String> recipients;
+    }
+}
+----
+
+And an `application.properties` mapping previous class:
+
+[source, properties]
+----
+greeting.message = hello
+greeting.hidden.recipients=Jane,John
+----
+
+Bean Validation is also supported so properties are validated at startup time, for example `@Size(min = 20) public String message;`.
+
+*TIP*:`prefix` attribute is not mandatory. If not provided, attribute is determined by class name (ie `GreeetingConfiguration` is translated to `greeting` or `GreetingExtraConfiguration` to `greeting-extra`). The suffix of the class is always removed.
+// end::update_9_1[]
+
 // tag::update_2_6[]
 *Custom Loader*
 
