@@ -260,6 +260,21 @@ a| [`Iterable`, `Steram`, `Object...`]
 a| 
 |===
 
+*Pagination*
+
+// tag::update_9_3[]
+[source, java]
+----
+PanacheQuery<Person> livingPersons = Person.find("status", Status.Alive);
+livingPersons.page(Page.ofSize(25));
+
+// get the first page
+List<Person> firstPage = livingPersons.list();
+// get the second page
+List<Person> secondPage = livingPersons.nextPage().list();
+----
+// end::update_9_3[]
+
 // tag::update_2_10[]
 If entities are defined in external JAR, you need to enable in these projects the `Jandex` plugin in project.
 
@@ -1393,3 +1408,118 @@ a|`Map<String, String>`
 |Authentication mechanism properties.
 |===
 // end::update_5_10[]
+
+== MongoDB Panache
+// tag::update_9_2[]
+You can also use the Panache framework to write persistence part when using MongoDB.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="mongodb-panache"
+----
+
+MongoDB configuration comes from <<MongoDB Client>> section.
+
+[source, java]
+----
+@MongoEntity(collection="ThePerson")
+public class Person extends PanacheMongoEntity {
+    public String name;
+
+    @BsonProperty("birth")
+    public LocalDate birthDate;
+
+    public Status status;
+}
+----
+
+Possible annotations in fields: `@BsonId` (for custom ID), `@BsonProperty` and `@BsonIgnore`.
+
+*Important:* `@MongoEntity` is optional.
+
+Methods provided are similar of the ones shown in <<Persistence>> section.
+
+
+[source, java]
+----
+person.persist();
+person.update();
+person.delete();
+
+List<Person> allPersons = Person.listAll();
+person = Person.findById(personId);
+List<Person> livingPersons = Person.list("status", Status.Alive);
+List<Person> persons = Person.list(Sort.by("name").and("birth"));
+
+long countAll = Person.count();
+
+Person.delete("status", Status.Alive);
+----
+
+All `list` methods have equivalent `stream` versions.
+
+*Pagination*
+
+You can also use pagination:
+
+[source, java]
+----
+PanacheQuery<Person> livingPersons = 
+    Person.find("status", Status.Alive);
+livingPersons.page(Page.ofSize(25));
+
+// get the first page
+List<Person> firstPage = livingPersons.list();
+// get the second page
+List<Person> secondPage = livingPersons.nextPage().list();
+----
+
+*Queries*
+
+Native MongoDB queries are supported (if they start with `{` or `org.bson.Document` instance) as well as Panache Queries.
+Panache Queries equivalence in MongoDB:
+
+* `firstname = ?1 and status = ?2` -> `{'firstname': ?1, 'status': ?2}`
+* `amount > ?1 and firstname != ?2` -> `{'amount': {'$gt': ?1}, 'firstname': {'$ne': ?2}}`
+* `lastname like ?1` -> `{'lastname': {'$regex': ?1}}`
+* `lastname is not null` -> `{'lastname':{'$exists': true}}`
+
+*WARNING:* PanacheQL refers to the Object parameter name but native queries refer to MongoDB field names.
+
+*DAO pattern*
+
+[source, java]
+----
+@ApplicationScoped
+public class PersonRepository 
+    implements PanacheMongoRepository<Person> {
+}
+----
+
+If entities are defined in external JAR, you need to enable in these projects the `Jandex` plugin in project.
+
+[source, xml]
+----
+<plugin>
+    <groupId>org.jboss.jandex</groupId>
+    <artifactId>jandex-maven-plugin</artifactId>
+    <version>1.0.3</version>
+    <executions>
+        <execution>
+            <id>make-index</id>
+            <goals>
+                <goal>jandex</goal>
+            </goals>
+        </execution>
+    </executions>
+    <dependencies>
+        <dependency>
+            <groupId>org.jboss</groupId>
+            <artifactId>jandex</artifactId>
+            <version>2.1.1.Final</version>
+        </dependency>
+    </dependencies>
+</plugin>
+----
+// end::update_9_2[]

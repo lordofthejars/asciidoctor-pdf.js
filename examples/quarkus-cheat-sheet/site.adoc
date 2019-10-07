@@ -23,6 +23,18 @@ In this page you can either read what has been added in each version of the chea
 include::core.adoc[tag=update_9_1]
 ====
 
+.Panache MongoDB
+[%collapsible]
+====
+include::persistence.adoc[tag=update_9_2]
+====
+
+.Panache JPA Pagination
+[%collapsible]
+====
+include::persistence.adoc[tag=update_9_3]
+====
+
 === Version 0.23.0
 
 .JGit
