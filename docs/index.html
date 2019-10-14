@@ -464,6 +464,544 @@ Also focused on developer experience, making things just work with little to no 
 <h2 id="whatsnew"><a class="anchor" href="#whatsnew"></a><a class="link" href="#whatsnew">What&#8217;s New in Cheat-Sheet</a></h2>
 <div class="sectionbody">
 <div class="sect2">
+<h3 id="_version_0_24_0"><a class="anchor" href="#_version_0_24_0"></a><a class="link" href="#_version_0_24_0">Version 0.24.0</a></h3>
+<details>
+<summary class="title">Grouping Configuration Properties</summary>
+<div class="content">
+<div class="paragraph">
+<p><strong>@ConfigProperties</strong></p>
+</div>
+<div class="paragraph">
+<p>As an alternative to injecting multiple related configuration values, you can also use the <code>@io.quarkus.arc.config.ConfigProperties</code> annotation to group properties.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperties(prefix = "greeting")
+public class GreetingConfiguration {
+    private String message;
+    // getter/setter
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This class maps <code>greeting.message</code> property defined in <code>application.properties</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can inject this class by using CDI <code>@Inject GreetingConfiguration greeting;</code>.</p>
+</div>
+<div class="paragraph">
+<p>Also you can use an interface approach:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperties(prefix = "greeting")
+public interface GreetingConfiguration {
+
+    @ConfigProperty(name = "message")
+    String message();
+    String getSuffix();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If property does not follow getter/setter naming convention you need to use <code>org.eclipse.microprofile.config.inject.ConfigProperty</code> to set it.</p>
+</div>
+<div class="paragraph">
+<p>Nested objects are also supporte:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperties(prefix = "greeting")
+public class GreetingConfiguration {
+    public String message;
+    public HiddenConfig hidden;
+
+    public static class HiddenConfig {
+        public List&lt;String&gt; recipients;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And an <code>application.properties</code> mapping previous class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">greeting.message = hello
+greeting.hidden.recipients=Jane,John</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Bean Validation is also supported so properties are validated at startup time, for example <code>@Size(min = 20) public String message;</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>TIP</strong>:`prefix` attribute is not mandatory. If not provided, attribute is determined by class name (ie <code>GreeetingConfiguration</code> is translated to <code>greeting</code> or <code>GreetingExtraConfiguration</code> to <code>greeting-extra</code>). The suffix of the class is always removed.</p>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Panache MongoDB</summary>
+<div class="content">
+<div class="paragraph">
+<p>You can also use the Panache framework to write persistence part when using MongoDB.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="mongodb-panache"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>MongoDB configuration comes from <a href="#_mongodb_client">MongoDB Client</a> section.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@MongoEntity(collection="ThePerson")
+public class Person extends PanacheMongoEntity {
+    public String name;
+
+    @BsonProperty("birth")
+    public LocalDate birthDate;
+
+    public Status status;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Possible annotations in fields: <code>@BsonId</code> (for custom ID), <code>@BsonProperty</code> and <code>@BsonIgnore</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>Important:</strong> <code>@MongoEntity</code> is optional.</p>
+</div>
+<div class="paragraph">
+<p>Methods provided are similar of the ones shown in <a href="#_persistence">Persistence</a> section.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">person.persist();
+person.update();
+person.delete();
+
+List&lt;Person&gt; allPersons = Person.listAll();
+person = Person.findById(personId);
+List&lt;Person&gt; livingPersons = Person.list("status", Status.Alive);
+List&lt;Person&gt; persons = Person.list(Sort.by("name").and("birth"));
+
+long countAll = Person.count();
+
+Person.delete("status", Status.Alive);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All <code>list</code> methods have equivalent <code>stream</code> versions.</p>
+</div>
+<div class="paragraph">
+<p><strong>Pagination</strong></p>
+</div>
+<div class="paragraph">
+<p>You can also use pagination:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">PanacheQuery&lt;Person&gt; livingPersons =
+    Person.find("status", Status.Alive);
+livingPersons.page(Page.ofSize(25));
+
+// get the first page
+List&lt;Person&gt; firstPage = livingPersons.list();
+// get the second page
+List&lt;Person&gt; secondPage = livingPersons.nextPage().list();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Queries</strong></p>
+</div>
+<div class="paragraph">
+<p>Native MongoDB queries are supported (if they start with <code>{</code> or <code>org.bson.Document</code> instance) as well as Panache Queries.
+Panache Queries equivalence in MongoDB:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>firstname = ?1 and status = ?2</code> &#8594; <code>{'firstname': ?1, 'status': ?2}</code></p>
+</li>
+<li>
+<p><code>amount &gt; ?1 and firstname != ?2</code> &#8594; <code>{'amount': {'$gt': ?1}, 'firstname': {'$ne': ?2}}</code></p>
+</li>
+<li>
+<p><code>lastname like ?1</code> &#8594; <code>{'lastname': {'$regex': ?1}}</code></p>
+</li>
+<li>
+<p><code>lastname is not null</code> &#8594; <code>{'lastname':{'$exists': true}}</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>WARNING:</strong> PanacheQL refers to the Object parameter name but native queries refer to MongoDB field names.</p>
+</div>
+<div class="paragraph">
+<p><strong>DAO pattern</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ApplicationScoped
+public class PersonRepository
+    implements PanacheMongoRepository&lt;Person&gt; {
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If entities are defined in external JAR, you need to enable in these projects the <code>Jandex</code> plugin in project.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;plugin&gt;
+    &lt;groupId&gt;org.jboss.jandex&lt;/groupId&gt;
+    &lt;artifactId&gt;jandex-maven-plugin&lt;/artifactId&gt;
+    &lt;version&gt;1.0.3&lt;/version&gt;
+    &lt;executions&gt;
+        &lt;execution&gt;
+            &lt;id&gt;make-index&lt;/id&gt;
+            &lt;goals&gt;
+                &lt;goal&gt;jandex&lt;/goal&gt;
+            &lt;/goals&gt;
+        &lt;/execution&gt;
+    &lt;/executions&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.jboss&lt;/groupId&gt;
+            &lt;artifactId&gt;jandex&lt;/artifactId&gt;
+            &lt;version&gt;2.1.1.Final&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Panache JPA Pagination</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">PanacheQuery&lt;Person&gt; livingPersons = Person
+            .find("status", Status.Alive);
+livingPersons.page(Page.ofSize(25));
+
+// get the first page
+List&lt;Person&gt; firstPage = livingPersons.list();
+// get the second page
+List&lt;Person&gt; secondPage = livingPersons.nextPage().list();</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Named Lambda Request Handlers</summary>
+<div class="content">
+<div class="paragraph">
+<p>You can set the handler name by using <code>quarkus.lambda.handler</code> property.</p>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Vert.X Filters and Routes</summary>
+<div class="content">
+<div class="paragraph">
+<p>You can also register Vert.X Filters and Router programmatically inside a CDI bean:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">import io.quarkus.vertx.http.runtime.filters.Filters;
+import io.vertx.ext.web.Router;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
+
+@ApplicationScoped
+public class MyBean {
+
+    public void filters(
+            @Observes Filters filters) {
+        filters
+            .register(
+                rc -&gt; {
+                    rc.response()
+                        .putHeader("X-Filter", "filter 1");
+                    rc.next();
+                },
+                10);
+    }
+
+    public void routes(
+            @Observes Router router) {
+        router
+            .get("/")
+            .handler(rc -&gt; rc.response().end("OK"));
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Change Context of Static Web Resources</summary>
+<div class="content">
+<div class="paragraph">
+<p>By default static resources as served under the root context.
+You can change this by using <code>quarkus.http.root-path</code> property.</p>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Security with a JDBC Realm</summary>
+<div class="content">
+<div class="paragraph">
+<p>You can also protect endpoints and store identities in a database.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn quarkus:add-extension
+    -Dextensions="elytron-security-jdbc"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You still need to add the database driver (ie <code>jdbc-h2</code>).</p>
+</div>
+<div class="paragraph">
+<p>You need to configure JDBC and Elytron JDBC Realm:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.datasource.url=
+quarkus.datasource.driver=org.h2.Driver
+quarkus.datasource.username=sa
+quarkus.datasource.password=sa
+
+quarkus.security.jdbc.enabled=true
+quarkus.security.jdbc.principal-query.sql=
+    SELECT u.password, u.role FROM test_user u WHERE u.user=?
+quarkus.security.jdbc.principal-query
+    .clear-password-mapper.enabled=true
+quarkus.security.jdbc.principal-query
+    .clear-password-mapper.password-index=1
+quarkus.security.jdbc.principal-query
+    .attribute-mappings.0.index=2
+quarkus.security.jdbc.principal-query
+    .attribute-mappings.0.to=groups</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You need to set the index (1-based) of password and role.</p>
+</div>
+<div class="paragraph">
+<p>Elytron JDBC Realm configuration properties.
+Prefix <code>quarkus.security.jdbc</code> is skipped.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top"> Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>auth-mechanism</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>BASIC</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The authentication mechanism</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>realm-name</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Quarkus</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The authentication mechanism</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>enabled</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>false</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If the properties store is enabled</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>principal-query.sql</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The sql query to find the password</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>principal-query.datasource</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The data source to use</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>principal-query.clear-password-mapper.enabled</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>false</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If the clear-password-mapper is enabled</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>principal-query.clear-password-mapper.password-index</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>1</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The index of column containing clear password</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>principal-query.bcrypt-password-mapper.enabled</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>false</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If the bcrypt-password-mapper is enabled</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>principal-query.bcrypt-password-mapper.password-index</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>0</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The index of column containing password hash</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>principal-query.bcrypt-password-mapper.hash-encoding</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>BASE64</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A string referencing the password hash encoding (<code>BASE64</code> or <code>HEX</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>principal-query.bcrypt-password-mapper.salt-index</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>0</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The index column containing the Bcrypt salt</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>principal-query.bcrypt-password-mapper.salt-encoding</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>BASE64</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A string referencing the salt encoding (<code>BASE64</code> or <code>HEX</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>principal-query.bcrypt-password-mapper.iteration-count-index</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>0</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The index column containing the Bcrypt iteration count</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For multiple datasources you can use the datasource name in the properties:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.datasource.url=
+quarkus.security.jdbc.principal-query.sql=
+
+quarkus.datasource.permissions.url=
+quarkus.security.jdbc.principal-query.permissions.sql=</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">XML Marshalling/Unmarshalling</summary>
+<div class="content">
+<div class="paragraph">
+<p>To work with <code>JAX-B</code> you need to add a dependency:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-resteasy-jaxb"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then annotated POJOs are converted to XML.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@XmlRootElement
+public class Message {
+}
+
+ @GET
+@Produces(MediaType.APPLICATION_XML)
+public Message hello() {
+    return message;
+}</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Multiple datasources</summary>
+<div class="content">
+<div class="paragraph">
+<p>You can register more than one datasource.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs"># default
+quarkus.datasource.driver=org.h2.Driver
+quarkus.datasource.url=jdbc:h2:tcp://localhost/mem:default
+....
+# users datasource
+quarkus.datasource.users.driver=org.h2.Driver
+quarkus.datasource.users.url=jdbc:h2:tcp://localhost/mem:users</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notice that after <code>datasource</code> you set the datasource name, in previous case <code>users</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can inject then <code>AgroalDataSource</code> with <code>io.quarkus.agroal.DataSource</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@DataSource("users")
+AgroalDataSource dataSource1;</code></pre>
+</div>
+</div>
+</div>
+</details>
+</div>
+<div class="sect2">
 <h3 id="_version_0_23_0"><a class="anchor" href="#_version_0_23_0"></a><a class="link" href="#_version_0_23_0">Version 0.23.0</a></h3>
 <details>
 <summary class="title">JGit</summary>
@@ -1730,9 +2268,12 @@ You can disable the scanning documents by adding the next configuration property
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs"># add ':tracing' to your database URL
-quarkus.datasource.url=jdbc:tracing:postgresql://localhost:5432/mydatabase
-quarkus.datasource.driver=io.opentracing.contrib.jdbc.TracingDriver
-quarkus.hibernate-orm.dialect=org.hibernate.dialect.PostgreSQLDialect</code></pre>
+quarkus.datasource.url=
+    jdbc:tracing:postgresql://localhost:5432/mydatabase
+quarkus.datasource.driver=
+    io.opentracing.contrib.jdbc.TracingDriver
+quarkus.hibernate-orm.dialect=
+    org.hibernate.dialect.PostgreSQLDialect</code></pre>
 </div>
 </div>
 </div>
@@ -2429,7 +2970,8 @@ public Response createDeveloper(
 &lt;configuration&gt;
     &lt;systemPropertyVariables&gt;
         &lt;quarkus.test.profile&gt;foo&lt;/quarkus.test.profile&gt;
-        &lt;buildDirectory&gt;${project.build.directory}&lt;/buildDirectory&gt;
+        &lt;buildDirectory&gt;${project.build.directory}
+        &lt;/buildDirectory&gt;
     &lt;/systemPropertyVariables&gt;
 &lt;/configuration&gt;</code></pre>
 </div>
@@ -6131,6 +6673,7 @@ List&lt;Mail&gt; sent = mailbox
 <details>
 <summary class="title">Custom ConfigSource</summary>
 <div class="content">
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p><strong>Custom Loader</strong></p>
 </div>
@@ -7293,24 +7836,15 @@ CompletionStage&lt;JsonArray&gt; =
 <summary class="title">Keycloak</summary>
 <div class="content">
 <div class="paragraph">
-<p>Quarkus can use <a href="https://www.keycloak.org/" target="_blank" rel="noopener">Keycloak</a> to protect resources using bearer token issued by Keycloak server.</p>
+<p>Quarkus can use OpenId Connect or OAuth 2.0 authorization servers such as  <a href="https://www.keycloak.org/" target="_blank" rel="noopener">Keycloak</a> to protect resources using bearer token issued by Keycloak server.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn quarkus:add-extension
-    -Dextensions="io.quarkus:quarkus-keycloak"</code></pre>
+    -Dextensions="using-openid-connect"</code></pre>
 </div>
 </div>
 <div style="page-break-after: always;"></div>
-<div class="paragraph">
-<p>You can get token information by injecting <code>KeycloakSecurityContext</code> object.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
-KeycloakSecurityContext keycloakSecurityContext;</code></pre>
-</div>
-</div>
 <div class="paragraph">
 <p>You can also protect resources with security annotations.</p>
 </div>
@@ -7325,33 +7859,91 @@ KeycloakSecurityContext keycloakSecurityContext;</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.keycloak.realm=quarkus
-quarkus.keycloak.auth-server-url=http://localhost:8180/auth
-quarkus.keycloak.resource=backend-service
-quarkus.keycloak.bearer-only=true
-quarkus.keycloak.credentials.secret=secret
-quarkus.keycloak.policy-enforcer.enable=true
-quarkus.keycloak.policy-enforcer.enforcement-mode=PERMISSIVE
-quarkus.keycloak.enable-cors=true
-quarkus.keycloak.cors-max-age=1000
-quarkus.keycloak.cors-allowed-methods=POST, PUT, DELETE, GET
-quarkus.keycloak.cors-exposed-headers=WWW-Authenticate</code></pre>
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.oidc.realm=quarkus
+quarkus.oidc.auth-server-url=http://localhost:8180/auth
+quarkus.oidc.resource=backend-service
+quarkus.oidc.bearer-only=true
+quarkus.oidc.credentials.secret=secret</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You can see all possible <a href="https://www.keycloak.org/docs/latest/securing_apps/index.html#_java_adapter_config" target="_blank" rel="noopener">Configuration parameters here</a>.</p>
+<p>Configuration options with <code>quarkus.oidc</code> prefix:</p>
 </div>
-<div class="admonitionblock tip">
-<table>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
 <tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-you can also use <code>src/main/resources/keycloak.json</code> standard Keycloak configuration file.
-</td>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top"> Description</th>
 </tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>auth-server-url</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The base URL of the OpenID Connect (OIDC) server</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>introspection-path</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Relative path of the RFC7662 introspection service</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>jwks-path</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Relative path of the OIDC service returning a JWK set</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>public-key</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Public key for the local JWT token verification</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>client-id</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The client-id of the application.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>credentials.secret</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The client secret</p>
+</div></div></td>
+</tr>
+</tbody>
 </table>
+<div class="paragraph">
+<p><strong>NOTE:</strong>  With Keycloak OIDC server <code><a href="https://host:port/auth/realms/{realm}" class="bare">https://host:port/auth/realms/{realm}</a></code> where <code>{realm}</code> has to be replaced by the name of the Keycloak realm.</p>
+</div>
+<div class="paragraph">
+<p><strong>TIP:</strong> You can use <code>quarkus.http.cors</code> property to enable consuming form different domain.</p>
 </div>
 </div>
 </details>
@@ -7380,6 +7972,9 @@ you can also use <code>src/main/resources/keycloak.json</code> standard Keycloak
     }
 }</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>You can set the handler name by using <code>quarkus.lambda.handler</code> property.</p>
 </div>
 <div class="paragraph">
 <p><strong>Test</strong></p>
@@ -7423,6 +8018,7 @@ public void testLambda() {
 <ul class="sectlevel1">
 <li><a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a>
 <ul class="sectlevel2">
+<li><a href="#_version_0_24_0">Version 0.24.0</a></li>
 <li><a href="#_version_0_23_0">Version 0.23.0</a></li>
 <li><a href="#_version_0_21_0">Version 0.21.0</a></li>
 <li><a href="#_version_0_20_0">Version 0.20.0</a></li>
@@ -7443,6 +8039,7 @@ public void testLambda() {
 <li><a href="#_custom_context_path">Custom Context Path</a></li>
 <li><a href="#_injection">Injection</a></li>
 <li><a href="#_json_marshallingunmarshalling">JSON Marshalling/Unmarshalling</a></li>
+<li><a href="#_xml_marshallingunmarshalling">XML Marshalling/Unmarshalling</a></li>
 <li><a href="#_validator">Validator</a></li>
 <li><a href="#_logging">Logging</a></li>
 <li><a href="#_rest_client">Rest Client</a></li>
@@ -7454,6 +8051,7 @@ public void testLambda() {
 <li><a href="#_amazon_dynamodb">Amazon DynamoDB</a></li>
 <li><a href="#_neo4j">Neo4j</a></li>
 <li><a href="#_mongodb_client">MongoDB Client</a></li>
+<li><a href="#_mongodb_panache">MongoDB Panache</a></li>
 <li><a href="#_reactive_programming">Reactive Programming</a></li>
 <li><a href="#_reactive_messaging">Reactive Messaging</a></li>
 <li><a href="#_kafka_streams">Kafka Streams</a></li>
@@ -7461,9 +8059,11 @@ public void testLambda() {
 <li><a href="#_reactive_mysql_client">Reactive MySQL Client</a></li>
 <li><a href="#_activemq_artemis">ActiveMQ Artemis</a></li>
 <li><a href="#_jwt">JWT</a></li>
-<li><a href="#_keycloak">Keycloak</a></li>
+<li><a href="#_open_id_connect">Open Id Connect</a></li>
 <li><a href="#_oauth2">OAuth2</a></li>
+<li><a href="#_security_with_a_jdbc_realm">Security with a JDBC Realm</a></li>
 <li><a href="#_jax_rs">JAX-RS</a></li>
+<li><a href="#_vert_x_filters_and_routes">Vert.X Filters and Routes</a></li>
 <li><a href="#_gzip_support">GZip Support</a></li>
 <li><a href="#_cors_filter">CORS Filter</a></li>
 <li><a href="#_fault_tolerance">Fault Tolerance</a></li>
@@ -7700,7 +8300,8 @@ Optional&lt;String&gt; optionalMessage;</code></pre>
 &lt;configuration&gt;
     &lt;systemPropertyVariables&gt;
         &lt;quarkus.test.profile&gt;foo&lt;/quarkus.test.profile&gt;
-        &lt;buildDirectory&gt;${project.build.directory}&lt;/buildDirectory&gt;
+        &lt;buildDirectory&gt;${project.build.directory}
+        &lt;/buildDirectory&gt;
     &lt;/systemPropertyVariables&gt;
 &lt;/configuration&gt;</code></pre>
 </div>
@@ -7725,6 +8326,75 @@ Same for <code>maven-failsafe-plugin</code>.
 }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p><strong>@ConfigProperties</strong></p>
+</div>
+<div class="paragraph">
+<p>As an alternative to injecting multiple related configuration values, you can also use the <code>@io.quarkus.arc.config.ConfigProperties</code> annotation to group properties.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperties(prefix = "greeting")
+public class GreetingConfiguration {
+    private String message;
+    // getter/setter
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This class maps <code>greeting.message</code> property defined in <code>application.properties</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can inject this class by using CDI <code>@Inject GreetingConfiguration greeting;</code>.</p>
+</div>
+<div class="paragraph">
+<p>Also you can use an interface approach:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperties(prefix = "greeting")
+public interface GreetingConfiguration {
+
+    @ConfigProperty(name = "message")
+    String message();
+    String getSuffix();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If property does not follow getter/setter naming convention you need to use <code>org.eclipse.microprofile.config.inject.ConfigProperty</code> to set it.</p>
+</div>
+<div class="paragraph">
+<p>Nested objects are also supporte:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperties(prefix = "greeting")
+public class GreetingConfiguration {
+    public String message;
+    public HiddenConfig hidden;
+
+    public static class HiddenConfig {
+        public List&lt;String&gt; recipients;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And an <code>application.properties</code> mapping previous class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">greeting.message = hello
+greeting.hidden.recipients=Jane,John</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Bean Validation is also supported so properties are validated at startup time, for example <code>@Size(min = 20) public String message;</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>TIP</strong>:`prefix` attribute is not mandatory. If not provided, attribute is determined by class name (ie <code>GreeetingConfiguration</code> is translated to <code>greeting</code> or <code>GreetingExtraConfiguration</code> to <code>greeting-extra</code>). The suffix of the class is always removed.</p>
+</div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p><strong>Custom Loader</strong></p>
 </div>
@@ -7859,9 +8529,12 @@ Quarkus is designed with Substrate VM in mind. For this reason, we encourage you
 </tr>
 </table>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
-<p><strong>Produces</strong>
-You can also create a factory of an object by using <code>@javax.enterprise.inject.Produces</code> annotation.</p>
+<p><strong>Produces</strong></p>
+</div>
+<div class="paragraph">
+<p>You can also create a factory of an object by using <code>@javax.enterprise.inject.Produces</code> annotation.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7995,6 +8668,34 @@ public class CustomObjectMapperConfig {
         // perform configuration
         return objectMapper;
     }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_xml_marshallingunmarshalling"><a class="anchor" href="#_xml_marshallingunmarshalling"></a><a class="link" href="#_xml_marshallingunmarshalling">XML Marshalling/Unmarshalling</a></h3>
+<div class="paragraph">
+<p>To work with <code>JAX-B</code> you need to add a dependency:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-resteasy-jaxb"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then annotated POJOs are converted to XML.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@XmlRootElement
+public class Message {
+}
+
+ @GET
+@Produces(MediaType.APPLICATION_XML)
+public Message hello() {
+    return message;
 }</code></pre>
 </div>
 </div>
@@ -8141,14 +8842,34 @@ quarkus.log.category."com.lordofthejars".level=DEBUG</code></pre>
 <col style="width: 33.3333%;">
 <col style="width: 33.3334%;">
 </colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top"> Description</th>
-</tr>
-</thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Property</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"> Description</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>category."&lt;category-name&gt;".level</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>INFO</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Minimum level category.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>level</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>INFO</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Default minimum level.</p>
+</div></div></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><code>console.enable</code></p>
@@ -8432,28 +9153,6 @@ quarkus.log.category."com.lordofthejars".level=DEBUG</code></pre>
 <p><code>BLOCK</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Action when queue is full.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>category."&lt;category-name&gt;".level</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>INFO</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Minimum level category.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>level</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>INFO</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Default minimum level.</p>
-</div></div></td>
 </tr>
 </tbody>
 </table>
@@ -9291,6 +9990,21 @@ long numberOfDeleted = Developer.delete("name", "Alex");</code></pre>
 </tbody>
 </table>
 <div class="paragraph">
+<p><strong>Pagination</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">PanacheQuery&lt;Person&gt; livingPersons = Person
+            .find("status", Status.Alive);
+livingPersons.page(Page.ofSize(25));
+
+// get the first page
+List&lt;Person&gt; firstPage = livingPersons.list();
+// get the second page
+List&lt;Person&gt; secondPage = livingPersons.nextPage().list();</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>If entities are defined in external JAR, you need to enable in these projects the <code>Jandex</code> plugin in project.</p>
 </div>
 <div class="listingblock">
@@ -9344,6 +10058,36 @@ You can inject <code>EntityManager</code> in your classes:</p>
 EntityManager em;
 
 em.persist(car);</code></pre>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+<div class="paragraph">
+<p><strong>Multiple datasources</strong></p>
+</div>
+<div class="paragraph">
+<p>You can register more than one datasource.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs"># default
+quarkus.datasource.driver=org.h2.Driver
+quarkus.datasource.url=jdbc:h2:tcp://localhost/mem:default
+....
+# users datasource
+quarkus.datasource.users.driver=org.h2.Driver
+quarkus.datasource.users.url=jdbc:h2:tcp://localhost/mem:users</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notice that after <code>datasource</code> you set the datasource name, in previous case <code>users</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can inject then <code>AgroalDataSource</code> with <code>io.quarkus.agroal.DataSource</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@DataSource("users")
+AgroalDataSource dataSource1;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -11331,6 +12075,144 @@ quarkus.mongodb.write-concern.journal=false</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="sect2">
+<h3 id="_mongodb_panache"><a class="anchor" href="#_mongodb_panache"></a><a class="link" href="#_mongodb_panache">MongoDB Panache</a></h3>
+<div class="paragraph">
+<p>You can also use the Panache framework to write persistence part when using MongoDB.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="mongodb-panache"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>MongoDB configuration comes from <a href="#_mongodb_client">MongoDB Client</a> section.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@MongoEntity(collection="ThePerson")
+public class Person extends PanacheMongoEntity {
+    public String name;
+
+    @BsonProperty("birth")
+    public LocalDate birthDate;
+
+    public Status status;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Possible annotations in fields: <code>@BsonId</code> (for custom ID), <code>@BsonProperty</code> and <code>@BsonIgnore</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>Important:</strong> <code>@MongoEntity</code> is optional.</p>
+</div>
+<div class="paragraph">
+<p>Methods provided are similar of the ones shown in <a href="#_persistence">Persistence</a> section.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">person.persist();
+person.update();
+person.delete();
+
+List&lt;Person&gt; allPersons = Person.listAll();
+person = Person.findById(personId);
+List&lt;Person&gt; livingPersons = Person.list("status", Status.Alive);
+List&lt;Person&gt; persons = Person.list(Sort.by("name").and("birth"));
+
+long countAll = Person.count();
+
+Person.delete("status", Status.Alive);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All <code>list</code> methods have equivalent <code>stream</code> versions.</p>
+</div>
+<div class="paragraph">
+<p><strong>Pagination</strong></p>
+</div>
+<div class="paragraph">
+<p>You can also use pagination:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">PanacheQuery&lt;Person&gt; livingPersons =
+    Person.find("status", Status.Alive);
+livingPersons.page(Page.ofSize(25));
+
+// get the first page
+List&lt;Person&gt; firstPage = livingPersons.list();
+// get the second page
+List&lt;Person&gt; secondPage = livingPersons.nextPage().list();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Queries</strong></p>
+</div>
+<div class="paragraph">
+<p>Native MongoDB queries are supported (if they start with <code>{</code> or <code>org.bson.Document</code> instance) as well as Panache Queries.
+Panache Queries equivalence in MongoDB:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>firstname = ?1 and status = ?2</code> &#8594; <code>{'firstname': ?1, 'status': ?2}</code></p>
+</li>
+<li>
+<p><code>amount &gt; ?1 and firstname != ?2</code> &#8594; <code>{'amount': {'$gt': ?1}, 'firstname': {'$ne': ?2}}</code></p>
+</li>
+<li>
+<p><code>lastname like ?1</code> &#8594; <code>{'lastname': {'$regex': ?1}}</code></p>
+</li>
+<li>
+<p><code>lastname is not null</code> &#8594; <code>{'lastname':{'$exists': true}}</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>WARNING:</strong> PanacheQL refers to the Object parameter name but native queries refer to MongoDB field names.</p>
+</div>
+<div class="paragraph">
+<p><strong>DAO pattern</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ApplicationScoped
+public class PersonRepository
+    implements PanacheMongoRepository&lt;Person&gt; {
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If entities are defined in external JAR, you need to enable in these projects the <code>Jandex</code> plugin in project.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;plugin&gt;
+    &lt;groupId&gt;org.jboss.jandex&lt;/groupId&gt;
+    &lt;artifactId&gt;jandex-maven-plugin&lt;/artifactId&gt;
+    &lt;version&gt;1.0.3&lt;/version&gt;
+    &lt;executions&gt;
+        &lt;execution&gt;
+            &lt;id&gt;make-index&lt;/id&gt;
+            &lt;goals&gt;
+                &lt;goal&gt;jandex&lt;/goal&gt;
+            &lt;/goals&gt;
+        &lt;/execution&gt;
+    &lt;/executions&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.jboss&lt;/groupId&gt;
+            &lt;artifactId&gt;jandex&lt;/artifactId&gt;
+            &lt;version&gt;2.1.1.Final&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
 <div style="page-break-after: always;"></div>
 </div>
 <div class="sect2">
@@ -12095,26 +12977,17 @@ private Instance&lt;Long&gt; providerIAT;</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_keycloak"><a class="anchor" href="#_keycloak"></a><a class="link" href="#_keycloak">Keycloak</a></h3>
+<h3 id="_open_id_connect"><a class="anchor" href="#_open_id_connect"></a><a class="link" href="#_open_id_connect">Open Id Connect</a></h3>
 <div class="paragraph">
-<p>Quarkus can use <a href="https://www.keycloak.org/" target="_blank" rel="noopener">Keycloak</a> to protect resources using bearer token issued by Keycloak server.</p>
+<p>Quarkus can use OpenId Connect or OAuth 2.0 authorization servers such as  <a href="https://www.keycloak.org/" target="_blank" rel="noopener">Keycloak</a> to protect resources using bearer token issued by Keycloak server.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn quarkus:add-extension
-    -Dextensions="io.quarkus:quarkus-keycloak"</code></pre>
+    -Dextensions="using-openid-connect"</code></pre>
 </div>
 </div>
 <div style="page-break-after: always;"></div>
-<div class="paragraph">
-<p>You can get token information by injecting <code>KeycloakSecurityContext</code> object.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
-KeycloakSecurityContext keycloakSecurityContext;</code></pre>
-</div>
-</div>
 <div class="paragraph">
 <p>You can also protect resources with security annotations.</p>
 </div>
@@ -12129,33 +13002,91 @@ KeycloakSecurityContext keycloakSecurityContext;</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.keycloak.realm=quarkus
-quarkus.keycloak.auth-server-url=http://localhost:8180/auth
-quarkus.keycloak.resource=backend-service
-quarkus.keycloak.bearer-only=true
-quarkus.keycloak.credentials.secret=secret
-quarkus.keycloak.policy-enforcer.enable=true
-quarkus.keycloak.policy-enforcer.enforcement-mode=PERMISSIVE
-quarkus.keycloak.enable-cors=true
-quarkus.keycloak.cors-max-age=1000
-quarkus.keycloak.cors-allowed-methods=POST, PUT, DELETE, GET
-quarkus.keycloak.cors-exposed-headers=WWW-Authenticate</code></pre>
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.oidc.realm=quarkus
+quarkus.oidc.auth-server-url=http://localhost:8180/auth
+quarkus.oidc.resource=backend-service
+quarkus.oidc.bearer-only=true
+quarkus.oidc.credentials.secret=secret</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You can see all possible <a href="https://www.keycloak.org/docs/latest/securing_apps/index.html#_java_adapter_config" target="_blank" rel="noopener">Configuration parameters here</a>.</p>
+<p>Configuration options with <code>quarkus.oidc</code> prefix:</p>
 </div>
-<div class="admonitionblock tip">
-<table>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
 <tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-you can also use <code>src/main/resources/keycloak.json</code> standard Keycloak configuration file.
-</td>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top"> Description</th>
 </tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>auth-server-url</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The base URL of the OpenID Connect (OIDC) server</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>introspection-path</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Relative path of the RFC7662 introspection service</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>jwks-path</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Relative path of the OIDC service returning a JWK set</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>public-key</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Public key for the local JWT token verification</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>client-id</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The client-id of the application.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>credentials.secret</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The client secret</p>
+</div></div></td>
+</tr>
+</tbody>
 </table>
+<div class="paragraph">
+<p><strong>NOTE:</strong>  With Keycloak OIDC server <code><a href="https://host:port/auth/realms/{realm}" class="bare">https://host:port/auth/realms/{realm}</a></code> where <code>{realm}</code> has to be replaced by the name of the Keycloak realm.</p>
+</div>
+<div class="paragraph">
+<p><strong>TIP:</strong> You can use <code>quarkus.http.cors</code> property to enable consuming form different domain.</p>
 </div>
 </div>
 <div class="sect2">
@@ -12245,6 +13176,192 @@ quarkus.oauth2.introspection-url=http://oauth-server/introspect</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="sect2">
+<h3 id="_security_with_a_jdbc_realm"><a class="anchor" href="#_security_with_a_jdbc_realm"></a><a class="link" href="#_security_with_a_jdbc_realm">Security with a JDBC Realm</a></h3>
+<div class="paragraph">
+<p>You can also protect endpoints and store identities in a database.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn quarkus:add-extension
+    -Dextensions="elytron-security-jdbc"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You still need to add the database driver (ie <code>jdbc-h2</code>).</p>
+</div>
+<div class="paragraph">
+<p>You need to configure JDBC and Elytron JDBC Realm:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.datasource.url=
+quarkus.datasource.driver=org.h2.Driver
+quarkus.datasource.username=sa
+quarkus.datasource.password=sa
+
+quarkus.security.jdbc.enabled=true
+quarkus.security.jdbc.principal-query.sql=
+    SELECT u.password, u.role FROM test_user u WHERE u.user=?
+quarkus.security.jdbc.principal-query
+    .clear-password-mapper.enabled=true
+quarkus.security.jdbc.principal-query
+    .clear-password-mapper.password-index=1
+quarkus.security.jdbc.principal-query
+    .attribute-mappings.0.index=2
+quarkus.security.jdbc.principal-query
+    .attribute-mappings.0.to=groups</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You need to set the index (1-based) of password and role.</p>
+</div>
+<div class="paragraph">
+<p>Elytron JDBC Realm configuration properties.
+Prefix <code>quarkus.security.jdbc</code> is skipped.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top"> Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>auth-mechanism</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>BASIC</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The authentication mechanism</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>realm-name</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Quarkus</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The authentication mechanism</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>enabled</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>false</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If the properties store is enabled</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>principal-query.sql</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The sql query to find the password</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>principal-query.datasource</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The data source to use</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>principal-query.clear-password-mapper.enabled</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>false</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If the clear-password-mapper is enabled</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>principal-query.clear-password-mapper.password-index</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>1</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The index of column containing clear password</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>principal-query.bcrypt-password-mapper.enabled</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>false</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If the bcrypt-password-mapper is enabled</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>principal-query.bcrypt-password-mapper.password-index</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>0</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The index of column containing password hash</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>principal-query.bcrypt-password-mapper.hash-encoding</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>BASE64</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A string referencing the password hash encoding (<code>BASE64</code> or <code>HEX</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>principal-query.bcrypt-password-mapper.salt-index</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>0</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The index column containing the Bcrypt salt</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>principal-query.bcrypt-password-mapper.salt-encoding</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>BASE64</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A string referencing the salt encoding (<code>BASE64</code> or <code>HEX</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>principal-query.bcrypt-password-mapper.iteration-count-index</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>0</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The index column containing the Bcrypt iteration count</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For multiple datasources you can use the datasource name in the properties:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.datasource.url=
+quarkus.security.jdbc.principal-query.sql=
+
+quarkus.datasource.permissions.url=
+quarkus.security.jdbc.principal-query.permissions.sql=</code></pre>
+</div>
+</div>
 <div style="page-break-after: always;"></div>
 </div>
 <div class="sect2">
@@ -12441,6 +13558,43 @@ public class ErrorMapper
             .build();
         }
     }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_vert_x_filters_and_routes"><a class="anchor" href="#_vert_x_filters_and_routes"></a><a class="link" href="#_vert_x_filters_and_routes">Vert.X Filters and Routes</a></h3>
+<div class="paragraph">
+<p>You can also register Vert.X Filters and Router programmatically inside a CDI bean:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">import io.quarkus.vertx.http.runtime.filters.Filters;
+import io.vertx.ext.web.Router;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
+
+@ApplicationScoped
+public class MyBean {
+
+    public void filters(
+            @Observes Filters filters) {
+        filters
+            .register(
+                rc -&gt; {
+                    rc.response()
+                        .putHeader("X-Filter", "filter 1");
+                    rc.next();
+                },
+                10);
+    }
+
+    public void routes(
+            @Observes Router router) {
+        router
+            .get("/")
+            .handler(rc -&gt; rc.response().end("OK"));
+    }
+}</code></pre>
 </div>
 </div>
 </div>
@@ -13068,9 +14222,12 @@ tracer.activeSpan().setBaggageItem("key", "value");</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs"># add ':tracing' to your database URL
-quarkus.datasource.url=jdbc:tracing:postgresql://localhost:5432/mydatabase
-quarkus.datasource.driver=io.opentracing.contrib.jdbc.TracingDriver
-quarkus.hibernate-orm.dialect=org.hibernate.dialect.PostgreSQLDialect</code></pre>
+quarkus.datasource.url=
+    jdbc:tracing:postgresql://localhost:5432/mydatabase
+quarkus.datasource.driver=
+    io.opentracing.contrib.jdbc.TracingDriver
+quarkus.hibernate-orm.dialect=
+    org.hibernate.dialect.PostgreSQLDialect</code></pre>
 </div>
 </div>
 <div style="page-break-after: always;"></div>
@@ -13454,6 +14611,9 @@ public class KubernetesClientTest {
     }
 }</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>You can set the handler name by using <code>quarkus.lambda.handler</code> property.</p>
 </div>
 <div class="paragraph">
 <p><strong>Test</strong></p>
@@ -14042,6 +15202,10 @@ public String extractText(InputStream stream) {
 <div class="paragraph">
 <p>You can serve web resources with Quarkus.
 You need to place web resources at <code>src/main/resources/META-INF/resources</code> and then they are accessible (ie <a href="http://localhost:8080/index.html" class="bare">http://localhost:8080/index.html</a>)</p>
+</div>
+<div class="paragraph">
+<p>By default static resources as served under the root context.
+You can change this by using <code>quarkus.http.root-path</code> property.</p>
 </div>
 <div style="page-break-after: always;"></div>
 </div>

@@ -139,7 +139,8 @@ You can also set it in the build tool:
 <configuration>
     <systemPropertyVariables>
         <quarkus.test.profile>foo</quarkus.test.profile>
-        <buildDirectory>${project.build.directory}</buildDirectory>
+        <buildDirectory>${project.build.directory}
+        </buildDirectory>
     </systemPropertyVariables>
 </configuration>
 ----
@@ -216,6 +217,9 @@ Bean Validation is also supported so properties are validated at startup time, f
 // end::update_9_1[]
 
 // tag::update_2_6[]
+
+<<<
+
 *Custom Loader*
 
 You can implement your own `ConfigSource` to load configuration from different places than the default ones provided by Quarkus. 
@@ -331,7 +335,10 @@ GreetingService greetingService;
 
 IMPORTANT: Quarkus is designed with Substrate VM in mind. For this reason, we encourage you to use _package-private_ scope instead of _private_.
 
+<<<
+
 *Produces*
+
 // tag::update_5_4[]
 You can also create a factory of an object by using `@javax.enterprise.inject.Produces` annotation.
 

@@ -265,7 +265,8 @@ a|
 // tag::update_9_3[]
 [source, java]
 ----
-PanacheQuery<Person> livingPersons = Person.find("status", Status.Alive);
+PanacheQuery<Person> livingPersons = Person
+            .find("status", Status.Alive);
 livingPersons.page(Page.ofSize(25));
 
 // get the first page
@@ -333,6 +334,8 @@ em.persist(car);
 ----
 // end::update_5_2[]
 
+<<<
+
 *Multiple datasources*
 
 // tag::update_9_9[]
@@ -349,7 +352,7 @@ quarkus.datasource.users.driver=org.h2.Driver
 quarkus.datasource.users.url=jdbc:h2:tcp://localhost/mem:users
 ----
 
-Notice that after `datasource` you set the datasource name, in prvious case `users`.
+Notice that after `datasource` you set the datasource name, in previous case `users`.
 
 You can inject then `AgroalDataSource` with `io.quarkus.agroal.DataSource`.
 

@@ -629,8 +629,11 @@ Configure JDBC driver apart from tracing properties seen before:
 [source, properties]
 ----
 # add ':tracing' to your database URL
-quarkus.datasource.url=jdbc:tracing:postgresql://localhost:5432/mydatabase
-quarkus.datasource.driver=io.opentracing.contrib.jdbc.TracingDriver
-quarkus.hibernate-orm.dialect=org.hibernate.dialect.PostgreSQLDialect
+quarkus.datasource.url=
+    jdbc:tracing:postgresql://localhost:5432/mydatabase
+quarkus.datasource.driver=
+    io.opentracing.contrib.jdbc.TracingDriver
+quarkus.hibernate-orm.dialect=
+    org.hibernate.dialect.PostgreSQLDialect
 ----
 // end::update_8_12[]
