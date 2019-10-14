@@ -390,8 +390,13 @@ try (Git git = Git.cloneRepository()
 // end::update_8_1[]
 
 == Web Resources
-// tag::update_8_9[]
 
+// tag::update_8_9[]
 You can serve web resources with Quarkus.
 You need to place web resources at `src/main/resources/META-INF/resources` and then they are accessible (ie http://localhost:8080/index.html)
 // end::update_8_9[]
+
+// tag::update_9_6[]
+By default static resources as served under the root context.
+You can change this by using `quarkus.http.root-path` property.
+// end::update_9_6[]

@@ -47,6 +47,12 @@ include::cloud.adoc[tag=update_9_4]
 include::network.adoc[tag=update_9_5]
 ====
 
+.Change Context of Static Web Resources
+[%collapsible]
+====
+include::misc.adoc[tag=update_9_6]
+====
+
 === Version 0.23.0
 
 .JGit
