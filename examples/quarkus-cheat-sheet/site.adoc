@@ -59,6 +59,11 @@ include::misc.adoc[tag=update_9_6]
 include::security.adoc[tag=update_9_7]
 ====
 
+.XML Marshalling/Unmarshalling
+[%collapsible]
+====
+include::core.adoc[tag=update_9_8]
+====
 
 === Version 0.23.0
 

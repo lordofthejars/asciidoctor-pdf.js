@@ -464,6 +464,33 @@ public class CustomObjectMapperConfig {
 ----
 // end::update_6_1[]
 
+== XML Marshalling/Unmarshalling
+
+// tag::update_9_8[]
+To work with `JAX-B` you need to add a dependency:
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-resteasy-jaxb"
+----
+
+Then annotated POJOs are converted to XML.
+
+[source, java]
+----
+@XmlRootElement
+public class Message {
+}
+
+ @GET
+@Produces(MediaType.APPLICATION_XML)
+public Message hello() {
+    return message;
+}
+----
+// end::update_9_8[]
+
 == Validator
 
 Quarkus uses https://hibernate.org/validator/[Hibernate Validator, window="_blank"] to validate input/output of REST services and business services using Bean validation spec.
