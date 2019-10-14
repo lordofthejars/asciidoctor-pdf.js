@@ -65,6 +65,12 @@ include::security.adoc[tag=update_9_7]
 include::core.adoc[tag=update_9_8]
 ====
 
+.Multiple datasources
+[%collapsible]
+====
+include::persistence.adoc[tag=update_9_9]
+====
+
 === Version 0.23.0
 
 .JGit
