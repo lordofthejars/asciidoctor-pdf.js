@@ -98,25 +98,17 @@ JWT `groups` claim is directly mapped to roles to be used in security annotation
 ----
 // end::update_1_5[]
 
-== Keycloak
+== Open Id Connect
 // tag::update_1_9[]
-Quarkus can use https://www.keycloak.org/[Keycloak, window="_blank"] to protect resources using bearer token issued by Keycloak server.
+Quarkus can use OpenId Connect or OAuth 2.0 authorization servers such as  https://www.keycloak.org/[Keycloak, window="_blank"] to protect resources using bearer token issued by Keycloak server.
 
 [source, bash]
 ----
 mvn quarkus:add-extension 
-    -Dextensions="io.quarkus:quarkus-keycloak"
+    -Dextensions="using-openid-connect"
 ----
 
 <<<
-
-You can get token information by injecting `KeycloakSecurityContext` object.
-
-[source, java]
-----
-@Inject
-KeycloakSecurityContext keycloakSecurityContext;
-----
 
 You can also protect resources with security annotations.
 
@@ -130,22 +122,44 @@ Configure application to Keycloak service in `application.properties` file.
 
 [source, properties]
 ----
-quarkus.keycloak.realm=quarkus
-quarkus.keycloak.auth-server-url=http://localhost:8180/auth
-quarkus.keycloak.resource=backend-service
-quarkus.keycloak.bearer-only=true
-quarkus.keycloak.credentials.secret=secret
-quarkus.keycloak.policy-enforcer.enable=true
-quarkus.keycloak.policy-enforcer.enforcement-mode=PERMISSIVE
-quarkus.keycloak.enable-cors=true
-quarkus.keycloak.cors-max-age=1000
-quarkus.keycloak.cors-allowed-methods=POST, PUT, DELETE, GET
-quarkus.keycloak.cors-exposed-headers=WWW-Authenticate
+quarkus.oidc.realm=quarkus
+quarkus.oidc.auth-server-url=http://localhost:8180/auth
+quarkus.oidc.resource=backend-service
+quarkus.oidc.bearer-only=true
+quarkus.oidc.credentials.secret=secret
 ----
 
-You can see all possible https://www.keycloak.org/docs/latest/securing_apps/index.html#_java_adapter_config[Configuration parameters here, window="_blank"].
+Configuration options with `quarkus.oidc` prefix:
 
-TIP: you can also use `src/main/resources/keycloak.json` standard Keycloak configuration file.
+|===	
+| Parameter | Default | Description
+
+a|`auth-server-url`
+a|
+a|The base URL of the OpenID Connect (OIDC) server
+
+a|`introspection-path`
+a|
+a|Relative path of the RFC7662 introspection service
+
+a|`jwks-path`
+a|
+a|Relative path of the OIDC service returning a JWK set
+
+a|`public-key`
+a|
+a|Public key for the local JWT token verification
+
+a|`client-id`
+a|
+a|The client-id of the application.
+
+a|`credentials.secret`
+a|
+a|The client secret
+|===
+
+*NOTE:*  With Keycloak OIDC server `https://host:port/auth/realms/{realm}` where `{realm}` has to be replaced by the name of the Keycloak realm.
 // end::update_1_9[]
 
 == OAuth2
