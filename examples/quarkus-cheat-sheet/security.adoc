@@ -216,3 +216,107 @@ a|`scope`
 |The claim that is used in the endpoint response to load the roles
 |===
 // end::update_6_8[]
+
+== Security with a JDBC Realm
+
+// tag::update_9_7[]
+You can also protect endpoints and store identities in a database.
+
+[source, bash]
+----
+mvn quarkus:add-extension 
+    -Dextensions="elytron-security-jdbc"
+----
+
+You still need to add the database driver (ie `jdbc-h2`).
+
+You need to configure JDBC and Elytron JDBC Realm:
+
+[source, properties]
+----
+quarkus.datasource.url=
+quarkus.datasource.driver=org.h2.Driver
+quarkus.datasource.username=sa
+quarkus.datasource.password=sa
+
+quarkus.security.jdbc.enabled=true
+quarkus.security.jdbc.principal-query.sql=
+    SELECT u.password, u.role FROM test_user u WHERE u.username=? 
+quarkus.security.jdbc.principal-query.clear-password-mapper.enabled=true 
+quarkus.security.jdbc.principal-query.clear-password-mapper.password-index=1
+quarkus.security.jdbc.principal-query.attribute-mappings.0.index=2 
+quarkus.security.jdbc.principal-query.attribute-mappings.0.to=groups
+----
+
+You need to set the index (1-based) of password and role.
+
+Elytron JDBC Realm configuration properties.
+Prefix `quarkus.security.jdbc` is skipped.
+
+|===	
+| Parameter | Default | Description
+
+a|`auth-mechanism`
+a|`BASIC`
+|The authentication mechanism
+
+a|`realm-name`
+a|`Quarkus`
+|The authentication mechanism
+
+a|`enabled`
+a|`false`
+|If the properties store is enabled
+
+a|`principal-query.sql`
+a|
+|The sql query to find the password
+
+a|`principal-query.datasource`
+a|
+|The data source to use
+
+a|`principal-query.clear-password-mapper.enabled`
+a|`false`
+|If the clear-password-mapper is enabled
+
+a|`principal-query.clear-password-mapper.password-index`
+a|`1`
+|The index of column containing clear password
+
+a|`principal-query.bcrypt-password-mapper.enabled`
+a|`false`
+|If the bcrypt-password-mapper is enabled
+
+a|`principal-query.bcrypt-password-mapper.password-index`
+a|`0`
+|The index of column containing password hash
+
+a|`principal-query.bcrypt-password-mapper.hash-encoding`
+a|`BASE64`
+|A string referencing the password hash encoding (`BASE64` or `HEX`)
+
+a|`principal-query.bcrypt-password-mapper.salt-index`
+a|`0`
+|The index column containing the Bcrypt salt
+
+a|`principal-query.bcrypt-password-mapper.salt-encoding`
+a|`BASE64`
+|A string referencing the salt encoding (`BASE64` or `HEX`)
+
+a|`principal-query.bcrypt-password-mapper.iteration-count-index`
+a|`0`
+|The index column containing the Bcrypt iteration count
+|===
+
+For multiple datasources you can use the datasource name in the properties:
+
+[source, properties]
+----
+quarkus.datasource.url=
+quarkus.security.jdbc.principal-query.sql=
+
+quarkus.datasource.permissions.url=
+quarkus.security.jdbc.principal-query.permissions.sql=
+----
+// end::update_9_7[]
