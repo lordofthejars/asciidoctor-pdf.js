@@ -154,6 +154,43 @@ public class ErrorMapper
 ----
 // end::update_5_1[]
 
+== Vert.X Filters and Routes
+
+// tag::update_9_5[]
+You can also register Vert.X Filters and Router programmatically inside a CDI bean:
+
+[source, java]
+----
+import io.quarkus.vertx.http.runtime.filters.Filters;
+import io.vertx.ext.web.Router;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
+
+@ApplicationScoped
+public class MyBean {
+
+    public void filters(
+            @Observes Filters filters) {
+        filters
+            .register(
+                rc -> {
+                    rc.response()
+                        .putHeader("X-Filter", "filter 1");
+                    rc.next();
+                },
+                10);
+    }
+
+    public void routes(
+            @Observes Router router) {
+        router
+            .get("/")
+            .handler(rc -> rc.response().end("OK"));
+    }
+}
+----
+// end::update_9_5[]
+
 == GZip Support
 // tag::update_7_4[]
 

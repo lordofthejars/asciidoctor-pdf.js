@@ -35,10 +35,16 @@ include::persistence.adoc[tag=update_9_2]
 include::persistence.adoc[tag=update_9_3]
 ====
 
-.Nambed Lambda Request Handlers
+.Named Lambda Request Handlers
 [%collapsible]
 ====
 include::cloud.adoc[tag=update_9_4]
+====
+
+.Vert.X Filters and Routes
+[%collapsible]
+====
+include::network.adoc[tag=update_9_5]
 ====
 
 === Version 0.23.0
