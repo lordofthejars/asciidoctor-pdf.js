@@ -53,6 +53,13 @@ include::network.adoc[tag=update_9_5]
 include::misc.adoc[tag=update_9_6]
 ====
 
+.Security with a JDBC Realm
+[%collapsible]
+====
+include::security.adoc[tag=update_9_7]
+====
+
+
 === Version 0.23.0
 
 .JGit
