@@ -35,6 +35,12 @@ include::persistence.adoc[tag=update_9_2]
 include::persistence.adoc[tag=update_9_3]
 ====
 
+.Nambed Lambda Request Handlers
+[%collapsible]
+====
+include::cloud.adoc[tag=update_9_4]
+====
+
 === Version 0.23.0
 
 .JGit

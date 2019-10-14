@@ -252,6 +252,10 @@ public class TestLambda
 }
 ----
 
+// tag::update_9_4[]
+You can set the handler name by using `quarkus.lambda.handler` property.
+// end::update_9_4[]
+
 *Test*
 
 You can write tests for Amazon lambdas:
