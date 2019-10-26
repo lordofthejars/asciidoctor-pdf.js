@@ -1,3 +1,44 @@
+== RBAC
+
+// tag::update_10_4[]
+*Annotations*
+
+You can define a roles by using `javax.annotation.security.RolesAllowed` annotation.
+
+[source, java]
+----
+@RolesAllowed("Subscriber")
+----
+
+You can use `io.quarkus.security.Authenticated` as a shortcut of `@RolesAllowed("*")`.
+
+*`application.properties`*
+
+[source, properties]
+----
+quarkus.http.auth.policy.role-policy1.roles-allowed=
+    user,admin                      
+quarkus.http.auth.permission.roles1.paths=
+    /roles-secured/*,/other/*,/api/*          
+quarkus.http.auth.permission.roles1.policy=
+    role-policy1
+
+quarkus.http.auth.permission.permit1.paths=
+    /public/*                                
+quarkus.http.auth.permission.permit1.policy=
+    permit
+quarkus.http.auth.permission.permit1.methods=
+    GET
+
+quarkus.http.auth.permission.deny1.paths=
+    /forbidden                                 
+quarkus.http.auth.permission.deny1.policy=
+    deny
+----
+
+You need to provide permissions set by using `roles-allowed` property or use the built-in ones `deny`, `permit` or `authenticated`. 
+// end::update_10_4[]
+
 == JWT
 // tag::update_1_5[]
 Quarkus implements https://github.com/eclipse/microprofile-jwt-auth[MicroProfile JWT RBAC spec, window="_blank"].
@@ -449,3 +490,168 @@ quarkus.datasource.permissions.url=
 quarkus.security.jdbc.principal-query.permissions.sql=
 ----
 // end::update_9_7[]
+
+== Vault
+
+// tag::update_10_5[]
+Quarkus integrates with https://www.vaultproject.io/[Vault] to manage secrets or protecting sensitive data. 
+
+[source, bash]
+----
+mvn quarkus:add-extension 
+    -Dextensions="vault"
+----
+
+And configuring Vault in `application.properties`:
+
+[source, properties]
+----
+# vault url
+quarkus.vault.url=http://localhost:8200
+
+quarkus.vault.authentication.userpass.username=
+    bob
+quarkus.vault.authentication.userpass.password=
+    sinclair
+
+# path within the kv secret engine
+quarkus.vault.secret-config-kv-path=
+    myapps/vault-quickstart/config
+----
+
+Then you can inject the value configured at `secret/myapps/vault-quickstart/a-private-key`.
+
+[source, java]
+----
+@ConfigProperty(name = "a-private-key")
+String privateKey;
+----
+
+You can access the KV engine programmatically:
+
+[source, java]
+----
+@Inject
+VaultKVSecretEngine kvSecretEngine;
+
+kvSecretEngine.readSecret("myapps/vault-quickstart/" + vaultPath).toString();
+----
+
+*Fetching credentials DB*
+
+With the next _kv_ `vault kv put secret/myapps/vault-quickstart/db password=connor`
+
+[source, properties]
+----
+quarkus.vault.credentials-provider.mydatabase.kv-path=
+    myapps/vault-quickstart/db
+quarkus.datasource.credentials-provider=
+    mydatabase
+
+quarkus.datasource.url= 
+    jdbc:postgresql://localhost:5432/mydatabase
+quarkus.datasource.driver= 
+    org.postgresql.Driver
+quarkus.datasource.username=
+    sarah
+----
+
+No password is set as it is fetched from Vault.
+
+*INFO:* https://www.vaultproject.io/docs/secrets/databases/index.html[dynamic database credentials] through the `database-credentials-role` property.
+
+Elytron JDBC Realm configuration properties.
+Prefix `quarkus.vault` is skipped.
+
+|===	
+| Parameter | Default | Description
+
+a|`url`
+a|
+|Vault server URL
+
+a|`authentication.client-token`
+a|
+|Vault token to access
+
+a|`authentication.app-role.role-id`
+a|
+|Role Id for AppRole auth
+
+a|`authentication.app-role.secret-id`
+a|
+|Secret Id for AppRole auth
+
+a|`authentication.userpass.username`
+a|
+|Username for userpass auth
+
+a|`authentication.userpass.password`
+a|
+|Password for userpass auth
+
+a|`authentication.kubernetes.role`
+a|
+|Kubernetes authentication role
+
+a|`authentication.kubernetes.jwt-token-path`
+a|`/var/run/secrets/kubernetes.io/serviceaccount/token`
+|Location of the file containing the Kubernetes JWT token
+
+a|`renew-grace-period`
+a|1H
+|Renew grace period duration. This value if used to extend a lease before it expires its ttl
+
+a|`secret-config-cache-period`
+a|10M
+|Vault config source cache period
+
+a|`secret-config-kv-path`
+a|
+|Vault path in kv store
+
+a|`log-confidentiality-level`
+a|`medium`
+|Used to hide confidential infos. `low`, `medium`, `high`
+
+a|`kv-secret-engine-version`
+a|`1`
+|Kv secret engine version
+
+a|`kv-secret-engine-mount-path`
+a|`secret`
+|Kv secret engine path
+
+a|`tls.skip-verify`
+a|`false`
+|Allows to bypass certificate validation on TLS communications
+
+a|`tls.ca-cert`
+a|
+|Certificate bundle used to validate TLS communications
+
+a|`tls.use-kubernetes-ca-cert`
+a|`true`
+a|TLS will be active and the cacert path will be set to `/var/run/secrets/kubernetes.io/serviceaccount/ca.crt`
+
+a|`connect-timeout`
+a|`5S`
+|Tiemout to establish a connection
+
+a|`read-timeout`
+a|`1S`
+|Request timeout
+
+a|`quarkus.vault.credentials-provider."credentials-provider".database-credentials-role`
+a|
+|Database credentials role
+
+a|`credentials-provider."credentials-provider".kv-path`
+a|
+|A path in vault kv store, where we will find the kv-key
+
+a|`credentials-provider."credentials-provider".kv-key`
+a|`password`
+|Key name to search in vault path kv-path
+|===
+// end::update_10_5[]

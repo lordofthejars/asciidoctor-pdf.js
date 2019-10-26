@@ -35,6 +35,18 @@ include::security.adoc[tag=update_10_2]
 include::security.adoc[tag=update_10_3]
 ====
 
+.RBAC
+[%collapsible]
+====
+include::security.adoc[tag=update_10_4]
+====
+
+.Vault Support
+[%collapsible]
+====
+include::security.adoc[tag=update_10_5]
+====
+
 === Version 0.24.0
 
 .Grouping Configuration Properties
