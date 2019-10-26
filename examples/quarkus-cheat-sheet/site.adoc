@@ -15,12 +15,24 @@ In this page you can either read what has been added in each version of the chea
 [[whatsnew]]
 == What's New in Cheat-Sheet
 
-=== Version 0.25.0
+=== Version 0.26.0
 
 .JAX-RS over Vert.X
 [%collapsible]
 ====
 include::network.adoc[tag=update_10_1]
+====
+
+.Security with File Properties Realm
+[%collapsible]
+====
+include::security.adoc[tag=update_10_2]
+====
+
+.Http basic auth
+[%collapsible]
+====
+include::security.adoc[tag=update_10_3]
 ====
 
 === Version 0.24.0

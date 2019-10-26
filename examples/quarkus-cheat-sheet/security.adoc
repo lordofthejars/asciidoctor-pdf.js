@@ -217,6 +217,131 @@ a|`scope`
 |===
 // end::update_6_8[]
 
+== HTTP basic auth
+
+// tag::update_10_3[]
+HTTP basic auth is now enabled by the `quarkus.http-auth.basic=true` property.
+Then you need to add `elytron-security-properties-file` or `elytron-security-jdbc`.
+// end::update_10_3[]
+
+== Security with Properties File
+
+// tag::update_10_2[]
+You can also protect endpoints and store identities (user, roles) in the file system.
+
+[source, bash]
+----
+mvn quarkus:add-extension 
+    -Dextensions="elytron-security-properties-file"
+----
+
+You need to configure the extension with users and roles files:
+
+And configuration in `src/main/resources/application.properties`:
+
+[source, properties]
+----
+quarkus.security.users.file.enabled=true
+quarkus.security.users.file.users=test-users.properties
+quarkus.security.users.file.roles=test-roles.properties
+quarkus.security.users.file.auth-mechanism=BASIC
+quarkus.security.users.file.realm-name=MyRealm
+quarkus.security.users.file.plain-text=true
+----
+
+Then `users.properties` and `roles.properties`:
+
+[source, properties]
+----
+scott=jb0ss 
+jdoe=p4ssw0rd
+----
+
+[source, properties]
+----
+scott=Admin,admin,Tester,user 
+jdoe=NoRolesUser
+----
+
+*IMPORTANT:*  If `plain-text` is set to `false` (or omitted) then passwords must be stored in the form MD5 (`username`:`realm`:`password`).
+
+Elytron File Properties configuration properties.
+Prefix `quarkus.security.users` is skipped.
+
+|===	
+| Parameter | Default | Description
+
+a|`file.enabled`
+a|`false`
+|The file realm is enabled
+
+a|`file.auth-mechanism`
+a|`BASIC`
+|The authentication mechanism
+
+a|`file.realm-name`
+a|`Quarkus`
+|The authentication realm name
+
+a|`file.plain-text`
+a|`false`
+|If passwords are in plain or in MD5
+
+a|`file.users`
+a|`users.properties`
+|Classpath resource of user/password
+
+a|`file.roles`
+a|`roles.properties`
+|Classpath resource of user/role
+|===
+
+*Embedded Realm*
+
+You can embed user/password/role in the same `application.properties`:
+
+[source, properties]
+----
+quarkus.security.users.embedded.enabled=true
+quarkus.security.users.embedded.plain-text=true
+quarkus.security.users.embedded.users.scott=jb0ss
+quarkus.security.users.embedded.roles.scott=admin,tester,user
+quarkus.security.users.embedded.auth-mechanism=BASIC
+----
+
+*IMPORTANT:*  If plain-text is set to `false` (or omitted) then passwords must be stored in the form MD5 (`username`:`realm`:`password`).
+
+Prefix `quarkus.security.users.embedded` is skipped.
+
+|===	
+| Parameter | Default | Description
+
+a|`file.enabled`
+a|`false`
+|The file realm is enabled
+
+a|`file.auth-mechanism`
+a|`BASIC`
+|The authentication mechanism
+
+a|`file.realm-name`
+a|`Quarkus`
+|The authentication realm name
+
+a|`file.plain-text`
+a|`false`
+|If passwords are in plain or in MD5
+
+a|`file.users.*`
+a|
+a|`*` is user and value is password
+
+a|`file.roles.*`
+a|
+a|`*` is user and value is role
+|===
+// end::update_10_2[]
+
 == Security with a JDBC Realm
 
 // tag::update_9_7[]
@@ -266,7 +391,7 @@ a|`BASIC`
 
 a|`realm-name`
 a|`Quarkus`
-|The authentication mechanism
+|The authentication realm name
 
 a|`enabled`
 a|`false`
