@@ -314,8 +314,6 @@ To start using it you only need to add the next extension:
 ----
 // end::update_3_9[]
 
-<<<
-
 == Apache Tika
 // tag::update_5_8[]
 
@@ -362,6 +360,8 @@ a|The document may have other embedded documents. Set if autmatically append.
 |===
 // end::update_7_3[]
 // end::update_5_8[]
+
+<<<
 
 == JGit
 // tag::update_8_1[]
@@ -424,7 +424,7 @@ public interface FlightService {
 }
 ----
 
-Pessimistic strategy is the default one, you can change to optimistic by using `@Optimistic`.
+The pessimistic strategy is the default one, you can change to optimistic by using `@Optimistic`.
 
 Then you need to create the object inside `org.jboss.stm.Container`.
 
@@ -461,7 +461,7 @@ public class FlightServiceImpl
 ----
 
 Any member is saved/restored automatically (`@State` is not mandatory).
-You can use `@NotState` to avoid the behaviour.
+You can use `@NotState` to avoid behaviour.
 
 *Transaction boundaries*
 

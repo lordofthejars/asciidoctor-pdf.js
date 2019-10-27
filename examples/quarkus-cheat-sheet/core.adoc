@@ -260,8 +260,6 @@ Bean Validation is also supported so properties are validated at startup time, f
 
 // tag::update_2_6[]
 
-<<<
-
 *Custom Loader*
 
 You can implement your own `ConfigSource` to load configuration from different places than the default ones provided by Quarkus. 
@@ -376,8 +374,6 @@ GreetingService greetingService;
 ----
 
 IMPORTANT: Quarkus is designed with Substrate VM in mind. For this reason, we encourage you to use _package-private_ scope instead of _private_.
-
-<<<
 
 *Produces*
 
@@ -921,7 +917,8 @@ import java.io.InputStream;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jboss.resteasy.annotations.providers.multipart.PartType;
+import 
+    org.jboss.resteasy.annotations.providers.multipart.PartType;
 
 public class MultipartBody {
 
@@ -941,7 +938,8 @@ And the Rest client interface:
 
 [source, java]
 ----
-import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+import 
+    org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 @Path("/echo")
 @RegisterRestClient
@@ -950,7 +948,8 @@ public interface MultipartService {
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.TEXT_PLAIN)
-    String sendMultipartData(@MultipartForm MultipartBody data);
+    String sendMultipartData(@MultipartForm 
+                        MultipartBody data);
 
 }
 ----

@@ -15,7 +15,7 @@
 <div class="sectionbody">
 <p class=""><a href="https://quarkus.io/">Quarkus</a> is a Kubernetes Native Java stack tailored for GraalVM &amp; OpenJDK HotSpot, crafted from the best of breed Java libraries and standards.
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
-<p class="">Cheat-sheet tested with <strong>Quarkus 0.24.0</strong>.</p>
+<p class="">Cheat-sheet tested with <strong>Quarkus 0.26.1</strong>.</p>
 </div>
 </div>
 <div class="sect1">
@@ -24,7 +24,7 @@ Also focused on developer experience, making things just work with little to no 
 <p class="">Quarkus comes with a Maven archetype to scaffold a very simple starting project.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:0.24.0:create \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:0.26.1:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=getting-started \
     -DclassName="org.acme.quickstart.GreetingResource" \
@@ -42,6 +42,47 @@ public class GreetingResource {
     public String hello() {
         return "hello";
     }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_gradle"><a class="anchor" href="#_gradle"></a><a class="link" href="#_gradle">Gradle</a></h2>
+<div class="sectionbody">
+<p class="">There is no way to scaffold a project in Gradle but you only need to do:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="groovy" class="language-groovy hljs">plugins {
+    id 'java'
+    id 'io.quarkus' version '0.26.1'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation enforcedPlatform('io.quarkus:quarkus-bom:0.26.1')
+    implementation 'io.quarkus:quarkus-resteasy'
+}</code></pre>
+</div>
+</div>
+<p class="">Or in Kotlin:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="kotlin" class="language-kotlin hljs">plugins {
+    java
+}
+apply(plugin = "io.quarkus")
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation(enforcedPlatform("io.quarkus:quarkus-bom:0.26.1"))
+    implementation("io.quarkus:quarkus-resteasy")
 }</code></pre>
 </div>
 </div>
@@ -270,7 +311,6 @@ greeting.hidden.recipients=Jane,John</code></pre>
 </div>
 <p class="">Bean Validation is also supported so properties are validated at startup time, for example <code>@Size(min = 20) public String message;</code>.</p>
 <p class=""><strong>TIP</strong>:`prefix` attribute is not mandatory. If not provided, attribute is determined by class name (ie <code>GreeetingConfiguration</code> is translated to <code>greeting</code> or <code>GreetingExtraConfiguration</code> to <code>greeting-extra</code>). The suffix of the class is always removed.</p>
-<div class="page-break"></div>
 <p class=""><strong>Custom Loader</strong></p>
 <p class="">You can implement your own <code>ConfigSource</code> to load configuration from different places than the default ones provided by Quarkus.
 For example, database, custom XML, REST Endpoints, &#8230;&#8203;</p>
@@ -387,7 +427,6 @@ Quarkus is designed with Substrate VM in mind. For this reason, we encourage you
 </tr>
 </table>
 </div>
-<div class="page-break"></div>
 <p class=""><strong>Produces</strong></p>
 <p class="">You can also create a factory of an object by using <code>@javax.enterprise.inject.Produces</code> annotation.</p>
 <div class="listingblock">
@@ -939,6 +978,60 @@ Response getNow();</code></pre>
 CompletionStage&lt;WorldClock&gt; getNow();</code></pre>
 </div>
 </div>
+<p class=""><strong>Multipart</strong></p>
+<p class="">It is really easy to send multipart form-data with Rest Client.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;org.jboss.resteasy&lt;/groupId&gt;
+    &lt;artifactId&gt;resteasy-multipart-provider&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<p class="">The model object:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">import java.io.InputStream;
+
+import javax.ws.rs.FormParam;
+import javax.ws.rs.core.MediaType;
+
+import
+    org.jboss.resteasy.annotations.providers.multipart.PartType;
+
+public class MultipartBody {
+
+    @FormParam("file")
+    @PartType(MediaType.APPLICATION_OCTET_STREAM)
+    private InputStream file;
+
+    @FormParam("fileName")
+    @PartType(MediaType.TEXT_PLAIN)
+    private String name;
+
+    // getter/setters
+}</code></pre>
+</div>
+</div>
+<p class="">And the Rest client interface:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">import
+    org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+
+@Path("/echo")
+@RegisterRestClient
+public interface MultipartService {
+
+    @POST
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.TEXT_PLAIN)
+    String sendMultipartData(@MultipartForm
+                        MultipartBody data);
+
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1074,7 +1167,7 @@ I recommend reading <a href="https://quarkus.io/guides/tests-with-coverage-guide
 <p class="">Quarkus works with JPA(Hibernate) as persistence solution.
 But also provides an <a href="https://en.wikipedia.org/wiki/Active_record_pattern" target="_blank" rel="noopener">Active Record pattern</a> implementation under Panache project.</p>
 <p class="">To use database access you need to add Quarkus JDBC drivers instead of the original ones.
-At this time <code>H2</code>, <code>MariaDB</code>, <code>MySQL</code>, <code>MSSQL</code> and <code>PostgreSQL</code> drivers are supported.</p>
+At this time <code>Apache Derby</code>, <code>H2</code>, <code>MariaDB</code>, <code>MySQL</code>, <code>MSSQL</code> and <code>PostgreSQL</code> drivers are supported.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
@@ -1682,6 +1775,36 @@ MessageMarshaller authorMarshaller() {
 }</code></pre>
 </div>
 </div>
+<p class=""><strong>Infinispan Embedded</strong></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="infinispan-embeddedy"</code></pre>
+</div>
+</div>
+<p class="">Configuration in <code>infinispan.xml</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;local-cache name="quarkus-transaction"&gt;
+   &lt;transaction
+        transaction-manager-lookup=
+        "org.infinispan.transaction.lookup.JBossStandaloneJTAManagerLookup"/&gt;
+&lt;/local-cache&gt;</code></pre>
+</div>
+</div>
+<p class="">Set configuration file location in <code>application.properties</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.infinispan-embedded.xml-config=infinispan.xml</code></pre>
+</div>
+</div>
+<p class="">And you can inject the main entry point for the cache:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+org.infinispan.manager.EmbeddedCacheManager cacheManager;</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1691,7 +1814,7 @@ MessageMarshaller authorMarshaller() {
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
-  -Dextensions="io.quarkus:quarkus-flyway"</code></pre>
+  -Dextensions="quarkus-flyway"</code></pre>
 </div>
 </div>
 <p class="">Then place migration files to the migrations folder (<code>classpath:db/migration</code>).</p>
@@ -3408,6 +3531,45 @@ public class ArtemisConsumerManager {
 </div>
 </div>
 <div class="sect1">
+<h2 id="_rbac"><a class="anchor" href="#_rbac"></a><a class="link" href="#_rbac">RBAC</a></h2>
+<div class="sectionbody">
+<p class="">You can set RBAC using annotations or in <code>application.properties</code>.</p>
+<p class=""><strong>Annotations</strong></p>
+<p class="">You can define roles by using <code>javax.annotation.security.RolesAllowed</code> annotation.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@RolesAllowed("Subscriber")</code></pre>
+</div>
+</div>
+<p class="">You can use <code>io.quarkus.security.Authenticated</code> as a shortcut of <code>@RolesAllowed("*")</code>.</p>
+<p class=""><strong>File Configuration</strong></p>
+<p class="">Defining RBAC in <code>application.properties</code> instead of using annotations.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.http.auth.policy.role-policy1.roles-allowed=
+    user,admin
+quarkus.http.auth.permission.roles1.paths=
+    /roles-secured/*,/other/*,/api/*
+quarkus.http.auth.permission.roles1.policy=
+    role-policy1
+
+quarkus.http.auth.permission.permit1.paths=
+    /public/*
+quarkus.http.auth.permission.permit1.policy=
+    permit
+quarkus.http.auth.permission.permit1.methods=
+    GET
+
+quarkus.http.auth.permission.deny1.paths=
+    /forbidden
+quarkus.http.auth.permission.deny1.policy=
+    deny</code></pre>
+</div>
+</div>
+<p class="">You need to provide permissions set by using the <code>roles-allowed</code> property or use the built-in ones <code>deny</code>, <code>permit</code> or <code>authenticated</code>.</p>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_jwt"><a class="anchor" href="#_jwt"></a><a class="link" href="#_jwt">JWT</a></h2>
 <div class="sectionbody">
 <p class="">Quarkus implements <a href="https://github.com/eclipse/microprofile-jwt-auth" target="_blank" rel="noopener">MicroProfile JWT RBAC spec</a>.</p>
@@ -3530,7 +3692,7 @@ private Instance&lt;Long&gt; providerIAT;</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_open_id_connect"><a class="anchor" href="#_open_id_connect"></a><a class="link" href="#_open_id_connect">Open Id Connect</a></h2>
+<h2 id="_openid_connect"><a class="anchor" href="#_openid_connect"></a><a class="link" href="#_openid_connect">OpenId Connect</a></h2>
 <div class="sectionbody">
 <p class="">Quarkus can use OpenId Connect or OAuth 2.0 authorization servers such as  <a href="https://www.keycloak.org/" target="_blank" rel="noopener">Keycloak</a> to protect resources using bearer token issued by Keycloak server.</p>
 <div class="listingblock">
@@ -3539,7 +3701,6 @@ private Instance&lt;Long&gt; providerIAT;</code></pre>
     -Dextensions="using-openid-connect"</code></pre>
 </div>
 </div>
-<div class="page-break"></div>
 <p class="">You can also protect resources with security annotations.</p>
 <div class="listingblock">
 <div class="content">
@@ -3677,6 +3838,158 @@ quarkus.oauth2.introspection-url=http://oauth-server/introspect</code></pre>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_http_basic_auth"><a class="anchor" href="#_http_basic_auth"></a><a class="link" href="#_http_basic_auth">HTTP basic auth</a></h2>
+<div class="sectionbody">
+<p class="">HTTP basic auth is now enabled by the <code>quarkus.http-auth.basic=true</code> property.
+Then you need to add <code>elytron-security-properties-file</code> or <code>elytron-security-jdbc</code>.</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_security_with_properties_file"><a class="anchor" href="#_security_with_properties_file"></a><a class="link" href="#_security_with_properties_file">Security with Properties File</a></h2>
+<div class="sectionbody">
+<p class="">You can also protect endpoints and store identities (user, roles) in the file system.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn quarkus:add-extension
+    -Dextensions="elytron-security-properties-file"</code></pre>
+</div>
+</div>
+<p class="">You need to configure the extension with users and roles files:</p>
+<p class="">And configuration in <code>src/main/resources/application.properties</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.security.users.file.enabled=true
+quarkus.security.users.file.users=test-users.properties
+quarkus.security.users.file.roles=test-roles.properties
+quarkus.security.users.file.auth-mechanism=BASIC
+quarkus.security.users.file.realm-name=MyRealm
+quarkus.security.users.file.plain-text=true</code></pre>
+</div>
+</div>
+<p class="">Then <code>users.properties</code> and <code>roles.properties</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">scott=jb0ss
+jdoe=p4ssw0rd</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">scott=Admin,admin,Tester,user
+jdoe=NoRolesUser</code></pre>
+</div>
+</div>
+<p class=""><strong>IMPORTANT:</strong>  If <code>plain-text</code> is set to <code>false</code> (or omitted) then passwords must be stored in the form MD5 (<code>username</code>:`realm`:`password`).</p>
+<p class="">Elytron File Properties configuration properties.
+Prefix <code>quarkus.security.users</code> is skipped.</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.enabled</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The file realm is enabled</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.auth-mechanism</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>BASIC</code></p></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The authentication mechanism</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.realm-name</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>Quarkus</code></p></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The authentication realm name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.plain-text</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If passwords are in plain or in MD5</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.users</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>users.properties</code></p></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Classpath resource of user/password</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.roles</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>roles.properties</code></p></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Classpath resource of user/role</p></td>
+</tr>
+</tbody>
+</table>
+<p class=""><strong>Embedded Realm</strong></p>
+<p class="">You can embed user/password/role in the same <code>application.properties</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.security.users.embedded.enabled=true
+quarkus.security.users.embedded.plain-text=true
+quarkus.security.users.embedded.users.scott=jb0ss
+quarkus.security.users.embedded.roles.scott=admin,tester,user
+quarkus.security.users.embedded.auth-mechanism=BASIC</code></pre>
+</div>
+</div>
+<p class=""><strong>IMPORTANT:</strong>  If plain-text is set to <code>false</code> (or omitted) then passwords must be stored in the form MD5 (<code>username</code>:`realm`:`password`).</p>
+<p class="">Prefix <code>quarkus.security.users.embedded</code> is skipped.</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.enabled</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The file realm is enabled</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.auth-mechanism</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>BASIC</code></p></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The authentication mechanism</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.realm-name</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>Quarkus</code></p></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The authentication realm name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.plain-text</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If passwords are in plain or in MD5</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.users.*</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>*</code> is user and value is password</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.roles.*</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>*</code> is user and value is role</p></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_security_with_a_jdbc_realm"><a class="anchor" href="#_security_with_a_jdbc_realm"></a><a class="link" href="#_security_with_a_jdbc_realm">Security with a JDBC Realm</a></h2>
 <div class="sectionbody">
 <p class="">You can also protect endpoints and store identities in a database.</p>
@@ -3733,7 +4046,7 @@ Prefix <code>quarkus.security.jdbc</code> is skipped.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>realm-name</code></p></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>Quarkus</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The authentication mechanism</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The authentication realm name</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>enabled</code></p></div></td>
@@ -3802,13 +4115,206 @@ quarkus.datasource.permissions.url=
 quarkus.security.jdbc.principal-query.permissions.sql=</code></pre>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_vault"><a class="anchor" href="#_vault"></a><a class="link" href="#_vault">Vault</a></h2>
+<div class="sectionbody">
+<p class="">Quarkus integrates with <a href="https://www.vaultproject.io/">Vault</a> to manage secrets or protecting sensitive data.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn quarkus:add-extension
+    -Dextensions="vault"</code></pre>
+</div>
+</div>
+<p class="">And configuring Vault in <code>application.properties</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs"># vault url
+quarkus.vault.url=http://localhost:8200
+
+quarkus.vault.authentication.userpass.username=
+    bob
+quarkus.vault.authentication.userpass.password=
+    sinclair
+
+# path within the kv secret engine
+quarkus.vault.secret-config-kv-path=
+    myapps/vault-quickstart/config</code></pre>
+</div>
+</div>
+<p class="">Then you can inject the value configured at <code>secret/myapps/vault-quickstart/a-private-key</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperty(name = "a-private-key")
+String privateKey;</code></pre>
+</div>
+</div>
+<p class="">You can access the KV engine programmatically:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+VaultKVSecretEngine kvSecretEngine;
+
+kvSecretEngine.readSecret("myapps/vault-quickstart/" + vaultPath).toString();</code></pre>
+</div>
+</div>
+<p class=""><strong>Fetching credentials DB</strong></p>
+<p class="">With the next <em>kv</em> <code>vault kv put secret/myapps/vault-quickstart/db password=connor</code></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.vault.credentials-provider.mydatabase.kv-path=
+    myapps/vault-quickstart/db
+quarkus.datasource.credentials-provider=
+    mydatabase
+
+quarkus.datasource.url=
+    jdbc:postgresql://localhost:5432/mydatabase
+quarkus.datasource.driver=
+    org.postgresql.Driver
+quarkus.datasource.username=
+    sarah</code></pre>
+</div>
+</div>
+<p class="">No password is set as it is fetched from Vault.</p>
+<p class=""><strong>INFO:</strong> <a href="https://www.vaultproject.io/docs/secrets/databases/index.html">dynamic database credentials</a> through the <code>database-credentials-role</code> property.</p>
+<p class="">Elytron JDBC Realm configuration properties.
+Prefix <code>quarkus.vault</code> is skipped.</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>url</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vault server URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>authentication.client-token</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vault token to access</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>authentication.app-role.role-id</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Role Id for AppRole auth</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>authentication.app-role.secret-id</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Secret Id for AppRole auth</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>authentication.userpass.username</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Username for userpass auth</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>authentication.userpass.password</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password for userpass auth</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>authentication.kubernetes.role</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes authentication role</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>authentication.kubernetes.jwt-token-path</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Location of the file containing the Kubernetes JWT token</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>renew-grace-period</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">1H</p></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Renew grace period duration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>secret-config-cache-period</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">10M</p></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vault config source cache period</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>secret-config-kv-path</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vault path in kv store</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>log-confidentiality-level</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>medium</code></p></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used to hide confidential infos. <code>low</code>, <code>medium</code>, <code>high</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>kv-secret-engine-version</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>1</code></p></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kv secret engine version</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>kv-secret-engine-mount-path</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>secret</code></p></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kv secret engine path</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>tls.skip-verify</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allows to bypass certificate validation on TLS communications</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>tls.ca-cert</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Certificate bundle used to validate TLS communications</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>tls.use-kubernetes-ca-cert</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>true</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class="">TLS will be active</p></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>connect-timeout</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>5S</code></p></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tiemout to establish a connection</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>read-timeout</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>1S</code></p></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Request timeout</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>credentials-provider."credentials-provider".database-credentials-role</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database credentials role</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>credentials-provider."credentials-provider".kv-path</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A path in vault kv store, where we will find the kv-key</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>credentials-provider."credentials-provider".kv-key</code></p></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>password</code></p></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Key name to search in vault path kv-path</p></td>
+</tr>
+</tbody>
+</table>
 <div class="page-break"></div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_jax_rs"><a class="anchor" href="#_jax_rs"></a><a class="link" href="#_jax_rs">JAX-RS</a></h2>
 <div class="sectionbody">
-<p class="">Quarkus uses JAX-RS to define <a href="https://github.com/jax-rs" target="_blank" rel="noopener">REST-ful web APIs</a>.</p>
+<p class="">Quarkus uses JAX-RS to define <a href="https://github.com/jax-rs" target="_blank" rel="noopener">REST-ful web APIs</a>.
+Under the covers, Rest-EASY is working with Vert.X directly without using any Servlet.</p>
+<p class="">It is <strong>important</strong> to know that if you want to use any feature that implies a <code>Servlet</code> (ie Servlet Filters) then you need to add the <code>quarkus-undertow</code> extension to switch back to the <code>Servlet</code> ecosystem but generally speaking, you don&#8217;t need to add it as everything else is well-supported.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Path("/book")
@@ -3969,6 +4475,7 @@ public class ErrorMapper
 <div class="sect1">
 <h2 id="_vert_x_filters_and_routes"><a class="anchor" href="#_vert_x_filters_and_routes"></a><a class="link" href="#_vert_x_filters_and_routes">Vert.X Filters and Routes</a></h2>
 <div class="sectionbody">
+<p class=""><strong>Programmatically</strong></p>
 <p class="">You can also register Vert.X Filters and Router programmatically inside a CDI bean:</p>
 <div class="listingblock">
 <div class="content">
@@ -3997,6 +4504,30 @@ public class MyBean {
         router
             .get("/")
             .handler(rc -&gt; rc.response().end("OK"));
+    }
+}</code></pre>
+</div>
+</div>
+<p class=""><strong>Declarative</strong></p>
+<p class="">You can use <code>@Route</code> annotation to use reactive routes in a declarative way:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-vertx-web"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ApplicationScoped
+public class MyDeclarativeRoutes {
+
+    @Route(path = "/hello", methods = HttpMethod.GET)
+    public void greetings(RoutingContext rc) {
+        String name = rc.request().getParam("name");
+        if (name == null) {
+            name = "world";
+        }
+        rc.response().end("hello " + name);
     }
 }</code></pre>
 </div>
@@ -5138,7 +5669,6 @@ void morningTask() {}</pre>
   -Dextensions="kogito"</code></pre>
 </div>
 </div>
-<div class="page-break"></div>
 </div>
 </div>
 <div class="sect1">
@@ -5198,6 +5728,7 @@ public String extractText(InputStream stream) {
 </tr>
 </tbody>
 </table>
+<div class="page-break"></div>
 </div>
 </div>
 <div class="sect1">
@@ -5231,6 +5762,94 @@ public String extractText(InputStream stream) {
 You need to place web resources at <code>src/main/resources/META-INF/resources</code> and then they are accessible (ie <a href="http://localhost:8080/index.html" class="bare">http://localhost:8080/index.html</a>)</p>
 <p class="">By default static resources as served under the root context.
 You can change this by using <code>quarkus.http.root-path</code> property.</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_transactional_memory"><a class="anchor" href="#_transactional_memory"></a><a class="link" href="#_transactional_memory">Transactional Memory</a></h2>
+<div class="sectionbody">
+<p class="">Quarkus integrates with the Software Transactional Memory (STM) implementation provided by the <a href="https://narayana.io/docs/project/index.html">Narayana</a> project.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="narayana-stm"</code></pre>
+</div>
+</div>
+<p class="">Transactional objects must be interfaces and annotated with <code>org.jboss.stm.annotations.Transactional</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Transactional
+@NestedTopLevel
+public interface FlightService {
+    int getNumberOfBookings();
+    void makeBooking(String details);
+}</code></pre>
+</div>
+</div>
+<p class="">The pessimistic strategy is the default one, you can change to optimistic by using <code>@Optimistic</code>.</p>
+<p class="">Then you need to create the object inside <code>org.jboss.stm.Container</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">Container&lt;FlightService&gt; container = new Container&lt;&gt;();
+FlightServiceImpl instance = new FlightServiceImpl();
+FlightService flightServiceProxy = container.create(instance);</code></pre>
+</div>
+</div>
+<p class="">The implementation of the service sets the locking and what needs to be saved/restored:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">import org.jboss.stm.annotations.ReadLock;
+import org.jboss.stm.annotations.State;
+import org.jboss.stm.annotations.WriteLock;
+
+public class FlightServiceImpl
+    implements FlightService {
+    @State
+    private int numberOfBookings;
+
+    @ReadLock
+    public int getNumberOfBookings() {
+        return numberOfBookings;
+    }
+
+    @WriteLock
+    public void makeBooking(String details) {
+        numberOfBookings += 1;
+    }
+}</code></pre>
+</div>
+</div>
+<p class="">Any member is saved/restored automatically (<code>@State</code> is not mandatory).
+You can use <code>@NotState</code> to avoid behaviour.</p>
+<p class=""><strong>Transaction boundaries</strong></p>
+<p class=""><em>Declarative</em></p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>@NestedTopLevel</code>: Defines that the container will create a new top-level transaction for each method invocation.</p>
+</li>
+<li>
+<p><code>@Nested</code>: Defines that the container will create a new top-level or nested transaction for each method invocation.</p>
+</li>
+</ul>
+</div>
+<p class=""><em>Programmatically</em></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">AtomicAction aa = new AtomicAction();
+
+aa.begin();
+{
+    try {
+        flightService.makeBooking("BA123 ...");
+        taxiService.makeBooking("East Coast Taxis ...");
+
+        aa.commit();
+    } catch (Exception e) {
+        aa.abort();
+    }
+}</code></pre>
+</div>
+</div>
 <div class="page-break"></div>
 </div>
 </div>
@@ -5331,7 +5950,7 @@ public class GreetingController {
 </div>
 </div>
 <p class="">Supported annotations are: <code>RestController</code>, <code>RequestMapping</code>, <code>GetMapping</code>, <code>PostMapping</code>, <code>PutMapping</code>, <code>DeleteMapping</code>, <code>PatchMapping</code>, <code>RequestParam, `RequestHeader</code>, <code>MatrixVariable</code>, <code>PathVariable</code>, <code>CookieValue</code>, <code>RequestBody</code>, <code>ResponseStatus</code>, <code>ExceptionHandler</code> and <code>RestControllerAdvice</code>.</p>
-<p class=""><strong>TIP:</strong> If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:0.24.0:create &#8230;&#8203; -Dextensions="spring-web"</code>.</p>
+<p class=""><strong>TIP:</strong> If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:0.26.1:create &#8230;&#8203; -Dextensions="spring-web"</code>.</p>
 </div>
 </div>
 <div class="sect1">
@@ -5440,7 +6059,7 @@ void deleteByRating(@Param("rating") String rating);</code></pre>
 <div class="author-bio">Java Champion and Director of DevExp at Red Hat</div>
 </div>
 
-<div class="author-bio">0.24.0</div>
+<div class="author-bio">0.26.1</div>
 <img src="./redhat/assets/by-nc-sa.png"/>
 </div>
 

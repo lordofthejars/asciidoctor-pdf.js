@@ -1,9 +1,12 @@
 == RBAC
 
 // tag::update_10_4[]
+
+You can set RBAC using annotations or in `application.properties`.
+
 *Annotations*
 
-You can define a roles by using `javax.annotation.security.RolesAllowed` annotation.
+You can define roles by using `javax.annotation.security.RolesAllowed` annotation.
 
 [source, java]
 ----
@@ -12,7 +15,9 @@ You can define a roles by using `javax.annotation.security.RolesAllowed` annotat
 
 You can use `io.quarkus.security.Authenticated` as a shortcut of `@RolesAllowed("*")`.
 
-*`application.properties`*
+*File Configuration*
+
+Defining RBAC in `application.properties` instead of using annotations.
 
 [source, properties]
 ----
@@ -36,7 +41,7 @@ quarkus.http.auth.permission.deny1.policy=
     deny
 ----
 
-You need to provide permissions set by using `roles-allowed` property or use the built-in ones `deny`, `permit` or `authenticated`. 
+You need to provide permissions set by using the `roles-allowed` property or use the built-in ones `deny`, `permit` or `authenticated`. 
 // end::update_10_4[]
 
 == JWT
@@ -148,8 +153,6 @@ Quarkus can use OpenId Connect or OAuth 2.0 authorization servers such as  https
 mvn quarkus:add-extension 
     -Dextensions="using-openid-connect"
 ----
-
-<<<
 
 You can also protect resources with security annotations.
 
@@ -595,12 +598,12 @@ a|
 |Kubernetes authentication role
 
 a|`authentication.kubernetes.jwt-token-path`
-a|`/var/run/secrets/kubernetes.io/serviceaccount/token`
+a|
 |Location of the file containing the Kubernetes JWT token
 
 a|`renew-grace-period`
 a|1H
-|Renew grace period duration. This value if used to extend a lease before it expires its ttl
+|Renew grace period duration.
 
 a|`secret-config-cache-period`
 a|10M
@@ -632,7 +635,7 @@ a|
 
 a|`tls.use-kubernetes-ca-cert`
 a|`true`
-a|TLS will be active and the cacert path will be set to `/var/run/secrets/kubernetes.io/serviceaccount/ca.crt`
+a|TLS will be active 
 
 a|`connect-timeout`
 a|`5S`
@@ -642,7 +645,7 @@ a|`read-timeout`
 a|`1S`
 |Request timeout
 
-a|`quarkus.vault.credentials-provider."credentials-provider".database-credentials-role`
+a|`credentials-provider."credentials-provider".database-credentials-role`
 a|
 |Database credentials role
 

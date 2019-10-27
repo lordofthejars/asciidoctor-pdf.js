@@ -585,7 +585,7 @@ Configuration in `infinispan.xml`:
 <local-cache name="quarkus-transaction">
    <transaction 
         transaction-manager-lookup=
-            "org.infinispan.transaction.lookup.JBossStandaloneJTAManagerLookup"/>
+        "org.infinispan.transaction.lookup.JBossStandaloneJTAManagerLookup"/>
 </local-cache>
 ----
 

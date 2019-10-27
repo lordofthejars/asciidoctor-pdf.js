@@ -2,9 +2,9 @@
 // tag::update_4_1[]
 Quarkus uses JAX-RS to define https://github.com/jax-rs[REST-ful web APIs, window="_blank"].
 // tag::update_10_1[]
-Under the covers Rest-EASY is working with Vert.X directly without using any Servlet.
+Under the covers, Rest-EASY is working with Vert.X directly without using any Servlet.
 
-It is *important* to know that if you want to use any feature that implies a `Servlet` (ie Servlet Filters) then you need to add the `quarkus-undertow` extension to switch back to `Servlet` ecosystem but generally speaking, you don't need to add it as everything else is well-suported.
+It is *important* to know that if you want to use any feature that implies a `Servlet` (ie Servlet Filters) then you need to add the `quarkus-undertow` extension to switch back to the `Servlet` ecosystem but generally speaking, you don't need to add it as everything else is well-supported.
 // end::update_10_1[]
 
 [source, java]
