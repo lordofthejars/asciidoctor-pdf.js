@@ -569,6 +569,42 @@ MessageMarshaller authorMarshaller() {
 ----
 // end::update_8_7[]
 
+*Infinispan Embedded*
+
+// tag::update_10_7[]
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="infinispan-embeddedy"
+----
+
+Configuration in `infinispan.xml`:
+
+[source, xml]
+----
+<local-cache name="quarkus-transaction">
+   <transaction 
+        transaction-manager-lookup=
+            "org.infinispan.transaction.lookup.JBossStandaloneJTAManagerLookup"/>
+</local-cache>
+----
+
+Set configuration file location in `application.properties`:
+
+[source, properties]
+----
+quarkus.infinispan-embedded.xml-config=infinispan.xml
+----
+
+And you can inject the main entry point for the cache:
+
+[source, java]
+----
+@Inject
+org.infinispan.manager.EmbeddedCacheManager cacheManager;
+----
+// end::update_10_7[]
+
 == Flyway
 // tag::update_1_7[]
 Quarkus integrates with https://flywaydb.org/[Flyway, window="_blank"] to help you on database schema migrations.
@@ -576,7 +612,7 @@ Quarkus integrates with https://flywaydb.org/[Flyway, window="_blank"] to help y
 [source, bash]
 ----
 ./mvnw quarkus:add-extension 
-  -Dextensions="io.quarkus:quarkus-flyway"
+  -Dextensions="quarkus-flyway"
 ----
 
 Then place migration files to the migrations folder (`classpath:db/migration`).

@@ -26,6 +26,48 @@ public class GreetingResource {
 }
 ----
 
+== Gradle
+
+// tag::update_10_8[]
+There is no way to scaffold a project in Gradle but you only need to do:
+
+[source, groovy]
+----
+plugins {
+    id 'java'
+    id 'io.quarkus' version '0.26.1' 
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies { 
+    implementation enforcedPlatform('io.quarkus:quarkus-bom:0.26.1')
+    implementation 'io.quarkus:quarkus-resteasy'
+}
+----
+
+Or in Kotlin:
+
+[source, kotlin]
+----
+plugins {
+    java
+}
+apply(plugin = "io.quarkus")
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation(enforcedPlatform("io.quarkus:quarkus-bom:0.26.1"))
+    implementation("io.quarkus:quarkus-resteasy")
+}
+----
+// end::update_10_8[]
+
 == Extensions
 
 Quarkus comes with extensions to integrate with some libraries such as JSON-B, Camel or MicroProfile spec.
@@ -856,6 +898,63 @@ A method on client interface can return a `CompletionStage` class to be executed
 @Produces(MediaType.APPLICATION_JSON) 
 CompletionStage<WorldClock> getNow();
 ----
+
+*Multipart*
+
+// tag::update_10_10[]
+It is really easy to send multipart form-data with Rest Client.
+
+[source, xml]
+----
+<dependency>
+    <groupId>org.jboss.resteasy</groupId>
+    <artifactId>resteasy-multipart-provider</artifactId>
+</dependency>
+----
+
+The model object:
+
+[source, java]
+----
+import java.io.InputStream;
+
+import javax.ws.rs.FormParam;
+import javax.ws.rs.core.MediaType;
+
+import org.jboss.resteasy.annotations.providers.multipart.PartType;
+
+public class MultipartBody {
+
+    @FormParam("file")
+    @PartType(MediaType.APPLICATION_OCTET_STREAM)
+    private InputStream file;
+
+    @FormParam("fileName")
+    @PartType(MediaType.TEXT_PLAIN)
+    private String name;
+
+    // getter/setters
+}
+----
+
+And the Rest client interface:
+
+[source, java]
+----
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+
+@Path("/echo")
+@RegisterRestClient
+public interface MultipartService {
+
+    @POST
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.TEXT_PLAIN)
+    String sendMultipartData(@MultipartForm MultipartBody data);
+
+}
+----
+// end::update_10_10[]
 
 == Testing
 

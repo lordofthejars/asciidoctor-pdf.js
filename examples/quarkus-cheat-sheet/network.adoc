@@ -4,7 +4,7 @@ Quarkus uses JAX-RS to define https://github.com/jax-rs[REST-ful web APIs, windo
 // tag::update_10_1[]
 Under the covers Rest-EASY is working with Vert.X directly without using any Servlet.
 
-It is *important* to know that if you want to use any feature that implies a `Servlet` (ie Servlet Filters) then you need to add the `quarkus-undertow` extension to switch back to `Servlet` ecosystem.
+It is *important* to know that if you want to use any feature that implies a `Servlet` (ie Servlet Filters) then you need to add the `quarkus-undertow` extension to switch back to `Servlet` ecosystem but generally speaking, you don't need to add it as everything else is well-suported.
 // end::update_10_1[]
 
 [source, java]
@@ -162,6 +162,9 @@ public class ErrorMapper
 == Vert.X Filters and Routes
 
 // tag::update_9_5[]
+
+*Programmatically*
+
 You can also register Vert.X Filters and Router programmatically inside a CDI bean:
 
 [source, java]
@@ -195,6 +198,35 @@ public class MyBean {
 }
 ----
 // end::update_9_5[]
+
+// tag::update_10_9[]
+*Declarative*
+
+You can use `@Route` annotation to use reactive routes in a declarative way:
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-vertx-web"
+----
+
+[source, java]
+----
+
+@ApplicationScoped
+public class MyDeclarativeRoutes {
+ 
+    @Route(path = "/hello", methods = HttpMethod.GET)
+    public void greetings(RoutingContext rc) {
+        String name = rc.request().getParam("name");
+        if (name == null) {
+            name = "world";
+        }
+        rc.response().end("hello " + name);
+    }
+}
+----
+// end::update_10_9[]
 
 == GZip Support
 // tag::update_7_4[]

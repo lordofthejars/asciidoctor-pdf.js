@@ -400,3 +400,92 @@ You need to place web resources at `src/main/resources/META-INF/resources` and t
 By default static resources as served under the root context.
 You can change this by using `quarkus.http.root-path` property.
 // end::update_9_6[]
+
+== Transactional Memory
+
+// tag::update_10_6[]
+Quarkus integrates with the Software Transactional Memory (STM) implementation provided by the https://narayana.io/docs/project/index.html[Narayana] project.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="narayana-stm"
+----
+
+Transactional objects must be interfaces and annotated with `org.jboss.stm.annotations.Transactional`.
+
+[source, java]
+----
+@Transactional
+@NestedTopLevel
+public interface FlightService {
+    int getNumberOfBookings();
+    void makeBooking(String details);
+}
+----
+
+Pessimistic strategy is the default one, you can change to optimistic by using `@Optimistic`.
+
+Then you need to create the object inside `org.jboss.stm.Container`.
+
+[source, java]
+----
+Container<FlightService> container = new Container<>(); 
+FlightServiceImpl instance = new FlightServiceImpl(); 
+FlightService flightServiceProxy = container.create(instance);
+----
+
+The implementation of the service sets the locking and what needs to be saved/restored:
+
+[source, java]
+----
+import org.jboss.stm.annotations.ReadLock;
+import org.jboss.stm.annotations.State;
+import org.jboss.stm.annotations.WriteLock;
+
+public class FlightServiceImpl 
+    implements FlightService {
+    @State
+    private int numberOfBookings;
+
+    @ReadLock
+    public int getNumberOfBookings() {
+        return numberOfBookings;
+    }
+
+    @WriteLock
+    public void makeBooking(String details) {
+        numberOfBookings += 1;
+    }
+}
+----
+
+Any member is saved/restored automatically (`@State` is not mandatory).
+You can use `@NotState` to avoid the behaviour.
+
+*Transaction boundaries*
+
+_Declarative_
+
+ * `@NestedTopLevel`: Defines that the container will create a new top-level transaction for each method invocation.
+ * `@Nested`: Defines that the container will create a new top-level or nested transaction for each method invocation.
+
+_Programmatically_
+
+[source, java]
+----
+AtomicAction aa = new AtomicAction(); 
+
+aa.begin(); 
+{
+    try {
+        flightService.makeBooking("BA123 ...");
+        taxiService.makeBooking("East Coast Taxis ..."); 
+        
+        aa.commit();
+    } catch (Exception e) {
+        aa.abort(); 
+    }
+}
+----
+// end::update_10_6[]

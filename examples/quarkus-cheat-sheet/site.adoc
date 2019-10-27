@@ -47,6 +47,36 @@ include::security.adoc[tag=update_10_4]
 include::security.adoc[tag=update_10_5]
 ====
 
+.Memory Transactions
+[%collapsible]
+====
+include::misc.adoc[tag=update_10_6]
+====
+
+.Infinispan Embedded
+[%collapsible]
+====
+include::persistence.adoc[tag=update_10_7]
+====
+
+.Gradle
+[%collapsible]
+====
+include::core.adoc[tag=update_10_8]
+====
+
+.Declarative Reactive Routes
+[%collapsible]
+====
+include::network.adoc[tag=update_10_9]
+====
+
+.Multipart form-data Rest Client
+[%collapsible]
+====
+include::core.adoc[tag=update_10_10]
+====
+
 === Version 0.24.0
 
 .Grouping Configuration Properties
