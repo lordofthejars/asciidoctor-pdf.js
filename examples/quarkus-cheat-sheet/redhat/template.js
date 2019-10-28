@@ -1,3 +1,25 @@
+const assetUriScheme = (node) => {
+  let result = node.getAttribute('asset-uri-scheme', 'https')
+  if (result.trim() !== '') {
+    result = `${result}:`
+  }
+  return result
+}
+
+const syntaxHighlighterHead = (node, syntaxHighlighter, attrs) => {
+  if (syntaxHighlighter !== Opal.nil && syntaxHighlighter['$docinfo?']('head')) {
+    return syntaxHighlighter['$docinfo']('head', node, Opal.hash(attrs))
+  }
+  return ''
+}
+
+const syntaxHighlighterFooter = (node, syntaxHighlighter, attrs) => {
+  if (syntaxHighlighter !== Opal.nil && syntaxHighlighter['$docinfo?']('footer')) {
+    return syntaxHighlighter['$docinfo']('footer', node, Opal.hash(attrs))
+  }
+  return ''
+}
+
 const getAuthors = function (node) {
   const result = [];
   const authorCount = node.getAttribute('authorcount')
@@ -38,10 +60,15 @@ const renderAuthors = function (authors) {
 
 module.exports = {
     paragraph: (node) => `<p class="${node.getRoles().join(' ')}">${node.getContent()}</p>`,
-    document: (node) => `<!DOCTYPE html>
+    document: (node) => {
+      const cdnBaseUrl = `${assetUriScheme(node)}//cdnjs.cloudflare.com/ajax/libs`
+      const linkcss = node.isAttribute('linkcss')
+      const syntaxHighlighter = node['$syntax_highlighter']()
+      return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+${syntaxHighlighterHead(node, syntaxHighlighter, { linkcss: linkcss })}
 <link href="./redhat/assets/style.css" rel="stylesheet">
 </head>
 <body>
@@ -59,6 +86,8 @@ ${renderAuthors(getAuthors(node))}
 </div>
 
 </section>
-</body>`,
+${syntaxHighlighterFooter(node, syntaxHighlighter, { cdn_base_url: cdnBaseUrl, linkcss: linkcss, self_closing_tag_slash: '/' })}
+</body>`
+  },
   page_break: () => `<div class="page-break"></div>`
 }

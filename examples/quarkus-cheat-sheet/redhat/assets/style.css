@@ -151,3 +151,12 @@ pre {
 .single-block {
   break-inside: avoid-column;
 }
+
+.hljs {
+  overflow-x: inherit !important;
+  background-color: inherit !important;
+}
+
+.listingblock pre, .listingblock pre[class] {
+  padding: 0.25em;
+}
