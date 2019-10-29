@@ -9,6 +9,8 @@
 @page :first {
   margin: 0;
   padding: 0;
+  padding-bottom: 0.5cm;
+  margin-bottom: 0.5cm;
 }
 
 html, body {
@@ -71,11 +73,15 @@ section.content {
   font-weight: bold
 }
 
+.admonitionblock {
+  break-inside: avoid;
+}
+
 .sect1 {
   max-width: calc((100vw / 3) - 3cm);
   margin-right: 1.2cm;
   margin-left: 1.2cm;
-  margin-top: 0.5cm;
+  margin-bottom: 0.5cm;
   break-inside: avoid-region;
 }
 
@@ -146,6 +152,25 @@ a {
 
 pre {
   break-inside: avoid;
+}
+
+pre > code {
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+:not(pre) > code {
+  font-size: 0.75em;
+  color: #1E1E1E;
+  font-style: normal!important;
+  letter-spacing: 0;
+  padding: .1em .5ex;
+  word-spacing: -.15em;
+  background: #f7f7f8;
+  border-radius: 4px;
+  line-height: 1;
+  text-rendering: optimizeSpeed;
+  word-wrap: break-word;
 }
 
 .single-block {
