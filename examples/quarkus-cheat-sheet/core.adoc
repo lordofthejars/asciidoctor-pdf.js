@@ -255,7 +255,7 @@ greeting.hidden.recipients=Jane,John
 
 Bean Validation is also supported so properties are validated at startup time, for example `@Size(min = 20) public String message;`.
 
-*TIP*:`prefix` attribute is not mandatory. If not provided, attribute is determined by class name (ie `GreeetingConfiguration` is translated to `greeting` or `GreetingExtraConfiguration` to `greeting-extra`). The suffix of the class is always removed.
+*TIP*: `prefix` attribute is not mandatory. If not provided, attribute is determined by class name (ie `GreeetingConfiguration` is translated to `greeting` or `GreetingExtraConfiguration` to `greeting-extra`). The suffix of the class is always removed.
 // end::update_9_1[]
 
 // tag::update_2_6[]
