@@ -649,136 +649,105 @@ quarkus.log.category."com.lordofthejars".level=DEBUG
 
 Prefix is `quarkus.log`.
 
-|===
-| Property | Default | Description
-a|`category."<category-name>".level`
-a|`INFO`
-a|Minimum level category.
+`category."<category-name>".level`::
+Minimum level category (default: `INFO`)
 
-a|`level`
-a|`INFO`
-a|Default minimum level.
+`level`::
+Default minimum level (default: `INFO`)
 
-a|`console.enable`
-a|`true`
-a|Console logging enabled.
+`console.enabled`::
+Console logging enabled (default: `true`)
 
-a|`console.format`
-a|`%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c{3.}] (%t) %s%e%n`
-a|Format pattern to use for logging.
+`console.format`::
+Format pattern to use for logging. Default value: +
+`%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c{3.}] (%t) %s%e%n`
 
-a|`console.level`
-a|`INFO`
-a|Minimum log level.
+`console.level`::
+Minimum log level (default: `INFO`)
 
-a|`console.color`
-a|`INFO`
-a|Allow color rendering.
+`console.color`::
+// QUESTION: default value should be a boolean right? not INFO?
+Allow color rendering (default: `INFO`)
 
-a|`file.enable`
-a|`false`
-a|File logging enabled.
+`file.enable`::
+File logging enabled (default: `false`)
 
-a|`file.format`
-a|`%d{yyyy-MM-dd HH:mm:ss,SSS} %h %N[%i] %-5p [%c{3.}] (%t) %s%e%n`
-a|Format pattern to use for logging.
+`file.format`::
+Format pattern to use for logging. Default value: +
+`%d{yyyy-MM-dd HH:mm:ss,SSS} %h %N[%i] %-5p [%c{3.}] (%t) %s%e%n`
 
-a|`file.level`
-a|`ALL`
-a|Minimum log level.
+`file.level`::
+Minimum log level (default: `ALL`)
 
-a|`file.path`
-a|`quarkus.log`
-a|The path to log file.
+`file.path`::
+The path to log file (default: `quarkus.log`)
 
-a|`file.rotation.max-file-size`
-a|
-a|The maximum file size of the log file.
+`file.rotation.max-file-size`::
+The maximum file size of the log file
 
-a|`file.rotation.max-backup-index`
-a|`1`
-|The maximum number of backups to keep.
+`file.rotation.max-backup-index`::
+The maximum number of backups to keep (default: `1`)
 
-a|`file.rotation.file-suffix`
-a|
-|Rotating log file suffix.
+`file.rotation.file-suffix`::
+Rotating log file suffix.
 
-a|`file.rotation.rotate-on-boot`
-a|`true`
-|Indicates rotate logs at bootup.
+`file.rotation.rotate-on-boot`::
+Indicates rotate logs at bootup (default: `true`)
 
-a|`file.async`
-a|`false`
-|Log asynchronously.
+`file.async`::
+Log asynchronously (default: `false`)
 
-a|`file.async.queue-length`
-a|`512`
-|The queue length to use before flushing writing.
+`file.async.queue-length`::
+The queue length to use before flushing writing (default: `512`)
 
-a|`file.async.overflow`
-a|`BLOCK`
-|Action when queue is full.
+`file.async.overflow`::
+Action when queue is full (default: `BLOCK`)
 
-a|`syslog.enable`
-a|`false`
-|syslog logging is enabled.
+`syslog.enable`::
+syslog logging is enabled (default: `false`)
 
-a|`syslog.format`
-a|`%d{yyyy-MM-dd HH:mm:ss,SSS} %h %N[%i] %-5p [%c{3.}] (%t) %s%e%n`
-|The format pattern to use for logging to syslog.
+`syslog.format`::
+The format pattern to use for logging to syslog. Default value: +
+`%d{yyyy-MM-dd HH:mm:ss,SSS} %h %N[%i] %-5p [%c{3.}] (%t) %s%e%n`
 
-a|`syslog.level`
-a|`ALL`
-|The minimum log level to write to syslog.
+`syslog.level`::
+The minimum log level to write to syslog (default: `ALL`)
 
-a|`syslog.endpoint`
-a|`localhost:514`
-|The IP address and port of the syslog server.
+`syslog.endpoint`::
+The IP address and port of the syslog server (default: `localhost:514`)
 
-a|`syslog.app-name`
-a|Current process name.
-|The app name used when formatting the message in RFC5424 format.
+`syslog.app-name`::
+The app name used when formatting the message in RFC5424 format (default: current process name)
 
-a|`syslog.hostname`
-a|Current hostname.
-|The name of the host the messages are being sent from.
+`syslog.hostname`::
+The name of the host the messages are being sent from (default: current hostname)
 
-a|`syslog.facility`
-a|`USER_LEVEL`
-|Priority of the message as defined by RFC-5424 and RFC-3164.
+`syslog.facility`::
+Priority of the message as defined by RFC-5424 and RFC-3164 (default: `USER_LEVEL`)
 
-a|`syslog.syslog-type`
-a|`RFC5424`
-|The syslog type of format message.
+`syslog.syslog-type`::
+The syslog type of format message (default: `RFC5424`)
 
-a|`syslog.protocol`
-a|`TCP`
-|Protocol used.
+`syslog.protocol`::
+Protocol used (default: `TCP`)
 
-a|`syslog.use-counting-framing`
-a|`false`
-|Message prefixed with the size of the message.
+`syslog.use-counting-framing`::
+Message prefixed with the size of the message (default `false`)
 
-a|`syslog.truncate`
-a|`true`
-|Message should be truncated.
+`syslog.truncate`::
+Message should be truncated (default: `true`)
 
-a|`syslog.block-on-reconnect`
-a|`true`
-|Block when attempting to reconnect.
+`syslog.block-on-reconnect`::
+Block when attempting to reconnect (default: `true`)
 
-a|`syslog.async`
-a|`false`
-|Log asynchronously.
+`syslog.async`::
+Log asynchronously (default: `false`)
 
-a|`syslog.async.queue-length`
-a|`512`
-|The queue length to use before flushing writing.
+`syslog.async.queue-length`::
+The queue length to use before flushing writing (default: `512`)
 
-a|`syslog.async.overflow`
-a|`BLOCK`
-|Action when queue is full.
-|===
+`syslog.async.overflow`::
+Action when queue is full (default: `BLOCK`)
 
 == Rest Client
 

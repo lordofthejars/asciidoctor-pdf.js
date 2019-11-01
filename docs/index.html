@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.9">
+<meta name="generator" content="Asciidoctor 2.0.10">
 <meta name="author" content="Alex Soto">
 <title>Home of Quarkus Cheat-Sheet</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
@@ -241,7 +241,7 @@ table.linenotable td.linenos{border-right:1px solid currentColor;opacity:.35;pad
 pre.pygments .lineno{border-right:1px solid currentColor;opacity:.35;display:inline-block;margin-right:.75em}
 pre.pygments .lineno::before{content:"";margin-right:-.125em}
 .quoteblock{margin:0 1em 1.25em 1.5em;display:table}
-.quoteblock>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock:not(.excerpt)>.title{margin-left:-1.5em;margin-bottom:.75em}
 .quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
 .quoteblock blockquote{margin:0;padding:0;border:0}
 .quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
@@ -258,7 +258,8 @@ pre.pygments .lineno::before{content:"";margin-right:-.125em}
 .quoteblock.abstract blockquote,.quoteblock.abstract p,.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{line-height:1.6;word-spacing:0}
 .quoteblock.abstract{margin:0 1em 1.25em;display:block}
 .quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
-.quoteblock.excerpt,.quoteblock .quoteblock{margin:0 0 1.25em;padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt>blockquote,.quoteblock .quoteblock{padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
 .quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
 .quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;text-align:left;margin-right:0}
 table.tableblock{max-width:100%;border-collapse:separate}
@@ -826,7 +827,7 @@ quarkus.datasource.username=
 <p>No password is set as it is fetched from Vault.</p>
 </div>
 <div class="paragraph">
-<p><strong>INFO:</strong> <a href="https://www.vaultproject.io/docs/secrets/databases/index.html">dynamic database credentials</a> through the <code>database-credentials-role</code> property.</p>
+<p>INFO: <a href="https://www.vaultproject.io/docs/secrets/databases/index.html">dynamic database credentials</a> through the <code>database-credentials-role</code> property.</p>
 </div>
 <div class="paragraph">
 <p>Elytron JDBC Realm configuration properties.
@@ -1385,8 +1386,17 @@ greeting.hidden.recipients=Jane,John</code></pre>
 <div class="paragraph">
 <p>Bean Validation is also supported so properties are validated at startup time, for example <code>@Size(min = 20) public String message;</code>.</p>
 </div>
-<div class="paragraph">
-<p><strong>TIP</strong>:`prefix` attribute is not mandatory. If not provided, attribute is determined by class name (ie <code>GreeetingConfiguration</code> is translated to <code>greeting</code> or <code>GreetingExtraConfiguration</code> to <code>greeting-extra</code>). The suffix of the class is always removed.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<code>prefix</code> attribute is not mandatory. If not provided, attribute is determined by class name (ie <code>GreeetingConfiguration</code> is translated to <code>greeting</code> or <code>GreetingExtraConfiguration</code> to <code>greeting-extra</code>). The suffix of the class is always removed.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </details>
@@ -1487,8 +1497,17 @@ Panache Queries equivalence in MongoDB:</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p><strong>WARNING:</strong> PanacheQL refers to the Object parameter name but native queries refer to MongoDB field names.</p>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+PanacheQL refers to the Object parameter name but native queries refer to MongoDB field names.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p><strong>DAO pattern</strong></p>
@@ -1883,8 +1902,17 @@ AgroalDataSource dataSource1;</code></pre>
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p><strong>IMPORTANT:</strong> When running in native mode, make sure to configure SSL access correctly <code>quarkus.ssl.native=true</code> (<a href="https://quarkus.io/guides/native-and-ssl-guide" target="_blank" rel="noopener">Native and SSL</a>).</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+When running in native mode, make sure to configure SSL access correctly <code>quarkus.ssl.native=true</code> (<a href="https://quarkus.io/guides/native-and-ssl-guide" target="_blank" rel="noopener">Native and SSL</a>).
+</td>
+</tr>
+</table>
 </div>
 </div>
 </details>
@@ -1901,7 +1929,7 @@ AgroalDataSource dataSource1;</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p><strong>INFO:</strong> Of course you still need to add the JDBC driver, and configure it in <code>application.properties</code>.</p>
+<p>INFO: Of course you still need to add the JDBC driver, and configure it in <code>application.properties</code>.</p>
 </div>
 <div style="page-break-after: always;"></div>
 <div class="listingblock">
@@ -1935,7 +1963,7 @@ AgroalDataSource dataSource1;</code></pre>
 </ul>
 </div>
 <div class="paragraph">
-<p><strong>INFO:</strong> Generated repositories are automatically annotated with <code>@Transactional</code>.</p>
+<p>INFO: Generated repositories are automatically annotated with <code>@Transactional</code>.</p>
 </div>
 <div class="paragraph">
 <p>Repository fragments is also supported:</p>
@@ -2844,15 +2872,24 @@ public class ArtemisConsumerManager {
 </div>
 </div>
 <div class="paragraph">
-<p><strong>INFO:</strong> Configuration options are the same as Artemis core.</p>
+<p>INFO: Configuration options are the same as Artemis core.</p>
 </div>
 </div>
 </details>
 <details>
 <summary class="title">Spring Web generation</summary>
 <div class="content">
-<div class="paragraph">
-<p><strong>TIP:</strong> If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:0.26.1:create &#8230;&#8203; -Dextensions="spring-web"</code>.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:0.26.1:create &#8230;&#8203; -Dextensions="spring-web"</code>.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </details>
@@ -3185,11 +3222,17 @@ HealthCheck check1() {
 <details>
 <summary class="title">Injecting without @Inject</summary>
 <div class="content">
-<div class="paragraph">
-<p><strong>TIP</strong></p>
-</div>
-<div class="paragraph">
-<p>Quarkus breaks the CDI spec by allowing you to inject qualified beans without using <code>@Inject</code> annotation.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Quarkus breaks the CDI spec by allowing you to inject qualified beans without using <code>@Inject</code> annotation.
+</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3468,7 +3511,7 @@ public class GreetingController {
 </div>
 </div>
 <div class="paragraph">
-<p>Supported annotations are: <code>RestController</code>, <code>RequestMapping</code>, <code>GetMapping</code>, <code>PostMapping</code>, <code>PutMapping</code>, <code>DeleteMapping</code>, <code>PatchMapping</code>, <code>RequestParam, `RequestHeader</code>, <code>MatrixVariable</code>, <code>PathVariable</code>, <code>CookieValue</code>, <code>RequestBody</code>, <code>ResponseStatus</code>, <code>ExceptionHandler</code> and <code>RestControllerAdvice</code>.</p>
+<p>Supported annotations are: <code>RestController</code>, <code>RequestMapping</code>, <code>GetMapping</code>, <code>PostMapping</code>, <code>PutMapping</code>, <code>DeleteMapping</code>, <code>PatchMapping</code>, <code>RequestParam</code>, <code>RequestHeader</code>, <code>MatrixVariable</code>, <code>PathVariable</code>, <code>CookieValue</code>, <code>RequestBody</code>, <code>ResponseStatus</code>, <code>ExceptionHandler</code> and <code>RestControllerAdvice</code>.</p>
 </div>
 </div>
 </details>
@@ -6342,8 +6385,17 @@ You only need to implement <code>ElasticsearchAnalysisConfigurer</code> interfac
     }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p><strong>IMPORTANT</strong> When not using Hibernate ORM, index data using <code>Search.getSearchSession(em).createIndexer()</code> <code>.startAndWait()</code> at startup time.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+When not using Hibernate ORM, index data using <code>Search.getSearchSession(em).createIndexer()</code> <code>.startAndWait()</code> at startup time.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Configure the extension in <code>application.properties</code>:</p>
@@ -6815,8 +6867,17 @@ quarkus.smallrye-health.readiness-path=/customready</code></pre>
 <details>
 <summary class="title">Email Test</summary>
 <div class="content">
-<div class="paragraph">
-<p><strong>IMPORTANT:</strong>  if you enable SSL for the mailer and you want to build a native executable, you will need to enable the SSL support <code>quarkus.ssl.native=true</code>.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+if you enable SSL for the mailer and you want to build a native executable, you will need to enable the SSL support <code>quarkus.ssl.native=true</code>.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p><strong>Testing</strong></p>
@@ -7504,8 +7565,17 @@ quarkus.mailer.password=....</code></pre>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p><strong>IMPORTANT:</strong>  if you enable SSL for the mailer and you want to build a native executable, you will need to enable the SSL support <code>quarkus.ssl.native=true</code>.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+if you enable SSL for the mailer and you want to build a native executable, you will need to enable the SSL support <code>quarkus.ssl.native=true</code>.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p><strong>Testing</strong></p>
@@ -7578,9 +7648,10 @@ public class InMemoryConfig implements ConfigSource {
 </div>
 <div class="paragraph">
 <p>Then you need to register the <code>ConfigSource</code> as Java service.
-Create a file <code>/META-INF/services/org.eclipse.microprofile.config.spi.ConfigSource</code> with next content:</p>
+Create a file with the following content:</p>
 </div>
 <div class="listingblock">
+<div class="title">/META-INF/services/org.eclipse.microprofile.config.spi.ConfigSource</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">com.acme.config.InMemoryConfig</code></pre>
 </div>
@@ -7635,9 +7706,10 @@ public class CustomInstantConverter
 </div>
 <div class="paragraph">
 <p>Then you need to register the <code>Converter</code> as Java service.
-Create a file <code>/META-INF/services/org.eclipse.microprofile.config.spi.Converter</code> with next content:</p>
+Create a file with the following content:</p>
 </div>
 <div class="listingblock">
+<div class="title">/META-INF/services/org.eclipse.microprofile.config.spi.Converter</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">com.acme.config.CustomInstantConverter</code></pre>
 </div>
@@ -8796,11 +8868,29 @@ quarkus.oidc.credentials.secret=secret</code></pre>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p><strong>NOTE:</strong>  With Keycloak OIDC server <code><a href="https://host:port/auth/realms/{realm}" class="bare">https://host:port/auth/realms/{realm}</a></code> where <code>{realm}</code> has to be replaced by the name of the Keycloak realm.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+With Keycloak OIDC server <code><a href="https://host:port/auth/realms/{realm}" class="bare">https://host:port/auth/realms/{realm}</a></code> where <code>{realm}</code> has to be replaced by the name of the Keycloak realm.
+</td>
+</tr>
+</table>
 </div>
-<div class="paragraph">
-<p><strong>TIP:</strong> You can use <code>quarkus.http.cors</code> property to enable consuming form different domain.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+You can use <code>quarkus.http.cors</code> property to enable consuming form different domain.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </details>
@@ -9298,8 +9388,17 @@ greeting.hidden.recipients=Jane,John</code></pre>
 <div class="paragraph">
 <p>Bean Validation is also supported so properties are validated at startup time, for example <code>@Size(min = 20) public String message;</code>.</p>
 </div>
-<div class="paragraph">
-<p><strong>TIP</strong>:`prefix` attribute is not mandatory. If not provided, attribute is determined by class name (ie <code>GreeetingConfiguration</code> is translated to <code>greeting</code> or <code>GreetingExtraConfiguration</code> to <code>greeting-extra</code>). The suffix of the class is always removed.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<code>prefix</code> attribute is not mandatory. If not provided, attribute is determined by class name (ie <code>GreeetingConfiguration</code> is translated to <code>greeting</code> or <code>GreetingExtraConfiguration</code> to <code>greeting-extra</code>). The suffix of the class is always removed.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p><strong>Custom Loader</strong></p>
@@ -9347,9 +9446,10 @@ public class InMemoryConfig implements ConfigSource {
 </div>
 <div class="paragraph">
 <p>Then you need to register the <code>ConfigSource</code> as Java service.
-Create a file <code>/META-INF/services/org.eclipse.microprofile.config.spi.ConfigSource</code> with next content:</p>
+Create a file with the following content:</p>
 </div>
 <div class="listingblock">
+<div class="title">/META-INF/services/org.eclipse.microprofile.config.spi.ConfigSource</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">com.acme.config.InMemoryConfig</code></pre>
 </div>
@@ -9382,9 +9482,10 @@ public class CustomInstantConverter
 </div>
 <div class="paragraph">
 <p>Then you need to register the <code>Converter</code> as Java service.
-Create a file <code>/META-INF/services/org.eclipse.microprofile.config.spi.Converter</code> with next content:</p>
+Create a file with the following content:</p>
 </div>
 <div class="listingblock">
+<div class="title">/META-INF/services/org.eclipse.microprofile.config.spi.Converter</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">com.acme.config.CustomInstantConverter</code></pre>
 </div>
@@ -9488,11 +9589,17 @@ Message message(InjectionPoint msg) {
 Message message;</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p><strong>TIP</strong></p>
-</div>
-<div class="paragraph">
-<p>Quarkus breaks the CDI spec by allowing you to inject qualified beans without using <code>@Inject</code> annotation.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Quarkus breaks the CDI spec by allowing you to inject qualified beans without using <code>@Inject</code> annotation.
+</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9741,326 +9848,141 @@ quarkus.log.category."com.lordofthejars".level=DEBUG</code></pre>
 <div class="paragraph">
 <p>Prefix is <code>quarkus.log</code>.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Property</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Default</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"> Description</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>category."&lt;category-name&gt;".level</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>INFO</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Minimum level category.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>level</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>INFO</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Default minimum level.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>console.enable</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>true</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Console logging enabled.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>console.format</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c{3.}] (%t) %s%e%n</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Format pattern to use for logging.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>console.level</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>INFO</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Minimum log level.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>console.color</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>INFO</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Allow color rendering.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>file.enable</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>false</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>File logging enabled.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>file.format</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>%d{yyyy-MM-dd HH:mm:ss,SSS} %h %N[%i] %-5p [%c{3.}] (%t) %s%e%n</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Format pattern to use for logging.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>file.level</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>ALL</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Minimum log level.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>file.path</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>quarkus.log</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The path to log file.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>file.rotation.max-file-size</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>The maximum file size of the log file.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>file.rotation.max-backup-index</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>1</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The maximum number of backups to keep.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>file.rotation.file-suffix</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Rotating log file suffix.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>file.rotation.rotate-on-boot</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>true</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates rotate logs at bootup.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>file.async</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>false</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Log asynchronously.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>file.async.queue-length</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>512</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The queue length to use before flushing writing.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>file.async.overflow</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>BLOCK</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Action when queue is full.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>syslog.enable</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>false</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">syslog logging is enabled.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>syslog.format</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>%d{yyyy-MM-dd HH:mm:ss,SSS} %h %N[%i] %-5p [%c{3.}] (%t) %s%e%n</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The format pattern to use for logging to syslog.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>syslog.level</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>ALL</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The minimum log level to write to syslog.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>syslog.endpoint</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>localhost:514</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The IP address and port of the syslog server.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>syslog.app-name</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Current process name.</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The app name used when formatting the message in RFC5424 format.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>syslog.hostname</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Current hostname.</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the host the messages are being sent from.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>syslog.facility</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>USER_LEVEL</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Priority of the message as defined by RFC-5424 and RFC-3164.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>syslog.syslog-type</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>RFC5424</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The syslog type of format message.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>syslog.protocol</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>TCP</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Protocol used.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>syslog.use-counting-framing</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>false</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Message prefixed with the size of the message.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>syslog.truncate</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>true</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Message should be truncated.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>syslog.block-on-reconnect</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>true</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Block when attempting to reconnect.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>syslog.async</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>false</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Log asynchronously.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>syslog.async.queue-length</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>512</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The queue length to use before flushing writing.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>syslog.async.overflow</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>BLOCK</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Action when queue is full.</p></td>
-</tr>
-</tbody>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>category."&lt;category-name&gt;".level</code></dt>
+<dd>
+<p>Minimum level category (default: <code>INFO</code>)</p>
+</dd>
+<dt class="hdlist1"><code>level</code></dt>
+<dd>
+<p>Default minimum level (default: <code>INFO</code>)</p>
+</dd>
+<dt class="hdlist1"><code>console.enabled</code></dt>
+<dd>
+<p>Console logging enabled (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>console.format</code></dt>
+<dd>
+<p>Format pattern to use for logging. Default value:<br>
+<code>%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c{3.}] (%t) %s%e%n</code></p>
+</dd>
+<dt class="hdlist1"><code>console.level</code></dt>
+<dd>
+<p>Minimum log level (default: <code>INFO</code>)</p>
+</dd>
+<dt class="hdlist1"><code>console.color</code></dt>
+<dd>
+<p>Allow color rendering (default: <code>INFO</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.enable</code></dt>
+<dd>
+<p>File logging enabled (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.format</code></dt>
+<dd>
+<p>Format pattern to use for logging. Default value:<br>
+<code>%d{yyyy-MM-dd HH:mm:ss,SSS} %h %N[%i] %-5p [%c{3.}] (%t) %s%e%n</code></p>
+</dd>
+<dt class="hdlist1"><code>file.level</code></dt>
+<dd>
+<p>Minimum log level (default: <code>ALL</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.path</code></dt>
+<dd>
+<p>The path to log file (default: <code>quarkus.log</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.rotation.max-file-size</code></dt>
+<dd>
+<p>The maximum file size of the log file</p>
+</dd>
+<dt class="hdlist1"><code>file.rotation.max-backup-index</code></dt>
+<dd>
+<p>The maximum number of backups to keep (default: <code>1</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.rotation.file-suffix</code></dt>
+<dd>
+<p>Rotating log file suffix.</p>
+</dd>
+<dt class="hdlist1"><code>file.rotation.rotate-on-boot</code></dt>
+<dd>
+<p>Indicates rotate logs at bootup (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.async</code></dt>
+<dd>
+<p>Log asynchronously (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.async.queue-length</code></dt>
+<dd>
+<p>The queue length to use before flushing writing (default: <code>512</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.async.overflow</code></dt>
+<dd>
+<p>Action when queue is full (default: <code>BLOCK</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.enable</code></dt>
+<dd>
+<p>syslog logging is enabled (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.format</code></dt>
+<dd>
+<p>The format pattern to use for logging to syslog. Default value:<br>
+<code>%d{yyyy-MM-dd HH:mm:ss,SSS} %h %N[%i] %-5p [%c{3.}] (%t) %s%e%n</code></p>
+</dd>
+<dt class="hdlist1"><code>syslog.level</code></dt>
+<dd>
+<p>The minimum log level to write to syslog (default: <code>ALL</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.endpoint</code></dt>
+<dd>
+<p>The IP address and port of the syslog server (default: <code>localhost:514</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.app-name</code></dt>
+<dd>
+<p>The app name used when formatting the message in RFC5424 format (default: current process name)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.hostname</code></dt>
+<dd>
+<p>The name of the host the messages are being sent from (default: current hostname)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.facility</code></dt>
+<dd>
+<p>Priority of the message as defined by RFC-5424 and RFC-3164 (default: <code>USER_LEVEL</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.syslog-type</code></dt>
+<dd>
+<p>The syslog type of format message (default: <code>RFC5424</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.protocol</code></dt>
+<dd>
+<p>Protocol used (default: <code>TCP</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.use-counting-framing</code></dt>
+<dd>
+<p>Message prefixed with the size of the message (default <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.truncate</code></dt>
+<dd>
+<p>Message should be truncated (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.block-on-reconnect</code></dt>
+<dd>
+<p>Block when attempting to reconnect (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.async</code></dt>
+<dd>
+<p>Log asynchronously (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.async.queue-length</code></dt>
+<dd>
+<p>The queue length to use before flushing writing (default: <code>512</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.async.overflow</code></dt>
+<dd>
+<p>Action when queue is full (default: <code>BLOCK</code>)</p>
+</dd>
+</dl>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_rest_client"><a class="anchor" href="#_rest_client"></a><a class="link" href="#_rest_client">Rest Client</a></h3>
@@ -11587,8 +11509,17 @@ You only need to implement <code>ElasticsearchAnalysisConfigurer</code> interfac
     }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p><strong>IMPORTANT</strong> When not using Hibernate ORM, index data using <code>Search.getSearchSession(em).createIndexer()</code> <code>.startAndWait()</code> at startup time.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+When not using Hibernate ORM, index data using <code>Search.getSearchSession(em).createIndexer()</code> <code>.startAndWait()</code> at startup time.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Configure the extension in <code>application.properties</code>:</p>
@@ -13177,8 +13108,17 @@ Panache Queries equivalence in MongoDB:</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p><strong>WARNING:</strong> PanacheQL refers to the Object parameter name but native queries refer to MongoDB field names.</p>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+PanacheQL refers to the Object parameter name but native queries refer to MongoDB field names.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p><strong>DAO pattern</strong></p>
@@ -13819,7 +13759,7 @@ public class ArtemisConsumerManager {
 </div>
 </div>
 <div class="paragraph">
-<p><strong>INFO:</strong> Configuration options are the same as Artemis core.</p>
+<p>INFO: Configuration options are the same as Artemis core.</p>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -14137,11 +14077,29 @@ quarkus.oidc.credentials.secret=secret</code></pre>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p><strong>NOTE:</strong>  With Keycloak OIDC server <code><a href="https://host:port/auth/realms/{realm}" class="bare">https://host:port/auth/realms/{realm}</a></code> where <code>{realm}</code> has to be replaced by the name of the Keycloak realm.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+With Keycloak OIDC server <code><a href="https://host:port/auth/realms/{realm}" class="bare">https://host:port/auth/realms/{realm}</a></code> where <code>{realm}</code> has to be replaced by the name of the Keycloak realm.
+</td>
+</tr>
+</table>
 </div>
-<div class="paragraph">
-<p><strong>TIP:</strong> You can use <code>quarkus.http.cors</code> property to enable consuming form different domain.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+You can use <code>quarkus.http.cors</code> property to enable consuming form different domain.
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -14710,7 +14668,7 @@ quarkus.datasource.username=
 <p>No password is set as it is fetched from Vault.</p>
 </div>
 <div class="paragraph">
-<p><strong>INFO:</strong> <a href="https://www.vaultproject.io/docs/secrets/databases/index.html">dynamic database credentials</a> through the <code>database-credentials-role</code> property.</p>
+<p>INFO: <a href="https://www.vaultproject.io/docs/secrets/databases/index.html">dynamic database credentials</a> through the <code>database-credentials-role</code> property.</p>
 </div>
 <div class="paragraph">
 <p>Elytron JDBC Realm configuration properties.
@@ -16597,8 +16555,17 @@ quarkus.mailer.password=....</code></pre>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p><strong>IMPORTANT:</strong>  if you enable SSL for the mailer and you want to build a native executable, you will need to enable the SSL support <code>quarkus.ssl.native=true</code>.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+if you enable SSL for the mailer and you want to build a native executable, you will need to enable the SSL support <code>quarkus.ssl.native=true</code>.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p><strong>Testing</strong></p>
@@ -16774,8 +16741,17 @@ public String extractText(InputStream stream) {
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p><strong>IMPORTANT:</strong> When running in native mode, make sure to configure SSL access correctly <code>quarkus.ssl.native=true</code> (<a href="https://quarkus.io/guides/native-and-ssl-guide" target="_blank" rel="noopener">Native and SSL</a>).</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+When running in native mode, make sure to configure SSL access correctly <code>quarkus.ssl.native=true</code> (<a href="https://quarkus.io/guides/native-and-ssl-guide" target="_blank" rel="noopener">Native and SSL</a>).
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -17002,10 +16978,19 @@ public class GreetingController {
 </div>
 </div>
 <div class="paragraph">
-<p>Supported annotations are: <code>RestController</code>, <code>RequestMapping</code>, <code>GetMapping</code>, <code>PostMapping</code>, <code>PutMapping</code>, <code>DeleteMapping</code>, <code>PatchMapping</code>, <code>RequestParam, `RequestHeader</code>, <code>MatrixVariable</code>, <code>PathVariable</code>, <code>CookieValue</code>, <code>RequestBody</code>, <code>ResponseStatus</code>, <code>ExceptionHandler</code> and <code>RestControllerAdvice</code>.</p>
+<p>Supported annotations are: <code>RestController</code>, <code>RequestMapping</code>, <code>GetMapping</code>, <code>PostMapping</code>, <code>PutMapping</code>, <code>DeleteMapping</code>, <code>PatchMapping</code>, <code>RequestParam</code>, <code>RequestHeader</code>, <code>MatrixVariable</code>, <code>PathVariable</code>, <code>CookieValue</code>, <code>RequestBody</code>, <code>ResponseStatus</code>, <code>ExceptionHandler</code> and <code>RestControllerAdvice</code>.</p>
 </div>
-<div class="paragraph">
-<p><strong>TIP:</strong> If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:0.26.1:create &#8230;&#8203; -Dextensions="spring-web"</code>.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:0.26.1:create &#8230;&#8203; -Dextensions="spring-web"</code>.
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -17020,7 +17005,7 @@ public class GreetingController {
 </div>
 </div>
 <div class="paragraph">
-<p><strong>INFO:</strong> Of course you still need to add the JDBC driver, and configure it in <code>application.properties</code>.</p>
+<p>INFO: Of course you still need to add the JDBC driver, and configure it in <code>application.properties</code>.</p>
 </div>
 <div style="page-break-after: always;"></div>
 <div class="listingblock">
@@ -17054,7 +17039,7 @@ public class GreetingController {
 </ul>
 </div>
 <div class="paragraph">
-<p><strong>INFO:</strong> Generated repositories are automatically annotated with <code>@Transactional</code>.</p>
+<p>INFO: Generated repositories are automatically annotated with <code>@Transactional</code>.</p>
 </div>
 <div class="paragraph">
 <p>Repository fragments is also supported:</p>

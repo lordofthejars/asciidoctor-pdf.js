@@ -1167,180 +1167,141 @@ quarkus.log.category."com.lordofthejars".level=DEBUG</code></pre>
 </div>
 </div>
 <p class="">Prefix is <code>quarkus.log</code>.</p>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Property</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Default</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Description</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>category."&lt;category-name&gt;".level</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>INFO</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Minimum level category.</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>level</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>INFO</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Default minimum level.</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>console.enable</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>true</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Console logging enabled.</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>console.format</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c{3.}] (%t) %s%e%n</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Format pattern to use for logging.</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>console.level</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>INFO</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Minimum log level.</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>console.color</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>INFO</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Allow color rendering.</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.enable</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">File logging enabled.</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.format</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>%d{yyyy-MM-dd HH:mm:ss,SSS} %h %N[%i] %-5p [%c{3.}] (%t) %s%e%n</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Format pattern to use for logging.</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.level</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>ALL</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Minimum log level.</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.path</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>quarkus.log</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">The path to log file.</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.rotation.max-file-size</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">The maximum file size of the log file.</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.rotation.max-backup-index</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>1</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The maximum number of backups to keep.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.rotation.file-suffix</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Rotating log file suffix.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.rotation.rotate-on-boot</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>true</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates rotate logs at bootup.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.async</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Log asynchronously.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.async.queue-length</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>512</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The queue length to use before flushing writing.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.async.overflow</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>BLOCK</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Action when queue is full.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>syslog.enable</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">syslog logging is enabled.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>syslog.format</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>%d{yyyy-MM-dd HH:mm:ss,SSS} %h %N[%i] %-5p [%c{3.}] (%t) %s%e%n</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The format pattern to use for logging to syslog.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>syslog.level</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>ALL</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The minimum log level to write to syslog.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>syslog.endpoint</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>localhost:514</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The IP address and port of the syslog server.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>syslog.app-name</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Current process name.</p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The app name used when formatting the message in RFC5424 format.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>syslog.hostname</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Current hostname.</p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the host the messages are being sent from.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>syslog.facility</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>USER_LEVEL</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Priority of the message as defined by RFC-5424 and RFC-3164.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>syslog.syslog-type</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>RFC5424</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The syslog type of format message.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>syslog.protocol</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>TCP</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Protocol used.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>syslog.use-counting-framing</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Message prefixed with the size of the message.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>syslog.truncate</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>true</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Message should be truncated.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>syslog.block-on-reconnect</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>true</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Block when attempting to reconnect.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>syslog.async</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Log asynchronously.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>syslog.async.queue-length</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>512</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The queue length to use before flushing writing.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>syslog.async.overflow</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>BLOCK</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Action when queue is full.</p></td>
-</tr>
-</tbody>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>category."&lt;category-name&gt;".level</code></dt>
+<dd>
+<p>Minimum level category (default: <code>INFO</code>)</p>
+</dd>
+<dt class="hdlist1"><code>level</code></dt>
+<dd>
+<p>Default minimum level (default: <code>INFO</code>)</p>
+</dd>
+<dt class="hdlist1"><code>console.enabled</code></dt>
+<dd>
+<p>Console logging enabled (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>console.format</code></dt>
+<dd>
+<p>Format pattern to use for logging. Default value:<br>
+<code>%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c{3.}] (%t) %s%e%n</code></p>
+</dd>
+<dt class="hdlist1"><code>console.level</code></dt>
+<dd>
+<p>Minimum log level (default: <code>INFO</code>)</p>
+</dd>
+<dt class="hdlist1"><code>console.color</code></dt>
+<dd>
+<p>Allow color rendering (default: <code>INFO</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.enable</code></dt>
+<dd>
+<p>File logging enabled (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.format</code></dt>
+<dd>
+<p>Format pattern to use for logging. Default value:<br>
+<code>%d{yyyy-MM-dd HH:mm:ss,SSS} %h %N[%i] %-5p [%c{3.}] (%t) %s%e%n</code></p>
+</dd>
+<dt class="hdlist1"><code>file.level</code></dt>
+<dd>
+<p>Minimum log level (default: <code>ALL</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.path</code></dt>
+<dd>
+<p>The path to log file (default: <code>quarkus.log</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.rotation.max-file-size</code></dt>
+<dd>
+<p>The maximum file size of the log file</p>
+</dd>
+<dt class="hdlist1"><code>file.rotation.max-backup-index</code></dt>
+<dd>
+<p>The maximum number of backups to keep (default: <code>1</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.rotation.file-suffix</code></dt>
+<dd>
+<p>Rotating log file suffix.</p>
+</dd>
+<dt class="hdlist1"><code>file.rotation.rotate-on-boot</code></dt>
+<dd>
+<p>Indicates rotate logs at bootup (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.async</code></dt>
+<dd>
+<p>Log asynchronously (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.async.queue-length</code></dt>
+<dd>
+<p>The queue length to use before flushing writing (default: <code>512</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.async.overflow</code></dt>
+<dd>
+<p>Action when queue is full (default: <code>BLOCK</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.enable</code></dt>
+<dd>
+<p>syslog logging is enabled (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.format</code></dt>
+<dd>
+<p>The format pattern to use for logging to syslog. Default value:<br>
+<code>%d{yyyy-MM-dd HH:mm:ss,SSS} %h %N[%i] %-5p [%c{3.}] (%t) %s%e%n</code></p>
+</dd>
+<dt class="hdlist1"><code>syslog.level</code></dt>
+<dd>
+<p>The minimum log level to write to syslog (default: <code>ALL</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.endpoint</code></dt>
+<dd>
+<p>The IP address and port of the syslog server (default: <code>localhost:514</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.app-name</code></dt>
+<dd>
+<p>The app name used when formatting the message in RFC5424 format (default: current process name)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.hostname</code></dt>
+<dd>
+<p>The name of the host the messages are being sent from (default: current hostname)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.facility</code></dt>
+<dd>
+<p>Priority of the message as defined by RFC-5424 and RFC-3164 (default: <code>USER_LEVEL</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.syslog-type</code></dt>
+<dd>
+<p>The syslog type of format message (default: <code>RFC5424</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.protocol</code></dt>
+<dd>
+<p>Protocol used (default: <code>TCP</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.use-counting-framing</code></dt>
+<dd>
+<p>Message prefixed with the size of the message (default <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.truncate</code></dt>
+<dd>
+<p>Message should be truncated (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.block-on-reconnect</code></dt>
+<dd>
+<p>Block when attempting to reconnect (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.async</code></dt>
+<dd>
+<p>Log asynchronously (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.async.queue-length</code></dt>
+<dd>
+<p>The queue length to use before flushing writing (default: <code>512</code>)</p>
+</dd>
+<dt class="hdlist1"><code>syslog.async.overflow</code></dt>
+<dd>
+<p>Action when queue is full (default: <code>BLOCK</code>)</p>
+</dd>
+</dl>
+</div>
 </div>
 </div>
 <div class="sect1">

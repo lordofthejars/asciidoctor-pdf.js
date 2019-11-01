@@ -260,3 +260,17 @@ pre > code {
   fill: #ab2424;
 }
 
+dl dt {
+  margin-bottom: .3125em;
+  font-weight: bold;
+}
+
+dd {
+  margin-left: 1em;
+}
+
+dd > p {
+  margin: 0;
+  margin-bottom: 1.25rem;
+}
+
