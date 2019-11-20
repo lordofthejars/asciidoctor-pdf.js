@@ -190,6 +190,8 @@ developer.delete();
 long numberOfDeleted = Developer.delete("name", "Alex");
 ----
 
+<<<
+
 Remember to annotate methods with `@Transactional` annotation to make changes persisted in the database.
 
 If queries start with the keyword `from` then they are treated as _HQL_ query, if not then next short form is supported:
@@ -333,8 +335,6 @@ EntityManager em;
 em.persist(car);
 ----
 // end::update_5_2[]
-
-<<<
 
 *Multiple datasources*
 
@@ -577,6 +577,8 @@ MessageMarshaller authorMarshaller() {
 ./mvnw quarkus:add-extension 
   -Dextensions="infinispan-embeddedy"
 ----
+
+<<<
 
 Configuration in `infinispan.xml`:
 

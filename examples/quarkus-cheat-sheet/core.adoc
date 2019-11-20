@@ -666,8 +666,7 @@ Format pattern to use for logging. Default value: +
 Minimum log level (default: `INFO`)
 
 `console.color`::
-// QUESTION: default value should be a boolean right? not INFO?
-Allow color rendering (default: `INFO`)
+Allow color rendering (default: `true`)
 
 `file.enable`::
 File logging enabled (default: `false`)
@@ -727,6 +726,8 @@ Priority of the message as defined by RFC-5424 and RFC-3164 (default: `USER_LEVE
 
 `syslog.syslog-type`::
 The syslog type of format message (default: `RFC5424`)
+
+<<<
 
 `syslog.protocol`::
 Protocol used (default: `TCP`)
@@ -924,6 +925,57 @@ public interface MultipartService {
 ----
 // end::update_10_10[]
 
+// tag::update_11_4[]
+*SSL*
+
+You can configure Rest Client key stores.
+
+[source, properties]
+----
+org.acme.quickstart.WorldClockService/mp-rest/trustStore=
+    classpath:/store.jks
+org.acme.quickstart.WorldClockService/mp-rest/trustStorePassword=
+    supersecret
+----
+
+Possible configuration properties:
+
+`%s/mp-rest/trustStore`::
+Trust store location defined with `classpath:` or `file:` prefix.
+
+`%s/mp-rest/trustStorePassword`::
+Trust store password.
+
+`%s/mp-rest/trustStoreType`::
+Trust store type (default: `JKS`)
+
+`%s/mp-rest/hostnameVerifier`::
+Custom hostname verifier class name.
+
+`%s/mp-rest/keyStore`::
+Key store location defined with `classpath:` or `file:` prefix.
+
+`%s/mp-rest/keyStorePassword`::
+Key store password.
+
+`%s/mp-rest/keyStoreType`::
+Key store type (default: `JKS`)
+// end::update_11_4[]
+
+// tag::update_11_5[]
+*Timeout* 
+
+You can define the timeout of the Rest Client:
+
+[source, properties]
+----
+org.acme.quickstart.WorldClockService/mp-rest/connectTimeout=
+    1000
+org.acme.quickstart.WorldClockService/mp-rest/readTimeout=
+    2000
+----
+// end::update_11_5[]
+
 == Testing
 
 Quarkus archetype adds test dependencies with JUnit 5 and Rest-Assured library to test REST endpoints.
@@ -1048,4 +1100,4 @@ I recommend reading https://quarkus.io/guides/tests-with-coverage-guide[this doc
 
 *Native Testing*
 
-To test native executables annotate the test with `@SubstrateTest`.
+To test native executables annotate the test with `@NativeImageTest`.

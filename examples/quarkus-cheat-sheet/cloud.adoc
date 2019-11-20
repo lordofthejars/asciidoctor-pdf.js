@@ -7,12 +7,22 @@ The common use case is creating a Docker image so you can execute the next comma
 
 [source, bash]
 ----
-./mvnw package -Pnative -Dnative-image.docker-build=true
+./mvnw package -Pnative -Dquarkus.native.container-build=true
 
 docker build -f src/main/docker/Dockerfile.native 
                     -t quarkus/getting-started .
 docker run -i --rm -p 8080:8080 quarkus/getting-started
 ----
+
+// tag::update_11_6[]
+You can use `quarkus.native.container-runtime` to select the container runtime to use.
+Now `docker` (default) and `podman` are the valid options.
+
+[source, bash]
+----
+./mvnw package -Pnative -Dquarkus.native.container-runtime=podman
+----
+// end::update_11_6[]
 
 // tag::update_1_6[]
 To configure native application, you can create a `config` directory at the same place as the native file and place an `application.properties` file inside. `config/application.properties`.
@@ -28,12 +38,12 @@ Quarks can use https://github.com/dekorateio/dekorate[Dekorate] to generate Kube
     -Dextensions="io.quarkus:quarkus-kubernetes"
 ----
 
-Running `./mvnw package` the Kubernetes resources are created at `target/wiring-classes/META-INF/kubernetes/` directory.
+Running `./mvnw package` the Kubernetes resources are created at `target/kubernetes/` directory.
 
 |===	
 | Property | Default | Description
 
-a|`quarkus.kubernetes.group`
+a|`kubernetes.group`
 a|Current username
 a|Set Docker Username.
 
@@ -43,6 +53,22 @@ a|Project name
 |===
 
 Generated resource is integrated with <<Observability, MicroProfile Health annotations>>.
+
+// tag::update_11_3[]
+Also, you can customize the generated resource by setting the new values in `application.properties`:
+
+[source, properties]
+----
+kubernetes.replicas=3
+
+kubernetes.labels[0].key=foo
+kubernetes.labels[0].value=bar
+
+kubernetes.readiness-probe.period-seconds=45
+----
+
+All possible values are explained at https://quarkus.io/guides/kubernetes#configuration-options.
+// end::update_11_3[]
 
 == Kubernetes Client
 // tag::update_4_5[]
@@ -253,8 +279,10 @@ public class TestLambda
 ----
 
 // tag::update_9_4[]
-You can set the handler name by using `quarkus.lambda.handler` property.
+You can set the handler name by using `quarkus.lambda.handler` property or by annotating the Lambda with the CDI `@Named` annotation.
 // end::update_9_4[]
+
+<<<
 
 *Test*
 
@@ -280,6 +308,18 @@ public void testLambda() {
 }
 ----
 // end::update_1_10[]
+
+// tag::update_11_8[]
+To scaffold a AWS Lambda run:
+
+[source, bash]
+----
+mvn archetype:generate \
+    -DarchetypeGroupId=io.quarkus \
+    -DarchetypeArtifactId=quarkus-amazon-lambda-archetype \
+    -DarchetypeVersion={version}
+----
+// end::update_11_8[]
 
 == Azure Functions
 
