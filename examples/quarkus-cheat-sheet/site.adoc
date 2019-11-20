@@ -15,6 +15,56 @@ In this page you can either read what has been added in each version of the chea
 [[whatsnew]]
 == What's New in Cheat-Sheet
 
+=== Version 1.0.0.CR2
+
+.HTTP Form Auth
+[%collapsible]
+====
+include::security.adoc[tag=update_11_1]
+====
+
+.Alter RBAC behaviour
+[%collapsible]
+====
+include::security.adoc[tag=update_11_2]
+====
+
+.Tuning generated Kubernetes resouces
+[%collapsible]
+====
+include::cloud.adoc[tag=update_11_3]
+====
+
+.HTTPS Rest Client
+[%collapsible]
+====
+include::core.adoc[tag=update_11_4]
+====
+
+.Timeout Rest Client
+[%collapsible]
+====
+include::core.adoc[tag=update_11_5]
+====
+
+.Select Container Runtime
+[%collapsible]
+====
+include::cloud.adoc[tag=update_11_6]
+====
+
+.Spring Web supported types
+[%collapsible]
+====
+include::spring.adoc[tag=update_11_7]
+====
+
+.AWS Lambda Archetype
+[%collapsible]
+====
+include::cloud.adoc[tag=update_11_8]
+====
+
 === Version 0.26.0
 
 .JAX-RS over Vert.X

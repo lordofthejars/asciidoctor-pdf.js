@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.10">
+<meta name="generator" content="Asciidoctor 2.0.9">
 <meta name="author" content="Alex Soto">
 <title>Home of Quarkus Cheat-Sheet</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
@@ -241,7 +241,7 @@ table.linenotable td.linenos{border-right:1px solid currentColor;opacity:.35;pad
 pre.pygments .lineno{border-right:1px solid currentColor;opacity:.35;display:inline-block;margin-right:.75em}
 pre.pygments .lineno::before{content:"";margin-right:-.125em}
 .quoteblock{margin:0 1em 1.25em 1.5em;display:table}
-.quoteblock:not(.excerpt)>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock>.title{margin-left:-1.5em;margin-bottom:.75em}
 .quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
 .quoteblock blockquote{margin:0;padding:0;border:0}
 .quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
@@ -258,8 +258,7 @@ pre.pygments .lineno::before{content:"";margin-right:-.125em}
 .quoteblock.abstract blockquote,.quoteblock.abstract p,.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{line-height:1.6;word-spacing:0}
 .quoteblock.abstract{margin:0 1em 1.25em;display:block}
 .quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
-.quoteblock.excerpt>blockquote,.quoteblock .quoteblock{padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
-.quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
+.quoteblock.excerpt,.quoteblock .quoteblock{margin:0 0 1.25em;padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
 .quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
 .quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;text-align:left;margin-right:0}
 table.tableblock{max-width:100%;border-collapse:separate}
@@ -450,20 +449,216 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.11/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
+<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.12/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
 </div>
 <div class="paragraph">
 <p>Quarkus (<a href="https://quarkus.io/" class="bare">https://quarkus.io/</a>) is a Kubernetes Native Java stack tailored for GraalVM &amp; OpenJDK HotSpot, crafted from the best of breed Java libraries and standards.
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
 </div>
 <div class="paragraph">
-<p>In this page you can either read what has been added in each version of the cheat-sheet individually in <a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a> section, see the full cheat-sheet as HTML <span class="icon"><i class="fa fa-html5"></i></span> <a href="#quarkuscheatsheet">Quarkus Cheat-Sheet</a> format or <span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.11/quarkus-cheat-sheet.pdf">download the full cheat-sheet as PDF</a>.</p>
+<p>In this page you can either read what has been added in each version of the cheat-sheet individually in <a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a> section, see the full cheat-sheet as HTML <span class="icon"><i class="fa fa-html5"></i></span> <a href="#quarkuscheatsheet">Quarkus Cheat-Sheet</a> format or <span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.12/quarkus-cheat-sheet.pdf">download the full cheat-sheet as PDF</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="whatsnew"><a class="anchor" href="#whatsnew"></a><a class="link" href="#whatsnew">What&#8217;s New in Cheat-Sheet</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_version_1_0_0_cr2"><a class="anchor" href="#_version_1_0_0_cr2"></a><a class="link" href="#_version_1_0_0_cr2">Version 1.0.0.CR2</a></h3>
+<details>
+<summary class="title">HTTP Form Auth</summary>
+<div class="content">
+<div class="paragraph">
+<p>HTTP form auth is enabled by the <code>quarkus.http.auth.form.enabled=true</code> property.</p>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Alter RBAC behaviour</summary>
+<div class="content">
+<div class="paragraph">
+<p>To alter RBAC behaviour there are two configuration properties:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.security.deny-unannotated=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Configuration options:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top"> Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>quarkus.jaxrs.deny-uncovered</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>false</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If true denies by default to all JAX-RS endpoints.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>quarkus.security.deny-unannotated</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>false</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If true denies by default all CDI methods and JAX-RS endpoints.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</details>
+<details>
+<summary class="title">Tuning generated Kubernetes resouces</summary>
+<div class="content">
+<div class="paragraph">
+<p>Also, you can customize the generated resource by setting the new values in <code>application.properties</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">kubernetes.replicas=3
+
+kubernetes.labels[0].key=foo
+kubernetes.labels[0].value=bar
+
+kubernetes.readiness-probe.period-seconds=45</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All possible values are explained at <a href="https://quarkus.io/guides/kubernetes#configuration-options" class="bare">https://quarkus.io/guides/kubernetes#configuration-options</a>.</p>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">HTTPS Rest Client</summary>
+<div class="content">
+<div class="paragraph">
+<p><strong>SSL</strong></p>
+</div>
+<div class="paragraph">
+<p>You can configure Rest Client key stores.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">org.acme.quickstart.WorldClockService/mp-rest/trustStore=
+    classpath:/store.jks
+org.acme.quickstart.WorldClockService/mp-rest/trustStorePassword=
+    supersecret</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Possible configuration properties:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>%s/mp-rest/trustStore</code></dt>
+<dd>
+<p>Trust store location defined with <code>classpath:</code> or <code>file:</code> prefix.</p>
+</dd>
+<dt class="hdlist1"><code>%s/mp-rest/trustStorePassword</code></dt>
+<dd>
+<p>Trust store password.</p>
+</dd>
+<dt class="hdlist1"><code>%s/mp-rest/trustStoreType</code></dt>
+<dd>
+<p>Trust store type (default: <code>JKS</code>)</p>
+</dd>
+<dt class="hdlist1"><code>%s/mp-rest/hostnameVerifier</code></dt>
+<dd>
+<p>Custom hostname verifier class name.</p>
+</dd>
+<dt class="hdlist1"><code>%s/mp-rest/keyStore</code></dt>
+<dd>
+<p>Key store location defined with <code>classpath:</code> or <code>file:</code> prefix.</p>
+</dd>
+<dt class="hdlist1"><code>%s/mp-rest/keyStorePassword</code></dt>
+<dd>
+<p>Key store password.</p>
+</dd>
+<dt class="hdlist1"><code>%s/mp-rest/keyStoreType</code></dt>
+<dd>
+<p>Key store type (default: <code>JKS</code>)</p>
+</dd>
+</dl>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Timeout Rest Client</summary>
+<div class="content">
+<div class="paragraph">
+<p><strong>Timeout</strong></p>
+</div>
+<div class="paragraph">
+<p>You can define the timeout of the Rest Client:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">org.acme.quickstart.WorldClockService/mp-rest/connectTimeout=
+    1000
+org.acme.quickstart.WorldClockService/mp-rest/readTimeout=
+    2000</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Select Container Runtime</summary>
+<div class="content">
+<div class="paragraph">
+<p>You can use <code>quarkus.native.container-runtime</code> to select the container runtime to use.
+Now <code>docker</code> (default) and <code>podman</code> are the valid options.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw package -Pnative -Dquarkus.native.container-runtime=podman</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Spring Web supported types</summary>
+<div class="content">
+<div class="paragraph">
+<p>The next return types are supported: <code>org.springframework.http.ResponseEntity</code> and <code>java.util.Map</code>.</p>
+</div>
+<div class="paragraph">
+<p>The next parameter types are supported: An <code>Exception</code> argument and <code>ServletRequest</code>/<code>HttpServletRequest</code> (adding <code>quarkus-undertow</code> dependency).</p>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">AWS Lambda Archetype</summary>
+<div class="content">
+<div class="paragraph">
+<p>To scaffold a AWS Lambda run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn archetype:generate \
+    -DarchetypeGroupId=io.quarkus \
+    -DarchetypeArtifactId=quarkus-amazon-lambda-archetype \
+    -DarchetypeVersion={version}</code></pre>
+</div>
+</div>
+</div>
+</details>
+</div>
 <div class="sect2">
 <h3 id="_version_0_26_0"><a class="anchor" href="#_version_0_26_0"></a><a class="link" href="#_version_0_26_0">Version 0.26.0</a></h3>
 <details>
@@ -694,8 +889,7 @@ quarkus.security.users.embedded.auth-mechanism=BASIC</code></pre>
 <summary class="title">Http basic auth</summary>
 <div class="content">
 <div class="paragraph">
-<p>HTTP basic auth is now enabled by the <code>quarkus.http-auth.basic=true</code> property.
-Then you need to add <code>elytron-security-properties-file</code> or <code>elytron-security-jdbc</code>.</p>
+<p>HTTP basic auth is enabled by the <code>quarkus.http.auth.basic=true</code> property.</p>
 </div>
 </div>
 </details>
@@ -719,6 +913,51 @@ Then you need to add <code>elytron-security-properties-file</code> or <code>elyt
 <div class="paragraph">
 <p>You can use <code>io.quarkus.security.Authenticated</code> as a shortcut of <code>@RolesAllowed("*")</code>.</p>
 </div>
+<div class="paragraph">
+<p>To alter RBAC behaviour there are two configuration properties:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.security.deny-unannotated=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Configuration options:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top"> Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>quarkus.jaxrs.deny-uncovered</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>false</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If true denies by default to all JAX-RS endpoints.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>quarkus.security.deny-unannotated</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>false</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If true denies by default all CDI methods and JAX-RS endpoints.</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p><strong>File Configuration</strong></p>
 </div>
@@ -747,6 +986,7 @@ quarkus.http.auth.permission.deny1.policy=
     deny</code></pre>
 </div>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>You need to provide permissions set by using the <code>roles-allowed</code> property or use the built-in ones <code>deny</code>, <code>permit</code> or <code>authenticated</code>.</p>
 </div>
@@ -1142,6 +1382,7 @@ aa.begin();
   -Dextensions="infinispan-embeddedy"</code></pre>
 </div>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>Configuration in <code>infinispan.xml</code>:</p>
 </div>
@@ -1570,7 +1811,7 @@ List&lt;Person&gt; secondPage = livingPersons.nextPage().list();</code></pre>
 <summary class="title">Named Lambda Request Handlers</summary>
 <div class="content">
 <div class="paragraph">
-<p>You can set the handler name by using <code>quarkus.lambda.handler</code> property.</p>
+<p>You can set the handler name by using <code>quarkus.lambda.handler</code> property or by annotating the Lambda with the CDI <code>@Named</code> annotation.</p>
 </div>
 </div>
 </details>
@@ -2886,7 +3127,7 @@ public class ArtemisConsumerManager {
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:0.26.1:create &#8230;&#8203; -Dextensions="spring-web"</code>.
+If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.0.0.CR2:create &#8230;&#8203; -Dextensions="spring-web"</code>.
 </td>
 </tr>
 </table>
@@ -3908,6 +4149,7 @@ Same for <code>maven-failsafe-plugin</code>.
     -Dextensions="security-oauth2"</code></pre>
 </div>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>And configuration in <code>src/main/resources/application.properties</code>:</p>
 </div>
@@ -7145,6 +7387,7 @@ mp.messaging.incoming.prices.auto-generated-client-id=
 <div class="paragraph">
 <p>Quarkus integrates with <a href="http://www.kiegroup.org/" target="_blank" rel="noopener">Kogito</a>, a next-generation business automation toolkit from Drools and jBPM projects for adding business automation capabilities.</p>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>To start using it you only need to add the next extension:</p>
 </div>
@@ -8921,8 +9164,9 @@ You can use <code>quarkus.http.cors</code> property to enable consuming form dif
 </div>
 </div>
 <div class="paragraph">
-<p>You can set the handler name by using <code>quarkus.lambda.handler</code> property.</p>
+<p>You can set the handler name by using <code>quarkus.lambda.handler</code> property or by annotating the Lambda with the CDI <code>@Named</code> annotation.</p>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p><strong>Test</strong></p>
 </div>
@@ -8958,13 +9202,14 @@ public void testLambda() {
 <h2 id="quarkuscheatsheet"><a class="anchor" href="#quarkuscheatsheet"></a><a class="link" href="#quarkuscheatsheet">Quarkus Cheat-Sheet</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.11/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
+<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.12/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
 </div>
 <div id="toc" class="toc">
 <div id="toctitle" class="title">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a>
 <ul class="sectlevel2">
+<li><a href="#_version_1_0_0_cr2">Version 1.0.0.CR2</a></li>
 <li><a href="#_version_0_26_0">Version 0.26.0</a></li>
 <li><a href="#_version_0_24_0">Version 0.24.0</a></li>
 <li><a href="#_version_0_23_0">Version 0.23.0</a></li>
@@ -9011,7 +9256,7 @@ public void testLambda() {
 <li><a href="#_jwt">JWT</a></li>
 <li><a href="#_openid_connect">OpenId Connect</a></li>
 <li><a href="#_oauth2">OAuth2</a></li>
-<li><a href="#_http_basic_auth">HTTP basic auth</a></li>
+<li><a href="#_authenticating_via_http">Authenticating via HTTP</a></li>
 <li><a href="#_security_with_properties_file">Security with Properties File</a></li>
 <li><a href="#_security_with_a_jdbc_realm">Security with a JDBC Realm</a></li>
 <li><a href="#_vault">Vault</a></li>
@@ -9050,7 +9295,7 @@ public void testLambda() {
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
 </div>
 <div class="paragraph">
-<p>Cheat-sheet tested with <strong>Quarkus 0.26.1</strong>.</p>
+<p>Cheat-sheet tested with <strong>Quarkus 1.0.0.CR2</strong>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -9060,7 +9305,7 @@ Also focused on developer experience, making things just work with little to no 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:0.26.1:create \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.0.0.CR2:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=getting-started \
     -DclassName="org.acme.quickstart.GreetingResource" \
@@ -9873,7 +10118,7 @@ quarkus.log.category."com.lordofthejars".level=DEBUG</code></pre>
 </dd>
 <dt class="hdlist1"><code>console.color</code></dt>
 <dd>
-<p>Allow color rendering (default: <code>INFO</code>)</p>
+<p>Allow color rendering (default: <code>true</code>)</p>
 </dd>
 <dt class="hdlist1"><code>file.enable</code></dt>
 <dd>
@@ -9953,6 +10198,11 @@ quarkus.log.category."com.lordofthejars".level=DEBUG</code></pre>
 <dd>
 <p>The syslog type of format message (default: <code>RFC5424</code>)</p>
 </dd>
+</dl>
+</div>
+<div style="page-break-after: always;"></div>
+<div class="dlist">
+<dl>
 <dt class="hdlist1"><code>syslog.protocol</code></dt>
 <dd>
 <p>Protocol used (default: <code>TCP</code>)</p>
@@ -10180,6 +10430,69 @@ public interface MultipartService {
 }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p><strong>SSL</strong></p>
+</div>
+<div class="paragraph">
+<p>You can configure Rest Client key stores.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">org.acme.quickstart.WorldClockService/mp-rest/trustStore=
+    classpath:/store.jks
+org.acme.quickstart.WorldClockService/mp-rest/trustStorePassword=
+    supersecret</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Possible configuration properties:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>%s/mp-rest/trustStore</code></dt>
+<dd>
+<p>Trust store location defined with <code>classpath:</code> or <code>file:</code> prefix.</p>
+</dd>
+<dt class="hdlist1"><code>%s/mp-rest/trustStorePassword</code></dt>
+<dd>
+<p>Trust store password.</p>
+</dd>
+<dt class="hdlist1"><code>%s/mp-rest/trustStoreType</code></dt>
+<dd>
+<p>Trust store type (default: <code>JKS</code>)</p>
+</dd>
+<dt class="hdlist1"><code>%s/mp-rest/hostnameVerifier</code></dt>
+<dd>
+<p>Custom hostname verifier class name.</p>
+</dd>
+<dt class="hdlist1"><code>%s/mp-rest/keyStore</code></dt>
+<dd>
+<p>Key store location defined with <code>classpath:</code> or <code>file:</code> prefix.</p>
+</dd>
+<dt class="hdlist1"><code>%s/mp-rest/keyStorePassword</code></dt>
+<dd>
+<p>Key store password.</p>
+</dd>
+<dt class="hdlist1"><code>%s/mp-rest/keyStoreType</code></dt>
+<dd>
+<p>Key store type (default: <code>JKS</code>)</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><strong>Timeout</strong></p>
+</div>
+<div class="paragraph">
+<p>You can define the timeout of the Rest Client:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">org.acme.quickstart.WorldClockService/mp-rest/connectTimeout=
+    1000
+org.acme.quickstart.WorldClockService/mp-rest/readTimeout=
+    2000</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_testing"><a class="anchor" href="#_testing"></a><a class="link" href="#_testing">Testing</a></h3>
@@ -10332,7 +10645,7 @@ I recommend reading <a href="https://quarkus.io/guides/tests-with-coverage-guide
 <p><strong>Native Testing</strong></p>
 </div>
 <div class="paragraph">
-<p>To test native executables annotate the test with <code>@SubstrateTest</code>.</p>
+<p>To test native executables annotate the test with <code>@NativeImageTest</code>.</p>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -10696,6 +11009,7 @@ developer.delete();
 long numberOfDeleted = Developer.delete("name", "Alex");</code></pre>
 </div>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>Remember to annotate methods with <code>@Transactional</code> annotation to make changes persisted in the database.</p>
 </div>
@@ -10949,7 +11263,6 @@ EntityManager em;
 em.persist(car);</code></pre>
 </div>
 </div>
-<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p><strong>Multiple datasources</strong></p>
 </div>
@@ -11234,6 +11547,7 @@ MessageMarshaller authorMarshaller() {
   -Dextensions="infinispan-embeddedy"</code></pre>
 </div>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>Configuration in <code>infinispan.xml</code>:</p>
 </div>
@@ -13783,6 +14097,51 @@ public class ArtemisConsumerManager {
 <p>You can use <code>io.quarkus.security.Authenticated</code> as a shortcut of <code>@RolesAllowed("*")</code>.</p>
 </div>
 <div class="paragraph">
+<p>To alter RBAC behaviour there are two configuration properties:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.security.deny-unannotated=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Configuration options:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top"> Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>quarkus.jaxrs.deny-uncovered</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>false</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If true denies by default to all JAX-RS endpoints.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>quarkus.security.deny-unannotated</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>false</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If true denies by default all CDI methods and JAX-RS endpoints.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
 <p><strong>File Configuration</strong></p>
 </div>
 <div class="paragraph">
@@ -13810,6 +14169,7 @@ quarkus.http.auth.permission.deny1.policy=
     deny</code></pre>
 </div>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>You need to provide permissions set by using the <code>roles-allowed</code> property or use the built-in ones <code>deny</code>, <code>permit</code> or <code>authenticated</code>.</p>
 </div>
@@ -14113,6 +14473,7 @@ You can use <code>quarkus.http.cors</code> property to enable consuming form dif
     -Dextensions="security-oauth2"</code></pre>
 </div>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>And configuration in <code>src/main/resources/application.properties</code>:</p>
 </div>
@@ -14191,10 +14552,15 @@ quarkus.oauth2.introspection-url=http://oauth-server/introspect</code></pre>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_http_basic_auth"><a class="anchor" href="#_http_basic_auth"></a><a class="link" href="#_http_basic_auth">HTTP basic auth</a></h3>
+<h3 id="_authenticating_via_http"><a class="anchor" href="#_authenticating_via_http"></a><a class="link" href="#_authenticating_via_http">Authenticating via HTTP</a></h3>
 <div class="paragraph">
-<p>HTTP basic auth is now enabled by the <code>quarkus.http-auth.basic=true</code> property.
-Then you need to add <code>elytron-security-properties-file</code> or <code>elytron-security-jdbc</code>.</p>
+<p>HTTP basic auth is enabled by the <code>quarkus.http.auth.basic=true</code> property.</p>
+</div>
+<div class="paragraph">
+<p>HTTP form auth is enabled by the <code>quarkus.http.auth.form.enabled=true</code> property.</p>
+</div>
+<div class="paragraph">
+<p>Then you need to add <code>elytron-security-properties-file</code> or <code>elytron-security-jdbc</code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -15782,11 +16148,20 @@ The common use case is creating a Docker image so you can execute the next comma
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw package -Pnative -Dnative-image.docker-build=true
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw package -Pnative -Dquarkus.native.container-build=true
 
 docker build -f src/main/docker/Dockerfile.native
                     -t quarkus/getting-started .
 docker run -i --rm -p 8080:8080 quarkus/getting-started</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can use <code>quarkus.native.container-runtime</code> to select the container runtime to use.
+Now <code>docker</code> (default) and <code>podman</code> are the valid options.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw package -Pnative -Dquarkus.native.container-runtime=podman</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -15805,7 +16180,7 @@ docker run -i --rm -p 8080:8080 quarkus/getting-started</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Running <code>./mvnw package</code> the Kubernetes resources are created at <code>target/wiring-classes/META-INF/kubernetes/</code> directory.</p>
+<p>Running <code>./mvnw package</code> the Kubernetes resources are created at <code>target/kubernetes/</code> directory.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -15823,7 +16198,7 @@ docker run -i --rm -p 8080:8080 quarkus/getting-started</code></pre>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>quarkus.kubernetes.group</code></p>
+<p><code>kubernetes.group</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Current username</p>
@@ -15847,6 +16222,22 @@ docker run -i --rm -p 8080:8080 quarkus/getting-started</code></pre>
 </table>
 <div class="paragraph">
 <p>Generated resource is integrated with <a href="#_observability">MicroProfile Health annotations</a>.</p>
+</div>
+<div class="paragraph">
+<p>Also, you can customize the generated resource by setting the new values in <code>application.properties</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">kubernetes.replicas=3
+
+kubernetes.labels[0].key=foo
+kubernetes.labels[0].value=bar
+
+kubernetes.readiness-probe.period-seconds=45</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All possible values are explained at <a href="https://quarkus.io/guides/kubernetes#configuration-options" class="bare">https://quarkus.io/guides/kubernetes#configuration-options</a>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -16152,8 +16543,9 @@ public class KubernetesClientTest {
 </div>
 </div>
 <div class="paragraph">
-<p>You can set the handler name by using <code>quarkus.lambda.handler</code> property.</p>
+<p>You can set the handler name by using <code>quarkus.lambda.handler</code> property or by annotating the Lambda with the CDI <code>@Named</code> annotation.</p>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p><strong>Test</strong></p>
 </div>
@@ -16178,6 +16570,17 @@ public void testLambda() {
     in.setName("Stu");
     MyOutput out = LambdaClient.invoke(MyOutput.class, in);
 }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To scaffold a AWS Lambda run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn archetype:generate \
+    -DarchetypeGroupId=io.quarkus \
+    -DarchetypeArtifactId=quarkus-amazon-lambda-archetype \
+    -DarchetypeVersion={version}</code></pre>
 </div>
 </div>
 </div>
@@ -16629,6 +17032,7 @@ void morningTask() {}</pre>
 <div class="paragraph">
 <p>Quarkus integrates with <a href="http://www.kiegroup.org/" target="_blank" rel="noopener">Kogito</a>, a next-generation business automation toolkit from Drools and jBPM projects for adding business automation capabilities.</p>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>To start using it you only need to add the next extension:</p>
 </div>
@@ -16941,6 +17345,7 @@ public class GreeterBean {
 }</code></pre>
 </div>
 </div>
+<div style="page-break-after: always;"></div>
 </div>
 <div class="sect2">
 <h3 id="_spring_web"><a class="anchor" href="#_spring_web"></a><a class="link" href="#_spring_web">Spring Web</a></h3>
@@ -16987,10 +17392,16 @@ public class GreetingController {
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:0.26.1:create &#8230;&#8203; -Dextensions="spring-web"</code>.
+If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.0.0.CR2:create &#8230;&#8203; -Dextensions="spring-web"</code>.
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>The next return types are supported: <code>org.springframework.http.ResponseEntity</code> and <code>java.util.Map</code>.</p>
+</div>
+<div class="paragraph">
+<p>The next parameter types are supported: An <code>Exception</code> argument and <code>ServletRequest</code>/<code>HttpServletRequest</code> (adding <code>quarkus-undertow</code> dependency).</p>
 </div>
 </div>
 <div class="sect2">

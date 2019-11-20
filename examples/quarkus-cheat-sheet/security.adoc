@@ -15,6 +15,29 @@ You can define roles by using `javax.annotation.security.RolesAllowed` annotatio
 
 You can use `io.quarkus.security.Authenticated` as a shortcut of `@RolesAllowed("*")`.
 
+// tag::update_11_2[]
+To alter RBAC behaviour there are two configuration properties:
+
+[source, properties]
+----
+quarkus.security.deny-unannotated=true
+----
+
+Configuration options:
+
+|===	
+| Parameter | Default | Description
+
+a|`quarkus.jaxrs.deny-uncovered`
+a|`false`
+|If true denies by default to all JAX-RS endpoints.
+
+a|`quarkus.security.deny-unannotated`
+a|`false`
+|If true denies by default all CDI methods and JAX-RS endpoints.
+|===
+// end::update_11_2[]
+
 *File Configuration*
 
 Defining RBAC in `application.properties` instead of using annotations.
@@ -40,6 +63,8 @@ quarkus.http.auth.permission.deny1.paths=
 quarkus.http.auth.permission.deny1.policy=
     deny
 ----
+
+<<<
 
 You need to provide permissions set by using the `roles-allowed` property or use the built-in ones `deny`, `permit` or `authenticated`. 
 // end::update_10_4[]
@@ -218,6 +243,8 @@ mvn quarkus:add-extension
     -Dextensions="security-oauth2"
 ----
 
+<<<
+
 And configuration in `src/main/resources/application.properties`:
 
 [source, properties]
@@ -261,12 +288,17 @@ a|`scope`
 |===
 // end::update_6_8[]
 
-== HTTP basic auth
+== Authenticating via HTTP
 
 // tag::update_10_3[]
-HTTP basic auth is now enabled by the `quarkus.http-auth.basic=true` property.
-Then you need to add `elytron-security-properties-file` or `elytron-security-jdbc`.
+HTTP basic auth is enabled by the `quarkus.http.auth.basic=true` property.
 // end::update_10_3[]
+
+// tag::update_11_1[]
+HTTP form auth is enabled by the `quarkus.http.auth.form.enabled=true` property.
+// end::update_11_1[]
+
+Then you need to add `elytron-security-properties-file` or `elytron-security-jdbc`.
 
 == Security with Properties File
 

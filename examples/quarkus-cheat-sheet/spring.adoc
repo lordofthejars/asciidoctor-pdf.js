@@ -66,6 +66,8 @@ public class GreeterBean {
 ----
 // end::update_7_5[]
 
+<<<
+
 == Spring Web
 // tag::update_7_6[]
 
@@ -106,6 +108,12 @@ Supported annotations are: `RestController`, `RequestMapping`, `GetMapping`, `Po
 // tag::update_8_5[]
 TIP: If you scaffold the project with `spring-web` extension, then Spring Web annotations are sed in the generated project. `mvn io.quarkus:quarkus-maven-plugin:{version}:create ... -Dextensions="spring-web"`.
 // end::update_8_5[]
+
+// tag::update_11_7[]
+The next return types are supported: `org.springframework.http.ResponseEntity` and `java.util.Map`.
+
+The next parameter types are supported: An `Exception` argument and `ServletRequest`/`HttpServletRequest` (adding `quarkus-undertow` dependency).
+// end::update_11_7[]
 
 == Spring Data JPA
 // tag::update_8_2[]
