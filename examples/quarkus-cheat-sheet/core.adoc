@@ -750,6 +750,41 @@ The queue length to use before flushing writing (default: `512`)
 `syslog.async.overflow`::
 Action when queue is full (default: `BLOCK`)
 
+*JSON output*
+// tag::update_12_9[]
+
+You can configure the output to be in _JSON_ format instead of plain text.
+
+[source, shell-session]
+----
+./mvnw quarkus:add-extension
+  -Dextensions="quarkus-logging-json"
+----
+
+And the configuration values are prefix with `quarkus.log`:
+
+`json`::
+JSON logging is enabled (default: true).
+
+`json.pretty-print`::
+JSON output is "pretty-printed" (default: false)
+
+`json.date-format`::
+Specify the date format to use (default: the default format)
+
+`json.record-delimiter`::
+Record delimiter to add (default: no delimiter)
+
+`json.zone-id`::
+The time zone ID
+
+`json.exception-output-type`::
+The exception output type: `detailed`, `formatted`, `detailed-and-formatted` (default: `detailed`)
+
+`json.print-details`::
+Detailed caller information should be logged (default: false)
+// end::update_12_9[]
+
 == Rest Client
 
 Quarkus implements https://github.com/eclipse/microprofile-rest-client[MicroProfile Rest Client, window="_blank"] spec:
@@ -757,7 +792,7 @@ Quarkus implements https://github.com/eclipse/microprofile-rest-client[MicroProf
 [source, bash]
 ----
 ./mvnw quarkus:add-extension
-  -Dextensions="io.quarkus:quarkus-rest-client"
+  -Dextensions="quarkus-rest-client"
 ----
 
 To get content from http://worldclockapi.com/api/json/cet/now you need to create a service interface:
