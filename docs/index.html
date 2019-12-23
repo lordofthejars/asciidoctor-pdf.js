@@ -589,13 +589,8 @@ The default value is <code>kubernetes</code>.</p>
 </div>
 </div>
 </details>
-<div class="literalblock">
-<div class="title">Quartz Expression Type</div>
-<div class="content">
-<pre>[%collapsible]</pre>
-</div>
-</div>
-<div class="exampleblock">
+<details>
+<summary class="title">Quartz Expression Type</summary>
 <div class="content">
 <div class="paragraph">
 <p>By default Quarkus expresion is used, but you can change that by setting <code>quarkus.scheduler.cron-type</code> property.</p>
@@ -606,14 +601,9 @@ The default value is <code>kubernetes</code>.</p>
 </div>
 </div>
 </div>
-</div>
-<div class="literalblock">
-<div class="title">Lock and Hint</div>
-<div class="content">
-<pre>[%collapsible]</pre>
-</div>
-</div>
-<div class="exampleblock">
+</details>
+<details>
+<summary class="title">Lock and Hint</summary>
 <div class="content">
 <div class="admonitionblock tip">
 <table>
@@ -628,14 +618,9 @@ The default value is <code>kubernetes</code>.</p>
 </table>
 </div>
 </div>
-</div>
-<div class="literalblock">
-<div class="title">Flyway Multiple Datasource support</div>
-<div class="content">
-<pre>[%collapsible]</pre>
-</div>
-</div>
-<div class="exampleblock">
+</details>
+<details>
+<summary class="title">Flyway Multiple Datasource support</summary>
 <div class="content">
 <div class="paragraph">
 <p>To use multiple datasource in Flyway you just need to add the datasource name just after the <code>flyway</code> property:</p>
@@ -652,14 +637,9 @@ quarkus.flyway.inventory.schemas=INVENTORY_TEST_SCHEMA
 </div>
 </div>
 </div>
-</div>
-<div class="literalblock">
-<div class="title">Qute Template engine</div>
-<div class="content">
-<pre>[%collapsible]</pre>
-</div>
-</div>
-<div class="exampleblock">
+</details>
+<details>
+<summary class="title">Qute Template engine</summary>
 <div class="content">
 <div class="paragraph">
 <p>Qute is a templating engine designed specifically to meet the Quarkus needs.
@@ -748,14 +728,9 @@ String output = report
 </div>
 </div>
 </div>
-</div>
-<div class="literalblock">
-<div class="title">JSON Logging Format</div>
-<div class="content">
-<pre>[%collapsible]</pre>
-</div>
-</div>
-<div class="exampleblock">
+</details>
+<details>
+<summary class="title">JSON Logging Format</summary>
 <div class="content">
 <div class="paragraph">
 <p>You can configure the output to be in <em>JSON</em> format instead of plain text.</p>
@@ -802,14 +777,9 @@ String output = report
 </dl>
 </div>
 </div>
-</div>
-<div class="literalblock">
-<div class="title">Sentry Logging</div>
-<div class="content">
-<pre>[%collapsible]</pre>
-</div>
-</div>
-<div class="exampleblock">
+</details>
+<details>
+<summary class="title">Sentry Logging</summary>
 <div class="content">
 <div class="paragraph">
 <p>Quarkus integrates with <a href="https://sentry.io">Sentry</a> for logging errors into an error monitoring system.</p>
@@ -855,14 +825,9 @@ quarkus.log.sentry.in-app-packages=org.example</code></pre>
 </dl>
 </div>
 </div>
-</div>
-<div class="literalblock">
-<div class="title">Spring Security</div>
-<div class="content">
-<pre>[%collapsible]</pre>
-</div>
-</div>
-<div class="exampleblock">
+</details>
+<details>
+<summary class="title">Spring Security</summary>
 <div class="content">
 <div class="paragraph">
 <p>Quarkus provides a compatibility layer for <a href="https://spring.io/projects/spring-security" target="_blank" rel="noopener">Spring Security</a>.</p>
@@ -993,14 +958,9 @@ public void allowedForUser(String user) {}</code></pre>
 </div>
 </div>
 </div>
-</div>
-<div class="literalblock">
-<div class="title">YAML Config</div>
-<div class="content">
-<pre>[%collapsible]</pre>
-</div>
-</div>
-<div class="exampleblock">
+</details>
+<details>
+<summary class="title">YAML Config</summary>
 <div class="content">
 <div class="paragraph">
 <p>YAML configuration is also supported.
@@ -1057,7 +1017,7 @@ quarkus.http.cors.methods=GET,PUT,POST</code></pre>
 </div>
 </div>
 </div>
-</div>
+</details>
 </div>
 <div class="sect2">
 <h3 id="_version_1_0_0_cr2"><a class="anchor" href="#_version_1_0_0_cr2"></a><a class="link" href="#_version_1_0_0_cr2">Version 1.0.0.CR2</a></h3>

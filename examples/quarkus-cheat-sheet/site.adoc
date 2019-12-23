@@ -42,49 +42,49 @@ include::cloud.adoc[tag=update_12_4]
 ====
 
 .Quartz Expression Type
- [%collapsible]
+[%collapsible]
 ====
 include::misc.adoc[tag=update_12_5]
 ====
 
 .Lock and Hint
- [%collapsible]
+[%collapsible]
 ====
 include::persistence.adoc[tag=update_12_6]
 ====
 
 .Flyway Multiple Datasource support
- [%collapsible]
+[%collapsible]
 ====
 include::persistence.adoc[tag=update_12_7]
 ====
 
 .Qute Template engine
- [%collapsible]
+[%collapsible]
 ====
 include::misc.adoc[tag=update_12_8]
 ====
 
 .JSON Logging Format
- [%collapsible]
+[%collapsible]
 ====
 include::core.adoc[tag=update_12_9]
 ====
 
 .Sentry Logging
- [%collapsible]
+[%collapsible]
 ====
 include::misc.adoc[tag=update_12_10]
 ====
 
 .Spring Security
- [%collapsible]
+[%collapsible]
 ====
 include::spring.adoc[tag=update_12_11]
 ====
 
 .YAML Config
- [%collapsible]
+[%collapsible]
 ====
 include::core.adoc[tag=update_12_12]
 ====
