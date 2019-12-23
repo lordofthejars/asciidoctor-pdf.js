@@ -193,8 +193,6 @@ developer.delete();
 long numberOfDeleted = Developer.delete("name", "Alex");
 ----
 
-<<<
-
 Remember to annotate methods with `@Transactional` annotation to make changes persisted in the database.
 
 If queries start with the keyword `from` then they are treated as _HQL_ query, if not then next short form is supported:
@@ -633,9 +631,6 @@ List of Flyway parameters.
 
 `quarkus.` as prefix is skipped in the next table.
 
-|===	
-|Parameter | Default | Description
-
 `flyway.clean-at-start`::
 Execute Flyway clean command (default: `false`) 
 
@@ -668,7 +663,6 @@ Version to tag an existing schema with when executing baseline (default: 1)
 
 `flyway.baseline-description`::
 Description to tag an existing schema with when executing baseline (default: `Flyway Baseline`)
-|===
 // end::update_1_7[]
 
 *Multiple Datasources*

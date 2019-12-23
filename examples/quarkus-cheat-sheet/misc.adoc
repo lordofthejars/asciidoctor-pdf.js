@@ -314,8 +314,6 @@ quarkus.scheduler.cron-type=unix
 // tag::update_3_9[]
 Quarkus integrates with http://www.kiegroup.org/[Kogito, window="_blank"], a next-generation business automation toolkit from Drools and jBPM projects for adding business automation capabilities.
 
-<<<
-
 To start using it you only need to add the next extension:
 
 [source, bash]

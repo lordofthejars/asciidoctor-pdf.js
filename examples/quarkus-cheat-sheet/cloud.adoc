@@ -226,8 +226,6 @@ client.customResourceDefinitions()
 ----
 // end::update_4_5[]
 
-<<<
-
 *Testing*
 
 // tag::update_5_9[]
@@ -290,8 +288,6 @@ public class TestLambda
 // tag::update_9_4[]
 You can set the handler name by using `quarkus.lambda.handler` property or by annotating the Lambda with the CDI `@Named` annotation.
 // end::update_9_4[]
-
-<<<
 
 *Test*
 

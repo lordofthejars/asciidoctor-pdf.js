@@ -258,6 +258,60 @@ Bean Validation is also supported so properties are validated at startup time, f
 TIP: `prefix` attribute is not mandatory. If not provided, attribute is determined by class name (ie `GreeetingConfiguration` is translated to `greeting` or `GreetingExtraConfiguration` to `greeting-extra`). The suffix of the class is always removed.
 // end::update_9_1[]
 
+*YAML Config*
+// tag::update_12_12[]
+
+YAML configuration is also supported.
+The configuration file is called `application.yaml` and you need to register a dependency to enable its support:
+
+[source, xml]
+.pom.xml
+----
+<dependency>
+    <groupId>io.quarkus</groupId>
+    <artifactId>quarkus-config-yaml</artifactId>
+</dependency>
+----
+
+[source, yaml]
+----
+quarkus:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/some-database
+    driver: org.postgresql.Driver
+----
+
+Or with profiles:
+
+[source, yaml]
+----
+"%dev":
+  quarkus:
+    datasource:
+      url: jdbc:postgresql://localhost:5432/some-database
+      driver: org.postgresql.Driver
+----
+
+In case of subkeys `~` is used to refer to the unprefixed part.
+
+[source, yaml]
+----
+quarkus:
+  http:
+    cors:
+      ~: true
+      methods: GET,PUT,POST
+----
+
+Is equivalent to:
+
+[source, properties]
+----
+quarkus.http.cors=true
+quarkus.http.cors.methods=GET,PUT,POST
+----
+// end::update_12_12[]
+
 // tag::update_2_6[]
 
 *Custom Loader*
@@ -726,8 +780,6 @@ Priority of the message as defined by RFC-5424 and RFC-3164 (default: `USER_LEVE
 
 `syslog.syslog-type`::
 The syslog type of format message (default: `RFC5424`)
-
-<<<
 
 `syslog.protocol`::
 Protocol used (default: `TCP`)

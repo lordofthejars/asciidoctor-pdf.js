@@ -15,7 +15,7 @@ In this page you can either read what has been added in each version of the chea
 [[whatsnew]]
 == What's New in Cheat-Sheet
 
-=== Version 1.0.1.Final
+=== Version 1.1.0.Final
 
 .Panache and Optional
 [%collapsible]
@@ -81,6 +81,12 @@ include::misc.adoc[tag=update_12_10]
  [%collapsible]
 ====
 include::spring.adoc[tag=update_12_11]
+====
+
+.YAML Config
+ [%collapsible]
+====
+include::core.adoc[tag=update_12_12]
 ====
 
 === Version 1.0.0.CR2
