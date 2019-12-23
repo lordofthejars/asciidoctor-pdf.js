@@ -15,6 +15,80 @@ In this page you can either read what has been added in each version of the chea
 [[whatsnew]]
 == What's New in Cheat-Sheet
 
+=== Version 1.1.0.Final
+
+.Panache and Optional
+[%collapsible]
+====
+include::persistence.adoc[tag=update_12_1]
+====
+
+.Quartz
+[%collapsible]
+====
+include::misc.adoc[tag=update_12_2]
+====
+
+.Automatic Readiness Probes
+[%collapsible]
+====
+include::network.adoc[tag=update_12_3]
+====
+
+.Kubernetes Deployment Targets
+[%collapsible]
+====
+include::cloud.adoc[tag=update_12_4]
+====
+
+.Quartz Expression Type
+ [%collapsible]
+====
+include::misc.adoc[tag=update_12_5]
+====
+
+.Lock and Hint
+ [%collapsible]
+====
+include::persistence.adoc[tag=update_12_6]
+====
+
+.Flyway Multiple Datasource support
+ [%collapsible]
+====
+include::persistence.adoc[tag=update_12_7]
+====
+
+.Qute Template engine
+ [%collapsible]
+====
+include::misc.adoc[tag=update_12_8]
+====
+
+.JSON Logging Format
+ [%collapsible]
+====
+include::core.adoc[tag=update_12_9]
+====
+
+.Sentry Logging
+ [%collapsible]
+====
+include::misc.adoc[tag=update_12_10]
+====
+
+.Spring Security
+ [%collapsible]
+====
+include::spring.adoc[tag=update_12_11]
+====
+
+.YAML Config
+ [%collapsible]
+====
+include::core.adoc[tag=update_12_12]
+====
+
 === Version 1.0.0.CR2
 
 .HTTP Form Auth

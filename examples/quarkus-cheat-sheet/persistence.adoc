@@ -85,6 +85,9 @@ a|`Boolean`
 
 a|`xa`
 a|`Boolean`
+
+a|`validation-query-sql`
+a|`Boolean`
 |===
 // end::update_4_6[]
 
@@ -190,8 +193,6 @@ developer.delete();
 long numberOfDeleted = Developer.delete("name", "Alex");
 ----
 
-<<<
-
 Remember to annotate methods with `@Transactional` annotation to make changes persisted in the database.
 
 If queries start with the keyword `from` then they are treated as _HQL_ query, if not then next short form is supported:
@@ -202,65 +203,55 @@ If queries start with the keyword `from` then they are treated as _HQL_ query, i
 
 *Static Methods*
 
-|===	
-| Field | Parameters | Return
+`findById`:`Object`::
+Returns object or null if not found. Overloaded version with `LockModeType` is provided.
 
-a| `findById`
-a| `Object`
-a| Returns object or null if not found.
+// tag::update_12_1[]
+`findByIdOptional`:`Optional<Object>`::
+Returns object or `java.util.Optional`.
+// end::update_12_1[]
 
-a| `find`
-a| `String`, [`Object...`, `Map<String, Object>`, `Parameters`]
-a| Lists of entities meeting given query with parameters set.
+`find`:`String`, [`Object...`, `Map<String, Object>`, `Parameters`]::
+Lists of entities meeting given query with parameters set.
 
-a| `find`
-a| `String`, `Sort`, [`Object...`, `Map<String, Object>`, `Parameters`]
-a| Lists of entities meeting given query with parameters set sorted by `Sort` attribute/s.
+`find`:`String`, `Sort`, [`Object...`, `Map<String, Object>`, `Parameters`]::
+Lists of entities meeting given query with parameters set sorted by `Sort` attribute/s.
 
-a| `findAll`
-a| 
-a| Finds all entities.
+`findAll`:: 
+Finds all entities.
 
-a| `findAll`
-a| `Sort`
-a| Finds all entities sorted by `Sort` attribute/s.
+`findAll`:`Sort`::
+Finds all entities sorted by `Sort` attribute/s.
 
-a| `stream`
-a| `String`, [`Object...`, `Map<String, Object>`, `Parameters`]
-a| `java.util.stream.Stream` of entities meeting given query with parameters set.
+`stream`:`String`, [`Object...`, `Map<String, Object>`, `Parameters`]::
+`java.util.stream.Stream` of entities meeting given query with parameters set.
 
-a| `stream`
-a| `String`, `Sort`, [`Object...`, `Map<String, Object>`, `Parameters`]
-a| `java.util.stream.Stream` of entities meeting given query with parameters set sorted by `Sort` attribute/s.
+`stream`:`String`, `Sort`, [`Object...`, `Map<String, Object>`, `Parameters`]::
+`java.util.stream.Stream` of entities meeting given query with parameters set sorted by `Sort` attribute/s.
 
-a| `streamAll`
-a| 
-a| `java.util.stream.Stream` of all entities.
+`streamAll`:: 
+`java.util.stream.Stream` of all entities.
 
-a| `streamAll`
-a| `Sort`
-a| `java.util.stream.Stream` of all entities sorted by `Sort` attribute/s.
+`streamAll`:`Sort`::
+`java.util.stream.Stream` of all entities sorted by `Sort` attribute/s.
 
-a| `count`
-a| 
-a| `Number of entities.
+`count`:: 
+Number of entities.
 
-a| `count`
-a| `String`, [`Object...`, `Map<String, Object>`, `Parameters`]
-a| Number of entities meeting given query with parameters set.
+`count`:`String`, [`Object...`, `Map<String, Object>`, `Parameters`]::
+Number of entities meeting given query with parameters set.
 
-a| `deleteAll`
-a| 
-a| Number of deleted entities.
+`deleteAll`:: 
+Number of deleted entities.
 
-a| `delete`
-a| `String`, [`Object...`, `Map<String, Object>`, `Parameters`]
-a| Number of deleted entities meeting given query with parameters set.
+`delete`:`String`, [`Object...`, `Map<String, Object>`, `Parameters`]::
+Number of deleted entities meeting given query with parameters set.
 
-a| `persist`
-a| [`Iterable`, `Steram`, `Object...`]
-a| 
-|===
+`persist`:[`Iterable`, `Steram`, `Object...`]::
+
+// tag::update_12_6[]
+TIP: `find` methods defines a `withLock(LockModeType)` to define the lock type and `withHint(QueryHints.HINT_CACHEABLE, "true")` to define hints.
+// end::update_12_6[]
 
 *Pagination*
 
@@ -640,50 +631,56 @@ List of Flyway parameters.
 
 `quarkus.` as prefix is skipped in the next table.
 
-|===	
-|Parameter | Default | Description
+`flyway.clean-at-start`::
+Execute Flyway clean command (default: `false`) 
 
-a|`flyway.migrate-at-start`
-a|`false`
-|Flyway migration automatically.
+`flyway.migrate-at-start`::
+Flyway migration automatically (default: `false`)
 
-a|`flyway.locations`
-a|`classpath:db/migration`
-|CSV locations to scan recursively for migrations. Supported prefixes `classpath` and `filesystem`.
+`flyway.locations`::
+CSV locations to scan recursively for migrations. Supported prefixes `classpath` and `filesystem` (default: `classpath:db/migration`).
 
-a|`flyway.connect-retries`
-a|0
-|The maximum number of retries when attempting to connect.
+`flyway.connect-retries`::
+The maximum number of retries when attempting to connect (default: 0)
 
-a|`flyway.schemas`
-a|none
-|CSV case-sensitive list of schemas managed.
+`flyway.schemas`::
+CSV case-sensitive list of schemas managed (default: none)
 
-a|`flyway.table`
-a|`flyway_schema_history`
-|The name of Flyway’s schema history table.
+a|`flyway.table`::
+The name of Flyway’s schema history table (default: `flyway_schema_history`)
 
-a|`flyway.sql-migration-prefix`
-a|`V`
-|Prefix for versioned SQL migrations. 
+`flyway.sql-migration-prefix`::
+Prefix for versioned SQL migrations (default: `V`)
 
-a|`flyway.repeatable-sql-migration-prefix`
-a|`R`
-|Prefix for repeatable SQL migrations.
+`flyway.repeatable-sql-migration-prefix::`
+Prefix for repeatable SQL migrations (default: `R`)
 
-a|`flyway.baseline-on-migrate`
-a|
-|Only migrations above *baseline-version* will then be applied.
+`flyway.baseline-on-migrate`::
+Only migrations above *baseline-version* will then be applied
 
-a|`flyway.baseline-version`
-a|Version to tag an existing schema with when executing baseline.
-|1
+`flyway.baseline-version`::
+Version to tag an existing schema with when executing baseline (default: 1)
 
-a|`flyway.baseline-description`
-a|`Flyway Baseline`
-|Description to tag an existing schema with when executing baseline
-|===
+`flyway.baseline-description`::
+Description to tag an existing schema with when executing baseline (default: `Flyway Baseline`)
 // end::update_1_7[]
+
+*Multiple Datasources*
+// tag::update_12_7[]
+
+To use multiple datasource in Flyway you just need to add the datasource name just after the `flyway` property:
+
+[source, properties]
+----
+quarkus.datasource.users.url=jdbc:h2:tcp://localhost/mem:users
+quarkus.datasource.inventory.url=jdbc:h2:tcp://localhost/mem:inventory
+# ...
+
+quarkus.flyway.users.schemas=USERS_TEST_SCHEMA
+quarkus.flyway.inventory.schemas=INVENTORY_TEST_SCHEMA
+# ...
+----
+// end::update_12_7[]
 
 == Hibernate Search
 // tag::update_3_1[]

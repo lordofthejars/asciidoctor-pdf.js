@@ -449,20 +449,616 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.12/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
+<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.13/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
 </div>
 <div class="paragraph">
 <p>Quarkus (<a href="https://quarkus.io/" class="bare">https://quarkus.io/</a>) is a Kubernetes Native Java stack tailored for GraalVM &amp; OpenJDK HotSpot, crafted from the best of breed Java libraries and standards.
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
 </div>
 <div class="paragraph">
-<p>In this page you can either read what has been added in each version of the cheat-sheet individually in <a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a> section, see the full cheat-sheet as HTML <span class="icon"><i class="fa fa-html5"></i></span> <a href="#quarkuscheatsheet">Quarkus Cheat-Sheet</a> format or <span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.12/quarkus-cheat-sheet.pdf">download the full cheat-sheet as PDF</a>.</p>
+<p>In this page you can either read what has been added in each version of the cheat-sheet individually in <a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a> section, see the full cheat-sheet as HTML <span class="icon"><i class="fa fa-html5"></i></span> <a href="#quarkuscheatsheet">Quarkus Cheat-Sheet</a> format or <span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.13/quarkus-cheat-sheet.pdf">download the full cheat-sheet as PDF</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="whatsnew"><a class="anchor" href="#whatsnew"></a><a class="link" href="#whatsnew">What&#8217;s New in Cheat-Sheet</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_version_1_1_0_final"><a class="anchor" href="#_version_1_1_0_final"></a><a class="link" href="#_version_1_1_0_final">Version 1.1.0.Final</a></h3>
+<details>
+<summary class="title">Panache and Optional</summary>
+<div class="content">
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>findByIdOptional</code>:`Optional&lt;Object&gt;`</dt>
+<dd>
+<p>Returns object or <code>java.util.Optional</code>.</p>
+</dd>
+</dl>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Quartz</summary>
+<div class="content">
+<div class="paragraph">
+<p>Quarkus integrates with <a href="http://www.quartz-scheduler.org/">Quartz</a>  to schedule periodic clustered tasks.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quartz"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ApplicationScoped
+public class TaskBean {
+
+    @Transactional
+    @Scheduled(every = "10s")
+    void schedule() {
+        Task task = new Task();
+        task.persist();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To configure in clustered mode vida DataSource:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="application.properties" class="language-application.properties hljs">quarkus.datasource.url=jdbc:postgresql://localhost/quarkus_test
+quarkus.datasource.driver=org.postgresql.Driver
+# ...
+
+quarkus.quartz.clustered=true
+quarkus.quartz.store-type=db</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+You need to define the datasource used by clustered mode and also import the database tables following the Quartz schema.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Automatic Readiness Probes</summary>
+<div class="content">
+<div class="paragraph">
+<p>Some default <em>readiness probes</em> are provided by default if any of the next features are added:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">datasource</dt>
+<dd>
+<p>A probe to check database connection status.</p>
+</dd>
+<dt class="hdlist1">kafka</dt>
+<dd>
+<p>A probe to check kafka connection status. In this case you need to enable manually by setting <code>quarkus.kafka.health.enabled</code> to <code>true</code>.</p>
+</dd>
+<dt class="hdlist1">mongoDB</dt>
+<dd>
+<p>A probe to check MongoDB connection status.</p>
+</dd>
+<dt class="hdlist1">neo4j</dt>
+<dd>
+<p>A probe to check Neo4J connection status.</p>
+</dd>
+<dt class="hdlist1">artemis</dt>
+<dd>
+<p>A probe to check Artemis JMS connection status.</p>
+</dd>
+<dt class="hdlist1">kafka-streams</dt>
+<dd>
+<p>Liveness (for stream state) and Readiness (topics created) probes.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>You can disable the automatic generation by setting <code>&lt;component&gt;.health.enabled</code> to false.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.kafka-streams.health.enabled=false
+quarkus.mongodb.health.enabled=false
+quarkus.neo4j.health.enabled=false</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Kubernetes Deployment Targets</summary>
+<div class="content">
+<div class="paragraph">
+<p>You can generate different resources setting the property <code>kubernetes.deployment.target</code>.</p>
+</div>
+<div class="paragraph">
+<p>Possible values are <code>kubernetes</code>, <code>openshift</code> and <code>knative</code>.
+The default value is <code>kubernetes</code>.</p>
+</div>
+</div>
+</details>
+<div class="literalblock">
+<div class="title">Quartz Expression Type</div>
+<div class="content">
+<pre>[%collapsible]</pre>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>By default Quarkus expresion is used, but you can change that by setting <code>quarkus.scheduler.cron-type</code> property.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.scheduler.cron-type=unix</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="literalblock">
+<div class="title">Lock and Hint</div>
+<div class="content">
+<pre>[%collapsible]</pre>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<code>find</code> methods defines a <code>withLock(LockModeType)</code> to define the lock type and <code>withHint(QueryHints.HINT_CACHEABLE, "true")</code> to define hints.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="literalblock">
+<div class="title">Flyway Multiple Datasource support</div>
+<div class="content">
+<pre>[%collapsible]</pre>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>To use multiple datasource in Flyway you just need to add the datasource name just after the <code>flyway</code> property:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.datasource.users.url=jdbc:h2:tcp://localhost/mem:users
+quarkus.datasource.inventory.url=jdbc:h2:tcp://localhost/mem:inventory
+# ...
+
+quarkus.flyway.users.schemas=USERS_TEST_SCHEMA
+quarkus.flyway.inventory.schemas=INVENTORY_TEST_SCHEMA
+# ...</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="literalblock">
+<div class="title">Qute Template engine</div>
+<div class="content">
+<pre>[%collapsible]</pre>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>Qute is a templating engine designed specifically to meet the Quarkus needs.
+Templates should be placed by default at <code>src/main/resources/templates</code> aand subdirectories.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-resteasy-qute"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Templates can be defined in any format, in case of HTML:</p>
+</div>
+<div class="listingblock">
+<div class="title">item.html</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="html" class="language-html hljs">{@org.acme.Item item}
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset="UTF-8"&gt;
+&lt;title&gt;{item.name}&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;{item.name}&lt;/h1&gt;
+    &lt;div&gt;Price: {item.price}&lt;/div&gt;
+    {#if item.price &gt; 100}
+    &lt;div&gt;Discounted Price: {item.discountedPrice}&lt;/div&gt;
+    {/if}
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>First line is not mandatory but helps on doing property checks at compilation time.</p>
+</div>
+<div class="paragraph">
+<p>To render the template:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class Item {
+    public String name;
+    public BigDecimal price;
+}
+
+@Inject
+io.quarkus.qute.Template item;
+
+@GET
+@Path("{id}")
+@Produces(MediaType.TEXT_HTML)
+public TemplateInstance get(@PathParam("id") Integer id) {
+    return item.data("item", service.findItem(id));
+}
+
+@TemplateExtension
+static BigDecimal discountedPrice(Item item) {
+    return item.price.multiply(new BigDecimal("0.9"));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>@ResourcePath</code> is not used in <code>Template</code> then the name of the field is used as file name.
+In this case the file should be <code>src/main/resources/templates/item.{}</code>.
+Extension of the file is not required to be set.</p>
+</div>
+<div class="paragraph">
+<p><code>discountedPrice</code> is not a field of the POJO but a method call.
+Method definition must be annotated with <code>@TemplateExtension</code>.
+First paramter is used to match thebase object.</p>
+</div>
+<div class="paragraph">
+<p>You can render programmaticaly too:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">// file located at src/main/resources/templates/reports/v1/report_01.{}
+@ResourcePath("reports/v1/report_01")
+Template report;
+
+String output = report
+    .data("samples", service.get())
+    .render();</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="literalblock">
+<div class="title">JSON Logging Format</div>
+<div class="content">
+<pre>[%collapsible]</pre>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>You can configure the output to be in <em>JSON</em> format instead of plain text.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="shell-session" class="language-shell-session hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-logging-json"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And the configuration values are prefix with <code>quarkus.log</code>:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>json</code></dt>
+<dd>
+<p>JSON logging is enabled (default: true).</p>
+</dd>
+<dt class="hdlist1"><code>json.pretty-print</code></dt>
+<dd>
+<p>JSON output is "pretty-printed" (default: false)</p>
+</dd>
+<dt class="hdlist1"><code>json.date-format</code></dt>
+<dd>
+<p>Specify the date format to use (default: the default format)</p>
+</dd>
+<dt class="hdlist1"><code>json.record-delimiter</code></dt>
+<dd>
+<p>Record delimiter to add (default: no delimiter)</p>
+</dd>
+<dt class="hdlist1"><code>json.zone-id</code></dt>
+<dd>
+<p>The time zone ID</p>
+</dd>
+<dt class="hdlist1"><code>json.exception-output-type</code></dt>
+<dd>
+<p>The exception output type: <code>detailed</code>, <code>formatted</code>, <code>detailed-and-formatted</code> (default: <code>detailed</code>)</p>
+</dd>
+<dt class="hdlist1"><code>json.print-details</code></dt>
+<dd>
+<p>Detailed caller information should be logged (default: false)</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="literalblock">
+<div class="title">Sentry Logging</div>
+<div class="content">
+<pre>[%collapsible]</pre>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>Quarkus integrates with <a href="https://sentry.io">Sentry</a> for logging errors into an error monitoring system.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-logging-sentry"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And the configuration to send all errors occuring in the package <code>org.example</code> to Sentrty with DSN <code><a href="https://abcd@sentry.io/1234" class="bare">https://abcd@sentry.io/1234</a></code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.log.sentry=true
+quarkus.log.sentry.dsn=https://abcd@sentry.io/1234
+quarkus.log.sentry.level=ERROR
+quarkus.log.sentry.in-app-packages=org.example</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Full list of configuration properties having  <code>quarkus.log</code> as prefix:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>sentry.enable</code></dt>
+<dd>
+<p>Enable the Sentry logging extension (default: false)</p>
+</dd>
+<dt class="hdlist1"><code>sentry.dsn</code></dt>
+<dd>
+<p>Where to send events.</p>
+</dd>
+<dt class="hdlist1"><code>sentry.level</code></dt>
+<dd>
+<p>Log level (default: <code>WARN</code>)</p>
+</dd>
+<dt class="hdlist1"><code>sentry.in-app-packages</code></dt>
+<dd>
+<p>Configure which package prefixes your application uses.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="literalblock">
+<div class="title">Spring Security</div>
+<div class="content">
+<pre>[%collapsible]</pre>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>Quarkus provides a compatibility layer for <a href="https://spring.io/projects/spring-security" target="_blank" rel="noopener">Spring Security</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="spring-security"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You need to choose a security extension to define user, roles, &#8230;&#8203; such as <code>openid-connect</code>, <code>oauth2</code>, <code>properties-file</code> or <code>security-jdbc</code> as seen at <a href="#_rbac">RBAC</a>.</p>
+</div>
+<div class="paragraph">
+<p>Then you can use Spring Security annotations to protect the methods:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Secured("admin")
+@GetMapping
+public String hello() {
+    return "hello";
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Quarkus provides support for some of the most used features of Spring Security’s <code>@PreAuthorize</code> annotation.</p>
+</div>
+<div class="paragraph">
+<p>Some examples:</p>
+</div>
+<div class="paragraph">
+<p><strong>hasRole</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>@PreAuthorize("hasRole('admin')")</code></p>
+</li>
+<li>
+<p><code>@PreAuthorize("hasRole(@roles.USER)")</code> where <code>roles</code> is a bean defined with <code>@Component</code> annotation and <code>USER</code> is a public field of the class.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>hasAnyRole</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>@PreAuthorize("hasAnyRole(@roles.USER, 'view')")</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Permit and Deny All</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>@PreAuthorize("permitAll()")</code></p>
+</li>
+<li>
+<p><code>@PreAuthorize("denyAll()")</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Anonymous and Authenticated</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>@PreAuthorize("isAnonymous()")</code></p>
+</li>
+<li>
+<p><code>@PreAuthorize("isAuthenticated()")</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Expressions</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Checks if the current logged in user is the same as the username method parameter:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@PreAuthorize("#person.name == authentication.principal.username")
+public void doSomethingElse(Person person){}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Checks if calling a method if user can access:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@PreAuthorize("@personChecker.check(#person, authentication.principal.username)")
+public void doSomething(Person person){}
+
+@Component
+public class PersonChecker {
+    public boolean check(Person person, String username) {
+        return person.getName().equals(username);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Combining expressions:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@PreAuthorize("hasAnyRole('user', 'admin') AND #user == principal.username")
+public void allowedForUser(String user) {}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="literalblock">
+<div class="title">YAML Config</div>
+<div class="content">
+<pre>[%collapsible]</pre>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>YAML configuration is also supported.
+The configuration file is called <code>application.yaml</code> and you need to register a dependency to enable its support:</p>
+</div>
+<div class="listingblock">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-config-yaml&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="yaml" class="language-yaml hljs">quarkus:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/some-database
+    driver: org.postgresql.Driver</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or with profiles:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="yaml" class="language-yaml hljs">"%dev":
+  quarkus:
+    datasource:
+      url: jdbc:postgresql://localhost:5432/some-database
+      driver: org.postgresql.Driver</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In case of subkeys <code>~</code> is used to refer to the unprefixed part.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="yaml" class="language-yaml hljs">quarkus:
+  http:
+    cors:
+      ~: true
+      methods: GET,PUT,POST</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Is equivalent to:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.http.cors=true
+quarkus.http.cors.methods=GET,PUT,POST</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 <div class="sect2">
 <h3 id="_version_1_0_0_cr2"><a class="anchor" href="#_version_1_0_0_cr2"></a><a class="link" href="#_version_1_0_0_cr2">Version 1.0.0.CR2</a></h3>
 <details>
@@ -1466,7 +2062,7 @@ dependencies {
 <p><strong>Declarative</strong></p>
 </div>
 <div class="paragraph">
-<p>You can use <code>@Route</code> annotation to use reactive routes in a declarative way:</p>
+<p>You can use <code>@Route</code> annotation to use reactive routes and <code>@RouteFilter</code> to sue reactive filters in a declarative way:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1487,6 +2083,13 @@ public class MyDeclarativeRoutes {
         }
         rc.response().end("hello " + name);
     }
+
+     @RouteFilter(20)
+    void filter(RoutingContext rc) {
+         rc.response().putHeader("X-Filter", "filter 2");
+         rc.next();
+    }
+
 }</code></pre>
 </div>
 </div>
@@ -3127,7 +3730,7 @@ public class ArtemisConsumerManager {
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.0.0.CR2:create &#8230;&#8203; -Dextensions="spring-web"</code>.
+If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.1.0.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
 </td>
 </tr>
 </table>
@@ -6518,6 +7121,14 @@ client.customResourceDefinitions()
 <p><code>Boolean</code></p>
 </div></div></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>validation-query-sql</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code></p>
+</div></div></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -7387,7 +7998,6 @@ mp.messaging.incoming.prices.auto-generated-client-id=
 <div class="paragraph">
 <p>Quarkus integrates with <a href="http://www.kiegroup.org/" target="_blank" rel="noopener">Kogito</a>, a next-generation business automation toolkit from Drools and jBPM projects for adding business automation capabilities.</p>
 </div>
-<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>To start using it you only need to add the next extension:</p>
 </div>
@@ -8859,110 +9469,58 @@ flyway.migrate();</code></pre>
 <div class="paragraph">
 <p><code>quarkus.</code> as prefix is skipped in the next table.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top"> Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>flyway.migrate-at-start</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>false</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Flyway migration automatically.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>flyway.locations</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>classpath:db/migration</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CSV locations to scan recursively for migrations. Supported prefixes <code>classpath</code> and <code>filesystem</code>.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>flyway.connect-retries</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>0</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The maximum number of retries when attempting to connect.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>flyway.schemas</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>none</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CSV case-sensitive list of schemas managed.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>flyway.table</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>flyway_schema_history</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The name of Flyway’s schema history table.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>flyway.sql-migration-prefix</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>V</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Prefix for versioned SQL migrations.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>flyway.repeatable-sql-migration-prefix</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>R</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Prefix for repeatable SQL migrations.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>flyway.baseline-on-migrate</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Only migrations above <strong>baseline-version</strong> will then be applied.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>flyway.baseline-version</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Version to tag an existing schema with when executing baseline.</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>flyway.baseline-description</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>Flyway Baseline</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Description to tag an existing schema with when executing baseline</p></td>
-</tr>
-</tbody>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>flyway.clean-at-start</code></dt>
+<dd>
+<p>Execute Flyway clean command (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>flyway.migrate-at-start</code></dt>
+<dd>
+<p>Flyway migration automatically (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>flyway.locations</code></dt>
+<dd>
+<p>CSV locations to scan recursively for migrations. Supported prefixes <code>classpath</code> and <code>filesystem</code> (default: <code>classpath:db/migration</code>).</p>
+</dd>
+<dt class="hdlist1"><code>flyway.connect-retries</code></dt>
+<dd>
+<p>The maximum number of retries when attempting to connect (default: 0)</p>
+</dd>
+<dt class="hdlist1"><code>flyway.schemas</code></dt>
+<dd>
+<p>CSV case-sensitive list of schemas managed (default: none)</p>
+</dd>
+<dt class="hdlist1">a|<code>flyway.table</code></dt>
+<dd>
+<p>The name of Flyway’s schema history table (default: <code>flyway_schema_history</code>)</p>
+</dd>
+<dt class="hdlist1"><code>flyway.sql-migration-prefix</code></dt>
+<dd>
+<p>Prefix for versioned SQL migrations (default: <code>V</code>)</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><code>flyway.repeatable-sql-migration-prefix::</code>
+Prefix for repeatable SQL migrations (default: <code>R</code>)</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>flyway.baseline-on-migrate</code></dt>
+<dd>
+<p>Only migrations above <strong>baseline-version</strong> will then be applied</p>
+</dd>
+<dt class="hdlist1"><code>flyway.baseline-version</code></dt>
+<dd>
+<p>Version to tag an existing schema with when executing baseline (default: 1)</p>
+</dd>
+<dt class="hdlist1"><code>flyway.baseline-description</code></dt>
+<dd>
+<p>Description to tag an existing schema with when executing baseline (default: <code>Flyway Baseline</code>)</p>
+</dd>
+</dl>
+</div>
 </div>
 </details>
 <details>
@@ -9166,7 +9724,6 @@ You can use <code>quarkus.http.cors</code> property to enable consuming form dif
 <div class="paragraph">
 <p>You can set the handler name by using <code>quarkus.lambda.handler</code> property or by annotating the Lambda with the CDI <code>@Named</code> annotation.</p>
 </div>
-<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p><strong>Test</strong></p>
 </div>
@@ -9202,13 +9759,14 @@ public void testLambda() {
 <h2 id="quarkuscheatsheet"><a class="anchor" href="#quarkuscheatsheet"></a><a class="link" href="#quarkuscheatsheet">Quarkus Cheat-Sheet</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.12/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
+<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.13/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
 </div>
 <div id="toc" class="toc">
 <div id="toctitle" class="title">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a>
 <ul class="sectlevel2">
+<li><a href="#_version_1_1_0_final">Version 1.1.0.Final</a></li>
 <li><a href="#_version_1_0_0_cr2">Version 1.0.0.CR2</a></li>
 <li><a href="#_version_0_26_0">Version 0.26.0</a></li>
 <li><a href="#_version_0_24_0">Version 0.24.0</a></li>
@@ -9280,9 +9838,13 @@ public void testLambda() {
 <li><a href="#_jgit">JGit</a></li>
 <li><a href="#_web_resources">Web Resources</a></li>
 <li><a href="#_transactional_memory">Transactional Memory</a></li>
+<li><a href="#_quartz">Quartz</a></li>
+<li><a href="#_qute">Qute</a></li>
+<li><a href="#_sentry">Sentry</a></li>
 <li><a href="#_spring_di">Spring DI</a></li>
 <li><a href="#_spring_web">Spring Web</a></li>
 <li><a href="#_spring_data_jpa">Spring Data JPA</a></li>
+<li><a href="#_spring_security">Spring Security</a></li>
 <li><a href="#_resources">Resources</a></li>
 </ul>
 </li>
@@ -9295,7 +9857,7 @@ public void testLambda() {
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
 </div>
 <div class="paragraph">
-<p>Cheat-sheet tested with <strong>Quarkus 1.0.0.CR2</strong>.</p>
+<p>Cheat-sheet tested with <strong>Quarkus 1.1.0.Final</strong>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -9305,7 +9867,7 @@ Also focused on developer experience, making things just work with little to no 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.0.0.CR2:create \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.1.0.Final:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=getting-started \
     -DclassName="org.acme.quickstart.GreetingResource" \
@@ -9644,6 +10206,63 @@ greeting.hidden.recipients=Jane,John</code></pre>
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p><strong>YAML Config</strong></p>
+</div>
+<div class="paragraph">
+<p>YAML configuration is also supported.
+The configuration file is called <code>application.yaml</code> and you need to register a dependency to enable its support:</p>
+</div>
+<div class="listingblock">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-config-yaml&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="yaml" class="language-yaml hljs">quarkus:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/some-database
+    driver: org.postgresql.Driver</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or with profiles:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="yaml" class="language-yaml hljs">"%dev":
+  quarkus:
+    datasource:
+      url: jdbc:postgresql://localhost:5432/some-database
+      driver: org.postgresql.Driver</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In case of subkeys <code>~</code> is used to refer to the unprefixed part.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="yaml" class="language-yaml hljs">quarkus:
+  http:
+    cors:
+      ~: true
+      methods: GET,PUT,POST</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Is equivalent to:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.http.cors=true
+quarkus.http.cors.methods=GET,PUT,POST</code></pre>
+</div>
 </div>
 <div class="paragraph">
 <p><strong>Custom Loader</strong></p>
@@ -10198,11 +10817,6 @@ quarkus.log.category."com.lordofthejars".level=DEBUG</code></pre>
 <dd>
 <p>The syslog type of format message (default: <code>RFC5424</code>)</p>
 </dd>
-</dl>
-</div>
-<div style="page-break-after: always;"></div>
-<div class="dlist">
-<dl>
 <dt class="hdlist1"><code>syslog.protocol</code></dt>
 <dd>
 <p>Protocol used (default: <code>TCP</code>)</p>
@@ -10233,6 +10847,53 @@ quarkus.log.category."com.lordofthejars".level=DEBUG</code></pre>
 </dd>
 </dl>
 </div>
+<div class="paragraph">
+<p><strong>JSON output</strong></p>
+</div>
+<div class="paragraph">
+<p>You can configure the output to be in <em>JSON</em> format instead of plain text.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="shell-session" class="language-shell-session hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-logging-json"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And the configuration values are prefix with <code>quarkus.log</code>:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>json</code></dt>
+<dd>
+<p>JSON logging is enabled (default: true).</p>
+</dd>
+<dt class="hdlist1"><code>json.pretty-print</code></dt>
+<dd>
+<p>JSON output is "pretty-printed" (default: false)</p>
+</dd>
+<dt class="hdlist1"><code>json.date-format</code></dt>
+<dd>
+<p>Specify the date format to use (default: the default format)</p>
+</dd>
+<dt class="hdlist1"><code>json.record-delimiter</code></dt>
+<dd>
+<p>Record delimiter to add (default: no delimiter)</p>
+</dd>
+<dt class="hdlist1"><code>json.zone-id</code></dt>
+<dd>
+<p>The time zone ID</p>
+</dd>
+<dt class="hdlist1"><code>json.exception-output-type</code></dt>
+<dd>
+<p>The exception output type: <code>detailed</code>, <code>formatted</code>, <code>detailed-and-formatted</code> (default: <code>detailed</code>)</p>
+</dd>
+<dt class="hdlist1"><code>json.print-details</code></dt>
+<dd>
+<p>Detailed caller information should be logged (default: false)</p>
+</dd>
+</dl>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_rest_client"><a class="anchor" href="#_rest_client"></a><a class="link" href="#_rest_client">Rest Client</a></h3>
@@ -10242,7 +10903,7 @@ quarkus.log.category."com.lordofthejars".level=DEBUG</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
-  -Dextensions="io.quarkus:quarkus-rest-client"</code></pre>
+  -Dextensions="quarkus-rest-client"</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -10820,6 +11481,14 @@ quarkus.hibernate-orm.database.generation=update</code></pre>
 <p><code>Boolean</code></p>
 </div></div></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>validation-query-sql</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>Boolean</code></p>
+</div></div></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
@@ -11009,7 +11678,6 @@ developer.delete();
 long numberOfDeleted = Developer.delete("name", "Alex");</code></pre>
 </div>
 </div>
-<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>Remember to annotate methods with <code>@Transactional</code> annotation to make changes persisted in the database.</p>
 </div>
@@ -11032,166 +11700,74 @@ long numberOfDeleted = Developer.delete("name", "Alex");</code></pre>
 <div class="paragraph">
 <p><strong>Static Methods</strong></p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Field</th>
-<th class="tableblock halign-left valign-top">Parameters</th>
-<th class="tableblock halign-left valign-top">Return</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>findById</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>Object</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Returns object or null if not found.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>find</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>String</code>, [<code>Object&#8230;&#8203;</code>, <code>Map&lt;String, Object&gt;</code>, <code>Parameters</code>]</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>findById</code>:`Object`</dt>
+<dd>
+<p>Returns object or null if not found. Overloaded version with <code>LockModeType</code> is provided.</p>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>findByIdOptional</code>:`Optional&lt;Object&gt;`</dt>
+<dd>
+<p>Returns object or <code>java.util.Optional</code>.</p>
+</dd>
+<dt class="hdlist1"><code>find</code>:`String`, [<code>Object&#8230;&#8203;</code>, <code>Map&lt;String, Object&gt;</code>, <code>Parameters</code>]</dt>
+<dd>
 <p>Lists of entities meeting given query with parameters set.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>find</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>String</code>, <code>Sort</code>, [<code>Object&#8230;&#8203;</code>, <code>Map&lt;String, Object&gt;</code>, <code>Parameters</code>]</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+</dd>
+<dt class="hdlist1"><code>find</code>:`String`, <code>Sort</code>, [<code>Object&#8230;&#8203;</code>, <code>Map&lt;String, Object&gt;</code>, <code>Parameters</code>]</dt>
+<dd>
 <p>Lists of entities meeting given query with parameters set sorted by <code>Sort</code> attribute/s.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>findAll</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+</dd>
+<dt class="hdlist1"><code>findAll</code></dt>
+<dd>
 <p>Finds all entities.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>findAll</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>Sort</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+</dd>
+<dt class="hdlist1"><code>findAll</code>:`Sort`</dt>
+<dd>
 <p>Finds all entities sorted by <code>Sort</code> attribute/s.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>stream</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>String</code>, [<code>Object&#8230;&#8203;</code>, <code>Map&lt;String, Object&gt;</code>, <code>Parameters</code>]</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+</dd>
+<dt class="hdlist1"><code>stream</code>:`String`, [<code>Object&#8230;&#8203;</code>, <code>Map&lt;String, Object&gt;</code>, <code>Parameters</code>]</dt>
+<dd>
 <p><code>java.util.stream.Stream</code> of entities meeting given query with parameters set.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>stream</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>String</code>, <code>Sort</code>, [<code>Object&#8230;&#8203;</code>, <code>Map&lt;String, Object&gt;</code>, <code>Parameters</code>]</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+</dd>
+<dt class="hdlist1"><code>stream</code>:`String`, <code>Sort</code>, [<code>Object&#8230;&#8203;</code>, <code>Map&lt;String, Object&gt;</code>, <code>Parameters</code>]</dt>
+<dd>
 <p><code>java.util.stream.Stream</code> of entities meeting given query with parameters set sorted by <code>Sort</code> attribute/s.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>streamAll</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+</dd>
+<dt class="hdlist1"><code>streamAll</code></dt>
+<dd>
 <p><code>java.util.stream.Stream</code> of all entities.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>streamAll</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>Sort</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+</dd>
+<dt class="hdlist1"><code>streamAll</code>:`Sort`</dt>
+<dd>
 <p><code>java.util.stream.Stream</code> of all entities sorted by <code>Sort</code> attribute/s.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>count</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>`Number of entities.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>count</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>String</code>, [<code>Object&#8230;&#8203;</code>, <code>Map&lt;String, Object&gt;</code>, <code>Parameters</code>]</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+</dd>
+<dt class="hdlist1"><code>count</code></dt>
+<dd>
+<p>Number of entities.</p>
+</dd>
+<dt class="hdlist1"><code>count</code>:`String`, [<code>Object&#8230;&#8203;</code>, <code>Map&lt;String, Object&gt;</code>, <code>Parameters</code>]</dt>
+<dd>
 <p>Number of entities meeting given query with parameters set.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>deleteAll</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+</dd>
+<dt class="hdlist1"><code>deleteAll</code></dt>
+<dd>
 <p>Number of deleted entities.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>delete</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>String</code>, [<code>Object&#8230;&#8203;</code>, <code>Map&lt;String, Object&gt;</code>, <code>Parameters</code>]</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+</dd>
+<dt class="hdlist1"><code>delete</code>:`String`, [<code>Object&#8230;&#8203;</code>, <code>Map&lt;String, Object&gt;</code>, <code>Parameters</code>]</dt>
+<dd>
 <p>Number of deleted entities meeting given query with parameters set.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>persist</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>[<code>Iterable</code>, <code>Steram</code>, <code>Object&#8230;&#8203;</code>]</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="hdlist1"><code>persist</code>:[<code>Iterable</code>, <code>Steram</code>, <code>Object&#8230;&#8203;</code>]</dt>
+<dd>
+<p>TIP: <code>find</code> methods defines a <code>withLock(LockModeType)</code> to define the lock type and <code>withHint(QueryHints.HINT_CACHEABLE, "true")</code> to define hints.</p>
+</dd>
+</dl>
+</div>
 <div class="paragraph">
 <p><strong>Pagination</strong></p>
 </div>
@@ -11617,110 +12193,75 @@ flyway.migrate();</code></pre>
 <div class="paragraph">
 <p><code>quarkus.</code> as prefix is skipped in the next table.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top"> Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>flyway.migrate-at-start</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>false</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Flyway migration automatically.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>flyway.locations</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>classpath:db/migration</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CSV locations to scan recursively for migrations. Supported prefixes <code>classpath</code> and <code>filesystem</code>.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>flyway.connect-retries</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>0</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The maximum number of retries when attempting to connect.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>flyway.schemas</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>none</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CSV case-sensitive list of schemas managed.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>flyway.table</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>flyway_schema_history</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The name of Flyway’s schema history table.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>flyway.sql-migration-prefix</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>V</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Prefix for versioned SQL migrations.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>flyway.repeatable-sql-migration-prefix</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>R</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Prefix for repeatable SQL migrations.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>flyway.baseline-on-migrate</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Only migrations above <strong>baseline-version</strong> will then be applied.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>flyway.baseline-version</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Version to tag an existing schema with when executing baseline.</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>flyway.baseline-description</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>Flyway Baseline</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Description to tag an existing schema with when executing baseline</p></td>
-</tr>
-</tbody>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>flyway.clean-at-start</code></dt>
+<dd>
+<p>Execute Flyway clean command (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>flyway.migrate-at-start</code></dt>
+<dd>
+<p>Flyway migration automatically (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>flyway.locations</code></dt>
+<dd>
+<p>CSV locations to scan recursively for migrations. Supported prefixes <code>classpath</code> and <code>filesystem</code> (default: <code>classpath:db/migration</code>).</p>
+</dd>
+<dt class="hdlist1"><code>flyway.connect-retries</code></dt>
+<dd>
+<p>The maximum number of retries when attempting to connect (default: 0)</p>
+</dd>
+<dt class="hdlist1"><code>flyway.schemas</code></dt>
+<dd>
+<p>CSV case-sensitive list of schemas managed (default: none)</p>
+</dd>
+<dt class="hdlist1">a|<code>flyway.table</code></dt>
+<dd>
+<p>The name of Flyway’s schema history table (default: <code>flyway_schema_history</code>)</p>
+</dd>
+<dt class="hdlist1"><code>flyway.sql-migration-prefix</code></dt>
+<dd>
+<p>Prefix for versioned SQL migrations (default: <code>V</code>)</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><code>flyway.repeatable-sql-migration-prefix::</code>
+Prefix for repeatable SQL migrations (default: <code>R</code>)</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>flyway.baseline-on-migrate</code></dt>
+<dd>
+<p>Only migrations above <strong>baseline-version</strong> will then be applied</p>
+</dd>
+<dt class="hdlist1"><code>flyway.baseline-version</code></dt>
+<dd>
+<p>Version to tag an existing schema with when executing baseline (default: 1)</p>
+</dd>
+<dt class="hdlist1"><code>flyway.baseline-description</code></dt>
+<dd>
+<p>Description to tag an existing schema with when executing baseline (default: <code>Flyway Baseline</code>)</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><strong>Multiple Datasources</strong></p>
+</div>
+<div class="paragraph">
+<p>To use multiple datasource in Flyway you just need to add the datasource name just after the <code>flyway</code> property:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.datasource.users.url=jdbc:h2:tcp://localhost/mem:users
+quarkus.datasource.inventory.url=jdbc:h2:tcp://localhost/mem:inventory
+# ...
+
+quarkus.flyway.users.schemas=USERS_TEST_SCHEMA
+quarkus.flyway.inventory.schemas=INVENTORY_TEST_SCHEMA
+# ...</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_hibernate_search"><a class="anchor" href="#_hibernate_search"></a><a class="link" href="#_hibernate_search">Hibernate Search</a></h3>
@@ -15478,7 +16019,7 @@ public class MyBean {
 <p><strong>Declarative</strong></p>
 </div>
 <div class="paragraph">
-<p>You can use <code>@Route</code> annotation to use reactive routes in a declarative way:</p>
+<p>You can use <code>@Route</code> annotation to use reactive routes and <code>@RouteFilter</code> to sue reactive filters in a declarative way:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -15499,6 +16040,13 @@ public class MyDeclarativeRoutes {
         }
         rc.response().end("hello " + name);
     }
+
+     @RouteFilter(20)
+    void filter(RoutingContext rc) {
+         rc.response().putHeader("X-Filter", "filter 2");
+         rc.next();
+    }
+
 }</code></pre>
 </div>
 </div>
@@ -15943,6 +16491,50 @@ quarkus.smallrye-health.readiness-path=/customready</code></pre>
 </div>
 </div>
 <div class="paragraph">
+<p><strong>Automatic readiness probes</strong></p>
+</div>
+<div class="paragraph">
+<p>Some default <em>readiness probes</em> are provided by default if any of the next features are added:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">datasource</dt>
+<dd>
+<p>A probe to check database connection status.</p>
+</dd>
+<dt class="hdlist1">kafka</dt>
+<dd>
+<p>A probe to check kafka connection status. In this case you need to enable manually by setting <code>quarkus.kafka.health.enabled</code> to <code>true</code>.</p>
+</dd>
+<dt class="hdlist1">mongoDB</dt>
+<dd>
+<p>A probe to check MongoDB connection status.</p>
+</dd>
+<dt class="hdlist1">neo4j</dt>
+<dd>
+<p>A probe to check Neo4J connection status.</p>
+</dd>
+<dt class="hdlist1">artemis</dt>
+<dd>
+<p>A probe to check Artemis JMS connection status.</p>
+</dd>
+<dt class="hdlist1">kafka-streams</dt>
+<dd>
+<p>Liveness (for stream state) and Readiness (topics created) probes.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>You can disable the automatic generation by setting <code>&lt;component&gt;.health.enabled</code> to false.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.kafka-streams.health.enabled=false
+quarkus.mongodb.health.enabled=false
+quarkus.neo4j.health.enabled=false</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p><strong>Metrics</strong></p>
 </div>
 <div class="paragraph">
@@ -16239,6 +16831,16 @@ kubernetes.readiness-probe.period-seconds=45</code></pre>
 <div class="paragraph">
 <p>All possible values are explained at <a href="https://quarkus.io/guides/kubernetes#configuration-options" class="bare">https://quarkus.io/guides/kubernetes#configuration-options</a>.</p>
 </div>
+<div class="paragraph">
+<p><strong>Kubernetes Deployment Targets</strong></p>
+</div>
+<div class="paragraph">
+<p>You can generate different resources setting the property <code>kubernetes.deployment.target</code>.</p>
+</div>
+<div class="paragraph">
+<p>Possible values are <code>kubernetes</code>, <code>openshift</code> and <code>knative</code>.
+The default value is <code>kubernetes</code>.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_kubernetes_client"><a class="anchor" href="#_kubernetes_client"></a><a class="link" href="#_kubernetes_client">Kubernetes Client</a></h3>
@@ -16478,7 +17080,6 @@ client.customResourceDefinitions()
         .create(dummyCRD);</code></pre>
 </div>
 </div>
-<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p><strong>Testing</strong></p>
 </div>
@@ -16545,7 +17146,6 @@ public class KubernetesClientTest {
 <div class="paragraph">
 <p>You can set the handler name by using <code>quarkus.lambda.handler</code> property or by annotating the Lambda with the CDI <code>@Named</code> annotation.</p>
 </div>
-<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p><strong>Test</strong></p>
 </div>
@@ -17026,13 +17626,20 @@ void morningTask() {}</pre>
 <pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">morning.check.cron.expr=0 15 10 * * ?</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>By default Quarkus expresion is used, but you can change that by setting <code>quarkus.scheduler.cron-type</code> property.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.scheduler.cron-type=unix</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_kogito"><a class="anchor" href="#_kogito"></a><a class="link" href="#_kogito">Kogito</a></h3>
 <div class="paragraph">
 <p>Quarkus integrates with <a href="http://www.kiegroup.org/" target="_blank" rel="noopener">Kogito</a>, a next-generation business automation toolkit from Drools and jBPM projects for adding business automation capabilities.</p>
 </div>
-<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>To start using it you only need to add the next extension:</p>
 </div>
@@ -17272,6 +17879,192 @@ aa.begin();
 }</code></pre>
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_quartz"><a class="anchor" href="#_quartz"></a><a class="link" href="#_quartz">Quartz</a></h3>
+<div class="paragraph">
+<p>Quarkus integrates with <a href="http://www.quartz-scheduler.org/">Quartz</a>  to schedule periodic clustered tasks.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quartz"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ApplicationScoped
+public class TaskBean {
+
+    @Transactional
+    @Scheduled(every = "10s")
+    void schedule() {
+        Task task = new Task();
+        task.persist();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To configure in clustered mode vida DataSource:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="application.properties" class="language-application.properties hljs">quarkus.datasource.url=jdbc:postgresql://localhost/quarkus_test
+quarkus.datasource.driver=org.postgresql.Driver
+# ...
+
+quarkus.quartz.clustered=true
+quarkus.quartz.store-type=db</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+You need to define the datasource used by clustered mode and also import the database tables following the Quartz schema.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_qute"><a class="anchor" href="#_qute"></a><a class="link" href="#_qute">Qute</a></h3>
+<div class="paragraph">
+<p>Qute is a templating engine designed specifically to meet the Quarkus needs.
+Templates should be placed by default at <code>src/main/resources/templates</code> aand subdirectories.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-resteasy-qute"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Templates can be defined in any format, in case of HTML:</p>
+</div>
+<div class="listingblock">
+<div class="title">item.html</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="html" class="language-html hljs">{@org.acme.Item item}
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset="UTF-8"&gt;
+&lt;title&gt;{item.name}&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;{item.name}&lt;/h1&gt;
+    &lt;div&gt;Price: {item.price}&lt;/div&gt;
+    {#if item.price &gt; 100}
+    &lt;div&gt;Discounted Price: {item.discountedPrice}&lt;/div&gt;
+    {/if}
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>First line is not mandatory but helps on doing property checks at compilation time.</p>
+</div>
+<div class="paragraph">
+<p>To render the template:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class Item {
+    public String name;
+    public BigDecimal price;
+}
+
+@Inject
+io.quarkus.qute.Template item;
+
+@GET
+@Path("{id}")
+@Produces(MediaType.TEXT_HTML)
+public TemplateInstance get(@PathParam("id") Integer id) {
+    return item.data("item", service.findItem(id));
+}
+
+@TemplateExtension
+static BigDecimal discountedPrice(Item item) {
+    return item.price.multiply(new BigDecimal("0.9"));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>@ResourcePath</code> is not used in <code>Template</code> then the name of the field is used as file name.
+In this case the file should be <code>src/main/resources/templates/item.{}</code>.
+Extension of the file is not required to be set.</p>
+</div>
+<div class="paragraph">
+<p><code>discountedPrice</code> is not a field of the POJO but a method call.
+Method definition must be annotated with <code>@TemplateExtension</code>.
+First paramter is used to match thebase object.</p>
+</div>
+<div class="paragraph">
+<p>You can render programmaticaly too:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">// file located at src/main/resources/templates/reports/v1/report_01.{}
+@ResourcePath("reports/v1/report_01")
+Template report;
+
+String output = report
+    .data("samples", service.get())
+    .render();</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_sentry"><a class="anchor" href="#_sentry"></a><a class="link" href="#_sentry">Sentry</a></h3>
+<div class="paragraph">
+<p>Quarkus integrates with <a href="https://sentry.io">Sentry</a> for logging errors into an error monitoring system.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-logging-sentry"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And the configuration to send all errors occuring in the package <code>org.example</code> to Sentrty with DSN <code><a href="https://abcd@sentry.io/1234" class="bare">https://abcd@sentry.io/1234</a></code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.log.sentry=true
+quarkus.log.sentry.dsn=https://abcd@sentry.io/1234
+quarkus.log.sentry.level=ERROR
+quarkus.log.sentry.in-app-packages=org.example</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Full list of configuration properties having  <code>quarkus.log</code> as prefix:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>sentry.enable</code></dt>
+<dd>
+<p>Enable the Sentry logging extension (default: false)</p>
+</dd>
+<dt class="hdlist1"><code>sentry.dsn</code></dt>
+<dd>
+<p>Where to send events.</p>
+</dd>
+<dt class="hdlist1"><code>sentry.level</code></dt>
+<dd>
+<p>Log level (default: <code>WARN</code>)</p>
+</dd>
+<dt class="hdlist1"><code>sentry.in-app-packages</code></dt>
+<dd>
+<p>Configure which package prefixes your application uses.</p>
+</dd>
+</dl>
+</div>
 <div style="page-break-after: always;"></div>
 </div>
 <div class="sect2">
@@ -17392,7 +18185,7 @@ public class GreetingController {
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.0.0.CR2:create &#8230;&#8203; -Dextensions="spring-web"</code>.
+If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.1.0.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
 </td>
 </tr>
 </table>
@@ -17498,6 +18291,137 @@ void deleteByRating(@Param("rating") String rating);</code></pre>
 <p>Native and named queries when using <code>@Query</code></p>
 </li>
 </ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_spring_security"><a class="anchor" href="#_spring_security"></a><a class="link" href="#_spring_security">Spring Security</a></h3>
+<div class="paragraph">
+<p>Quarkus provides a compatibility layer for <a href="https://spring.io/projects/spring-security" target="_blank" rel="noopener">Spring Security</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="spring-security"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You need to choose a security extension to define user, roles, &#8230;&#8203; such as <code>openid-connect</code>, <code>oauth2</code>, <code>properties-file</code> or <code>security-jdbc</code> as seen at <a href="#_rbac">RBAC</a>.</p>
+</div>
+<div class="paragraph">
+<p>Then you can use Spring Security annotations to protect the methods:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Secured("admin")
+@GetMapping
+public String hello() {
+    return "hello";
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Quarkus provides support for some of the most used features of Spring Security’s <code>@PreAuthorize</code> annotation.</p>
+</div>
+<div class="paragraph">
+<p>Some examples:</p>
+</div>
+<div class="paragraph">
+<p><strong>hasRole</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>@PreAuthorize("hasRole('admin')")</code></p>
+</li>
+<li>
+<p><code>@PreAuthorize("hasRole(@roles.USER)")</code> where <code>roles</code> is a bean defined with <code>@Component</code> annotation and <code>USER</code> is a public field of the class.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>hasAnyRole</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>@PreAuthorize("hasAnyRole(@roles.USER, 'view')")</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Permit and Deny All</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>@PreAuthorize("permitAll()")</code></p>
+</li>
+<li>
+<p><code>@PreAuthorize("denyAll()")</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Anonymous and Authenticated</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>@PreAuthorize("isAnonymous()")</code></p>
+</li>
+<li>
+<p><code>@PreAuthorize("isAuthenticated()")</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Expressions</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Checks if the current logged in user is the same as the username method parameter:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@PreAuthorize("#person.name == authentication.principal.username")
+public void doSomethingElse(Person person){}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Checks if calling a method if user can access:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@PreAuthorize("@personChecker.check(#person, authentication.principal.username)")
+public void doSomething(Person person){}
+
+@Component
+public class PersonChecker {
+    public boolean check(Person person, String username) {
+        return person.getName().equals(username);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Combining expressions:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@PreAuthorize("hasAnyRole('user', 'admin') AND #user == principal.username")
+public void allowedForUser(String user) {}</code></pre>
+</div>
 </div>
 <div style="page-break-after: always;"></div>
 </div>

@@ -70,6 +70,15 @@ kubernetes.readiness-probe.period-seconds=45
 All possible values are explained at https://quarkus.io/guides/kubernetes#configuration-options.
 // end::update_11_3[]
 
+*Kubernetes Deployment Targets*
+// tag::update_12_4[]
+
+You can generate different resources setting the property `kubernetes.deployment.target`.
+
+Possible values are `kubernetes`, `openshift` and `knative`.
+The default value is `kubernetes`.
+// end::update_12_4[]
+
 == Kubernetes Client
 // tag::update_4_5[]
 Quarkus integrates with https://github.com/fabric8io/kubernetes-client[Fabric8 Kubernetes Client, window="_blank"].
@@ -217,8 +226,6 @@ client.customResourceDefinitions()
 ----
 // end::update_4_5[]
 
-<<<
-
 *Testing*
 
 // tag::update_5_9[]
@@ -281,8 +288,6 @@ public class TestLambda
 // tag::update_9_4[]
 You can set the handler name by using `quarkus.lambda.handler` property or by annotating the Lambda with the CDI `@Named` annotation.
 // end::update_9_4[]
-
-<<<
 
 *Test*
 

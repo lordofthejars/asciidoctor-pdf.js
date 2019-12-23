@@ -180,3 +180,83 @@ What is currently unsupported:
 * `java.util.concurrent.Future` as return type
 * Native and named queries when using `@Query`
 // end::update_8_2[]
+
+== Spring Security
+// tag::update_12_11[]
+Quarkus provides a compatibility layer for https://spring.io/projects/spring-security[Spring Security, window="_blank" ].
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="spring-security"
+----
+
+You need to choose a security extension to define user, roles, ... such as `openid-connect`, `oauth2`, `properties-file` or `security-jdbc` as seen at <<RBAC>>.
+
+Then you can use Spring Security annotations to protect the methods:
+
+[source, java]
+----
+@Secured("admin")
+@GetMapping
+public String hello() {
+    return "hello";
+}
+----
+
+Quarkus provides support for some of the most used features of Spring Security’s `@PreAuthorize` annotation.
+
+Some examples:
+
+*hasRole*
+
+* `@PreAuthorize("hasRole('admin')")` 
+* `@PreAuthorize("hasRole(@roles.USER)")` where `roles` is a bean defined with `@Component` annotation and `USER` is a public field of the class.
+
+*hasAnyRole*
+
+* `@PreAuthorize("hasAnyRole(@roles.USER, 'view')")`
+
+*Permit and Deny All*
+
+* `@PreAuthorize("permitAll()")`
+* `@PreAuthorize("denyAll()")`
+
+*Anonymous and Authenticated*
+
+* `@PreAuthorize("isAnonymous()")`
+* `@PreAuthorize("isAuthenticated()")`
+
+*Expressions*
+
+* Checks if the current logged in user is the same as the username method parameter:
+
+[source, java]
+----
+@PreAuthorize("#person.name == authentication.principal.username")
+public void doSomethingElse(Person person){}
+----
+
+* Checks if calling a method if user can access:
+
+[source, java]
+----
+@PreAuthorize("@personChecker.check(#person, authentication.principal.username)")
+public void doSomething(Person person){}
+
+@Component
+public class PersonChecker {
+    public boolean check(Person person, String username) {
+        return person.getName().equals(username);
+    }
+}
+----
+
+* Combining expressions:
+
+[source, java]
+----
+@PreAuthorize("hasAnyRole('user', 'admin') AND #user == principal.username")
+public void allowedForUser(String user) {}
+----
+// end::update_12_11[]

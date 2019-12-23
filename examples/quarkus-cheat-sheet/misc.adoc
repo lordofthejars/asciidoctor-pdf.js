@@ -301,11 +301,18 @@ morning.check.cron.expr=0 15 10 * * ?
 ----
 // end::update_3_2[]
 
+// tag::update_12_5[]
+By default Quarkus expresion is used, but you can change that by setting `quarkus.scheduler.cron-type` property.
+
+[source, properties]
+----
+quarkus.scheduler.cron-type=unix
+----
+// end::update_12_5[]
+
 == Kogito
 // tag::update_3_9[]
 Quarkus integrates with http://www.kiegroup.org/[Kogito, window="_blank"], a next-generation business automation toolkit from Drools and jBPM projects for adding business automation capabilities.
-
-<<<
 
 To start using it you only need to add the next extension:
 
@@ -491,3 +498,162 @@ aa.begin();
 }
 ----
 // end::update_10_6[]
+
+== Quartz
+// tag::update_12_2[]
+Quarkus integrates with http://www.quartz-scheduler.org/[Quartz]  to schedule periodic clustered tasks.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quartz"
+----
+
+[source, java]
+----
+@ApplicationScoped
+public class TaskBean {
+
+    @Transactional
+    @Scheduled(every = "10s")
+    void schedule() {
+        Task task = new Task();
+        task.persist();
+    }
+}
+----
+
+To configure in clustered mode vida DataSource:
+
+[source, application.properties]
+----
+quarkus.datasource.url=jdbc:postgresql://localhost/quarkus_test
+quarkus.datasource.driver=org.postgresql.Driver
+# ...
+
+quarkus.quartz.clustered=true
+quarkus.quartz.store-type=db
+----
+
+IMPORTANT: You need to define the datasource used by clustered mode and also import the database tables following the Quartz schema.
+// end::update_12_2[]
+
+== Qute
+
+// tag::update_12_8[]
+Qute is a templating engine designed specifically to meet the Quarkus needs.
+Templates should be placed by default at `src/main/resources/templates` aand subdirectories.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-resteasy-qute"
+----
+
+Templates can be defined in any format, in case of HTML:
+
+[source, html]
+.item.html
+----
+{@org.acme.Item item}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{item.name}</title>
+</head>
+<body>
+    <h1>{item.name}</h1>
+    <div>Price: {item.price}</div>
+    {#if item.price > 100}
+    <div>Discounted Price: {item.discountedPrice}</div>
+    {/if}
+</body>
+</html>
+----
+
+First line is not mandatory but helps on doing property checks at compilation time.
+
+To render the template:
+
+[source, java]
+----
+public class Item {
+    public String name;
+    public BigDecimal price;
+}
+
+@Inject
+io.quarkus.qute.Template item;
+
+@GET
+@Path("{id}")
+@Produces(MediaType.TEXT_HTML)
+public TemplateInstance get(@PathParam("id") Integer id) {
+    return item.data("item", service.findItem(id));
+}
+
+@TemplateExtension
+static BigDecimal discountedPrice(Item item) {
+    return item.price.multiply(new BigDecimal("0.9"));
+}
+----
+
+If `@ResourcePath` is not used in `Template` then the name of the field is used as file name.
+In this case the file should be `src/main/resources/templates/item.{}`.
+Extension of the file is not required to be set.
+
+`discountedPrice` is not a field of the POJO but a method call.
+Method definition must be annotated with `@TemplateExtension`.
+First paramter is used to match thebase object.
+
+You can render programmaticaly too:
+
+[source, java]
+----
+
+// file located at src/main/resources/templates/reports/v1/report_01.{}
+@ResourcePath("reports/v1/report_01")
+Template report;
+
+String output = report
+    .data("samples", service.get())
+    .render();
+----
+// end::update_12_8[]
+
+== Sentry
+// tag::update_12_10[]
+
+Quarkus integrates with https://sentry.io[Sentry] for logging errors into an error monitoring system.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-logging-sentry"
+----
+
+And the configuration to send all errors occuring in the package `org.example` to Sentrty with DSN `https://abcd@sentry.io/1234`:
+
+[source, properties]
+----
+quarkus.log.sentry=true
+quarkus.log.sentry.dsn=https://abcd@sentry.io/1234
+quarkus.log.sentry.level=ERROR
+quarkus.log.sentry.in-app-packages=org.example
+----
+
+Full list of configuration properties having  `quarkus.log` as prefix:
+
+`sentry.enable`::
+Enable the Sentry logging extension (default: false)
+
+`sentry.dsn`::
+Where to send events.
+
+`sentry.level`::
+Log level (default: `WARN`)
+
+`sentry.in-app-packages`::
+Configure which package prefixes your application uses.
+// end::update_12_10[]

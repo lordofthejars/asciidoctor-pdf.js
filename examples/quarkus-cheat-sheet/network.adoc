@@ -202,7 +202,7 @@ public class MyBean {
 // tag::update_10_9[]
 *Declarative*
 
-You can use `@Route` annotation to use reactive routes in a declarative way:
+You can use `@Route` annotation to use reactive routes and `@RouteFilter` to sue reactive filters in a declarative way:
 
 [source, bash]
 ----
@@ -224,6 +224,13 @@ public class MyDeclarativeRoutes {
         }
         rc.response().end("hello " + name);
     }
+
+     @RouteFilter(20)
+    void filter(RoutingContext rc) {
+         rc.response().putHeader("X-Filter", "filter 2");
+         rc.next();
+    }
+
 }
 ----
 // end::update_10_9[]
@@ -535,6 +542,29 @@ quarkus.smallrye-health.readiness-path=/customready
 ----
 // end::update_8_13[]
 // end::update_3_4[]
+
+*Automatic readiness probes*
+// tag::update_12_3[]
+
+Some default _readiness probes_ are provided by default if any of the next features are added:
+
+datasource:: A probe to check database connection status.
+kafka:: A probe to check kafka connection status. In this case you need to enable manually by setting `quarkus.kafka.health.enabled` to `true`.
+mongoDB:: A probe to check MongoDB connection status.
+neo4j:: A probe to check Neo4J connection status.
+artemis:: A probe to check Artemis JMS connection status.
+kafka-streams:: Liveness (for stream state) and Readiness (topics created) probes.
+
+You can disable the automatic generation by setting `<component>.health.enabled` to false.
+
+[source, properties]
+----
+quarkus.kafka-streams.health.enabled=false
+quarkus.mongodb.health.enabled=false
+quarkus.neo4j.health.enabled=false
+----
+
+// end::update_12_3[]
 
 *Metrics*
 

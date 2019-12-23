@@ -258,6 +258,60 @@ Bean Validation is also supported so properties are validated at startup time, f
 TIP: `prefix` attribute is not mandatory. If not provided, attribute is determined by class name (ie `GreeetingConfiguration` is translated to `greeting` or `GreetingExtraConfiguration` to `greeting-extra`). The suffix of the class is always removed.
 // end::update_9_1[]
 
+*YAML Config*
+// tag::update_12_12[]
+
+YAML configuration is also supported.
+The configuration file is called `application.yaml` and you need to register a dependency to enable its support:
+
+[source, xml]
+.pom.xml
+----
+<dependency>
+    <groupId>io.quarkus</groupId>
+    <artifactId>quarkus-config-yaml</artifactId>
+</dependency>
+----
+
+[source, yaml]
+----
+quarkus:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/some-database
+    driver: org.postgresql.Driver
+----
+
+Or with profiles:
+
+[source, yaml]
+----
+"%dev":
+  quarkus:
+    datasource:
+      url: jdbc:postgresql://localhost:5432/some-database
+      driver: org.postgresql.Driver
+----
+
+In case of subkeys `~` is used to refer to the unprefixed part.
+
+[source, yaml]
+----
+quarkus:
+  http:
+    cors:
+      ~: true
+      methods: GET,PUT,POST
+----
+
+Is equivalent to:
+
+[source, properties]
+----
+quarkus.http.cors=true
+quarkus.http.cors.methods=GET,PUT,POST
+----
+// end::update_12_12[]
+
 // tag::update_2_6[]
 
 *Custom Loader*
@@ -727,8 +781,6 @@ Priority of the message as defined by RFC-5424 and RFC-3164 (default: `USER_LEVE
 `syslog.syslog-type`::
 The syslog type of format message (default: `RFC5424`)
 
-<<<
-
 `syslog.protocol`::
 Protocol used (default: `TCP`)
 
@@ -750,6 +802,41 @@ The queue length to use before flushing writing (default: `512`)
 `syslog.async.overflow`::
 Action when queue is full (default: `BLOCK`)
 
+*JSON output*
+// tag::update_12_9[]
+
+You can configure the output to be in _JSON_ format instead of plain text.
+
+[source, shell-session]
+----
+./mvnw quarkus:add-extension
+  -Dextensions="quarkus-logging-json"
+----
+
+And the configuration values are prefix with `quarkus.log`:
+
+`json`::
+JSON logging is enabled (default: true).
+
+`json.pretty-print`::
+JSON output is "pretty-printed" (default: false)
+
+`json.date-format`::
+Specify the date format to use (default: the default format)
+
+`json.record-delimiter`::
+Record delimiter to add (default: no delimiter)
+
+`json.zone-id`::
+The time zone ID
+
+`json.exception-output-type`::
+The exception output type: `detailed`, `formatted`, `detailed-and-formatted` (default: `detailed`)
+
+`json.print-details`::
+Detailed caller information should be logged (default: false)
+// end::update_12_9[]
+
 == Rest Client
 
 Quarkus implements https://github.com/eclipse/microprofile-rest-client[MicroProfile Rest Client, window="_blank"] spec:
@@ -757,7 +844,7 @@ Quarkus implements https://github.com/eclipse/microprofile-rest-client[MicroProf
 [source, bash]
 ----
 ./mvnw quarkus:add-extension
-  -Dextensions="io.quarkus:quarkus-rest-client"
+  -Dextensions="quarkus-rest-client"
 ----
 
 To get content from http://worldclockapi.com/api/json/cet/now you need to create a service interface:
