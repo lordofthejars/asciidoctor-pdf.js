@@ -170,6 +170,10 @@ quarkus.http.port=9090
 And enable it `quarkus.profile=staging`.
 // end::update_2_9[]
 
+// tag::update_13_5[]
+NOTE: To get the active profile programmatically use `io.quarkus.runtime.configuration.ProfileManager.getActiveProfile()`.
+// end::update_13_5[]
+
 // tag::update_6_7[]
 You can also set it in the build tool:
 
@@ -197,6 +201,16 @@ test {
 }
 ----
 // end::update_6_7[]
+
+// tag::update_13_7[]
+Special properties are set in *prod* mode: `quarkus.application.version` and `quarkus.application.name` to get them available at runtime.
+
+[source, java]
+----
+@ConfigProperty(name = "quarkus.application.name")
+String applicationName;
+----
+// end::update_13_7[]
 
 // tag::update_9_1[]
 *@ConfigProperties*
@@ -801,6 +815,41 @@ The queue length to use before flushing writing (default: `512`)
 
 `syslog.async.overflow`::
 Action when queue is full (default: `BLOCK`)
+
+// tag::update_13_4[]
+`handler.gelf.enabled`::
+Enable GELF logging handler (default: `false`)
+
+`handler.gelf.host`::
+Hostname/IP of Logstash/Graylof. Prepend `tcp:` for using TCP protocol. (default: `udp:localhost`)
+
+`handler.gelf.port`::
+The port. (default: `12201`)
+
+`handler.gelf.version`::
+GELF version. (default: `1.1`)
+
+`handler.gelf.extract-stack-trace`::
+Post Stack-Trace to StackTrace field. (default: `true`)
+
+`handler.gelf.stack-trace-throwable-reference`::
+Gets the cause level to stack trace. `0` is fulls tack trace. (default: `0`)
+
+`handler.gelf.filter-stack-trace`::
+Stack-Trace filtering. (default: `false`)
+
+`handler.gelf.timestamp-pattern`::
+Java Date pattern. (default: `yyyy-MM-dd HH:mm:ss,SSS`)
+
+`handler.gelf.level`::
+Log level `java.util.logging.Level`. (default: `ALL`)
+
+`handler.gelf.facility`::
+Name of the facility. (default: `jboss-logmanage`)
+
+`handler.gelf.additional-field.<field>.<subfield>`::
+Post additional fields. `quarkus.log.handler.gelf.additional-field.field1.type=String`
+// end::update_13_4[]
 
 *JSON output*
 // tag::update_12_9[]

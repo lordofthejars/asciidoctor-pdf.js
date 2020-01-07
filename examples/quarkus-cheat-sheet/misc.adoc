@@ -622,6 +622,22 @@ String output = report
 ----
 // end::update_12_8[]
 
+*Qute Mail Integration*
+// tag::update_13_1[]
+[source, java]
+----
+@Inject
+MailTemplate hello;
+
+CompletionStage<Void> c = hello.to("to@acme.org")
+     .subject("Hello from Qute template")
+     .data("name", "John")
+     .send();
+----
+
+INFO: Template located at `src/main/resources/templates/hello.[html|txt]`.
+// end::update_13_1[]
+
 == Sentry
 // tag::update_12_10[]
 
@@ -657,3 +673,23 @@ Log level (default: `WARN`)
 `sentry.in-app-packages`::
 Configure which package prefixes your application uses.
 // end::update_12_10[]
+
+== JSch
+// tag::update_13_2[]
+
+Quarkus integrates with http://www.jcraft.com/jsch/[Jsch] for SSH communication.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-jsch"
+----
+
+[source, java]
+----
+JSch jsch = new JSch();
+Session session = jsch.getSession(null, host, port);
+session.setConfig("StrictHostKeyChecking", "no");
+session.connect();
+----
+// end::update_13_2[]

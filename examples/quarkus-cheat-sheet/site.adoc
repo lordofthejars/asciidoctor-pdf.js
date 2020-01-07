@@ -15,6 +15,50 @@ In this page you can either read what has been added in each version of the chea
 [[whatsnew]]
 == What's New in Cheat-Sheet
 
+=== Version 1.2.0.Final
+
+.Qute Mail Integration
+[%collapsible]
+====
+include::misc.adoc[tag=update_13_1]
+====
+
+.JSch
+[%collapsible]
+====
+include::misc.adoc[tag=update_13_2]
+====
+
+.Spring Boot Configuration
+[%collapsible]
+====
+include::spring.adoc[tag=update_13_3]
+====
+
+.GELF handler
+[%collapsible]
+====
+include::core.adoc[tag=update_13_4]
+====
+
+.Get Active Profile
+[%collapsible]
+====
+include::core.adoc[tag=update_13_5]
+====
+
+.Flyway Validate on Migrate
+[%collapsible]
+====
+include::persistence.adoc[tag=update_13_6]
+====
+
+.Appplication Name and Version available at Runtime
+[%collapsible]
+====
+include::core.adoc[tag=update_13_7]
+====
+
 === Version 1.1.0.Final
 
 .Panache and Optional

@@ -68,6 +68,36 @@ public class GreeterBean {
 
 <<<
 
+== Spring Boot Configuration
+// tag::update_13_3[]
+
+Quarkus provides a compatibility layer for Spring Boot `ConfigurationProperties`.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-spring-boot-properties"
+----
+
+[source, java]
+----
+@ConfigurationProperties("example")
+public final class ClassProperties {
+
+    private String value;
+    private AnotherClass anotherClass;
+
+    // getters/setters
+}
+----
+
+[source, properties]
+----
+example.value=class-value
+example.anotherClass.value=true
+----
+// end::update_13_3[]
+
 == Spring Web
 // tag::update_7_6[]
 

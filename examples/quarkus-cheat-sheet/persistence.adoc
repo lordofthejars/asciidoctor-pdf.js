@@ -629,41 +629,46 @@ quarkus.flyway.migrate-at-start=true
 
 List of Flyway parameters.
 
-`quarkus.` as prefix is skipped in the next table.
+`quarkus.flyway` as prefix is skipped in the next table.
 
-`flyway.clean-at-start`::
+`clean-at-start`::
 Execute Flyway clean command (default: `false`) 
 
-`flyway.migrate-at-start`::
+`migrate-at-start`::
 Flyway migration automatically (default: `false`)
 
-`flyway.locations`::
+`locations`::
 CSV locations to scan recursively for migrations. Supported prefixes `classpath` and `filesystem` (default: `classpath:db/migration`).
 
-`flyway.connect-retries`::
+`connect-retries`::
 The maximum number of retries when attempting to connect (default: 0)
 
-`flyway.schemas`::
+`schemas`::
 CSV case-sensitive list of schemas managed (default: none)
 
-a|`flyway.table`::
+`table`::
 The name of Flyway’s schema history table (default: `flyway_schema_history`)
 
-`flyway.sql-migration-prefix`::
+`sql-migration-prefix`::
 Prefix for versioned SQL migrations (default: `V`)
 
-`flyway.repeatable-sql-migration-prefix::`
+`repeatable-sql-migration-prefix::`
 Prefix for repeatable SQL migrations (default: `R`)
 
-`flyway.baseline-on-migrate`::
+`baseline-on-migrate`::
 Only migrations above *baseline-version* will then be applied
 
-`flyway.baseline-version`::
+`baseline-version`::
 Version to tag an existing schema with when executing baseline (default: 1)
 
-`flyway.baseline-description`::
+`baseline-description`::
 Description to tag an existing schema with when executing baseline (default: `Flyway Baseline`)
 // end::update_1_7[]
+
+// tag::update_13_6[]
+`validate-on-migrate`::
+Validate the applied migrations against the available ones (default: `true`)
+// end::update_13_6[]
 
 *Multiple Datasources*
 // tag::update_12_7[]
