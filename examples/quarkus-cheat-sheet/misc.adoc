@@ -604,10 +604,37 @@ In this case the file should be `src/main/resources/templates/item.{}`.
 Extension of the file is not required to be set.
 
 `discountedPrice` is not a field of the POJO but a method call.
-Method definition must be annotated with `@TemplateExtension`.
-First paramter is used to match thebase object.
+Method definition must be annotated with `@TemplateExtension` and be static method.
+First parameter is used to match the base object (`Item`).
+// tag::update_13_8[]
+`@TemplateExtension` can be used at class level:
 
-You can render programmaticaly too:
+[source, java]
+----
+@TemplateExtension
+public class MyExtensions {
+    static BigDecimal discountedPrice(Item item) {
+        return item.price.multiply(new BigDecimal("0.9"));
+    }
+}
+----
+
+Methods with multiple parameters are supported too:
+
+[source,html]
+----
+{item.discountedPrice(2)}
+----
+
+[source, java]
+----
+static BigDecimal discountedPrice(Item item, int scale) {
+    return item.price.multiply(scale);
+}
+----
+// end::udpate_13_8[]
+
+You can render programmaticaly the templates too:
 
 [source, java]
 ----

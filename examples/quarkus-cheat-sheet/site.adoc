@@ -59,6 +59,12 @@ include::persistence.adoc[tag=update_13_6]
 include::core.adoc[tag=update_13_7]
 ====
 
+.Qute Method Parameters
+[%collapsible]
+====
+include::misc.adoc[tag=update_13_8]
+====
+
 === Version 1.1.0.Final
 
 .Panache and Optional
