@@ -159,6 +159,26 @@ public class ErrorMapper
 ----
 // end::update_5_1[]
 
+*Caching*
+// tag::update_13_9[]
+
+Annotations to make setting Cache-Control headers:
+
+[source, java]
+----
+@Produces(MediaType.APPLICATION_JSON)
+@org.jboss.resteasy.annotations.cache.NoCache
+public User me() {}
+
+@Produces(MediaType.APPLICATION_JSON)
+@org.jboss.resteasy.annotations.cache.Cache(
+    maxAge = 2000,
+    noStore = false
+)
+public User you() {}
+----
+// end::update_13_9[]
+
 == Vert.X Filters and Routes
 
 // tag::update_9_5[]

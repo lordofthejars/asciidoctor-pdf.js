@@ -166,6 +166,14 @@ a|[`false`], `true`
 a|`statistics`
 |Enable statiscs collection.
 a|[`false`], `true`
+
+a|`physical-naming-strategy`
+|Class name of the Hibernate PhysicalNamingStrategy implementation.
+a|
+
+a|`globally-quoted-identifiers`
+|Should quote all identifiers.
+a|[`false`], `true`
 |===
 // end::update_5_3[]
 
@@ -1556,6 +1564,25 @@ Panache Queries equivalence in MongoDB:
 * `lastname is not null` -> `{'lastname':{'$exists': true}}`
 
 WARNING: PanacheQL refers to the Object parameter name but native queries refer to MongoDB field names.
+
+*Projection*
+
+// tag::update_13_10[]
+Projection can be done for both PanacheQL and native queries.
+
+[source, java]
+----
+import io.quarkus.mongodb.panache.ProjectionFor;
+
+@ProjectionFor(Person.class) // <1>
+public class PersonName {
+    public String name;
+}
+
+PanacheQuery<PersonName> shortQuery = Person.find("status ", Status.Alive).project(PersonName.class);
+----
+<1> Entity class.
+// end::update_13_10[]
 
 *DAO pattern*
 

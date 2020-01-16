@@ -65,6 +65,24 @@ include::core.adoc[tag=update_13_7]
 include::misc.adoc[tag=update_13_8]
 ====
 
+.Caching
+[%collapsible]
+====
+include::network.adoc[tag=update_13_9]
+====
+
+.MongoDB Projections
+[%collapsible]
+====
+include::persistence.adoc[tag=update_13_10]
+====
+
+.Config Naming Strategy
+[%collapsible]
+====
+include::core.adoc[tag=update_13_11]
+====
+
 === Version 1.1.0.Final
 
 .Panache and Optional
