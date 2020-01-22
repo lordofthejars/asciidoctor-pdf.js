@@ -439,6 +439,12 @@ MP_Fault_Tolerance_NonFallback_Enabled=false
 TIP: MicroProfile Fault Tolerance integrates with MicroProfile Metrics spec. You can disable it by setting `MP_Fault_Tolerance_Metrics_Enabled` to false.
 // end::update_1_2[]
 
+*Hibernate ORM*
+
+// tag::update_13_12[]
+`quarkus.hibernate-orm.metrics.enabled` set to `true` exposes Hibernate metrics under `vendor` scope.
+// end::update_13_12[]
+
 == Observability
 
 *Health Checks*

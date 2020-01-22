@@ -229,6 +229,41 @@ NOTE:  With Keycloak OIDC server `https://host:port/auth/realms/{realm}` where `
 TIP: You can use `quarkus.http.cors` property to enable consuming form different domain.
 // end::update_1_9[]
 
+*Generate tokens*
+
+// tag::update_13_15[]
+JWT generation API:
+
+[source, java]
+----
+Jwt.claims()
+    .issuer("https://server.com")
+    .claim("customClaim", 3)
+    .sign(createKey());
+
+JwtSignatureBuilder jwtSignatureBuilder = Jwt.claims("/testJsonToken.json").jws();
+jwtSignatureBuilder
+     .signatureKeyId("some-key-id")
+     .signatureAlgorithm(SignatureAlgorithm.ES256)
+     .header("custom-header", "custom-value");    
+     .sign(createKey());
+
+Jwt.claims("/testJsonToken.json")
+    .encrypt(createKey());
+
+JwtEncryptionBuilder jwtEncryptionBuilder = Jwt.claims("/testJsonToken.json").jwe();
+jwtEncryptionBuilder
+     .keyEncryptionKeyId("some-key-id")
+      .keyEncryptionAlgorithm(KeyEncryptionAlgorithm.ECDH_ES_A256KW)
+     .header("custom-header", "custom-value");
+     .encrypt(createKey());
+
+Jwt.claims("/testJsonToken.json")
+  .innerSign(createKey());
+  .encrypt(createKey());
+----
+// end::update_13_15[]
+
 == OAuth2
 // tag::update_6_8[]
 Quarkus integrates with OAuth2 to be used in case of opaque tokens (none JWT) and its validation against an introspection endpoint.
@@ -597,6 +632,17 @@ quarkus.datasource.username=
 No password is set as it is fetched from Vault.
 
 INFO: https://www.vaultproject.io/docs/secrets/databases/index.html[dynamic database credentials] through the `database-credentials-role` property.
+
+*Transit*
+
+// tag::update_13_14[]
+@Inject
+VaultTransitSecretEngine transit;
+
+transit.encrypt("my_encryption", text);
+transit.decrypt("my_encryption", text).asString();
+transit.sign("my-sign-key", text);
+// end::update_13_14[]
 
 Elytron JDBC Realm configuration properties.
 Prefix `quarkus.vault` is skipped.

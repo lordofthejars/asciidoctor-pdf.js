@@ -83,6 +83,30 @@ include::persistence.adoc[tag=update_13_10]
 include::core.adoc[tag=update_13_11]
 ====
 
+.Hibernate ORM Metrics
+[%collapsible]
+====
+include::network.adoc[tag=update_13_12]
+====
+
+.Bean Validation and Localization
+[%collapsible]
+====
+include::core.adoc[tag=update_13_13]
+====
+
+.Vault Transit Engine
+[%collapsible]
+====
+include::security.adoc[tag=update_13_14]
+====
+
+.JWT Generation API
+[%collapsible]
+====
+include::security.adoc[tag=update_13_15]
+====
+
 === Version 1.1.0.Final
 
 .Panache and Optional

@@ -707,6 +707,31 @@ Set<ConstraintViolation<Sauce>> violations =
             validator.validate(sauce);
 ----
 
+*Localization*
+
+// tag::update_13_13[]
+You can configure the based on locale.
+
+[source, properties]
+----
+quarkus.default-locale=ca-ES
+# Supported locales resolved by Accept-Language
+quarkus.locales=en-US,es-ES,fr-FR, ca_ES
+----
+
+[source, properties]
+.ValidationMessages_ca_ES.properties
+----
+pattern.message=No conforme al patro
+----
+
+[source, java]
+----
+@Pattern(regexp = "A.*", message = "{pattern.message}")
+private String name;
+----
+// end::update_13_13[]
+
 == Logging
 
 You can configure how Quarkus logs:
