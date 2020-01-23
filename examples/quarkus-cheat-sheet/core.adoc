@@ -710,7 +710,7 @@ Set<ConstraintViolation<Sauce>> violations =
 *Localization*
 
 // tag::update_13_13[]
-You can configure the based on locale.
+You can configure the based locale for validation messages.
 
 [source, properties]
 ----

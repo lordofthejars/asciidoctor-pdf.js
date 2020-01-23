@@ -464,6 +464,501 @@ Also focused on developer experience, making things just work with little to no 
 <h2 id="whatsnew"><a class="anchor" href="#whatsnew"></a><a class="link" href="#whatsnew">What&#8217;s New in Cheat-Sheet</a></h2>
 <div class="sectionbody">
 <div class="sect2">
+<h3 id="_version_1_2_0_final"><a class="anchor" href="#_version_1_2_0_final"></a><a class="link" href="#_version_1_2_0_final">Version 1.2.0.Final</a></h3>
+<details>
+<summary class="title">Qute Mail Integration</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+MailTemplate hello;
+
+CompletionStage&lt;Void&gt; c = hello.to("to@acme.org")
+     .subject("Hello from Qute template")
+     .data("name", "John")
+     .send();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>INFO: Template located at <code>src/main/resources/templates/hello.[html|txt]</code>.</p>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">JSch</summary>
+<div class="content">
+<div class="paragraph">
+<p>Quarkus integrates with <a href="http://www.jcraft.com/jsch/">Jsch</a> for SSH communication.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-jsch"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">JSch jsch = new JSch();
+Session session = jsch.getSession(null, host, port);
+session.setConfig("StrictHostKeyChecking", "no");
+session.connect();</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Spring Boot Configuration</summary>
+<div class="content">
+<div class="paragraph">
+<p>Quarkus provides a compatibility layer for Spring Boot <code>ConfigurationProperties</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-spring-boot-properties"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigurationProperties("example")
+public final class ClassProperties {
+
+    private String value;
+    private AnotherClass anotherClass;
+
+    // getters/setters
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">example.value=class-value
+example.anotherClass.value=true</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">GELF handler</summary>
+<div class="content">
+<div class="paragraph">
+<p>You can configure the output to be in <em>GELF</em> format instead of plain text.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="shell-session" class="language-shell-session hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-logging-gelf"</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>handler.gelf.enabled</code></dt>
+<dd>
+<p>Enable GELF logging handler (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.host</code></dt>
+<dd>
+<p>Hostname/IP of Logstash/Graylof. Prepend <code>tcp:</code> for using TCP protocol. (default: <code>udp:localhost</code>)</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.port</code></dt>
+<dd>
+<p>The port. (default: <code>12201</code>)</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.version</code></dt>
+<dd>
+<p>GELF version. (default: <code>1.1</code>)</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.extract-stack-trace</code></dt>
+<dd>
+<p>Post Stack-Trace to StackTrace field. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.stack-trace-throwable-reference</code></dt>
+<dd>
+<p>Gets the cause level to stack trace. <code>0</code> is fulls tack trace. (default: <code>0</code>)</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.filter-stack-trace</code></dt>
+<dd>
+<p>Stack-Trace filtering. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.timestamp-pattern</code></dt>
+<dd>
+<p>Java Date pattern. (default: <code>yyyy-MM-dd HH:mm:ss,SSS</code>)</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.level</code></dt>
+<dd>
+<p>Log level <code>java.util.logging.Level</code>. (default: <code>ALL</code>)</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.facility</code></dt>
+<dd>
+<p>Name of the facility. (default: <code>jboss-logmanage</code>)</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.additional-field.&lt;field&gt;.&lt;subfield&gt;</code></dt>
+<dd>
+<p>Post additional fields. <code>quarkus.log.handler.gelf.additional-field.field1.type=String</code></p>
+</dd>
+</dl>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Get Active Profile</summary>
+<div class="content">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+To get the active profile programmatically use <code>io.quarkus.runtime.configuration.ProfileManager.getActiveProfile()</code>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Flyway Validate on Migrate</summary>
+<div class="content">
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>validate-on-migrate</code></dt>
+<dd>
+<p>Validate the applied migrations against the available ones (default: <code>true</code>)</p>
+</dd>
+</dl>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Appplication Name and Version available at Runtime</summary>
+<div class="content">
+<div class="paragraph">
+<p>Special properties are set in <strong>prod</strong> mode: <code>quarkus.application.version</code> and <code>quarkus.application.name</code> to get them available at runtime.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperty(name = "quarkus.application.name")
+String applicationName;</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Qute Method Parameters</summary>
+<div class="content">
+<div class="paragraph">
+<p><code>@TemplateExtension</code> can be used at class level:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@TemplateExtension
+public class MyExtensions {
+    static BigDecimal discountedPrice(Item item) {
+        return item.price.multiply(new BigDecimal("0.9"));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Methods with multiple parameters are supported too:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="html" class="language-html hljs">{item.discountedPrice(2)}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">static BigDecimal discountedPrice(Item item, int scale) {
+    return item.price.multiply(scale);
+}</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Caching</summary>
+<div class="content">
+<div class="paragraph">
+<p>Annotations to set Cache-Control headers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Produces(MediaType.APPLICATION_JSON)
+@org.jboss.resteasy.annotations.cache.NoCache
+public User me() {}
+
+@Produces(MediaType.APPLICATION_JSON)
+@org.jboss.resteasy.annotations.cache.Cache(
+    maxAge = 2000,
+    noStore = false
+)
+public User you() {}</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">MongoDB Projections</summary>
+<div class="content">
+<div class="paragraph">
+<p>Projection can be done for both PanacheQL and native queries.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">import io.quarkus.mongodb.panache.ProjectionFor;
+
+@ProjectionFor(Person.class) <i class="conum" data-value="1"></i><b>(1)</b>
+public class PersonName {
+    public String name;
+}
+
+PanacheQuery&lt;PersonName&gt; shortQuery = Person.find("status ", Status.Alive).project(PersonName.class);</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Entity class.</td>
+</tr>
+</table>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Config Naming Strategy</summary>
+<div class="content">
+<div class="paragraph">
+<p>Naming strategy can be changed with property <code>namingStrategy</code>. <code>KEBAB_CASE</code> (whatever.foo-bar) or <code>VERBATIM</code> (whatever.fooBar).</p>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Hibernate ORM Metrics</summary>
+<div class="content">
+<div class="paragraph">
+<p><code>quarkus.hibernate-orm.metrics.enabled</code> set to <code>true</code> exposes Hibernate metrics under <code>vendor</code> scope.</p>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Bean Validation and Localization</summary>
+<div class="content">
+<div class="paragraph">
+<p>You can configure the based locale for validation messages.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.default-locale=ca-ES
+# Supported locales resolved by Accept-Language
+quarkus.locales=en-US,es-ES,fr-FR, ca_ES</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">ValidationMessages_ca_ES.properties</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">pattern.message=No conforme al patro</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Pattern(regexp = "A.*", message = "{pattern.message}")
+private String name;</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Vault Transit Engine</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+VaultTransitSecretEngine transit;
+
+transit.encrypt("my_encryption", text);
+transit.decrypt("my_encryption", text).asString();
+transit.sign("my-sign-key", text);</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">JWT Generation API</summary>
+<div class="content">
+<div class="paragraph">
+<p>JWT generation API:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">Jwt.claims()
+    .issuer("https://server.com")
+    .claim("customClaim", 3)
+    .sign(createKey());
+
+JwtSignatureBuilder jwtSignatureBuilder = Jwt.claims("/testJsonToken.json").jws();
+jwtSignatureBuilder
+     .signatureKeyId("some-key-id")
+     .signatureAlgorithm(SignatureAlgorithm.ES256)
+     .header("custom-header", "custom-value");
+     .sign(createKey());
+
+Jwt.claims("/testJsonToken.json")
+    .encrypt(createKey());
+
+JwtEncryptionBuilder jwtEncryptionBuilder = Jwt.claims("/testJsonToken.json").jwe();
+jwtEncryptionBuilder
+     .keyEncryptionKeyId("some-key-id")
+      .keyEncryptionAlgorithm(KeyEncryptionAlgorithm.ECDH_ES_A256KW)
+     .header("custom-header", "custom-value");
+     .encrypt(createKey());
+
+Jwt.claims("/testJsonToken.json")
+  .innerSign(createKey());
+  .encrypt(createKey());</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">JWT Properties</summary>
+<div class="content">
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>smallrye.jwt.token.header</code></dt>
+<dd>
+<p>Sets header such as <code>Cookie</code> is used to pass the token. (default: <code>Authorization</code>).</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.token.cookie</code></dt>
+<dd>
+<p>Name of the cookie containing a token.</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.token.schemes</code></dt>
+<dd>
+<p>Comma-separated list containing an alternative single or multiple schemes. (default: <code>Bearer</code>).</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.require.named-principal</code></dt>
+<dd>
+<p>A token must have a upn or preferred_username or sub claim set if using <code>java.security.Principal</code>. <code>True</code> makes throw an exception if not set. (default: <code>false</code>).</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.path.sub</code></dt>
+<dd>
+<p>Path to the claim with subject name.</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.claims.sub</code></dt>
+<dd>
+<p>Default sub claim value.</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.path.groups</code></dt>
+<dd>
+<p>Path to the claim containing the groups.</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.path.groups-separator</code></dt>
+<dd>
+<p>Separator for splitting a string which may contain multiple group values. (default. ` `).</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.claims.groups</code></dt>
+<dd>
+<p>Default groups claim value.</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.jwk.refresh-interval</code></dt>
+<dd>
+<p>JWK cache refresh interval in minutes. (default: <code>60</code>).</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.expiration.grace</code></dt>
+<dd>
+<p>Expiration grace in seconds. (default: <code>60</code>).</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.verify.audience</code></dt>
+<dd>
+<p>Comma separated list of the audiences that a token aud claim may contain.</p>
+</dd>
+</dl>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Cache with Caffeine</summary>
+<div class="content">
+<div class="paragraph">
+<p>Quarkus can cache method calls by using as key the tuple (method + arguments).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="cache"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@io.quarkus.cache.CacheResult(cacheName = "weather-cache")
+public String getDailyForecast(LocalDate date, String city) {}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>@CacheInvalidate</code> removes the element represented by the calculated cache key from cache.
+<code>@CacheInvalidateAll</code> removes all entries from the cache.
+<code>@CacheKey</code> to specifically set the arguments to be used as key instead of all.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ApplicationScoped
+public class CachedBean {
+
+    @CacheResult(cacheName = "foo")
+    public Object load(Object key) {}
+
+    @CacheInvalidate(cacheName = "foo")
+    public void invalidate(Object key) {}
+
+    @CacheInvalidateAll(cacheName = "foo")
+    public void invalidateAll() {}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This extension uses <a href="https://github.com/ben-manes/caffeine">Caffeine</a> as its underlying caching provider.</p>
+</div>
+<div class="paragraph">
+<p>Each cache can be configured individually:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.cache.caffeine."foo".initial-capacity=10
+quarkus.cache.caffeine."foo".maximum-size=20
+quarkus.cache.caffeine."foo".expire-after-write
+quarkus.cache.caffeine."bar".maximum-size=1000</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Full list of configuration properties having  <code>quarkus.cache.caffeine.[cache-name]</code> as prefix:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>initial-capacity</code></dt>
+<dd>
+<p>Minimum total size for the internal data structures.</p>
+</dd>
+<dt class="hdlist1"><code>maximum-size</code></dt>
+<dd>
+<p>Maximum number of entries the cache may contain.</p>
+</dd>
+<dt class="hdlist1"><code>expire-after-write</code></dt>
+<dd>
+<p>Specifies that each entry should be automatically removed from the cache once a fixed duration has elapsed after the entry&#8217;s creation, or last write.</p>
+</dd>
+<dt class="hdlist1"><code>expire-after-access</code></dt>
+<dd>
+<p>Specifies that each entry should be automatically removed from the cache once a fixed duration has elapsed after the entry&#8217;s creation, or last write.</p>
+</dd>
+</dl>
+</div>
+</div>
+</details>
+</div>
+<div class="sect2">
 <h3 id="_version_1_1_0_final"><a class="anchor" href="#_version_1_1_0_final"></a><a class="link" href="#_version_1_1_0_final">Version 1.1.0.Final</a></h3>
 <details>
 <summary class="title">Panache and Optional</summary>
@@ -710,11 +1205,37 @@ Extension of the file is not required to be set.</p>
 </div>
 <div class="paragraph">
 <p><code>discountedPrice</code> is not a field of the POJO but a method call.
-Method definition must be annotated with <code>@TemplateExtension</code>.
-First paramter is used to match thebase object.</p>
+Method definition must be annotated with <code>@TemplateExtension</code> and be static method.
+First parameter is used to match the base object (<code>Item</code>).
+<code>@TemplateExtension</code> can be used at class level:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@TemplateExtension
+public class MyExtensions {
+    static BigDecimal discountedPrice(Item item) {
+        return item.price.multiply(new BigDecimal("0.9"));
+    }
+}</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>You can render programmaticaly too:</p>
+<p>Methods with multiple parameters are supported too:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="html" class="language-html hljs">{item.discountedPrice(2)}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">static BigDecimal discountedPrice(Item item, int scale) {
+    return item.price.multiply(scale);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can render programmaticaly the templates too:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1092,7 +1613,9 @@ quarkus.http.cors.methods=GET,PUT,POST</code></pre>
 kubernetes.labels[0].key=foo
 kubernetes.labels[0].value=bar
 
-kubernetes.readiness-probe.period-seconds=45</code></pre>
+kubernetes.readiness-probe.period-seconds=45
+
+docker.registry=quay.io</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1575,16 +2098,24 @@ quarkus.vault.authentication.userpass.password=
 
 # path within the kv secret engine
 quarkus.vault.secret-config-kv-path=
-    myapps/vault-quickstart/config</code></pre>
+    myapps/vault-quickstart/config
+quarkus.vault.secret-config-kv-path.singer=
+    multi/singer</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Then you can inject the value configured at <code>secret/myapps/vault-quickstart/a-private-key</code>.</p>
+<p><code>vault kv put secret/myapps/vault-quickstart/config a-private-key=123456</code></p>
+</div>
+<div class="paragraph">
+<p><code>vault kv put secret/multi/singer firstname=paul</code></p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperty(name = "a-private-key")
-String privateKey;</code></pre>
+String privateKey;
+
+@ConfigProperty(name = "singer.firstname")
+String firstName;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1626,201 +2157,118 @@ quarkus.datasource.username=
 <p>INFO: <a href="https://www.vaultproject.io/docs/secrets/databases/index.html">dynamic database credentials</a> through the <code>database-credentials-role</code> property.</p>
 </div>
 <div class="paragraph">
+<p><strong>Transit</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+VaultTransitSecretEngine transit;
+
+transit.encrypt("my_encryption", text);
+transit.decrypt("my_encryption", text).asString();
+transit.sign("my-sign-key", text);</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Elytron JDBC Realm configuration properties.
 Prefix <code>quarkus.vault</code> is skipped.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top"> Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>url</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Vault server URL</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>authentication.client-token</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Vault token to access</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>authentication.app-role.role-id</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Role Id for AppRole auth</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>authentication.app-role.secret-id</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Secret Id for AppRole auth</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>authentication.userpass.username</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Username for userpass auth</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>authentication.userpass.password</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Password for userpass auth</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>authentication.kubernetes.role</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes authentication role</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>authentication.kubernetes.jwt-token-path</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Location of the file containing the Kubernetes JWT token</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>renew-grace-period</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>1H</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Renew grace period duration.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>secret-config-cache-period</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>10M</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Vault config source cache period</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>secret-config-kv-path</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Vault path in kv store</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>log-confidentiality-level</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>medium</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used to hide confidential infos. <code>low</code>, <code>medium</code>, <code>high</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>kv-secret-engine-version</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>1</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Kv secret engine version</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>kv-secret-engine-mount-path</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>secret</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Kv secret engine path</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>tls.skip-verify</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>false</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Allows to bypass certificate validation on TLS communications</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>tls.ca-cert</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Certificate bundle used to validate TLS communications</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>tls.use-kubernetes-ca-cert</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>true</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>TLS will be active</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>connect-timeout</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>5S</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Tiemout to establish a connection</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>read-timeout</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>1S</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Request timeout</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>credentials-provider."credentials-provider".database-credentials-role</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Database credentials role</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>credentials-provider."credentials-provider".kv-path</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A path in vault kv store, where we will find the kv-key</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>credentials-provider."credentials-provider".kv-key</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>password</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Key name to search in vault path kv-path</p></td>
-</tr>
-</tbody>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>url</code></dt>
+<dd>
+<p>Vault server URL</p>
+</dd>
+<dt class="hdlist1"><code>authentication.client-token</code></dt>
+<dd>
+<p>Vault token to access</p>
+</dd>
+<dt class="hdlist1"><code>authentication.app-role.role-id</code></dt>
+<dd>
+<p>Role Id for AppRole auth</p>
+</dd>
+<dt class="hdlist1"><code>authentication.app-role.secret-id</code></dt>
+<dd>
+<p>Secret Id for AppRole auth</p>
+</dd>
+<dt class="hdlist1"><code>authentication.userpass.username</code></dt>
+<dd>
+<p>Username for userpass auth</p>
+</dd>
+<dt class="hdlist1"><code>authentication.userpass.password</code></dt>
+<dd>
+<p>Password for userpass auth</p>
+</dd>
+<dt class="hdlist1"><code>authentication.kubernetes.role</code></dt>
+<dd>
+<p>Kubernetes authentication role</p>
+</dd>
+<dt class="hdlist1"><code>authentication.kubernetes.jwt-token-path</code></dt>
+<dd>
+<p>Location of the file containing the Kubernetes JWT token</p>
+</dd>
+<dt class="hdlist1"><code>renew-grace-period</code></dt>
+<dd>
+<p>Renew grace period duration (default: <code>1H</code>)</p>
+</dd>
+<dt class="hdlist1"><code>secret-config-cache-period</code></dt>
+<dd>
+<p>Vault config source cache period (default: <code>10M</code>)</p>
+</dd>
+<dt class="hdlist1"><code>secret-config-kv-path</code></dt>
+<dd>
+<p>Vault path in kv store. List of paths is supported in CSV</p>
+</dd>
+<dt class="hdlist1"><code>log-confidentiality-level</code></dt>
+<dd>
+<p>Used to hide confidential infos. <code>low</code>, <code>medium</code>, <code>high</code> (default: <code>medium</code>)</p>
+</dd>
+<dt class="hdlist1"><code>kv-secret-engine-version</code></dt>
+<dd>
+<p>Kv secret engine version (default: 1)</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><code>kv-secret-engine-mount-path</code>
+Kv secret engine path (default: <code>secret</code>)</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>tls.skip-verify</code></dt>
+<dd>
+<p>Allows to bypass certificate validation on TLS communications (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>tls.ca-cert</code></dt>
+<dd>
+<p>Certificate bundle used to validate TLS communications</p>
+</dd>
+<dt class="hdlist1"><code>tls.use-kubernetes-ca-cert</code></dt>
+<dd>
+<p>TLS will be active (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>connect-timeout</code></dt>
+<dd>
+<p>Tiemout to establish a connection (default: <code>5S</code>)</p>
+</dd>
+<dt class="hdlist1"><code>read-timeout</code></dt>
+<dd>
+<p>Request timeout (default: <code>1S</code>)</p>
+</dd>
+<dt class="hdlist1"><code>credentials-provider."credentials-provider".database-credentials-role</code></dt>
+<dd>
+<p>Database credentials role</p>
+</dd>
+<dt class="hdlist1"><code>credentials-provider."credentials-provider".kv-path</code></dt>
+<dd>
+<p>A path in vault kv store, where we will find the kv-key</p>
+</dd>
+<dt class="hdlist1"><code>credentials-provider."credentials-provider".kv-key</code></dt>
+<dd>
+<p>Key name to search in vault path kv-path (default: <code>password</code>)</p>
+</dd>
+</dl>
+</div>
 </div>
 </details>
 <details>
@@ -2133,7 +2581,7 @@ public interface MultipartService {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperties(prefix = "greeting")
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperties(prefix = "greeting", namingStrategy=NamingStrategy.KEBAB_CASE)
 public class GreetingConfiguration {
     private String message;
     // getter/setter
@@ -2151,7 +2599,7 @@ public class GreetingConfiguration {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperties(prefix = "greeting")
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperties(prefix = "greeting", namingStrategy=NamingStrategy.KEBAB_CASE)
 public interface GreetingConfiguration {
 
     @ConfigProperty(name = "message")
@@ -2167,7 +2615,7 @@ public interface GreetingConfiguration {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperties(prefix = "greeting")
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperties(prefix = "greeting", namingStrategy=NamingStrategy.KEBAB_CASE)
 public class GreetingConfiguration {
     public String message;
     public HiddenConfig hidden;
@@ -2310,6 +2758,32 @@ Panache Queries equivalence in MongoDB:</p>
 <td class="content">
 PanacheQL refers to the Object parameter name but native queries refer to MongoDB field names.
 </td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>Projection</strong></p>
+</div>
+<div class="paragraph">
+<p>Projection can be done for both PanacheQL and native queries.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">import io.quarkus.mongodb.panache.ProjectionFor;
+
+@ProjectionFor(Person.class) <i class="conum" data-value="1"></i><b>(1)</b>
+public class PersonName {
+    public String name;
+}
+
+PanacheQuery&lt;PersonName&gt; shortQuery = Person.find("status ", Status.Alive).project(PersonName.class);</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Entity class.</td>
 </tr>
 </table>
 </div>
@@ -3675,8 +4149,17 @@ public class ArtemisConsumerManager {
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>INFO: Configuration options are the same as Artemis core.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Configuration options are the same as Artemis core.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </details>
@@ -4712,7 +5195,6 @@ Same for <code>maven-failsafe-plugin</code>.
     -Dextensions="security-oauth2"</code></pre>
 </div>
 </div>
-<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>And configuration in <code>src/main/resources/application.properties</code>:</p>
 </div>
@@ -5002,6 +5484,22 @@ Prefix <code>quarkus.hibernate-orm</code> is skipped.</p>
 <p><code>statistics</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enable statiscs collection.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>[<code>false</code>], <code>true</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>physical-naming-strategy</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class name of the Hibernate PhysicalNamingStrategy implementation.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>globally-quoted-identifiers</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Should quote all identifiers.</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>[<code>false</code>], <code>true</code></p>
 </div></div></td>
@@ -8213,7 +8711,6 @@ quarkus.mailer.password=....</code></pre>
 <p>List of Mailer parameters.
 <code>quarkus.</code> as a prefix is skipped in the next table.</p>
 </div>
-<div style="page-break-after: always;"></div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -9270,68 +9767,74 @@ mp.jwt.verify.issuer=
 <div class="paragraph">
 <p>Configuration options:</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top"> Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>quarkus.smallrye-jwt.enabled</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>true</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Determine if the jwt extension is enabled.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>quarkus.smallrye-jwt.realm-name</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Quarkus-JWT</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name to use for security realm.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>quarkus.smallrye-jwt.auth-mechanism</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">MP-JWT</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Authentication mechanism.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>mp.jwt.verify.publickey</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Public Key text itself to be supplied as a string.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>mp.jwt.verify.publickey.location</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Relative path or URL of a public key.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>mp.jwt.verify.issuer</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>mp.jwt.verify.publickey</code></dt>
+<dd>
+<p>Public Key text itself to be supplied as a string.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><code>mp.jwt.verify.publickey.location</code>
+Relative path or URL of a public key.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>mp.jwt.verify.issuer</code></dt>
+<dd>
 <p><code>iss</code> accepted as valid.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.token.header</code></dt>
+<dd>
+<p>Sets header such as <code>Cookie</code> is used to pass the token. (default: <code>Authorization</code>).</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.token.cookie</code></dt>
+<dd>
+<p>Name of the cookie containing a token.</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.token.schemes</code></dt>
+<dd>
+<p>Comma-separated list containing an alternative single or multiple schemes. (default: <code>Bearer</code>).</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.require.named-principal</code></dt>
+<dd>
+<p>A token must have a upn or preferred_username or sub claim set if using <code>java.security.Principal</code>. <code>True</code> makes throw an exception if not set. (default: <code>false</code>).</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.path.sub</code></dt>
+<dd>
+<p>Path to the claim with subject name.</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.claims.sub</code></dt>
+<dd>
+<p>Default sub claim value.</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.path.groups</code></dt>
+<dd>
+<p>Path to the claim containing the groups.</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.path.groups-separator</code></dt>
+<dd>
+<p>Separator for splitting a string which may contain multiple group values. (default. ` `).</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.claims.groups</code></dt>
+<dd>
+<p>Default groups claim value.</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.jwk.refresh-interval</code></dt>
+<dd>
+<p>JWK cache refresh interval in minutes. (default: <code>60</code>).</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.expiration.grace</code></dt>
+<dd>
+<p>Expiration grace in seconds. (default: <code>60</code>).</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.verify.audience</code></dt>
+<dd>
+<p>Comma separated list of the audiences that a token aud claim may contain.</p>
+</dd>
+</dl>
+</div>
 <div class="paragraph">
 <p>Supported public key formats:</p>
 </div>
@@ -9427,55 +9930,55 @@ flyway.migrate();</code></pre>
 <p>List of Flyway parameters.</p>
 </div>
 <div class="paragraph">
-<p><code>quarkus.</code> as prefix is skipped in the next table.</p>
+<p><code>quarkus.flyway</code> as prefix is skipped in the next table.</p>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><code>flyway.clean-at-start</code></dt>
+<dt class="hdlist1"><code>clean-at-start</code></dt>
 <dd>
 <p>Execute Flyway clean command (default: <code>false</code>)</p>
 </dd>
-<dt class="hdlist1"><code>flyway.migrate-at-start</code></dt>
+<dt class="hdlist1"><code>migrate-at-start</code></dt>
 <dd>
 <p>Flyway migration automatically (default: <code>false</code>)</p>
 </dd>
-<dt class="hdlist1"><code>flyway.locations</code></dt>
+<dt class="hdlist1"><code>locations</code></dt>
 <dd>
 <p>CSV locations to scan recursively for migrations. Supported prefixes <code>classpath</code> and <code>filesystem</code> (default: <code>classpath:db/migration</code>).</p>
 </dd>
-<dt class="hdlist1"><code>flyway.connect-retries</code></dt>
+<dt class="hdlist1"><code>connect-retries</code></dt>
 <dd>
 <p>The maximum number of retries when attempting to connect (default: 0)</p>
 </dd>
-<dt class="hdlist1"><code>flyway.schemas</code></dt>
+<dt class="hdlist1"><code>schemas</code></dt>
 <dd>
 <p>CSV case-sensitive list of schemas managed (default: none)</p>
 </dd>
-<dt class="hdlist1">a|<code>flyway.table</code></dt>
+<dt class="hdlist1"><code>table</code></dt>
 <dd>
 <p>The name of Flyway’s schema history table (default: <code>flyway_schema_history</code>)</p>
 </dd>
-<dt class="hdlist1"><code>flyway.sql-migration-prefix</code></dt>
+<dt class="hdlist1"><code>sql-migration-prefix</code></dt>
 <dd>
 <p>Prefix for versioned SQL migrations (default: <code>V</code>)</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
-<p><code>flyway.repeatable-sql-migration-prefix::</code>
+<p><code>repeatable-sql-migration-prefix::</code>
 Prefix for repeatable SQL migrations (default: <code>R</code>)</p>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><code>flyway.baseline-on-migrate</code></dt>
+<dt class="hdlist1"><code>baseline-on-migrate</code></dt>
 <dd>
 <p>Only migrations above <strong>baseline-version</strong> will then be applied</p>
 </dd>
-<dt class="hdlist1"><code>flyway.baseline-version</code></dt>
+<dt class="hdlist1"><code>baseline-version</code></dt>
 <dd>
 <p>Version to tag an existing schema with when executing baseline (default: 1)</p>
 </dd>
-<dt class="hdlist1"><code>flyway.baseline-description</code></dt>
+<dt class="hdlist1"><code>baseline-description</code></dt>
 <dd>
 <p>Description to tag an existing schema with when executing baseline (default: <code>Flyway Baseline</code>)</p>
 </dd>
@@ -9726,6 +10229,7 @@ public void testLambda() {
 <ul class="sectlevel1">
 <li><a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a>
 <ul class="sectlevel2">
+<li><a href="#_version_1_2_0_final">Version 1.2.0.Final</a></li>
 <li><a href="#_version_1_1_0_final">Version 1.1.0.Final</a></li>
 <li><a href="#_version_1_0_0_cr2">Version 1.0.0.CR2</a></li>
 <li><a href="#_version_0_26_0">Version 0.26.0</a></li>
@@ -9801,7 +10305,10 @@ public void testLambda() {
 <li><a href="#_quartz">Quartz</a></li>
 <li><a href="#_qute">Qute</a></li>
 <li><a href="#_sentry">Sentry</a></li>
+<li><a href="#_jsch">JSch</a></li>
+<li><a href="#_cache">Cache</a></li>
 <li><a href="#_spring_di">Spring DI</a></li>
+<li><a href="#_spring_boot_configuration">Spring Boot Configuration</a></li>
 <li><a href="#_spring_web">Spring Web</a></li>
 <li><a href="#_spring_data_jpa">Spring Data JPA</a></li>
 <li><a href="#_spring_security">Spring Security</a></li>
@@ -10053,6 +10560,18 @@ Optional&lt;String&gt; optionalMessage;</code></pre>
 <div class="paragraph">
 <p>And enable it <code>quarkus.profile=staging</code>.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+To get the active profile programmatically use <code>io.quarkus.runtime.configuration.ProfileManager.getActiveProfile()</code>.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>You can also set it in the build tool:</p>
 </div>
@@ -10091,6 +10610,15 @@ Same for <code>maven-failsafe-plugin</code>.
 </div>
 </div>
 <div class="paragraph">
+<p>Special properties are set in <strong>prod</strong> mode: <code>quarkus.application.version</code> and <code>quarkus.application.name</code> to get them available at runtime.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperty(name = "quarkus.application.name")
+String applicationName;</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p><strong>@ConfigProperties</strong></p>
 </div>
 <div class="paragraph">
@@ -10098,7 +10626,7 @@ Same for <code>maven-failsafe-plugin</code>.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperties(prefix = "greeting")
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperties(prefix = "greeting", namingStrategy=NamingStrategy.KEBAB_CASE)
 public class GreetingConfiguration {
     private String message;
     // getter/setter
@@ -10116,7 +10644,7 @@ public class GreetingConfiguration {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperties(prefix = "greeting")
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperties(prefix = "greeting", namingStrategy=NamingStrategy.KEBAB_CASE)
 public interface GreetingConfiguration {
 
     @ConfigProperty(name = "message")
@@ -10132,7 +10660,7 @@ public interface GreetingConfiguration {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperties(prefix = "greeting")
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperties(prefix = "greeting", namingStrategy=NamingStrategy.KEBAB_CASE)
 public class GreetingConfiguration {
     public String message;
     public HiddenConfig hidden;
@@ -10166,6 +10694,9 @@ greeting.hidden.recipients=Jane,John</code></pre>
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>Naming strategy can be changed with property <code>namingStrategy</code>. <code>KEBAB_CASE</code> (whatever.foo-bar) or <code>VERBATIM</code> (whatever.fooBar).</p>
 </div>
 <div class="paragraph">
 <p><strong>YAML Config</strong></p>
@@ -10655,6 +11186,31 @@ Validator validator;</code></pre>
             validator.validate(sauce);</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p><strong>Localization</strong></p>
+</div>
+<div class="paragraph">
+<p>You can configure the based locale for validation messages.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.default-locale=ca-ES
+# Supported locales resolved by Accept-Language
+quarkus.locales=en-US,es-ES,fr-FR, ca_ES</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">ValidationMessages_ca_ES.properties</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">pattern.message=No conforme al patro</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Pattern(regexp = "A.*", message = "{pattern.message}")
+private String name;</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_logging"><a class="anchor" href="#_logging"></a><a class="link" href="#_logging">Logging</a></h3>
@@ -10804,6 +11360,66 @@ quarkus.log.category."com.lordofthejars".level=DEBUG</code></pre>
 <dt class="hdlist1"><code>syslog.async.overflow</code></dt>
 <dd>
 <p>Action when queue is full (default: <code>BLOCK</code>)</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><strong>Gelf ouput</strong></p>
+</div>
+<div class="paragraph">
+<p>You can configure the output to be in <em>GELF</em> format instead of plain text.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="shell-session" class="language-shell-session hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-logging-gelf"</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>handler.gelf.enabled</code></dt>
+<dd>
+<p>Enable GELF logging handler (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.host</code></dt>
+<dd>
+<p>Hostname/IP of Logstash/Graylof. Prepend <code>tcp:</code> for using TCP protocol. (default: <code>udp:localhost</code>)</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.port</code></dt>
+<dd>
+<p>The port. (default: <code>12201</code>)</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.version</code></dt>
+<dd>
+<p>GELF version. (default: <code>1.1</code>)</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.extract-stack-trace</code></dt>
+<dd>
+<p>Post Stack-Trace to StackTrace field. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.stack-trace-throwable-reference</code></dt>
+<dd>
+<p>Gets the cause level to stack trace. <code>0</code> is fulls tack trace. (default: <code>0</code>)</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.filter-stack-trace</code></dt>
+<dd>
+<p>Stack-Trace filtering. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.timestamp-pattern</code></dt>
+<dd>
+<p>Java Date pattern. (default: <code>yyyy-MM-dd HH:mm:ss,SSS</code>)</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.level</code></dt>
+<dd>
+<p>Log level <code>java.util.logging.Level</code>. (default: <code>ALL</code>)</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.facility</code></dt>
+<dd>
+<p>Name of the facility. (default: <code>jboss-logmanage</code>)</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.additional-field.&lt;field&gt;.&lt;subfield&gt;</code></dt>
+<dd>
+<p>Post additional fields. <code>quarkus.log.handler.gelf.additional-field.field1.type=String</code></p>
 </dd>
 </dl>
 </div>
@@ -11611,6 +12227,22 @@ Prefix <code>quarkus.hibernate-orm</code> is skipped.</p>
 <p>[<code>false</code>], <code>true</code></p>
 </div></div></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>physical-naming-strategy</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class name of the Hibernate PhysicalNamingStrategy implementation.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>globally-quoted-identifiers</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Should quote all identifiers.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>[<code>false</code>], <code>true</code></p>
+</div></div></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
@@ -12151,57 +12783,65 @@ flyway.migrate();</code></pre>
 <p>List of Flyway parameters.</p>
 </div>
 <div class="paragraph">
-<p><code>quarkus.</code> as prefix is skipped in the next table.</p>
+<p><code>quarkus.flyway</code> as prefix is skipped in the next table.</p>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><code>flyway.clean-at-start</code></dt>
+<dt class="hdlist1"><code>clean-at-start</code></dt>
 <dd>
 <p>Execute Flyway clean command (default: <code>false</code>)</p>
 </dd>
-<dt class="hdlist1"><code>flyway.migrate-at-start</code></dt>
+<dt class="hdlist1"><code>migrate-at-start</code></dt>
 <dd>
 <p>Flyway migration automatically (default: <code>false</code>)</p>
 </dd>
-<dt class="hdlist1"><code>flyway.locations</code></dt>
+<dt class="hdlist1"><code>locations</code></dt>
 <dd>
 <p>CSV locations to scan recursively for migrations. Supported prefixes <code>classpath</code> and <code>filesystem</code> (default: <code>classpath:db/migration</code>).</p>
 </dd>
-<dt class="hdlist1"><code>flyway.connect-retries</code></dt>
+<dt class="hdlist1"><code>connect-retries</code></dt>
 <dd>
 <p>The maximum number of retries when attempting to connect (default: 0)</p>
 </dd>
-<dt class="hdlist1"><code>flyway.schemas</code></dt>
+<dt class="hdlist1"><code>schemas</code></dt>
 <dd>
 <p>CSV case-sensitive list of schemas managed (default: none)</p>
 </dd>
-<dt class="hdlist1">a|<code>flyway.table</code></dt>
+<dt class="hdlist1"><code>table</code></dt>
 <dd>
 <p>The name of Flyway’s schema history table (default: <code>flyway_schema_history</code>)</p>
 </dd>
-<dt class="hdlist1"><code>flyway.sql-migration-prefix</code></dt>
+<dt class="hdlist1"><code>sql-migration-prefix</code></dt>
 <dd>
 <p>Prefix for versioned SQL migrations (default: <code>V</code>)</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
-<p><code>flyway.repeatable-sql-migration-prefix::</code>
+<p><code>repeatable-sql-migration-prefix::</code>
 Prefix for repeatable SQL migrations (default: <code>R</code>)</p>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><code>flyway.baseline-on-migrate</code></dt>
+<dt class="hdlist1"><code>baseline-on-migrate</code></dt>
 <dd>
 <p>Only migrations above <strong>baseline-version</strong> will then be applied</p>
 </dd>
-<dt class="hdlist1"><code>flyway.baseline-version</code></dt>
+<dt class="hdlist1"><code>baseline-version</code></dt>
 <dd>
 <p>Version to tag an existing schema with when executing baseline (default: 1)</p>
 </dd>
-<dt class="hdlist1"><code>flyway.baseline-description</code></dt>
+<dt class="hdlist1"><code>baseline-description</code></dt>
 <dd>
 <p>Description to tag an existing schema with when executing baseline (default: <code>Flyway Baseline</code>)</p>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>validate-on-migrate</code></dt>
+<dd>
+<p>Validate the applied migrations against the available ones (default: <code>true</code>)</p>
 </dd>
 </dl>
 </div>
@@ -13936,6 +14576,32 @@ PanacheQL refers to the Object parameter name but native queries refer to MongoD
 </table>
 </div>
 <div class="paragraph">
+<p><strong>Projection</strong></p>
+</div>
+<div class="paragraph">
+<p>Projection can be done for both PanacheQL and native queries.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">import io.quarkus.mongodb.panache.ProjectionFor;
+
+@ProjectionFor(Person.class) <i class="conum" data-value="1"></i><b>(1)</b>
+public class PersonName {
+    public String name;
+}
+
+PanacheQuery&lt;PersonName&gt; shortQuery = Person.find("status ", Status.Alive).project(PersonName.class);</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Entity class.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
 <p><strong>DAO pattern</strong></p>
 </div>
 <div class="listingblock">
@@ -14573,8 +15239,17 @@ public class ArtemisConsumerManager {
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>INFO: Configuration options are the same as Artemis core.</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Configuration options are the same as Artemis core.
+</td>
+</tr>
+</table>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -14723,68 +15398,78 @@ mp.jwt.verify.issuer=
 <div class="paragraph">
 <p>Configuration options:</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top"> Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>quarkus.smallrye-jwt.enabled</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>true</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Determine if the jwt extension is enabled.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>quarkus.smallrye-jwt.realm-name</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Quarkus-JWT</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name to use for security realm.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>quarkus.smallrye-jwt.auth-mechanism</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">MP-JWT</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Authentication mechanism.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>mp.jwt.verify.publickey</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Public Key text itself to be supplied as a string.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>mp.jwt.verify.publickey.location</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Relative path or URL of a public key.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>mp.jwt.verify.issuer</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>mp.jwt.verify.publickey</code></dt>
+<dd>
+<p>Public Key text itself to be supplied as a string.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><code>mp.jwt.verify.publickey.location</code>
+Relative path or URL of a public key.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>mp.jwt.verify.issuer</code></dt>
+<dd>
 <p><code>iss</code> accepted as valid.</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>smallrye.jwt.token.header</code></dt>
+<dd>
+<p>Sets header such as <code>Cookie</code> is used to pass the token. (default: <code>Authorization</code>).</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.token.cookie</code></dt>
+<dd>
+<p>Name of the cookie containing a token.</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.token.schemes</code></dt>
+<dd>
+<p>Comma-separated list containing an alternative single or multiple schemes. (default: <code>Bearer</code>).</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.require.named-principal</code></dt>
+<dd>
+<p>A token must have a upn or preferred_username or sub claim set if using <code>java.security.Principal</code>. <code>True</code> makes throw an exception if not set. (default: <code>false</code>).</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.path.sub</code></dt>
+<dd>
+<p>Path to the claim with subject name.</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.claims.sub</code></dt>
+<dd>
+<p>Default sub claim value.</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.path.groups</code></dt>
+<dd>
+<p>Path to the claim containing the groups.</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.path.groups-separator</code></dt>
+<dd>
+<p>Separator for splitting a string which may contain multiple group values. (default. ` `).</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.claims.groups</code></dt>
+<dd>
+<p>Default groups claim value.</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.jwk.refresh-interval</code></dt>
+<dd>
+<p>JWK cache refresh interval in minutes. (default: <code>60</code>).</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.expiration.grace</code></dt>
+<dd>
+<p>Expiration grace in seconds. (default: <code>60</code>).</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.verify.audience</code></dt>
+<dd>
+<p>Comma separated list of the audiences that a token aud claim may contain.</p>
+</dd>
+</dl>
+</div>
 <div class="paragraph">
 <p>Supported public key formats:</p>
 </div>
@@ -14830,6 +15515,41 @@ private Instance&lt;Long&gt; providerIAT;</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@RolesAllowed("Subscriber")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Generate tokens</strong></p>
+</div>
+<div class="paragraph">
+<p>JWT generation API:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">Jwt.claims()
+    .issuer("https://server.com")
+    .claim("customClaim", 3)
+    .sign(createKey());
+
+JwtSignatureBuilder jwtSignatureBuilder = Jwt.claims("/testJsonToken.json").jws();
+jwtSignatureBuilder
+     .signatureKeyId("some-key-id")
+     .signatureAlgorithm(SignatureAlgorithm.ES256)
+     .header("custom-header", "custom-value");
+     .sign(createKey());
+
+Jwt.claims("/testJsonToken.json")
+    .encrypt(createKey());
+
+JwtEncryptionBuilder jwtEncryptionBuilder = Jwt.claims("/testJsonToken.json").jwe();
+jwtEncryptionBuilder
+     .keyEncryptionKeyId("some-key-id")
+      .keyEncryptionAlgorithm(KeyEncryptionAlgorithm.ECDH_ES_A256KW)
+     .header("custom-header", "custom-value");
+     .encrypt(createKey());
+
+Jwt.claims("/testJsonToken.json")
+  .innerSign(createKey());
+  .encrypt(createKey());</code></pre>
 </div>
 </div>
 </div>
@@ -14974,7 +15694,6 @@ You can use <code>quarkus.http.cors</code> property to enable consuming form dif
     -Dextensions="security-oauth2"</code></pre>
 </div>
 </div>
-<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>And configuration in <code>src/main/resources/application.properties</code>:</p>
 </div>
@@ -15487,16 +16206,24 @@ quarkus.vault.authentication.userpass.password=
 
 # path within the kv secret engine
 quarkus.vault.secret-config-kv-path=
-    myapps/vault-quickstart/config</code></pre>
+    myapps/vault-quickstart/config
+quarkus.vault.secret-config-kv-path.singer=
+    multi/singer</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Then you can inject the value configured at <code>secret/myapps/vault-quickstart/a-private-key</code>.</p>
+<p><code>vault kv put secret/myapps/vault-quickstart/config a-private-key=123456</code></p>
+</div>
+<div class="paragraph">
+<p><code>vault kv put secret/multi/singer firstname=paul</code></p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperty(name = "a-private-key")
-String privateKey;</code></pre>
+String privateKey;
+
+@ConfigProperty(name = "singer.firstname")
+String firstName;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -15538,201 +16265,118 @@ quarkus.datasource.username=
 <p>INFO: <a href="https://www.vaultproject.io/docs/secrets/databases/index.html">dynamic database credentials</a> through the <code>database-credentials-role</code> property.</p>
 </div>
 <div class="paragraph">
+<p><strong>Transit</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+VaultTransitSecretEngine transit;
+
+transit.encrypt("my_encryption", text);
+transit.decrypt("my_encryption", text).asString();
+transit.sign("my-sign-key", text);</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Elytron JDBC Realm configuration properties.
 Prefix <code>quarkus.vault</code> is skipped.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top"> Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>url</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Vault server URL</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>authentication.client-token</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Vault token to access</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>authentication.app-role.role-id</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Role Id for AppRole auth</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>authentication.app-role.secret-id</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Secret Id for AppRole auth</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>authentication.userpass.username</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Username for userpass auth</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>authentication.userpass.password</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Password for userpass auth</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>authentication.kubernetes.role</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes authentication role</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>authentication.kubernetes.jwt-token-path</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Location of the file containing the Kubernetes JWT token</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>renew-grace-period</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>1H</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Renew grace period duration.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>secret-config-cache-period</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>10M</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Vault config source cache period</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>secret-config-kv-path</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Vault path in kv store</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>log-confidentiality-level</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>medium</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used to hide confidential infos. <code>low</code>, <code>medium</code>, <code>high</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>kv-secret-engine-version</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>1</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Kv secret engine version</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>kv-secret-engine-mount-path</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>secret</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Kv secret engine path</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>tls.skip-verify</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>false</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Allows to bypass certificate validation on TLS communications</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>tls.ca-cert</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Certificate bundle used to validate TLS communications</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>tls.use-kubernetes-ca-cert</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>true</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>TLS will be active</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>connect-timeout</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>5S</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Tiemout to establish a connection</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>read-timeout</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>1S</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Request timeout</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>credentials-provider."credentials-provider".database-credentials-role</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Database credentials role</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>credentials-provider."credentials-provider".kv-path</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A path in vault kv store, where we will find the kv-key</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>credentials-provider."credentials-provider".kv-key</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>password</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Key name to search in vault path kv-path</p></td>
-</tr>
-</tbody>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>url</code></dt>
+<dd>
+<p>Vault server URL</p>
+</dd>
+<dt class="hdlist1"><code>authentication.client-token</code></dt>
+<dd>
+<p>Vault token to access</p>
+</dd>
+<dt class="hdlist1"><code>authentication.app-role.role-id</code></dt>
+<dd>
+<p>Role Id for AppRole auth</p>
+</dd>
+<dt class="hdlist1"><code>authentication.app-role.secret-id</code></dt>
+<dd>
+<p>Secret Id for AppRole auth</p>
+</dd>
+<dt class="hdlist1"><code>authentication.userpass.username</code></dt>
+<dd>
+<p>Username for userpass auth</p>
+</dd>
+<dt class="hdlist1"><code>authentication.userpass.password</code></dt>
+<dd>
+<p>Password for userpass auth</p>
+</dd>
+<dt class="hdlist1"><code>authentication.kubernetes.role</code></dt>
+<dd>
+<p>Kubernetes authentication role</p>
+</dd>
+<dt class="hdlist1"><code>authentication.kubernetes.jwt-token-path</code></dt>
+<dd>
+<p>Location of the file containing the Kubernetes JWT token</p>
+</dd>
+<dt class="hdlist1"><code>renew-grace-period</code></dt>
+<dd>
+<p>Renew grace period duration (default: <code>1H</code>)</p>
+</dd>
+<dt class="hdlist1"><code>secret-config-cache-period</code></dt>
+<dd>
+<p>Vault config source cache period (default: <code>10M</code>)</p>
+</dd>
+<dt class="hdlist1"><code>secret-config-kv-path</code></dt>
+<dd>
+<p>Vault path in kv store. List of paths is supported in CSV</p>
+</dd>
+<dt class="hdlist1"><code>log-confidentiality-level</code></dt>
+<dd>
+<p>Used to hide confidential infos. <code>low</code>, <code>medium</code>, <code>high</code> (default: <code>medium</code>)</p>
+</dd>
+<dt class="hdlist1"><code>kv-secret-engine-version</code></dt>
+<dd>
+<p>Kv secret engine version (default: 1)</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><code>kv-secret-engine-mount-path</code>
+Kv secret engine path (default: <code>secret</code>)</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>tls.skip-verify</code></dt>
+<dd>
+<p>Allows to bypass certificate validation on TLS communications (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>tls.ca-cert</code></dt>
+<dd>
+<p>Certificate bundle used to validate TLS communications</p>
+</dd>
+<dt class="hdlist1"><code>tls.use-kubernetes-ca-cert</code></dt>
+<dd>
+<p>TLS will be active (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>connect-timeout</code></dt>
+<dd>
+<p>Tiemout to establish a connection (default: <code>5S</code>)</p>
+</dd>
+<dt class="hdlist1"><code>read-timeout</code></dt>
+<dd>
+<p>Request timeout (default: <code>1S</code>)</p>
+</dd>
+<dt class="hdlist1"><code>credentials-provider."credentials-provider".database-credentials-role</code></dt>
+<dd>
+<p>Database credentials role</p>
+</dd>
+<dt class="hdlist1"><code>credentials-provider."credentials-provider".kv-path</code></dt>
+<dd>
+<p>A path in vault kv store, where we will find the kv-key</p>
+</dd>
+<dt class="hdlist1"><code>credentials-provider."credentials-provider".kv-key</code></dt>
+<dd>
+<p>Key name to search in vault path kv-path (default: <code>password</code>)</p>
+</dd>
+</dl>
+</div>
 <div style="page-break-after: always;"></div>
 </div>
 <div class="sect2">
@@ -15933,6 +16577,26 @@ public class ErrorMapper
             .build();
         }
     }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Caching</strong></p>
+</div>
+<div class="paragraph">
+<p>Annotations to set Cache-Control headers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Produces(MediaType.APPLICATION_JSON)
+@org.jboss.resteasy.annotations.cache.NoCache
+public User me() {}
+
+@Produces(MediaType.APPLICATION_JSON)
+@org.jboss.resteasy.annotations.cache.Cache(
+    maxAge = 2000,
+    noStore = false
+)
+public User you() {}</code></pre>
 </div>
 </div>
 </div>
@@ -16312,6 +16976,12 @@ MicroProfile Fault Tolerance integrates with MicroProfile Metrics spec. You can 
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p><strong>Hibernate ORM</strong></p>
+</div>
+<div class="paragraph">
+<p><code>quarkus.hibernate-orm.metrics.enabled</code> set to <code>true</code> exposes Hibernate metrics under <code>vendor</code> scope.</p>
 </div>
 </div>
 <div class="sect2">
@@ -16785,7 +17455,9 @@ Now <code>docker</code> (default) and <code>podman</code> are the valid options.
 kubernetes.labels[0].key=foo
 kubernetes.labels[0].value=bar
 
-kubernetes.readiness-probe.period-seconds=45</code></pre>
+kubernetes.readiness-probe.period-seconds=45
+
+docker.registry=quay.io</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -17353,7 +18025,6 @@ quarkus.mailer.password=....</code></pre>
 <p>List of Mailer parameters.
 <code>quarkus.</code> as a prefix is skipped in the next table.</p>
 </div>
-<div style="page-break-after: always;"></div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -17686,7 +18357,6 @@ public String extractText(InputStream stream) {
 </tr>
 </tbody>
 </table>
-<div style="page-break-after: always;"></div>
 </div>
 <div class="sect2">
 <h3 id="_jgit"><a class="anchor" href="#_jgit"></a><a class="link" href="#_jgit">JGit</a></h3>
@@ -17962,11 +18632,37 @@ Extension of the file is not required to be set.</p>
 </div>
 <div class="paragraph">
 <p><code>discountedPrice</code> is not a field of the POJO but a method call.
-Method definition must be annotated with <code>@TemplateExtension</code>.
-First paramter is used to match thebase object.</p>
+Method definition must be annotated with <code>@TemplateExtension</code> and be static method.
+First parameter is used to match the base object (<code>Item</code>).
+<code>@TemplateExtension</code> can be used at class level:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@TemplateExtension
+public class MyExtensions {
+    static BigDecimal discountedPrice(Item item) {
+        return item.price.multiply(new BigDecimal("0.9"));
+    }
+}</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>You can render programmaticaly too:</p>
+<p>Methods with multiple parameters are supported too:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="html" class="language-html hljs">{item.discountedPrice(2)}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">static BigDecimal discountedPrice(Item item, int scale) {
+    return item.price.multiply(scale);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can render programmaticaly the templates too:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -17978,6 +18674,23 @@ String output = report
     .data("samples", service.get())
     .render();</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p><strong>Qute Mail Integration</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+MailTemplate hello;
+
+CompletionStage&lt;Void&gt; c = hello.to("to@acme.org")
+     .subject("Hello from Qute template")
+     .data("name", "John")
+     .send();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>INFO: Template located at <code>src/main/resources/templates/hello.[html|txt]</code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -18022,6 +18735,102 @@ quarkus.log.sentry.in-app-packages=org.example</code></pre>
 <dt class="hdlist1"><code>sentry.in-app-packages</code></dt>
 <dd>
 <p>Configure which package prefixes your application uses.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jsch"><a class="anchor" href="#_jsch"></a><a class="link" href="#_jsch">JSch</a></h3>
+<div class="paragraph">
+<p>Quarkus integrates with <a href="http://www.jcraft.com/jsch/">Jsch</a> for SSH communication.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-jsch"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">JSch jsch = new JSch();
+Session session = jsch.getSession(null, host, port);
+session.setConfig("StrictHostKeyChecking", "no");
+session.connect();</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cache"><a class="anchor" href="#_cache"></a><a class="link" href="#_cache">Cache</a></h3>
+<div class="paragraph">
+<p>Quarkus can cache method calls by using as key the tuple (method + arguments).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="cache"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@io.quarkus.cache.CacheResult(cacheName = "weather-cache")
+public String getDailyForecast(LocalDate date, String city) {}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>@CacheInvalidate</code> removes the element represented by the calculated cache key from cache.
+<code>@CacheInvalidateAll</code> removes all entries from the cache.
+<code>@CacheKey</code> to specifically set the arguments to be used as key instead of all.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ApplicationScoped
+public class CachedBean {
+
+    @CacheResult(cacheName = "foo")
+    public Object load(Object key) {}
+
+    @CacheInvalidate(cacheName = "foo")
+    public void invalidate(Object key) {}
+
+    @CacheInvalidateAll(cacheName = "foo")
+    public void invalidateAll() {}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This extension uses <a href="https://github.com/ben-manes/caffeine">Caffeine</a> as its underlying caching provider.</p>
+</div>
+<div class="paragraph">
+<p>Each cache can be configured individually:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.cache.caffeine."foo".initial-capacity=10
+quarkus.cache.caffeine."foo".maximum-size=20
+quarkus.cache.caffeine."foo".expire-after-write
+quarkus.cache.caffeine."bar".maximum-size=1000</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Full list of configuration properties having  <code>quarkus.cache.caffeine.[cache-name]</code> as prefix:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>initial-capacity</code></dt>
+<dd>
+<p>Minimum total size for the internal data structures.</p>
+</dd>
+<dt class="hdlist1"><code>maximum-size</code></dt>
+<dd>
+<p>Maximum number of entries the cache may contain.</p>
+</dd>
+<dt class="hdlist1"><code>expire-after-write</code></dt>
+<dd>
+<p>Specifies that each entry should be automatically removed from the cache once a fixed duration has elapsed after the entry&#8217;s creation, or last write.</p>
+</dd>
+<dt class="hdlist1"><code>expire-after-access</code></dt>
+<dd>
+<p>Specifies that each entry should be automatically removed from the cache once a fixed duration has elapsed after the entry&#8217;s creation, or last write.</p>
 </dd>
 </dl>
 </div>
@@ -18099,6 +18908,36 @@ public class GreeterBean {
 </div>
 </div>
 <div style="page-break-after: always;"></div>
+</div>
+<div class="sect2">
+<h3 id="_spring_boot_configuration"><a class="anchor" href="#_spring_boot_configuration"></a><a class="link" href="#_spring_boot_configuration">Spring Boot Configuration</a></h3>
+<div class="paragraph">
+<p>Quarkus provides a compatibility layer for Spring Boot <code>ConfigurationProperties</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-spring-boot-properties"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigurationProperties("example")
+public final class ClassProperties {
+
+    private String value;
+    private AnotherClass anotherClass;
+
+    // getters/setters
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">example.value=class-value
+example.anotherClass.value=true</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_spring_web"><a class="anchor" href="#_spring_web"></a><a class="link" href="#_spring_web">Spring Web</a></h3>

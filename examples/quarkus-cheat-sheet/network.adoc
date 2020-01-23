@@ -162,7 +162,7 @@ public class ErrorMapper
 *Caching*
 // tag::update_13_9[]
 
-Annotations to make setting Cache-Control headers:
+Annotations to set Cache-Control headers:
 
 [source, java]
 ----

@@ -519,5 +519,5 @@ public class ArtemisConsumerManager {
 }
 ----
 
-INFO: Configuration options are the same as Artemis core.
+TIP: Configuration options are the same as Artemis core.
 // end::update_8_4[]

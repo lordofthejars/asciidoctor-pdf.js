@@ -165,8 +165,6 @@ quarkus.mailer.password=....
 List of Mailer parameters.
 `quarkus.` as a prefix is skipped in the next table.
 
-<<<
-
 |===	
 |Parameter | Default | Description
 
@@ -369,8 +367,6 @@ a|The document may have other embedded documents. Set if autmatically append.
 |===
 // end::update_7_3[]
 // end::update_5_8[]
-
-<<<
 
 == JGit
 // tag::update_8_1[]
@@ -632,7 +628,7 @@ static BigDecimal discountedPrice(Item item, int scale) {
     return item.price.multiply(scale);
 }
 ----
-// end::udpate_13_8[]
+// end::update_13_8[]
 
 You can render programmaticaly the templates too:
 
@@ -720,3 +716,67 @@ session.setConfig("StrictHostKeyChecking", "no");
 session.connect();
 ----
 // end::update_13_2[]
+
+== Cache
+// tag::update_13_17[]
+
+Quarkus can cache method calls by using as key the tuple (method + arguments).
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="cache"
+----
+
+[source, java]
+----
+@io.quarkus.cache.CacheResult(cacheName = "weather-cache")
+public String getDailyForecast(LocalDate date, String city) {}
+----
+
+`@CacheInvalidate` removes the element represented by the calculated cache key from cache.
+`@CacheInvalidateAll` removes all entries from the cache.
+`@CacheKey` to specifically set the arguments to be used as key instead of all.
+
+[source, java]
+----
+@ApplicationScoped
+public class CachedBean {
+
+    @CacheResult(cacheName = "foo")
+    public Object load(Object key) {}
+
+    @CacheInvalidate(cacheName = "foo")
+    public void invalidate(Object key) {}
+
+    @CacheInvalidateAll(cacheName = "foo")
+    public void invalidateAll() {}
+}
+----
+
+This extension uses https://github.com/ben-manes/caffeine[Caffeine] as its underlying caching provider.
+
+Each cache can be configured individually:
+
+[source, properties]
+----
+quarkus.cache.caffeine."foo".initial-capacity=10
+quarkus.cache.caffeine."foo".maximum-size=20
+quarkus.cache.caffeine."foo".expire-after-write
+quarkus.cache.caffeine."bar".maximum-size=1000 
+----
+
+Full list of configuration properties having  `quarkus.cache.caffeine.[cache-name]` as prefix:
+
+`initial-capacity`::
+Minimum total size for the internal data structures.
+
+`maximum-size`::
+Maximum number of entries the cache may contain.
+
+`expire-after-write`::
+Specifies that each entry should be automatically removed from the cache once a fixed duration has elapsed after the entry's creation, or last write.
+
+`expire-after-access`::
+Specifies that each entry should be automatically removed from the cache once a fixed duration has elapsed after the entry's creation, or last write.
+// end::update_13_17[]
