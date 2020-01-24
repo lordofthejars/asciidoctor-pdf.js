@@ -159,6 +159,26 @@ public class ErrorMapper
 ----
 // end::update_5_1[]
 
+*Caching*
+// tag::update_13_9[]
+
+Annotations to set Cache-Control headers:
+
+[source, java]
+----
+@Produces(MediaType.APPLICATION_JSON)
+@org.jboss.resteasy.annotations.cache.NoCache
+public User me() {}
+
+@Produces(MediaType.APPLICATION_JSON)
+@org.jboss.resteasy.annotations.cache.Cache(
+    maxAge = 2000,
+    noStore = false
+)
+public User you() {}
+----
+// end::update_13_9[]
+
 == Vert.X Filters and Routes
 
 // tag::update_9_5[]
@@ -418,6 +438,12 @@ MP_Fault_Tolerance_NonFallback_Enabled=false
 
 TIP: MicroProfile Fault Tolerance integrates with MicroProfile Metrics spec. You can disable it by setting `MP_Fault_Tolerance_Metrics_Enabled` to false.
 // end::update_1_2[]
+
+*Hibernate ORM*
+
+// tag::update_13_12[]
+`quarkus.hibernate-orm.metrics.enabled` set to `true` exposes Hibernate metrics under `vendor` scope.
+// end::update_13_12[]
 
 == Observability
 

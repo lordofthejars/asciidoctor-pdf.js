@@ -170,6 +170,10 @@ quarkus.http.port=9090
 And enable it `quarkus.profile=staging`.
 // end::update_2_9[]
 
+// tag::update_13_5[]
+NOTE: To get the active profile programmatically use `io.quarkus.runtime.configuration.ProfileManager.getActiveProfile()`.
+// end::update_13_5[]
+
 // tag::update_6_7[]
 You can also set it in the build tool:
 
@@ -198,6 +202,16 @@ test {
 ----
 // end::update_6_7[]
 
+// tag::update_13_7[]
+Special properties are set in *prod* mode: `quarkus.application.version` and `quarkus.application.name` to get them available at runtime.
+
+[source, java]
+----
+@ConfigProperty(name = "quarkus.application.name")
+String applicationName;
+----
+// end::update_13_7[]
+
 // tag::update_9_1[]
 *@ConfigProperties*
 
@@ -205,7 +219,7 @@ As an alternative to injecting multiple related configuration values, you can al
 
 [source, java]
 ----
-@ConfigProperties(prefix = "greeting")
+@ConfigProperties(prefix = "greeting", namingStrategy=NamingStrategy.KEBAB_CASE)
 public class GreetingConfiguration {
     private String message;
     // getter/setter
@@ -220,7 +234,7 @@ Also you can use an interface approach:
 
 [source, java]
 ----
-@ConfigProperties(prefix = "greeting")
+@ConfigProperties(prefix = "greeting", namingStrategy=NamingStrategy.KEBAB_CASE)
 public interface GreetingConfiguration {
 
     @ConfigProperty(name = "message")
@@ -234,7 +248,7 @@ Nested objects are also supporte:
 
 [source, java]
 ----
-@ConfigProperties(prefix = "greeting")
+@ConfigProperties(prefix = "greeting", namingStrategy=NamingStrategy.KEBAB_CASE)
 public class GreetingConfiguration {
     public String message;
     public HiddenConfig hidden;
@@ -257,6 +271,10 @@ Bean Validation is also supported so properties are validated at startup time, f
 
 TIP: `prefix` attribute is not mandatory. If not provided, attribute is determined by class name (ie `GreeetingConfiguration` is translated to `greeting` or `GreetingExtraConfiguration` to `greeting-extra`). The suffix of the class is always removed.
 // end::update_9_1[]
+
+// tag::update_13_11[]
+Naming strategy can be changed with property `namingStrategy`. `KEBAB_CASE` (whatever.foo-bar) or `VERBATIM` (whatever.fooBar).
+// end::update_13_11[]
 
 *YAML Config*
 // tag::update_12_12[]
@@ -689,6 +707,31 @@ Set<ConstraintViolation<Sauce>> violations =
             validator.validate(sauce);
 ----
 
+*Localization*
+
+// tag::update_13_13[]
+You can configure the based locale for validation messages.
+
+[source, properties]
+----
+quarkus.default-locale=ca-ES
+# Supported locales resolved by Accept-Language
+quarkus.locales=en-US,es-ES,fr-FR, ca_ES
+----
+
+[source, properties]
+.ValidationMessages_ca_ES.properties
+----
+pattern.message=No conforme al patro
+----
+
+[source, java]
+----
+@Pattern(regexp = "A.*", message = "{pattern.message}")
+private String name;
+----
+// end::update_13_13[]
+
 == Logging
 
 You can configure how Quarkus logs:
@@ -801,6 +844,51 @@ The queue length to use before flushing writing (default: `512`)
 
 `syslog.async.overflow`::
 Action when queue is full (default: `BLOCK`)
+
+*Gelf ouput*
+// tag::update_13_4[]
+
+You can configure the output to be in _GELF_ format instead of plain text.
+
+[source, shell-session]
+----
+./mvnw quarkus:add-extension
+  -Dextensions="quarkus-logging-gelf"
+----
+
+`handler.gelf.enabled`::
+Enable GELF logging handler (default: `false`)
+
+`handler.gelf.host`::
+Hostname/IP of Logstash/Graylof. Prepend `tcp:` for using TCP protocol. (default: `udp:localhost`)
+
+`handler.gelf.port`::
+The port. (default: `12201`)
+
+`handler.gelf.version`::
+GELF version. (default: `1.1`)
+
+`handler.gelf.extract-stack-trace`::
+Post Stack-Trace to StackTrace field. (default: `true`)
+
+`handler.gelf.stack-trace-throwable-reference`::
+Gets the cause level to stack trace. `0` is fulls tack trace. (default: `0`)
+
+`handler.gelf.filter-stack-trace`::
+Stack-Trace filtering. (default: `false`)
+
+`handler.gelf.timestamp-pattern`::
+Java Date pattern. (default: `yyyy-MM-dd HH:mm:ss,SSS`)
+
+`handler.gelf.level`::
+Log level `java.util.logging.Level`. (default: `ALL`)
+
+`handler.gelf.facility`::
+Name of the facility. (default: `jboss-logmanage`)
+
+`handler.gelf.additional-field.<field>.<subfield>`::
+Post additional fields. `quarkus.log.handler.gelf.additional-field.field1.type=String`
+// end::update_13_4[]
 
 *JSON output*
 // tag::update_12_9[]

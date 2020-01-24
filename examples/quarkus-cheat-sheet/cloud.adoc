@@ -65,6 +65,8 @@ kubernetes.labels[0].key=foo
 kubernetes.labels[0].value=bar
 
 kubernetes.readiness-probe.period-seconds=45
+
+docker.registry=quay.io
 ----
 
 All possible values are explained at https://quarkus.io/guides/kubernetes#configuration-options.

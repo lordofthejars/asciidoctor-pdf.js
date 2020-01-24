@@ -111,33 +111,52 @@ mp.jwt.verify.issuer=
 
 Configuration options:
 
-|===	
-| Parameter | Default | Description
+`mp.jwt.verify.publickey`::
+Public Key text itself to be supplied as a string.
 
-a|`quarkus.smallrye-jwt.enabled`
-a|`true`
-|Determine if the jwt extension is enabled.
+`mp.jwt.verify.publickey.location`
+Relative path or URL of a public key.
 
-a|`quarkus.smallrye-jwt.realm-name`
-|Quarkus-JWT
-|Name to use for security realm.
+`mp.jwt.verify.issuer`::
+`iss` accepted as valid.
 
-a|`quarkus.smallrye-jwt.auth-mechanism`
-|MP-JWT
-|Authentication mechanism.
+// tag::update_13_16[]
+`smallrye.jwt.token.header`::
+Sets header such as `Cookie` is used to pass the token. (default: `Authorization`).
 
-a|`mp.jwt.verify.publickey`
-|none
-|Public Key text itself to be supplied as a string.
+`smallrye.jwt.token.cookie`::
+Name of the cookie containing a token.
 
-a|`mp.jwt.verify.publickey.location`
-|none
-|Relative path or URL of a public key.
+`smallrye.jwt.token.schemes`::
+Comma-separated list containing an alternative single or multiple schemes. (default: `Bearer`).
 
-a|`mp.jwt.verify.issuer`
-|none
-a|`iss` accepted as valid.
-|===
+`smallrye.jwt.require.named-principal`::
+A token must have a upn or preferred_username or sub claim set if using `java.security.Principal`. `True` makes throw an exception if not set. (default: `false`).
+
+`smallrye.jwt.path.sub`::
+Path to the claim with subject name.
+
+`smallrye.jwt.claims.sub`::
+Default sub claim value.
+
+`smallrye.jwt.path.groups`::
+Path to the claim containing the groups.
+
+`smallrye.jwt.path.groups-separator`::
+Separator for splitting a string which may contain multiple group values. (default. ` `).
+
+`smallrye.jwt.claims.groups`::
+Default groups claim value.
+
+`smallrye.jwt.jwk.refresh-interval`::
+JWK cache refresh interval in minutes. (default: `60`).
+
+`smallrye.jwt.expiration.grace`::
+Expiration grace in seconds. (default: `60`).
+
+`smallrye.jwt.verify.audience`::
+Comma separated list of the audiences that a token aud claim may contain.
+// end::update_13_16[]
 
 Supported public key formats:
 
@@ -168,6 +187,41 @@ JWT `groups` claim is directly mapped to roles to be used in security annotation
 @RolesAllowed("Subscriber")
 ----
 // end::update_1_5[]
+
+*Generate tokens*
+
+// tag::update_13_15[]
+JWT generation API:
+
+[source, java]
+----
+Jwt.claims()
+    .issuer("https://server.com")
+    .claim("customClaim", 3)
+    .sign(createKey());
+
+JwtSignatureBuilder jwtSignatureBuilder = Jwt.claims("/testJsonToken.json").jws();
+jwtSignatureBuilder
+     .signatureKeyId("some-key-id")
+     .signatureAlgorithm(SignatureAlgorithm.ES256)
+     .header("custom-header", "custom-value");    
+     .sign(createKey());
+
+Jwt.claims("/testJsonToken.json")
+    .encrypt(createKey());
+
+JwtEncryptionBuilder jwtEncryptionBuilder = Jwt.claims("/testJsonToken.json").jwe();
+jwtEncryptionBuilder
+     .keyEncryptionKeyId("some-key-id")
+      .keyEncryptionAlgorithm(KeyEncryptionAlgorithm.ECDH_ES_A256KW)
+     .header("custom-header", "custom-value");
+     .encrypt(createKey());
+
+Jwt.claims("/testJsonToken.json")
+  .innerSign(createKey());
+  .encrypt(createKey());
+----
+// end::update_13_15[]
 
 == OpenId Connect
 // tag::update_1_9[]
@@ -242,8 +296,6 @@ Quarkus integrates with OAuth2 to be used in case of opaque tokens (none JWT) an
 mvn quarkus:add-extension 
     -Dextensions="security-oauth2"
 ----
-
-<<<
 
 And configuration in `src/main/resources/application.properties`:
 
@@ -552,14 +604,21 @@ quarkus.vault.authentication.userpass.password=
 # path within the kv secret engine
 quarkus.vault.secret-config-kv-path=
     myapps/vault-quickstart/config
+quarkus.vault.secret-config-kv-path.singer=
+    multi/singer
 ----
 
-Then you can inject the value configured at `secret/myapps/vault-quickstart/a-private-key`.
+`vault kv put secret/myapps/vault-quickstart/config a-private-key=123456`
+
+`vault kv put secret/multi/singer firstname=paul`
 
 [source, java]
 ----
 @ConfigProperty(name = "a-private-key")
 String privateKey;
+
+@ConfigProperty(name = "singer.firstname")
+String firstName;
 ----
 
 You can access the KV engine programmatically:
@@ -595,98 +654,86 @@ No password is set as it is fetched from Vault.
 
 INFO: https://www.vaultproject.io/docs/secrets/databases/index.html[dynamic database credentials] through the `database-credentials-role` property.
 
+*Transit*
+
+// tag::update_13_14[]
+[source, java]
+----
+@Inject
+VaultTransitSecretEngine transit;
+
+transit.encrypt("my_encryption", text);
+transit.decrypt("my_encryption", text).asString();
+transit.sign("my-sign-key", text);
+----
+// end::update_13_14[]
+
 Elytron JDBC Realm configuration properties.
 Prefix `quarkus.vault` is skipped.
 
-|===	
-| Parameter | Default | Description
+`url`::
+Vault server URL
 
-a|`url`
-a|
-|Vault server URL
+`authentication.client-token`::
+Vault token to access
 
-a|`authentication.client-token`
-a|
-|Vault token to access
+`authentication.app-role.role-id`::
+Role Id for AppRole auth
 
-a|`authentication.app-role.role-id`
-a|
-|Role Id for AppRole auth
+`authentication.app-role.secret-id`::
+Secret Id for AppRole auth
 
-a|`authentication.app-role.secret-id`
-a|
-|Secret Id for AppRole auth
+`authentication.userpass.username`::
+Username for userpass auth
 
-a|`authentication.userpass.username`
-a|
-|Username for userpass auth
+`authentication.userpass.password`::
+Password for userpass auth
 
-a|`authentication.userpass.password`
-a|
-|Password for userpass auth
+`authentication.kubernetes.role`::
+Kubernetes authentication role
 
-a|`authentication.kubernetes.role`
-a|
-|Kubernetes authentication role
+`authentication.kubernetes.jwt-token-path`::
+Location of the file containing the Kubernetes JWT token
 
-a|`authentication.kubernetes.jwt-token-path`
-a|
-|Location of the file containing the Kubernetes JWT token
+`renew-grace-period`::
+Renew grace period duration (default: `1H`)
 
-a|`renew-grace-period`
-a|1H
-|Renew grace period duration.
+`secret-config-cache-period`::
+Vault config source cache period (default: `10M`)
 
-a|`secret-config-cache-period`
-a|10M
-|Vault config source cache period
+`secret-config-kv-path`::
+Vault path in kv store. List of paths is supported in CSV
 
-a|`secret-config-kv-path`
-a|
-|Vault path in kv store
+`log-confidentiality-level`::
+Used to hide confidential infos. `low`, `medium`, `high` (default: `medium`)
 
-a|`log-confidentiality-level`
-a|`medium`
-|Used to hide confidential infos. `low`, `medium`, `high`
+`kv-secret-engine-version`::
+Kv secret engine version (default: 1)
 
-a|`kv-secret-engine-version`
-a|`1`
-|Kv secret engine version
+`kv-secret-engine-mount-path`
+Kv secret engine path (default: `secret`)
 
-a|`kv-secret-engine-mount-path`
-a|`secret`
-|Kv secret engine path
+`tls.skip-verify`::
+Allows to bypass certificate validation on TLS communications (default: `false`)
 
-a|`tls.skip-verify`
-a|`false`
-|Allows to bypass certificate validation on TLS communications
+`tls.ca-cert`::
+Certificate bundle used to validate TLS communications
 
-a|`tls.ca-cert`
-a|
-|Certificate bundle used to validate TLS communications
+`tls.use-kubernetes-ca-cert`::
+TLS will be active (default: `true`)
 
-a|`tls.use-kubernetes-ca-cert`
-a|`true`
-a|TLS will be active 
+`connect-timeout`::
+Tiemout to establish a connection (default: `5S`)
 
-a|`connect-timeout`
-a|`5S`
-|Tiemout to establish a connection
+`read-timeout`::
+Request timeout (default: `1S`)
 
-a|`read-timeout`
-a|`1S`
-|Request timeout
+`credentials-provider."credentials-provider".database-credentials-role`::
+Database credentials role
 
-a|`credentials-provider."credentials-provider".database-credentials-role`
-a|
-|Database credentials role
+`credentials-provider."credentials-provider".kv-path`::
+A path in vault kv store, where we will find the kv-key
 
-a|`credentials-provider."credentials-provider".kv-path`
-a|
-|A path in vault kv store, where we will find the kv-key
-
-a|`credentials-provider."credentials-provider".kv-key`
-a|`password`
-|Key name to search in vault path kv-path
-|===
+`credentials-provider."credentials-provider".kv-key`::
+Key name to search in vault path kv-path (default: `password`)
 // end::update_10_5[]
