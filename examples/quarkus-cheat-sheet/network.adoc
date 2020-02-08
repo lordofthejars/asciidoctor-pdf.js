@@ -255,6 +255,36 @@ public class MyDeclarativeRoutes {
 ----
 // end::update_10_9[]
 
+== Vert.X Verticle
+
+// tag::update_14_1[]
+Vert.X Verticles are also supported:
+
+[source, java]
+----
+@ApplicationScoped
+public class VerticleDeployer {
+
+    @Inject
+    Vertx vertx;
+
+    public void init(@Observes StartupEvent ev) {
+        CountDownLatch latch = new CountDownLatch(1);
+        vertx.deployVerticle(BareVerticle::new, 
+            new DeploymentOptions()
+                .setConfig(
+                    new JsonObject()
+                    .put("id", "bare")
+                )
+            )
+            .thenAccept(x -> latch.countDown());
+        
+        latch.countDown();
+    }
+----
+// end::update_14_1[]
+
+
 == GZip Support
 // tag::update_7_4[]
 
@@ -661,6 +691,26 @@ Injecting a histogram using `@Metric`.
 @Metric(name = "histogram")
 Histogram historgram;
 ----
+
+// tag::update_14_2[]
+You can configure Metrics:
+
+[source, properties]
+----
+quarkus.smallrye-metrics.path=/mymetrics
+----
+
+Prefix is `quarkus.smallrye-metrics`.
+
+`path`::
+The path to the metrics handler. (default: `/metrics`)
+
+`extensions.enabled`::
+Metrics are enabled or not. (default: `true`)
+
+`micrometer.compatibility`::
+Apply Micrometer compatibility mode. (default: `false`)
+// end::update_14_2[]
 
 *Tracing*
 

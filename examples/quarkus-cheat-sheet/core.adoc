@@ -122,12 +122,15 @@ String messageWithDefault;
 Optional<String> optionalMessage;
 ----
 
-Properties can be set as:
+// tag::update_14_6[]
+Properties can be set (in decreasing priority) as:
 
-* Environment variables (`GREETINGS_MESSAGE`).
 * System properties (`-Dgreetings.message`).
-* Resources `src/main/resources/application.properties`.
+* Environment variables (`GREETINGS_MESSAGE`).
+* Environment file named `.env` placed in the current working directory (`GREETING_MESSAGE=`).
 * External config directory under the current working directory: `config/application.properties`.
+* Resources `src/main/resources/application.properties`.
+// end::update_14_6[]
 
 [source, properties]
 ----

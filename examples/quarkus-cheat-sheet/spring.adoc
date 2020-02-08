@@ -198,6 +198,15 @@ Iterator<Movie> findByRating(String rating);
 @Modifying
 @Query("delete from Movie where rating = :rating")
 void deleteByRating(@Param("rating") String rating);
+
+@Query(value = "SELECT COUNT(*), publicationYear FROM Book GROUP BY publicationYear")
+List<BookCountByYear> findAllByPublicationYear2();
+
+interface BookCountByYear {
+    int getPublicationYear();
+
+    Long getCount();
+}
 ----
 
 What is currently unsupported:

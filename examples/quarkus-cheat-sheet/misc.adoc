@@ -630,6 +630,17 @@ static BigDecimal discountedPrice(Item item, int scale) {
 ----
 // end::update_13_8[]
 
+// tag::update_14_4[]
+Qute `for` syntax supports any instance of `Iterable`, `Map.EntrySet`, `Stream` or `Integer`.
+
+[source, html]
+----
+{#for i in total}
+  {i}:
+{/for}
+----
+// end::update_14_4[]
+
 You can render programmaticaly the templates too:
 
 [source, java]
@@ -780,3 +791,7 @@ Specifies that each entry should be automatically removed from the cache once a 
 `expire-after-access`::
 Specifies that each entry should be automatically removed from the cache once a fixed duration has elapsed after the entry's creation, or last write.
 // end::update_13_17[]
+
+// tag::update_14_3[]
+TIP: You can multiple cache annotations on a single method.
+// end::update_14_3[]
