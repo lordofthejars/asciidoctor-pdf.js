@@ -53,6 +53,24 @@ include::persistence.adoc[tag=update_14_5]
 include::core.adoc[tag=update_14_6]
 ====
 
+.Mutiny
+[%collapsible]
+====
+include::reactive.adoc[tag=update_14_7]
+====
+
+.Security with JPA
+[%collapsible]
+====
+include::security.adoc[tag=update_14_8]
+====
+
+.Banner
+[%collapsible]
+====
+include::misc.adoc[tag=update_14_9]
+====
+
 === Version 1.2.0.Final
 
 .Qute Mail Integration

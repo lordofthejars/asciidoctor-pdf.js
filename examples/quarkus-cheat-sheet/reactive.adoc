@@ -5,8 +5,7 @@ Quarkus implements https://github.com/eclipse/microprofile-reactive-streams-oper
 [source, bash]
 ----
 ./mvnw quarkus:add-extension 
-  -Dextensions="
-    io.quarkus:quarkus-smallrye-reactive-streams-operators"
+  -Dextensions="quarkus-smallrye-reactive-streams-operators"
 ----
 
 Asynchronous HTTP endpoint is implemented by returning Java `CompletionStage`.
@@ -40,6 +39,35 @@ public Publisher<String> publishers() {
         .map(i -> Integer.toString(i));
 }
 ----
+
+*Mutiny*
+
+// tag::update_14_7[]
+Quarkus integrates with https://github.com/smallrye/smallrye-mutiny[Mutiny] as reactive programming library:
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="mutiny"
+----
+
+[source, java]
+----
+@ApplicationScoped
+public static class ReactiveHello {
+
+    public Uni<String> greeting() {
+        return Uni.createFrom().item(() -> "hello")
+                .emitOn(Infrastructure.getDefaultExecutor());
+    }
+
+    public Multi<String> stream() {
+        return Multi.createFrom().items("hello", "world")
+                .emitOn(Infrastructure.getDefaultExecutor());
+    }
+}
+----
+// end::update_14_7[]
 
 == Reactive Messaging
 // tag::update_1_4[]

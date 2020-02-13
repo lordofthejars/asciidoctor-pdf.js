@@ -795,3 +795,17 @@ Specifies that each entry should be automatically removed from the cache once a 
 // tag::update_14_3[]
 TIP: You can multiple cache annotations on a single method.
 // end::update_14_3[]
+
+== Banner
+
+// tag::update_14_9[]
+To print a Quarkus banner at start-up:
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="banner"
+----
+
+Configure banner by setting `quarkus.banner.path` to a _txt_ file containing the banner. Path is relative to root of the classpath.
+// end::update_14_9[]

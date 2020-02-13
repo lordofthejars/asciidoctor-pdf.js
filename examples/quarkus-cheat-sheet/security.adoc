@@ -578,6 +578,67 @@ quarkus.security.jdbc.principal-query.permissions.sql=
 ----
 // end::update_9_7[]
 
+== Security with JPA
+
+// tag::update_14_8[]
+You can also protect endpoints and store identities in a database using JPA.
+
+[source, bash]
+----
+mvn quarkus:add-extension 
+    -Dextensions="security-jpa"
+----
+
+NOTE: Also you might require `jdbc-postgresql`, `resteasy`, `hibernate-orm-panache`.
+
+[source, java]
+----
+@io.quarkus.security.jpa.UserDefinition
+@Table(name = "test_user")
+@Entity
+public class User extends PanacheEntity {
+    @io.quarkus.security.Username
+    public String name;
+
+    @io.quarkus.security.Password
+    public String pass;
+
+    @ManyToMany
+    @Roles
+    public List<Role> roles = new ArrayList<>();
+
+    public static void add(String username, String password) {
+        User user = new User();
+        user.username = username;
+        user.password = BcryptUtil.bcryptHash(password);
+        user.persist();
+    }
+}
+
+@Entity
+public class Role extends PanacheEntity {
+
+    @ManyToMany(mappedBy = "roles")
+    public List<ExternalRolesUserEntity> users;
+
+    @io.quarkus.security.RolesValue
+    public String role;
+}
+----
+
+You need to configure JDBC:
+
+[source, properties]
+----
+quarkus.datasource.url=jdbc:postgresql:security_jpa
+quarkus.datasource.driver=org.postgresql.Driver
+quarkus.datasource.username=quarkus
+quarkus.datasource.password=quarkus
+
+quarkus.hibernate-orm.database.generation=drop-and-create
+----
+// end::update_14_8[]
+
 == Vault
 
 // tag::update_10_5[]
