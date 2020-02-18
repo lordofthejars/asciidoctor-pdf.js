@@ -780,3 +780,9 @@ quarkus.hibernate-orm.dialect=
     org.hibernate.dialect.PostgreSQLDialect
 ----
 // end::update_8_12[]
+
+*AWS XRay*
+
+// tag::udpate_14_10[]
+If you are building native images, and want to use AWS X-Ray Tracing with your lambda you will need to include `quarkus-amazon-lambda-xray` as a dependency in your pom.
+// end::update_14_10[]

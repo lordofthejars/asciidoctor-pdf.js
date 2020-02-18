@@ -71,6 +71,24 @@ include::security.adoc[tag=update_14_8]
 include::misc.adoc[tag=update_14_9]
 ====
 
+.AWS XRay
+[%collapsible]
+====
+include::network.adoc[tag=update_14_10]
+====
+
+.Spring Cloud Config Client
+[%collapsible]
+====
+include::spring.adoc[tag=update_14_11]
+====
+
+.Reactive Panache
+[%collapsible]
+====
+include::persistence.adoc[tag=update_14_12]
+====
+
 === Version 1.2.0.Final
 
 .Qute Mail Integration

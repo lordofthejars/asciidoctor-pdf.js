@@ -1616,6 +1616,8 @@ public class PersonRepository
 }
 ----
 
+*Jandex*
+
 If entities are defined in external JAR, you need to enable in these projects the `Jandex` plugin in project.
 
 [source, xml]
@@ -1642,3 +1644,20 @@ If entities are defined in external JAR, you need to enable in these projects th
 </plugin>
 ----
 // end::update_9_2[]
+
+*Reactive Panache*
+
+// tag::update_14_12[]
+MongoDB with Panache allows using reactive implementation too by using `ReactivePanacheMongoEntity` or `ReactivePanacheMongoEntityBase` or `ReactivePanacheMongoRepository` or `ReactivePanacheMongoRepositoryBase` depending on your style.
+
+[source, java]
+----
+public class ReactivePerson extends ReactivePanacheMongoEntity {
+    public String name;
+}
+
+CompletionStage<Void> cs1 = person.persist();
+CompletionStage<List<ReactivePerson>> allPersons = ReactivePerson.listAll();
+Publisher<ReactivePerson> allPersons = ReactivePerson.streamAll();
+----
+// end::update_14_12[]
