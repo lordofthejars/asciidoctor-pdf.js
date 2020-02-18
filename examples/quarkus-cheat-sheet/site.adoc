@@ -89,6 +89,18 @@ include::spring.adoc[tag=update_14_11]
 include::persistence.adoc[tag=update_14_12]
 ====
 
+.Reactive and Async in Qute
+[%collapsible]
+====
+include::misc.adoc[tag=update_14_13]
+====
+
+.Reactive Mail client
+[%collapsible]
+====
+include::misc.adoc[tag=update_14_14]
+====
+
 === Version 1.2.0.Final
 
 .Qute Mail Integration

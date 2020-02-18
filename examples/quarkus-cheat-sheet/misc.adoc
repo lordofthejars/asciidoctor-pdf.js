@@ -113,15 +113,12 @@ You can send emails by using Quarkus Mailer extension:
   -Dextensions="io.quarkus:quarkus-mailer"
 ----
 
-You can inject two possible classes `io.quarkus.mailer.Mailer` for synchronous API or `io.quarkus.mailer.ReactiveMailer` for asynchronous API.
+You can inject two possible classes `io.quarkus.mailer.Mailer` for synchronous API or `io.quarkus.mailer.reactive.ReactiveMailer` for asynchronous/reactive API.
 
 [source, java]
 ----
 @Inject
 Mailer mailer;
-
-@Inject
-ReactiveMailer reactiveMailer;
 ----
 
 And then you can use them to send an email:
@@ -131,13 +128,27 @@ And then you can use them to send an email:
 mailer.send(
     Mail.withText("to@acme.org", "Subject", "Body")
 );
-
-CompletionStage<Void> stage = 
-    reactiveMailer.send(
-        Mail.withText("to@acme.org", "Subject", "Body")
-    );
 ----
 
+*Reactive Mail client*
+
+// tag::update_14_14[]
+[source, java]
+----
+@Inject
+ReactiveMailer reactiveMailer;
+
+CompletionStage<Response> stage = 
+    reactiveMailer.send(
+        Mail.withText("to@acme.org", "Subject", "Body")
+    )
+    .subscribeAsCompletionStage()
+    .thenApply(x -> Response.accepted().build());
+----
+
+TIP: If you are using `quarkus-resteasy-mutiny`, you can return `io.smallrye.mutiny.Uni` type.
+
+// end::update_14_14[]
 `Mail` class contains methods to add `cc`, `bcc`, `headers`, `bounce address`, `reply to`, `attachments`, `inline attachments` and `html body`.
 
 [source, java]
@@ -655,6 +666,19 @@ String output = report
     .render();
 ----
 // end::update_12_8[]
+
+*Reactive and Async*
+
+// tag::update_14_13[]
+[source, java]
+----
+CompletionStage<String> async = report.renderAsync();
+Publisher<String> publisher = report.publisher();
+
+Uni<String> content = io.smallrye.mutiny.Uni.createFrom()
+                            .completionStage(() -> report.renderAsync());
+----
+// end::update_14_13[]
 
 *Qute Mail Integration*
 // tag::update_13_1[]
