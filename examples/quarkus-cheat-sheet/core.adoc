@@ -1043,6 +1043,22 @@ A method on client interface can return a `CompletionStage` class to be executed
 CompletionStage<WorldClock> getNow();
 ----
 
+*Reactive*
+
+// tag::update_14_15[]
+Rest Client also integrates with reactive library named Mutiny.
+To start using it you need to add the `quarkus-resteasy-mutiny`.
+
+After that, a methodon a client interface can return a `io.smallrye.mutiny.Uni` instance.
+
+[source, java]
+----
+@GET @Path("/json/cet/now")
+@Produces(MediaType.APPLICATION_JSON)
+Uni<WorldClock> getNow();
+----
+// end::update_14_15[]
+
 *Multipart*
 
 // tag::update_10_10[]

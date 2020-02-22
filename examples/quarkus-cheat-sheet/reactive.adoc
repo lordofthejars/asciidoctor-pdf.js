@@ -40,6 +40,33 @@ public Publisher<String> publishers() {
 }
 ----
 
+*Mutiny and JAX-RS*
+
+// tag::update_14_16[]
+Apart from the `CompletionStage` support, there is also support for Mutiny.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-resteasy-mutiny"
+----
+
+[source, java]
+----
+@GET
+@Produces(MediaType.TEXT_PLAIN)
+public Uni<String> hello() {
+    return Uni.createFrom().item(() -> "hello");
+}
+
+@GET
+@Produces(MediaType.TEXT_PLAIN)
+public Multi<String> multi() {
+    return Multi.createFrom().items("hello", "world");
+}
+----
+// end::update_14_16[]
+
 *Mutiny*
 
 // tag::update_14_7[]
@@ -407,18 +434,20 @@ quarkus.datasource.url=
     vertx-reactive:postgresql://host:5431/db
 ----
 
-Then you can inject `io.vertx.axle.pgclient.PgPool` class.
+Then you can inject `io.vertx.mutiny.pgclient.PgPool` class.
 
 [source, java]
 ----
 @Inject
 PgPool client;
 
-CompletionStage<JsonArray> = 
-    client.query("SELECT * FROM table")  
-    .thenApply(rowSet -> {
+Uni<List<Fruit>> fruits = 
+    client.query("SELECT * FROM fruits")  
+    .map(rowSet -> {
         JsonArray jsonArray = new JsonArray();
-        PgIterator iterator = rowSet.iterator();
+        for (Row row : rowSet) {
+            jsonArray.add(from(row));
+        }
         return jsonArray;
     })
 ----
@@ -442,7 +471,7 @@ quarkus.datasource.url=
     vertx-reactive:mysql://localhost:3306/db
 ----
 
-Then you can inject `io.vertx.axle.mysqlclient.MySQLPool` class.
+Then you can inject `io.vertx.mutiny.mysqlclient.MySQLPool` class.
 
 [source, java]
 ----
@@ -453,8 +482,8 @@ public static CompletionStage<Fruit> findById(
     MySQLPool c, Long id) {
     return c.preparedQuery("SELECT name FROM fruits WHERE id = $1", 
                 Tuple.of(id))
-            .thenApply(RowSet::iterator)
-            .thenApply(iterator -> iterator.hasNext() ? 
+            .map(RowSet::iterator)
+            .map(iterator -> iterator.hasNext() ? 
                         from(iterator.next()) : null);
 }
 ----

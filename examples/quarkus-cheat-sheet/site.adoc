@@ -101,6 +101,30 @@ include::misc.adoc[tag=update_14_13]
 include::misc.adoc[tag=update_14_14]
 ====
 
+.Reactive Rest Client Mutiny
+[%collapsible]
+====
+include::core.adoc[tag=update_14_15]
+====
+
+.Mutiny and JAX-RS
+[%collapsible]
+====
+include::network.adoc[tag=update_14_16]
+====
+
+.New Reactive MongoDB Client
+[%collapsible]
+====
+include::persistence.adoc[tag=update_14_17]
+====
+
+.Scheduling Jobs Programmatically
+[%collapsible]
+====
+include::persistence.adoc[tag=update_14_18]
+====
+
 === Version 1.2.0.Final
 
 .Qute Mail Integration

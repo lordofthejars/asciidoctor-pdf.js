@@ -1342,8 +1342,12 @@ Quarkus integrates with https://www.mongodb.com/[MongoDB, window="_blank"]:
 com.mongodb.client.MongoClient client;
 
 @Inject
-io.quarkus.mongodb.ReactiveMongoClient client;
+io.quarkus.mongodb.reactive.ReactiveMongoClient client;
 ----
+
+// tag::update_14_17[]
+INFO: Reactive client uses exposes Mutiny API.
+// end::update_14_17[]
 
 [source, properties]
 ----

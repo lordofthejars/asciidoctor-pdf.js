@@ -319,6 +319,18 @@ quarkus.scheduler.cron-type=unix
 ----
 // end::update_12_5[]
 
+// tag::update_14_18[]
+`org.quartz.Scheduler` can be injected as any other bean and scehdule jobs programmatically.
+
+[source, java]
+----
+@Inject
+org.quartz.Scheduler quartz;
+
+quartz.scheduleJob(job, trigger);
+----
+// end::update_14_18[]
+
 == Kogito
 // tag::update_3_9[]
 Quarkus integrates with http://www.kiegroup.org/[Kogito, window="_blank"], a next-generation business automation toolkit from Drools and jBPM projects for adding business automation capabilities.
