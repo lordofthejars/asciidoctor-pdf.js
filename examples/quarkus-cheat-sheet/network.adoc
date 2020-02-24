@@ -282,8 +282,12 @@ public class VerticleDeployer {
         latch.countDown();
     }
 ----
-// end::update_14_1[]
 
+Verticles can be:
+
+bare:: extending `io.vertx.core.AbstractVerticle`.
+mutiny: extendig `io.smallrye.mutiny.vertx.core.AbstractVerticle`.
+// end::update_14_1[]
 
 == GZip Support
 // tag::update_7_4[]

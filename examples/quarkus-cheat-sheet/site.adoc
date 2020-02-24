@@ -122,7 +122,43 @@ include::persistence.adoc[tag=update_14_17]
 .Scheduling Jobs Programmatically
 [%collapsible]
 ====
-include::persistence.adoc[tag=update_14_18]
+include::misc.adoc[tag=update_14_18]
+====
+
+.Neo4J Mutiny
+[%collapsible]
+====
+include::persistence.adoc[tag=update_14_19]
+====
+
+.Hibernate Properties
+[%collapsible]
+====
+include::persistence.adoc[tag=update_14_20]
+====
+
+.JWT Properties
+[%collapsible]
+====
+include::security.adoc[tag=update_14_21]
+====
+
+.Container Image Creation
+[%collapsible]
+====
+include::cloud.adoc[tag=update_14_22]
+====
+
+.Kubernetes/OpenShift/Knative Options
+[%collapsible]
+====
+include::cloud.adoc[tag=update_14_23]
+====
+
+.Kubernetes Deployment
+[%collapsible]
+====
+include::cloud.adoc[tag=update_14_24]
 ====
 
 === Version 1.2.0.Final

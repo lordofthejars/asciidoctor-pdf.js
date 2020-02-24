@@ -95,87 +95,72 @@ a|`Boolean`
 Hibernate configuration properties.
 Prefix `quarkus.hibernate-orm` is skipped.
 
-|===
-|Parameter|Description|Values[Default]
+`dialect`::
+Class name of the Hibernate ORM dialect.
 
-a|`dialect`
-|Class name of the Hibernate ORM dialect.
-a|Not necessary to set.
+`dialect.storage-engine`::
+The storage engine when the dialect supports multiple storage engines.
 
-a|`dialect.storage-engine`
-|The storage engine when the dialect supports multiple storage engines.
-a|Not necessary to set.
+`sql-load-script`::
+Name of the file containing the SQL statements to execute when starts.
+`no-file` force Hibernate to skip SQL import. (default: `import.sql`)
 
-a|`sql-load-script`
-|Name of the file containing the SQL statements to execute when starts.
-`no-file` force Hibernate to skip SQL import.
-a|`import.sql`
+`batch-fetch-size`::
+The size of the batches. (default: -1 disabled)
 
-a|`batch-fetch-size`
-|The size of the batches.
-a|-1 disabled.
+`query.query-plan-cache-max-size`::
+The maximum size of the query plan cache.
 
-a|`query.query-plan-cache-max-size`
-|The maximum size of the query plan cache.
-a|
+`query.default-null-ordering`::
+Default precedence of null values in `ORDER BY`. Possible values: `none`, `first`, `last`. (default: `none`)
 
-a|`query.default-null-ordering`
-a|Default precedence of null values in `ORDER BY`.
-a|[`none`], `first`, `last`.
+`database.generation`::
+Database schema is generation. Possible values: `none`, `create`, `drop-and-create`, `drop`, `update`. (default: `none`)
 
-a|`database.generation`
-|Database schema is generation.
-a|[`none`], `create`, `drop-and-create`, `drop`, `update`.
+`database.generation.halt-on-error`::
+Stop on the first error when applying the schema. (default: `false`)
 
-a|`database.generation.halt-on-error`
-|Stop on the first error when applying the schema.
-a|[`flase`], `true`
+`database.default-catalog`::
+Default catalog.
 
-a|`database.default-catalog`
-|Default catalog.
-a|
+`database.default-schema`::
+Default Schema.
 
-a|`database.default-schema`
-|Default Schema.
-a|
+`database.charset`::
+Charset.
 
-a|`database.charset`
-|Charset.
-a|
+`jdbc.timezone`::
+Time Zone JDBC driver.
 
-a|`jdbc.timezone`
-|Time Zone JDBC driver.
-a|
+`jdbc.statement-fetch-size`::
+Number of rows fetched at a time.
 
-a|`jdbc.statement-fetch-size`
-|Number of rows fetched at a time.
-a|
+`jdbc.statement-batch-size`::
+Number of updates sent at a time.
 
-a|`jdbc.statement-batch-size`
-|Number of updates sent at a time.
-a|
+`log.sql`::
+Show SQL logs (default: `false`)
 
-a|`log.sql`
-|Show SQL logs
-a|[`false`], `true`
+`log.jdbc-warnings`::
+Collect and show JDBC warnings. (default: false)
 
-a|`log.jdbc-warnings`
-|Collect and show JDBC warnings.
-a|[`false`], `true`
+`statistics`::
+Enable statiscs collection. (default: `false`)
 
-a|`statistics`
-|Enable statiscs collection.
-a|[`false`], `true`
+`physical-naming-strategy`::
+Class name of the Hibernate PhysicalNamingStrategy implementation.
 
-a|`physical-naming-strategy`
-|Class name of the Hibernate PhysicalNamingStrategy implementation.
-a|
-
-a|`globally-quoted-identifiers`
-|Should quote all identifiers.
-a|[`false`], `true`
-|===
+`globally-quoted-identifiers`::
+Should quote all identifiers. (default: `false`)
 // end::update_5_3[]
+
+// tag:update_14_20[]
+`metrics-enabled`::
+Metrics published with smallrye-metrics extension (default: `false`)
+
+second-level-caching-enabled::
+Enable/Disable 2nd level cache. (default: `true`)
+// end:update_14_20[]
 
 Database operations:
 
@@ -1238,52 +1223,37 @@ Configuration properties:
 
 `quarkus.neo4j` as prefix is skipped in the next table.
 
-|===	
-|Parameter | Default | Description
+Prefix is `quarkus.neo4j`.
 
-a|`uri`
-a|`localhost:7687`
-|URI of Neo4j.
+`uri`::
+URI of Neo4j. (default: `localhost:7687`)
 
-a|`authentication`
-`.username`
-a|`neo4j`
-|Username.
+`authentication.username`::
+Username. (default: `neo4j`)
 
-a|`authentication`
-`.password`
-a|`neo4j`
-|Password.
+`authentication.password`::
+Password. (default: `neo4j`)
 
-a|`authentication`
-`.disabled`
-a|`false`
-|Disable authentication.
+`authentication.disabled`::
+Disable authentication. (default: `false`)
 
-a|`pool.metrics-enabled`
-a|`false`
-|Enable metrics.
+`pool.metrics-enabled`::
+Enable metrics. (default: `false`)
 
-a|`pool.log-leaked-sessions`
-a|`false`
-|Enable leaked sessions logging.
+`pool.log-leaked-sessions`::
+Enable leaked sessions logging. (default:`false`)
 
-a|`pool.max-connection-pool-size`
-a|`100`
-|Max amount of connections.
+`pool.max-connection-pool-size`::
+Max amount of connections. (default: `100`)
 
-a|`pool.max-connection-lifetime`
-a|`1H`
-|Pooled connections older will be closed and removed from the pool.
+`pool.max-connection-lifetime`::
+Pooled connections older will be closed and removed from the pool. (default: `1H`)
 
-a|`pool.connection-acquisition-timeout`
-a|`1M`
-|Timout for connection adquisation.
+`pool.connection-acquisition-timeout`::
+Timout for connection adquisation. (default: 1M)
 
-a|`pool.idle-time-before-connection-test`
-a|`-1`
-|Pooled connections idled in the pool for longer than this timeout will be tested before they are used.
-|===
+`pool.idle-time-before-connection-test`::
+Pooled connections idled in the pool for longer than this timeout will be tested before they are used. (default: `-1`)
 
 As Neo4j uses SSL communication by default, to create a native executable you need to compile with next options GraalVM options:
 
@@ -1315,16 +1285,27 @@ And Quarkus Maven Plugin with next configuration:
 
 Alternatively, and as a not recommended way in production, you can disable SSL and Quarkus will disable Bolt SSL as well. `quarkus.ssl.native=false`.
 
+// end::update_5_7[]
+// tag::update_14_19[]
 If you are using Neo4j 4.0, you can use fully reactive. 
-Add next depenency management `io.projectreactor:reactor-bom:Californium-SR4:pom:import` and dependency: `io.projectreactor:reactor-core`.
+Add the next extension: `quarkus-resteasy-mutiny`.
 
 [source, java]
 ----
+@GET
 public Publisher<String> get() {
-        return Flux.using(driver::rxSession, ...);
+    return Multi.createFrom().resource(driver::rxSession,
+        session -> session.readTransaction(tx -> {
+            RxResult result = tx.run("MATCH (f:Fruit) RETURN f.name as name");
+            return Multi.createFrom().publisher(result.records())
+                    .map(record -> record.get("name").asString());
+        })
+    ).withFinalizer(session -> {
+        return Uni.createFrom().publisher(session.close());
+    });
 }
 ----
-// end::update_5_7[]
+// end::update_14_19[]
 
 == MongoDB Client
 // tag::update_5_10[]
