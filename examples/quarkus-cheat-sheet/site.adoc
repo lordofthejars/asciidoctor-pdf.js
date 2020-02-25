@@ -161,6 +161,18 @@ include::cloud.adoc[tag=update_14_23]
 include::cloud.adoc[tag=update_14_24]
 ====
 
+.Integration MongoDB and Metrics
+[%collapsible]
+====
+include::network.adoc[tag=update_14_25]
+====
+
+.DynamoDB and Mutiny
+[%collapsible]
+====
+include::persistence.adoc[tag=update_14_26]
+====
+
 === Version 1.2.0.Final
 
 .Qute Mail Integration

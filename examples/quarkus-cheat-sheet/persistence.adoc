@@ -142,7 +142,6 @@ Number of updates sent at a time.
 Show SQL logs (default: `false`)
 
 `log.jdbc-warnings`::
-Collect and show JDBC warnings. (default: false)
 
 `statistics`::
 Enable statiscs collection. (default: `false`)
@@ -904,10 +903,25 @@ Quarkus integrates with https://aws.amazon.com/dynamodb/[Amazon DynamoDB, window
 ----
 @Inject
 DynamoDbClient dynamoDB;
+----
 
+// tag::update_14_26[]
+To use asycnhronous client with Mutiny:
+
+[source, shell-session]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-amazon-dynamodb, resteasy-mutiny"
+----
+
+[source, java]
+----
 @Inject
 DynamoDbAsyncClient dynamoDB;
+
+Uni.createFrom().completionStage(() -> dynamoDB.scan(scanRequest()))....
 ----
+// end::update_14_26[]
 
 To use it as a local DynamoDB instance:
 

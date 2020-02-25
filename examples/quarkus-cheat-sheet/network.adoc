@@ -37,33 +37,23 @@ public class BookResource {
 
 To get information from request:
 
-|===	
-|Property | Description | Example
+`@PathParam`::
+Gets content from request URI. (example: `/book/{id} @PathParam("id")`)
 
-a|`@PathParam`
-|Gets content from request URI.
-a|`/book/{id} @PathParam("id")`
+`@QueryParam`::
+Gets query parameter. (example: `/book?desc="" @QueryParam("desc)`)
 
-a|`@QueryParam`
-|Gets query parameter.
-|`/book?desc="" @QueryParam("desc)`
+`@FormParam`::
+Gets form parameter.
 
-a|`@FormParam`
-|Gets form parameter.
-|
+`@MatrixParam`::
+Get URI matrix parameter. (example: `/book;author=mkyong;country=malaysia`)
 
-a|`@MatrixParam`
-|Get URI matrix parameter.
-a|`/book;author=mkyong;country=malaysia`
+`@CookieParam`::
+Gets cookie param by name.
 
-a|`@CookieParam`
-|Gets cookie param by name.
-|
-
-a|`@HeaderParam`
-|Gets header parameter by name.
-|
-|===
+`@HeaderParam`::
+Gets header parameter by name.
 
 Valid HTTP method annotations provided by the spec are: `@GET`, `@POST`, `@PUT`, `@DELETE`, `@PATCH`, `@HEAD` and `@OPTIONS`.
 
@@ -294,17 +284,11 @@ mutiny: extendig `io.smallrye.mutiny.vertx.core.AbstractVerticle`.
 
 You can configure Quarkus to use GZip in the `application.properties` file using the next properties with `quarkus.resteasy` suffix:
 
-|===	
-|Parameter | Default | Description
+`gzip.enabled`::
+EnableGZip. (default: `false`)
 
-a|`gzip.enabled`
-a|`false`
-a|EnableGZip.
-
-a|`gzip.max-input`
-a|`10M`
-a|Configure the upper limit on deflated request body.
-|===
+`gzip.max-input`::
+Configure the upper limit on deflated request body. (default: `10M`)
 // end::update_7_4[]
 
 == CORS Filter
@@ -319,29 +303,20 @@ quarkus.http.cors=true
 
 Prefix is `quarkus.http`.
 
-|===	
-| Property | Default | Description
+`cors`::
+Enable CORS. (default: `false`)
 
-a|`cors`
-a|`false`
-|Enable CORS.
+`cors.origins`::
+CSV of origins allowed. (dedault: Any request valid.)
 
-a|`cors.origins`
-a|Any request valid.
-|CSV of origins allowed.
+`cors.methods`::
+CSV of methods valid. (default: Any method valid.)
 
-a|`cors.methods`
-|Any method valid.
-|CSV of methods valid.
+`cors.headers`::
+CSV of valid allowed headers. (default: Any requested header valid.)
 
-a|`cors.headers`
-|Any requested header valid.
-|CSV of valid allowed headers.
-
-a|`cors.exposed-headers`
-|
-|CSV of valid exposed headers.
-|===
+`cors.exposed-headers`::
+CSV of valid exposed headers.
 // end::update_2_11[]
 
 == Fault Tolerance
@@ -472,12 +447,6 @@ MP_Fault_Tolerance_NonFallback_Enabled=false
 
 TIP: MicroProfile Fault Tolerance integrates with MicroProfile Metrics spec. You can disable it by setting `MP_Fault_Tolerance_Metrics_Enabled` to false.
 // end::update_1_2[]
-
-*Hibernate ORM*
-
-// tag::update_13_12[]
-`quarkus.hibernate-orm.metrics.enabled` set to `true` exposes Hibernate metrics under `vendor` scope.
-// end::update_13_12[]
 
 == Observability
 
@@ -641,27 +610,23 @@ An endpoint is registered automatically at `/metrics` providing default metrics.
 
 MicroProfile Metrics annotations:
 
-|===	
-| Annotation | Description
+`@Timed`::
+Tracks the duration.
 
-a|`@Timed`
-a|Tracks the duration.
+`@Metered`::
+Tracks the frequency of invocations.
 
-a|`@Metered`
-a|Tracks the frequency of invocations.
+`@Counted`::
+Counts number of invocations.
 
-a|`@Counted`
-a|Counts number of invocations.
+`@Gauge`::
+Samples the value of the annotated object.
 
-a|`@Gauge`
-a|Samples the value of the annotated object.
+`@ConcurrentGauge`::
+Gauge to count parallel invocations.
 
-a|`@ConcurrentGauge`
-a|Gauge to count parallel invocations.
-
-a|`@Metric`
-a|Used to inject a metric. Valid types `Meter`, `Timer`, `Counter`, `Histogram`. `Gauge` only on producer methods/fields.
-|===
+`@Metric`::
+Used to inject a metric. Valid types `Meter`, `Timer`, `Counter`, `Histogram`. `Gauge` only on producer methods/fields.
 
 [source, java]
 ----
@@ -715,6 +680,14 @@ Metrics are enabled or not. (default: `true`)
 `micrometer.compatibility`::
 Apply Micrometer compatibility mode. (default: `false`)
 // end::update_14_2[]
+
+// tag::update_13_12[]
+`quarkus.hibernate-orm.metrics.enabled` set to `true` exposes Hibernate metrics under `vendor` scope.
+// end::update_13_12[]
+
+// tag::update_14_25[]
+`quarkus.mongodb.metrics.enabled` set to `true` exposes MongoDB metrics under `vendor` scope.
+// end::update_14_25[]
 
 *Tracing*
 
