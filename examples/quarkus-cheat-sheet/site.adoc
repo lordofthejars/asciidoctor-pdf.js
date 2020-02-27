@@ -173,6 +173,24 @@ include::network.adoc[tag=update_14_25]
 include::persistence.adoc[tag=update_14_26]
 ====
 
+.Qute methods
+[%collapsible]
+====
+include::misc.adoc[tag=update_14_27]
+====
+
+.SSL in Docker and Native
+[%collapsible]
+====
+include::cloud.adoc[tag=update_14_28]
+====
+
+.OpenShift Extension
+[%collapsible]
+====
+include::cloud.adoc[tag=update_14_29]
+====
+
 === Version 1.2.0.Final
 
 .Qute Mail Integration

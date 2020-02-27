@@ -664,6 +664,33 @@ Qute `for` syntax supports any instance of `Iterable`, `Map.EntrySet`, `Stream` 
 ----
 // end::update_14_4[]
 
+// tag::update_14_27[]
+The next map methods are supported:
+
+[source, html]
+----
+{#for key in map.keySet}
+{#for value in map.values}
+{map.size}
+{#if map.isEmpty}
+{map['foo']
+----
+
+The next list methods are supported:
+
+[source, html]
+----
+{list[0]}
+----
+
+The next number methods are supported:
+
+[source, html]
+----
+{#if counter.mod(5) == 0}
+----
+// end::update_14_27[]
+
 You can render programmaticaly the templates too:
 
 [source, java]
