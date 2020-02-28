@@ -582,7 +582,7 @@ Templates can be defined in any format, in case of HTML:
 <title>{item.name}</title>
 </head>
 <body>
-    <h1>{item.name}</h1>
+    <h1>{item.name ?: 'Unknown'}</h1>
     <div>Price: {item.price}</div>
     {#if item.price > 100}
     <div>Discounted Price: {item.discountedPrice}</div>
