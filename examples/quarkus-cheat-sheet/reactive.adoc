@@ -500,8 +500,6 @@ Quarkus uses <<Reactive Messaging>> to integrate with messaging systems, but in 
   -Dextensions="quarkus-artemis-core"
 ----
 
-<<<
-
 And then you can inject `org.apache.activemq.artemis.api.core.client.ServerLocator` instance.
 
 [source, java]

@@ -110,7 +110,7 @@ include::core.adoc[tag=update_14_15]
 .Mutiny and JAX-RS
 [%collapsible]
 ====
-include::network.adoc[tag=update_14_16]
+include::reactive.adoc[tag=update_14_16]
 ====
 
 .New Reactive MongoDB Client

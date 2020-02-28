@@ -153,13 +153,13 @@ Class name of the Hibernate PhysicalNamingStrategy implementation.
 Should quote all identifiers. (default: `false`)
 // end::update_5_3[]
 
-// tag:update_14_20[]
+// tag::update_14_20[]
 `metrics-enabled`::
 Metrics published with smallrye-metrics extension (default: `false`)
 
 second-level-caching-enabled::
 Enable/Disable 2nd level cache. (default: `true`)
-// end:update_14_20[]
+// end::update_14_20[]
 
 Database operations:
 
@@ -195,51 +195,51 @@ If queries start with the keyword `from` then they are treated as _HQL_ query, i
 
 *Static Methods*
 
-`findById`:`Object`::
+`findById`: `Object`::
 Returns object or null if not found. Overloaded version with `LockModeType` is provided.
 
 // tag::update_12_1[]
-`findByIdOptional`:`Optional<Object>`::
+`findByIdOptional`: `Optional<Object>`::
 Returns object or `java.util.Optional`.
 // end::update_12_1[]
 
-`find`:`String`, [`Object...`, `Map<String, Object>`, `Parameters`]::
+`find`: `String`, [`Object...`, `Map<String, Object>`, `Parameters`]::
 Lists of entities meeting given query with parameters set.
 
-`find`:`String`, `Sort`, [`Object...`, `Map<String, Object>`, `Parameters`]::
+`find`: `String`, `Sort`, [`Object...`, `Map<String, Object>`, `Parameters`]::
 Lists of entities meeting given query with parameters set sorted by `Sort` attribute/s.
 
 `findAll`:: 
 Finds all entities.
 
-`findAll`:`Sort`::
+`findAll`: `Sort`::
 Finds all entities sorted by `Sort` attribute/s.
 
-`stream`:`String`, [`Object...`, `Map<String, Object>`, `Parameters`]::
+`stream`: `String`, [`Object...`, `Map<String, Object>`, `Parameters`]::
 `java.util.stream.Stream` of entities meeting given query with parameters set.
 
-`stream`:`String`, `Sort`, [`Object...`, `Map<String, Object>`, `Parameters`]::
+`stream`: `String`, `Sort`, [`Object...`, `Map<String, Object>`, `Parameters`]::
 `java.util.stream.Stream` of entities meeting given query with parameters set sorted by `Sort` attribute/s.
 
 `streamAll`:: 
 `java.util.stream.Stream` of all entities.
 
-`streamAll`:`Sort`::
+`streamAll`: `Sort`::
 `java.util.stream.Stream` of all entities sorted by `Sort` attribute/s.
 
 `count`:: 
 Number of entities.
 
-`count`:`String`, [`Object...`, `Map<String, Object>`, `Parameters`]::
+`count`: `String`, [`Object...`, `Map<String, Object>`, `Parameters`]::
 Number of entities meeting given query with parameters set.
 
 `deleteAll`:: 
 Number of deleted entities.
 
-`delete`:`String`, [`Object...`, `Map<String, Object>`, `Parameters`]::
+`delete`: `String`, [`Object...`, `Map<String, Object>`, `Parameters`]::
 Number of deleted entities meeting given query with parameters set.
 
-`persist`:[`Iterable`, `Steram`, `Object...`]::
+`persist`: [`Iterable`, `Steram`, `Object...`]::
 
 // tag::update_12_6[]
 TIP: `find` methods defines a `withLock(LockModeType)` to define the lock type and `withHint(QueryHints.HINT_CACHEABLE, "true")` to define hints.
@@ -384,6 +384,8 @@ Transactions are mandatory in case of none idempotent operations.
 @Transactional
 public void createDeveloper() {}
 ----
+
+<<<
 
 You can control the transaction scope:
 
@@ -560,8 +562,6 @@ MessageMarshaller authorMarshaller() {
 ./mvnw quarkus:add-extension 
   -Dextensions="infinispan-embeddedy"
 ----
-
-<<<
 
 Configuration in `infinispan.xml`:
 
@@ -1260,6 +1260,8 @@ Enable leaked sessions logging. (default:`false`)
 `pool.max-connection-pool-size`::
 Max amount of connections. (default: `100`)
 
+<<<
+
 `pool.max-connection-lifetime`::
 Pooled connections older will be closed and removed from the pool. (default: `1H`)
 
@@ -1370,7 +1372,9 @@ Inject the instance using `@io.quarkus.mongodb.runtime.MongoClientName` annotati
 @MongoClientName("users")
 MongoClient mongoClient1;
 ----
-// end::udpate_14_5[]
+// end::update_14_5[]
+
+<<<
 
 `quarkus.mongodb` as prefix is skipped in the next table.
 
@@ -1535,7 +1539,7 @@ public class Person extends PanacheMongoEntity {
 
 Possible annotations in fields: `@BsonId` (for custom ID), `@BsonProperty` and `@BsonIgnore`.
 
-*Important:* `@MongoEntity` is optional.
+IMPORTANT: `@MongoEntity` is optional.
 
 Methods provided are similar of the ones shown in <<Persistence>> section.
 

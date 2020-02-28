@@ -241,7 +241,7 @@ mvn clean package -Dquarkus.kubernetes.deploy=true
 
 TIP: If you set this flag to `true`, the `build` and `push` flags from container-image are set to `true` too. 
 
-To deploy the application, the extension uses the `https://github.com/fabric8io/kubernetes-client[Fabric8 Kubernetes Client, window="_blank"].
+To deploy the application, the extension uses the `https://github.com/fabric8io/kubernetes-client.
 All options described at <<Kubernetes Client>> are valid here.
 
 TIP: <<Container Images Creation>> integrates with Kubernetes extension, so no need of extra properties.
