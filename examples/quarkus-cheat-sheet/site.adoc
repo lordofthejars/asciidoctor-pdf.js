@@ -191,6 +191,30 @@ include::cloud.adoc[tag=update_14_28]
 include::cloud.adoc[tag=update_14_29]
 ====
 
+.Streams in Panache
+[%collapsible]
+====
+include::persistence.adoc[tag=update_14_30]
+====
+
+.Graceful Shutdown
+[%collapsible]
+====
+include::core.adoc[tag=update_14_31]
+====
+
+.HTTPS
+[%collapsible]
+====
+include::core.adoc[tag=update_14_32]
+====
+
+.Vert.X Reactive Clients
+[%collapsible]
+====
+include::reactive.adoc[tag=update_14_33]
+====
+
 === Version 1.2.0.Final
 
 .Qute Mail Integration

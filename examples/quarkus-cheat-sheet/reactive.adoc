@@ -94,6 +94,102 @@ public static class ReactiveHello {
     }
 }
 ----
+
+Converting from/to `RxJava2` or `Reactor` APIs:
+
+_RxJava 2_
+
+[source, xml]
+----
+<dependency>
+    <groupId>io.smallrye.reactive</groupId>
+    <artifactId>mutiny-rxjava</artifactId>
+</dependency>
+----
+
+From `RxJava2`:
+
+[source, java]
+----
+Uni<Void> uniFromCompletable = Uni.createFrom()
+                                    .converter(UniRxConverters.fromCompletable(), completable);
+Uni<String> uniFromSingle = Uni.createFrom()
+                                .converter(UniRxConverters.fromSingle(), single);
+Uni<String> uniFromObservable = Uni.createFrom()
+                                .converter(UniRxConverters.fromObservable(), observable);
+Uni<String> uniFromFlowable = Uni.createFrom()
+                                .converter(UniRxConverters.fromFlowable(), flowable);
+...
+
+Multi<Void> multiFromCompletable = Multi.createFrom()
+                                        .converter(MultiRxConverters.fromCompletable(), completable);
+Multi<String> multiFromObservable = Multi.createFrom()
+                                        .converter(MultiRxConverters.fromObservable(), observable);
+Multi<String> multiFromFlowable = Multi.createFrom()
+                                        .converter(MultiRxConverters.fromFlowable(), flowable);
+...
+----
+
+To `RxJava2`:
+
+[source, java]
+----
+Completable completable = uni.convert().with(UniRxConverters.toCompletable());
+Single<Optional<String>> single = uni.convert().with(UniRxConverters.toSingle());
+Observable<String> observable = uni.convert().with(UniRxConverters.toObservable());
+Flowable<String> flowable = uni.convert().with(UniRxConverters.toFlowable());
+...
+
+Completable completable = multi.convert().with(MultiRxConverters.toCompletable());
+Single<Optional<String>> single = multi.convert().with(MultiRxConverters.toSingle());
+Observable<String> observable = multi.convert().with(MultiRxConverters.toObservable());
+Flowable<String> flowable = multi.convert().with(MultiRxConverters.toFlowable());
+...
+----
+
+_Reactor API_
+
+[source, xml]
+----
+<dependency>
+    <groupId>io.smallrye.reactive</groupId>
+    <artifactId>mutiny-reactor</artifactId>
+</dependency>
+----
+
+From `Reactor `:
+
+[source, java]
+----
+Uni<String> uniFromMono = Uni.createFrom().converter(UniReactorConverters.fromMono(), mono);
+Uni<String> uniFromFlux = Uni.createFrom().converter(UniReactorConverters.fromFlux(), flux);
+Multi<String> multiFromMono = Multi.createFrom().converter(MultiReactorConverters.fromMono(), mono);
+Multi<String> multiFromFlux = Multi.createFrom().converter(MultiReactorConverters.fromFlux(), flux);
+----
+
+To `Reactor`:
+
+[source, java]
+----
+Mono<String> mono = uni.convert().with(UniReactorConverters.toMono());
+Flux<String> flux = uni.convert().with(UniReactorConverters.toFlux());
+
+Mono<String> mono2 = multi.convert().with(MultiReactorConverters.toMono());
+Flux<String> flux2 = multi.convert().with(MultiReactorConverters.toFlux());
+----
+
+_CompletionStages_ or _Publisher_
+
+[source, java]
+----
+CompletableFuture<String> future = Uni
+        .createFrom().completionStage(CompletableFuture.supplyAsync(() -> "hello"));
+
+CompletationStage<String> cs = Uni
+        .createFrom().subscribeAsCompletionStage();
+----
+
+`Multi` implements `Publisher`.
 // end::update_14_7[]
 
 == Reactive Messaging
@@ -120,6 +216,22 @@ public class ProducerData {
     public Flowable<Integer> generate() {
         return Flowable.interval(5, TimeUnit.SECONDS)
                 .map(tick -> random.nextInt(100));
+    }
+}
+----
+
+or in Mutiny:
+
+[source, java]
+----
+[source, java]
+----
+@ApplicationScoped
+public class ProducerData {
+    @Outgoing("my-in-memory")
+    public Multi<Integer> generate() {
+        return Multi.createFrom().ticks().every(Duration.ofSeconds(5))
+                .onItem().apply(n -> random.nextInt(100));
     }
 }
 ----
@@ -442,8 +554,8 @@ Then you can inject `io.vertx.mutiny.pgclient.PgPool` class.
 PgPool client;
 
 Uni<List<Fruit>> fruits = 
-    client.query("SELECT * FROM fruits")  
-    .map(rowSet -> {
+    client.preparedQuery("SELECT * FROM fruits")  
+    .onItem().apply(rowSet -> {
         JsonArray jsonArray = new JsonArray();
         for (Row row : rowSet) {
             jsonArray.add(from(row));
@@ -472,21 +584,6 @@ quarkus.datasource.url=
 ----
 
 Then you can inject `io.vertx.mutiny.mysqlclient.MySQLPool` class.
-
-[source, java]
-----
-@Inject
-MySQLPool client;
-
-public static CompletionStage<Fruit> findById(
-    MySQLPool c, Long id) {
-    return c.preparedQuery("SELECT name FROM fruits WHERE id = $1", 
-                Tuple.of(id))
-            .map(RowSet::iterator)
-            .map(iterator -> iterator.hasNext() ? 
-                        from(iterator.next()) : null);
-}
-----
 // end::update_8_8[]
 
 == ActiveMQ Artemis
@@ -528,21 +625,14 @@ quarkus.artemis.url=tcp://localhost:61616
 
 You can configure ActiveMQ Artemis in `application.properties` file by using next properties prefixed with `quarkus`:
 
-|===	
-|Parameter | Default | Description
+`artemis.url`::
+Connection URL.
 
-a|`artemis.url`
-a|
-a|Connection URL
+`artemis.username`::
+Username for authentication.
 
-a|`artemis.username`
-a|
-a|Username for authentication.
-
-a|`artemis.password`
-a|
-a|Password for authentication.
-|===
+`artemis.password`::
+Password for authentication.
 
 *Artemis JMS*
 
@@ -576,3 +666,50 @@ public class ArtemisConsumerManager {
 
 TIP: Configuration options are the same as Artemis core.
 // end::update_8_4[]
+
+== Vert.X Reactive Clients
+
+// tag::update_14_33[]
+
+Vert.X Reactive clients in Quarkus, the next clients are supported and you need to add the dependency to use them:
+
+Vert.X Mail Client::
+`io.smallrye.reactive:smallrye-mutiny-vertx-mail-client`
+
+Vert.X MongoDB Client::
+`io.smallrye.reactive:smallrye-mutiny-vertx-mongo-client`
+
+Vert.X Redis Client::
+`io.smallrye.reactive:smallrye-mutiny-vertx-redis-client`
+
+Vert.X Cassandra Client::
+`io.smallrye.reactive:smallrye-mutiny-vertx-cassandra-client`
+
+Vert.X Consul Client::
+`io.smallrye.reactive:smallrye-mutiny-vertx-consul-client`
+
+Vert.X Kafka Client::
+`io.smallrye.reactive:smallrye-mutiny-vertx-kafka-client`
+
+Vert.X AMQP Client::
+`io.smallrye.reactive:smallrye-mutiny-vertx-amqp-client`
+
+Vert.X RabbitMQ Client::
+`io.smallrye.reactive:smallrye-mutiny-vertx-rabbitmq-client`
+
+Example of Vert.X Web Client:
+
+[source, java]
+----
+@Inject
+Vertx vertx;
+
+private WebClient client;
+
+@PostConstruct
+void initialize() {
+    this.client = WebClient.create(vertx, ...);
+}
+----
+
+// end::update_14_33[]

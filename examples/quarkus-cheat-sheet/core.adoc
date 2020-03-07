@@ -105,6 +105,11 @@ public class ApplicationLifecycle {
 ----
 // end::update_1_3[]
 
+// tag::update_14_31[]
+Quarkus supports graceful shutdown.
+By default tthere is no timeout but can be set by using the `quarkus.shutdown.timeout` config property.
+// end::update_14_31[]
+
 == Adding Configuration Parameters
 
 To add configuration to your application, Quarkus relies on https://github.com/eclipse/microprofile-config[MicroProfile Config, window="_blank"] spec.
@@ -425,6 +430,62 @@ com.acme.config.CustomInstantConverter
 By default Undertow will serve content from under the root context.
 If you want to change this you can use the `quarkus.servlet.context-path` config key to set the context path.
 // end::update_6_2[]
+
+== HTTPS
+
+// tag::update_14_32[]
+To configure HTTPS:
+
+[source, properties]
+----
+quarkus.http.ssl-port=8443
+quarkus.http.ssl.certificate.key-store-file=keystore.jks
+quarkus.http.ssl.certificate.key-store-file-type=jks
+quarkus.http.ssl.certificate.key-store-password=changeit
+quarkus.ssl.native=true
+----
+
+Possible parameters with prefix `quarkus.http`:
+
+`ssl-port`::
+The _HTTPS_ port. (default: `8443`)
+
+`ssl.certificate.file`::
+The file path to a service certificate or certificate chain in _PEM_ format. Relative to `src/main/resources`.
+
+`ssl.certificate.key-file`::
+The file path to the corresponding certificate private key in _PEM_ format. Relative to `src/main/resources`.
+
+`ssl.certificate.key-store-file`::
+The key store contains the certificate information. Relative to `src/main/resources`.
+
+`ssl.certificate.key-store-file-type`::
+The key store type. It is automatically detected based on the file name or can be set manually. Supported values are: `JKS`, `JCEKS`, `P12`, `PKCS12` or `PFX`.
+
+`ssl.certificate.key-store-password`::
+The password to open the key store file.
+
+`ssl.certificate.trust-store-file`
+The trust store location which contains the certificate information of the certificates to trust. Relative to `src/main/resources`.
+
+`ssl.certificate.trust-store-file-type`::
+The trust store type. It is automatically detected based on the file name or can be set manually.
+
+`ssl.certificate.trust-store-password`::
+The password to open the trust store file.
+
+`ssl.cipher-suites`::
+A list of strings of cipher suites to use. If not provided, a reasonable default is selected.
+
+`ssl.protocols`::
+The list of protocols to explicitly enable. (default: `TLSv1.3` and `TLSv1.2`).
+
+`ssl.client-auth`::
+Configures the engine to require/request client authentication. Possible values are: `NONE`, `REQUEST` and  `REQUIRED`. (default:  `NONE`).
+
+`insecure-requests`::
+Disable the HTTP port and only support secure requests. Possible values: `ENABLED`, `DISABLED`, `REDIRECT`. (default: `enabled`). 
+// end::update_14_32[]
 
 == Injection
 
