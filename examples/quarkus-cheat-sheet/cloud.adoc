@@ -206,7 +206,7 @@ quarkus.kubernetes.secret-volumes.github-token.volume-name=github-token
 quarkus.kubernetes.secret-volumes.github-token.secret-name=greeting-security
 quarkus.kubernetes.secret-volumes.github-token.default-mode=420
 
-quarkus.docker.registry=quay.io
+quarkus.kubernetes.expose=true
 ----
 
 All possible values are explained at https://quarkus.io/guides/kubernetes#configuration-options.
@@ -244,7 +244,7 @@ TIP: If you set this flag to `true`, the `build` and `push` flags from container
 To deploy the application, the extension uses the `https://github.com/fabric8io/kubernetes-client.
 All options described at <<Kubernetes Client>> are valid here.
 
-TIP: <<Container Images Creation>> integrates with Kubernetes extension, so no need of extra properties.
+TIP: <<Container Images Creation>> integrates with Kubernetes extension, so no need of extra Kubernetes properties.
 
 // end::update_14_24[]
 

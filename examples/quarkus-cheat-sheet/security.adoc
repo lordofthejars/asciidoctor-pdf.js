@@ -265,38 +265,48 @@ quarkus.oidc.credentials.secret=secret
 
 Configuration options with `quarkus.oidc` prefix:
 
-|===	
-| Parameter | Default | Description
+`auth-server-url`::
+The base URL of the OpenID Connect (OIDC) server.
 
-a|`auth-server-url`
-a|
-a|The base URL of the OpenID Connect (OIDC) server
+`introspection-path`::
+Relative path of the RFC7662 introspection service.
 
-a|`introspection-path`
-a|
-a|Relative path of the RFC7662 introspection service
+`jwks-path`::
+Relative path of the OIDC service returning a JWK set.
 
-a|`jwks-path`
-a|
-a|Relative path of the OIDC service returning a JWK set
+`public-key`::
+Public key for the local JWT token verification
 
-a|`public-key`
-a|
-a|Public key for the local JWT token verification
+`client-id`::
+The client-id of the application.
 
-a|`client-id`
-a|
-a|The client-id of the application.
-
-a|`credentials.secret`
-a|
-a|The client secret
-|===
+`credentials.secret`::
+The client secret
 
 NOTE:  With Keycloak OIDC server `https://host:port/auth/realms/{realm}` where `{realm}` has to be replaced by the name of the Keycloak realm.
 
 TIP: You can use `quarkus.http.cors` property to enable consuming form different domain.
 // end::update_1_9[]
+
+*Multi-tenancy* 
+
+// tag::update_14_34[]
+Multi-tenancy is supported by adding a sub-category to OIDC configuration properties (ie `quarkus.oidc.{tenent_id}.property`).
+
+[source, properties]
+----
+quarkus.oidc.auth-server-url=http://localhost:8180/auth/realms/quarkus
+quarkus.oidc.client-id=multi-tenant-client
+quarkus.oidc.application-type=web-app
+
+quarkus.oidc.tenant-b.auth-server-url=https://accounts.google.com
+quarkus.oidc.tenant-b.application-type=web-app
+quarkus.oidc.tenant-b.client-id=xxxx
+quarkus.oidc.tenant-b.credentials.secret=yyyy
+quarkus.oidc.tenant-b.token.issuer=https://accounts.google.com
+quarkus.oidc.tenant-b.authentication.scopes=email,profile,openid
+----
+// end::update_14_34[]
 
 == OAuth2
 // tag::update_6_8[]
@@ -521,61 +531,44 @@ You need to set the index (1-based) of password and role.
 Elytron JDBC Realm configuration properties.
 Prefix `quarkus.security.jdbc` is skipped.
 
-|===	
-| Parameter | Default | Description
+`auth-mechanism`::
+The authentication mechanism. (default: `BASIC`)
 
-a|`auth-mechanism`
-a|`BASIC`
-|The authentication mechanism
+`realm-name`::
+The authentication realm name. (default: `Quarkus`)
 
-a|`realm-name`
-a|`Quarkus`
-|The authentication realm name
+`enabled`::
+If the properties store is enabled. (default: `false`)
 
-a|`enabled`
-a|`false`
-|If the properties store is enabled
+`principal-query.sql`::
+The sql query to find the password.
 
-a|`principal-query.sql`
-a|
-|The sql query to find the password
+`principal-query.datasource`::
+The data source to use.
 
-a|`principal-query.datasource`
-a|
-|The data source to use
+`principal-query.clear-password-mapper.enabled`::
+If the clear-password-mapper is enabled. (default: `false`)
 
-a|`principal-query.clear-password-mapper.enabled`
-a|`false`
-|If the clear-password-mapper is enabled
+`principal-query.clear-password-mapper.password-index`::
+The index of column containing clear password. (default: `1`)
 
-a|`principal-query.clear-password-mapper.password-index`
-a|`1`
-|The index of column containing clear password
+`principal-query.bcrypt-password-mapper.enabled`::
+If the bcrypt-password-mapper is enabled. (default: `false`)
 
-a|`principal-query.bcrypt-password-mapper.enabled`
-a|`false`
-|If the bcrypt-password-mapper is enabled
+`principal-query.bcrypt-password-mapper.password-index`::
+The index of column containing password hash. (default: `0`)
 
-a|`principal-query.bcrypt-password-mapper.password-index`
-a|`0`
-|The index of column containing password hash
+`principal-query.bcrypt-password-mapper.hash-encoding`::
+A string referencing the password hash encoding (`BASE64` or `HEX`). (default: `BASE64`)
 
-a|`principal-query.bcrypt-password-mapper.hash-encoding`
-a|`BASE64`
-|A string referencing the password hash encoding (`BASE64` or `HEX`)
+`principal-query.bcrypt-password-mapper.salt-index`::
+The index column containing the Bcrypt salt. (default: `0`)
 
-a|`principal-query.bcrypt-password-mapper.salt-index`
-a|`0`
-|The index column containing the Bcrypt salt
+`principal-query.bcrypt-password-mapper.salt-encoding`::
+A string referencing the salt encoding (`BASE64` or `HEX`). (default: `BASE64`)
 
-a|`principal-query.bcrypt-password-mapper.salt-encoding`
-a|`BASE64`
-|A string referencing the salt encoding (`BASE64` or `HEX`)
-
-a|`principal-query.bcrypt-password-mapper.iteration-count-index`
-a|`0`
-|The index column containing the Bcrypt iteration count
-|===
+`principal-query.bcrypt-password-mapper.iteration-count-index`::
+The index column containing the Bcrypt iteration count. (default: `0`)
 
 For multiple datasources you can use the datasource name in the properties:
 
@@ -701,6 +694,11 @@ You can access the KV engine programmatically:
 VaultKVSecretEngine kvSecretEngine;
 
 kvSecretEngine.readSecret("myapps/vault-quickstart/" + vaultPath).toString();
+
+Map<String, String> secrets;
+kvSecretEngine.writeSecret("myapps/vault-quickstart/crud", secrets);
+
+kvSecretEngine.deleteSecret("myapps/vault-quickstart/crud");
 ----
 
 *Fetching credentials DB*

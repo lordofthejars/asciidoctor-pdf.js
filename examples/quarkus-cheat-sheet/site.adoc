@@ -215,6 +215,18 @@ include::core.adoc[tag=update_14_32]
 include::reactive.adoc[tag=update_14_33]
 ====
 
+.OIDC Multi-tenancy
+[%collapsible]
+====
+include::security.adoc[tag=update_14_34]
+====
+
+.OptaPlanner
+[%collapsible]
+====
+include::misc.adoc[tag=update_14_35]
+====
+
 === Version 1.2.0.Final
 
 .Qute Mail Integration

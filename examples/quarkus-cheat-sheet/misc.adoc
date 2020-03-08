@@ -864,11 +864,54 @@ TIP: You can multiple cache annotations on a single method.
 // tag::update_14_9[]
 To print a Quarkus banner at start-up:
 
+Configure banner by setting `quarkus.banner.path` to a _txt_ file containing the banner. Path is relative to root of the classpath.
+// end::update_14_9[]
+
+== OptaPlanner
+
+// tag::update_14_35[]
+Quarkus integrates with https://www.optaplanner.org/[OptaPlanner].
+
 [source, bash]
 ----
 ./mvnw quarkus:add-extension 
-  -Dextensions="banner"
+  -Dextensions="quarkus-optaplanner, quarkus-optaplanner-jackson"
 ----
 
-Configure banner by setting `quarkus.banner.path` to a _txt_ file containing the banner. Path is relative to root of the classpath.
-// end::update_14_9[]
+[source, java]
+----
+@PlanningSolution
+public class TimeTable {
+}
+
+@Inject
+private SolverManager<TimeTable, UUID> solverManager;
+
+UUID problemId = UUID.randomUUID();
+SolverJob<TimeTable, UUID> solverJob = solverManager.solve(problemId, problem);
+TimeTable solution = solverJob.getFinalBestSolution();
+----
+
+Possible configuration options prefixed with `quarkus.optaplanner`:
+
+`solver-config-xml`::
+A classpath resource to read the solver configuration XML. Not mandatory.
+
+`solver.environment-mode`::
+Enable runtime assertions to detect common bugs in your implementation during development. Possible values: `FAST_ASSERT`, `FULL_ASSERT`, `NON_INTRUSIVE_FULL_ASSERT`, `NON_REPRODUCIBLE`, `REPRODUCIBLE`. (default: `REPRODUCIBLE`)
+
+`solver.move-thread-count`::
+Enable multithreaded solving for a single problem. Possible values: `MOVE_THREAD_COUNT_NONE`, `MOVE_THREAD_COUNT_AUTO`, a number or formula based on the available processors. (default: `MOVE_THREAD_COUNT_NONE`)
+
+`solver.termination.spent-limit`::
+How long the solver can run. (ie `5s`)
+
+`solver.termination.unimproved-spent-limit`::
+How long the solver can run without finding a new best solution after finding a new best solution. (ie `2h`)
+
+`solver.termination.best-score-limit`::
+Terminates the solver when a specific or higher score has been reached. (ie `0hard/-1000soft`)
+
+`solver-manager.parallel-solver-count`::
+The number of solvers that run in parallel. (default: `PARALLEL_SOLVER_COUNT_AUTO`)
+// end::update_14_35[]
