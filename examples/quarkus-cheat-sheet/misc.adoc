@@ -862,9 +862,14 @@ TIP: You can multiple cache annotations on a single method.
 == Banner
 
 // tag::update_14_9[]
-To print a Quarkus banner at start-up:
+Banner is printed by default.
+It is not an extension but placed in the core.
 
-Configure banner by setting `quarkus.banner.path` to a _txt_ file containing the banner. Path is relative to root of the classpath.
+`quarkus.banner.path`::
+ Path is relative to root of the classpath. (default: `default_banner.txt`)
+
+ `quarkus.banner.enabled`::
+Enables banner. (default : `true`)
 // end::update_14_9[]
 
 == OptaPlanner
@@ -915,3 +920,25 @@ Terminates the solver when a specific or higher score has been reached. (ie `0ha
 `solver-manager.parallel-solver-count`::
 The number of solvers that run in parallel. (default: `PARALLEL_SOLVER_COUNT_AUTO`)
 // end::update_14_35[]
+
+== Context Propagation
+
+// tag::update_14_36[]
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-smallrye-context-propagation"
+----
+
+If using `mutiny` extension together you already get context propagation for ArC, RESTEasy and transactions.
+With `CompletionStage` you need to:
+
+[source, java]
+----
+@Inject ThreadContext threadContext;
+@Inject ManagedExecutor managedExecutor;
+
+threadContext.withContextCapture(..)
+             .thenApplyAsync(r -> {}, managedExecutor);
+----
+// end::update_14_36[]

@@ -595,8 +595,9 @@ org.infinispan.manager.EmbeddedCacheManager cacheManager;
 // end::update_10_7[]
 
 == Flyway
+
 // tag::update_1_7[]
-Quarkus integrates with https://flywaydb.org/[Flyway, window="_blank"] to help you on database schema migrations.
+Quarkus integrates with https://flywaydb.org/[Flyway] to help you on database schema migrations.
 
 [source, bash]
 ----
@@ -682,6 +683,98 @@ quarkus.flyway.inventory.schemas=INVENTORY_TEST_SCHEMA
 # ...
 ----
 // end::update_12_7[]
+
+== Liquibase
+
+// tag::update_14_37[]
+Quarkus integrates with https://www.liquibase.org/[Liquibase] to help you on database schema migrations.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-liquibase"
+----
+
+Then place changelog files to the (`src/main/resources/db`) folder.
+
+You can inject `org.quarkus.liquibase.LiquibaseFactory` to programmatically execute the migration.
+
+[source, java]
+----
+@Inject
+LiquibaseFactory liquibaseFactory;
+
+try (Liquibase liquibase = liquibaseFactory.createLiquibase()) {
+    ...
+}
+----
+
+Or can be automatically executed by setting `migrate-at-start` property to `true`.
+
+[source, properties]
+----
+quarkus.liquibase.migrate-at-start=true
+----
+
+List of Liquibase parameters.
+
+`quarkus.liquibase` as prefix is skipped in the next table.
+
+change-log::
+The change log file. `XML`, `YAML` , `JSON`, `SQL` formats supported. (default: `db/changeLog.xml`)
+
+migrate-at-start::
+The migrate at start flag. (default: `false`)
+
+validate-on-migrate::
+The validate on update flag. (default: `false`)
+
+clean-at-start::
+The clean at start flag. (default: `false`)
+
+contexts::
+The list of contexts.
+
+labels::
+The list of labels.
+
+database-change-log-table-name::
+The database change log lock table name. (default: `DATABASECHANGELOG`)
+
+database-change-log-lock-table-name::
+The database change log lock table name. (default: `DATABASECHANGELOGLOCK`)
+
+default-catalog-name::
+The default catalog name.
+
+default-schema-name::
+The default schema name.
+
+liquibase-catalog-name::
+The liquibase tables catalog name.
+
+liquibase-schema-name::
+The liquibase tables schema name.
+
+liquibase-tablespace-name::
+The liquibase tables tablespace name.
+
+*Multiple Datasources*
+// tag::update_12_7[]
+
+To use multiple datasource in Liquibase you just need to add the datasource name just after the `liquibase` property:
+
+[source, properties]
+----
+quarkus.datasource.users.url=jdbc:h2:tcp://localhost/mem:users
+quarkus.datasource.inventory.url=jdbc:h2:tcp://localhost/mem:inventory
+# ...
+
+quarkus.liquibase.users.schemas=USERS_TEST_SCHEMA
+quarkus.liquibase.inventory.schemas=INVENTORY_TEST_SCHEMA
+# ...
+----
+// end::update_14_37[]
 
 == Hibernate Search
 // tag::update_3_1[]

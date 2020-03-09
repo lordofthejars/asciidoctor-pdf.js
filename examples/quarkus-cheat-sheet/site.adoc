@@ -227,6 +227,18 @@ include::security.adoc[tag=update_14_34]
 include::misc.adoc[tag=update_14_35]
 ====
 
+.Context Propagation
+[%collapsible]
+====
+include::misc.adoc[tag=update_14_36]
+====
+
+.Liquibase
+[%collapsible]
+====
+include::persistence.adoc[tag=update_14_37]
+====
+
 === Version 1.2.0.Final
 
 .Qute Mail Integration
