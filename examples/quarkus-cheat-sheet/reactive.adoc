@@ -157,7 +157,7 @@ _Reactor API_
 </dependency>
 ----
 
-From `Reactor `:
+From `Reactor`:
 
 [source, java]
 ----
@@ -222,8 +222,6 @@ public class ProducerData {
 
 or in Mutiny:
 
-[source, java]
-----
 [source, java]
 ----
 @ApplicationScoped
@@ -467,6 +465,7 @@ mp.messaging.incoming.prices.auto-generated-client-id=
 // end::update_1_4[]
 
 == Kafka Streams
+
 // tag::update_3_10[]
 Create streaming queries with the Kafka Streams API.
 
@@ -529,6 +528,7 @@ kafka-streams.commit.interval.ms=1000
 // end::update_3_10[]
 
 == Reactive PostgreSQL Client
+
 // tag::update_1_8[]
 You can use Reactive PostgreSQL to execute queries to PostreSQL database in a reactive way, instead of using JDBC way.
 
@@ -542,8 +542,8 @@ Database configuration is the same as shown in <<Persistence>> section, but URL 
 
 [source, properties]
 ----
-quarkus.datasource.url=
-    vertx-reactive:postgresql://host:5431/db
+quarkus.datasource.db-kind=postgresql
+quarkus.datasource.reactive.url=postgresql:///your_database
 ----
 
 Then you can inject `io.vertx.mutiny.pgclient.PgPool` class.
@@ -566,6 +566,7 @@ Uni<List<Fruit>> fruits =
 // end::update_1_8[]
 
 == Reactive MySQL Client
+
 // tag::update_8_8[]
 You can use Reactive MySQL to execute queries to MySQL database in a reactive way, instead of using JDBC way.
 
@@ -579,8 +580,8 @@ Database configuration is the same as shown in <<Persistence>> section, but URL 
 
 [source, properties]
 ----
-quarkus.datasource.url=
-    vertx-reactive:mysql://localhost:3306/db
+quarkus.datasource.db-kind=mysql
+quarkus.datasource.reactive.url=mysql:///your_database
 ----
 
 Then you can inject `io.vertx.mutiny.mysqlclient.MySQLPool` class.
@@ -711,5 +712,4 @@ void initialize() {
     this.client = WebClient.create(vertx, ...);
 }
 ----
-
 // end::update_14_33[]

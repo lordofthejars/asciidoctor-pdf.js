@@ -941,4 +941,6 @@ With `CompletionStage` you need to:
 threadContext.withContextCapture(..)
              .thenApplyAsync(r -> {}, managedExecutor);
 ----
+
+If you are going to use security in a reactive environment you will likely need Smallrye Content Propagation to propagate the identity throughout the reactive callback.
 // end::update_14_36[]

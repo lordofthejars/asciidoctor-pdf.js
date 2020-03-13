@@ -28,68 +28,72 @@ And configuration in `src/main/resources/application.properties`:
 
 [source, properties]
 ----
-quarkus.datasource.url=jdbc:mariadb://localhost:3306/mydb
-quarkus.datasource.driver=org.mariadb.jdbc.Driver
+quarkus.datasource.jdbc.url=jdbc:mariadb://localhost:3306/mydb
+quarkus.datasource.db-kind=mariadb
 quarkus.datasource.username=developer
 quarkus.datasource.password=developer
 quarkus.hibernate-orm.database.generation=update
 ----
 
-// tag::update_4_6[]
+// tag::update_14_42[]
 List of datasource parameters.
 
 `quarkus.datasource` as prefix is skipped in the next table.
 
-|===
-|Parameter|Type
+`db-kind`::
+Built-in datasource kinds so the JDBC driver is resolved automatically. Possible values: `derby`, `h2`, `mariadb`, `mssql`, `mysql`, `postgresql`.
 
-a|`driver`
-a|`String`
+`username`::
+Username to access.
 
-a|`url`
-a|`String`
+`password`::
+Password to access.
 
-a|`username`
-a|`String`
+`driver`::
+JDBC Driver class. It is not necessary to set if `db-kind` used.
 
-a|`password`
-a|`String`
+`jdbc.url`::
+The datasource URL.
 
-a|`min-size`
-a|`Integer`
+`jdbc.min-size`::
+The datasource pool minimum size. (default: `0`)
 
-a|`max-size`
-a|`Integer`
+`jdbc.max-size`::
+The datasource pool maximum size. (default: `20`)
 
-a|`initial-size`
-a|`Integer`
+`jdbc.initial-size`::
+The initial size of the pool.
 
-a|`background-validation-interval`
-a|`java.time.Duration`
+`jdbc.background-validation-interval`::
+The interval at which we validate idle connections in the background. (default: `2M`)
 
-a|`acquisition-timeout`
-a|`java.time.Duration`
+`jdbc.acquisition-timeout`::
+The timeout before cancelling the acquisition of a new connection. (default: `5`)
 
-a|`leak-detection-interval`
-a|`java.time.Duration`
+`jdbc.leak-detection-interval`::
+The interval at which we check for connection leaks.
 
-a|`idle-removal-interval`
-a|`java.time.Duration`
+`jdbc.idle-removal-interval`::
+The interval at which we try to remove idle connections. (default: `5M`)
 
-a|`transaction-isolation-level`
-a|`io.quarkus.agroal.runtime`
-`.TransactionIsolationLevel`
+`jdbc.max-lifetime`::
+The max lifetime of a connection.
 
-a|`enable-metrics`
-a|`Boolean`
+`jdbc.transaction-isolation-level`::
+The transaction isolation level. Possible values: `UNDEFINED`, `NONE`, `READ_UNCOMMITTED`, `READ_COMMITTED`, `REPEATABLE_READ`, `SERIALIZABLE`.
 
-a|`xa`
-a|`Boolean`
+`jdbc.detect-statement-leaks`::
+ Warn when a connection is returned to the pool without the application having closed all open statements. (default: `true`)
 
-a|`validation-query-sql`
-a|`Boolean`
-|===
-// end::update_4_6[]
+`jdbc.new-connection-sql`::
+Query executed when first using a connection.
+
+`jdbc.validation-query-sql`::
+Query executed to validate a connection.
+
+`jdbc.enable-metrics`::
+Enable datasource metrics collection when using `quarkus-smallrye-metrics` extension.
+// end::update_14_42[]
 
 // tag::update_5_3[]
 Hibernate configuration properties.
@@ -331,12 +335,12 @@ You can register more than one datasource.
 [source, properties]
 ----
 # default
-quarkus.datasource.driver=org.h2.Driver
-quarkus.datasource.url=jdbc:h2:tcp://localhost/mem:default
+quarkus.datasource.db-kind=h2
+quarkus.datasource.jdbc.url=jdbc:h2:tcp://localhost/mem:default
 ....
 # users datasource
-quarkus.datasource.users.driver=org.h2.Driver
-quarkus.datasource.users.url=jdbc:h2:tcp://localhost/mem:users
+quarkus.datasource.users.db-kind=h2
+quarkus.datasource.users..jdbc.url=jdbc:h2:tcp://localhost/mem:users
 ----
 
 Notice that after `datasource` you set the datasource name, in previous case `users`.
@@ -388,8 +392,6 @@ Transactions are mandatory in case of none idempotent operations.
 @Transactional
 public void createDeveloper() {}
 ----
-
-<<<
 
 You can control the transaction scope:
 
@@ -674,8 +676,8 @@ To use multiple datasource in Flyway you just need to add the datasource name ju
 
 [source, properties]
 ----
-quarkus.datasource.users.url=jdbc:h2:tcp://localhost/mem:users
-quarkus.datasource.inventory.url=jdbc:h2:tcp://localhost/mem:inventory
+quarkus.datasource.users.jdbc.url=jdbc:h2:tcp://localhost/mem:users
+quarkus.datasource.inventory.jdbc.url=jdbc:h2:tcp://localhost/mem:inventory
 # ...
 
 quarkus.flyway.users.schemas=USERS_TEST_SCHEMA
@@ -766,8 +768,8 @@ To use multiple datasource in Liquibase you just need to add the datasource name
 
 [source, properties]
 ----
-quarkus.datasource.users.url=jdbc:h2:tcp://localhost/mem:users
-quarkus.datasource.inventory.url=jdbc:h2:tcp://localhost/mem:inventory
+quarkus.datasource.users.jdbc.url=jdbc:h2:tcp://localhost/mem:users
+quarkus.datasource.inventory.jdbc.url=jdbc:h2:tcp://localhost/mem:inventory
 # ...
 
 quarkus.liquibase.users.schemas=USERS_TEST_SCHEMA
@@ -883,105 +885,97 @@ quarkus.hibernate-search.elasticsearch.
 
 List of Hibernate-Elasticsearch properties prefixed with `quarkus.hibernate-search.elasticsearch`:
 
-|===	
-|Parameter | Description
+`backends`::
+Map of configuration of additional backends.
 
-a|`backends`
-|Map of configuration of additional backends.
+`version`::
+Version of Elasticsearch
 
-a|`version`
-|Version of Elasticsearch
+`analysis-configurer`::
+Class or name of the neab used to configure.
 
-a|`analysis-configurer`
-|Class or name of the neab used to configure.
+`hosts`::
+List of Elasticsearch servers hosts.
 
-a|`hosts`
-|List of Elasticsearch servers hosts.
+`username`::
+Username for auth.
 
-a|`username`
-|Username for auth.
+`password`::
+Password for auth.
 
-a|`password`
-|Password for auth.
+`connection-timeout`::
+Duration of connection timeout.
 
-a|`connection-timeout`
-|Duration of connection timeout.
+`max-connections`::
+Max number of connections to servers.
 
-a|`max-connections`
-|Max number of connections to servers.
+`max-connections-per-route`::
+Max number of connections to server.
 
-a|`max-connections-per-route`
-|Max number of connections to server.
+`indexes`::
+Per-index specific configuration.
 
-a|`indexes`
-|Per-index specific configuration.
+`discovery.enabled`::
+Enables automatic discovery.
 
-a|`discovery.enabled`
-|Enables automatic discovery.
+`discovery.refresh-interval`::
+Refresh interval of node list.
 
-a|`discovery.refresh-interval`
-|Refresh interval of node list.
+`discovery.default-scheme`::
+Scheme to be used for the new nodes.
 
-a|`discovery.default-scheme`
-|Scheme to be used for the new nodes.
+`automatic-indexing.synchronization-strategy`::
+Status for which you wait before considering the operation completed (`queued`,`committed` or `searchable`).
 
-a|`automatic-indexing.synchronization-strategy`
-a|Status for which you wait before considering the operation completed (`queued`,`committed` or `searchable`).
+`automatic-indexing.enable-dirty-check`::
+When enabled, re-indexing of is skipped if the changes are on properties that are not used when indexing. 
 
-a|`automatic-indexing.enable-dirty-check`
-|When enabled, re-indexing of is skipped if the changes are on properties that are not used when indexing. 
+`index-defaults.lifecycle.strategy`::
+Index lifecycle (`none`, `validate`, `update`, `create`, `drop-and-create`, `drop-abd-create-drop`)
 
-a|`index-defaults.lifecycle.strategy`
-a|Index lifecycle (`none`, `validate`, `update`, `create`, `drop-and-create`, `drop-abd-create-drop`)
+`index-defaults.lifecycle.required-status`::
+Minimal cluster status (`green`, `yellow`, `red`)
 
-a|`index-defaults.lifecycle.required-status`
-a|Minimal cluster status (`green`, `yellow`, `red`)
+`index-defaults.lifecycle.required-status-wait-timeout`::
+Waiting time before failing the bootstrap.
 
-a|`index-defaults.lifecycle.required-status-wait-timeout`
-|Waiting time before failing the bootstrap.
-
-a|`index-defaults.refresh-after-write`
-|Set if index should be refreshed after writes.
-|===
+`index-defaults.refresh-after-write`::
+Set if index should be refreshed after writes.
 
 Possible annotations:
 
-|===	
-|Parameter | Description
+`@Indexed`::
+Register entity as full text index
 
-a|`@Indexed`
-|Register entity as full text index
+`@FullTextField`::
+Full text search. Need to set an analyzer to split tokens.
 
-a|`@FullTextField`
-|Full text search. Need to set an analyzer to split tokens.
+`@KeywordField`::
+The string is kept as one single token but can be normalized.
 
-a|`@KeywordField`
-|The string is kept as one single token but can be normalized.
+`IndexedEmbedded`::
+Include the Book fields into the Author index.
 
-a|`IndexedEmbedded`
-|Include the Book fields into the Author index.
+`@ContainerExtraction`::
+Sets how to extract a value from container, e.g from a `Map`.
 
-a|`@ContainerExtraction`
-a|Sets how to extract a value from container, e.g from a `Map`.
+`@DocumentId`::
+Map an unusual entity identifier to a document identifier.
 
-a|`@DocumentId`
-| Map an unusual entity identifier to a document identifier.
+`@GenericField`::
+Full text index for any supported type.
 
-a|`@GenericField`
-|Full text index for any supported type.
+`@IdentifierBridgeRef`::
+Reference to the identifier bridge to use for a `@DocumentId`.
 
-a|`@IdentifierBridgeRef`
-a|Reference to the identifier bridge to use for a `@DocumentId`.
+`@IndexingDependency`::
+How a dependency of the indexing process to a property should affect automatic reindexing.
 
-a|`@IndexingDependency`
-|How a dependency of the indexing process to a property should affect automatic reindexing.
+`@ObjectPath`::
 
-a|`@ObjectPath`
-|
 
-a|`@ScaledNumberField`
-a| For `java.math.BigDecimal` or `java.math.BigInteger` that you need higher precision.
-|===
+`@ScaledNumberField`::
+For `java.math.BigDecimal` or `java.math.BigInteger` that you need higher precision.
 // end::update_3_1[]
 
 == Amazon DynamoDB

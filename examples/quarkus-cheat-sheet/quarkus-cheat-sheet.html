@@ -598,6 +598,8 @@ public class ApplicationLifecycle {
 }</code></pre>
 </div>
 </div>
+<p class="">Quarkus supports graceful shutdown.
+By default tthere is no timeout but can be set by using the <code>quarkus.shutdown.timeout</code> config property.</p>
 </div>
 </div>
 <div class="sect1">
@@ -928,6 +930,80 @@ Create a file with the following content:</p>
 <div class="sectionbody">
 <p class="">By default Undertow will serve content from under the root context.
 If you want to change this you can use the <code>quarkus.servlet.context-path</code> config key to set the context path.</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_https"><a class="anchor" href="#_https"></a><a class="link" href="#_https">HTTPS</a></h2>
+<div class="sectionbody">
+<p class="">To configure HTTPS:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.http.ssl-port=8443
+quarkus.http.ssl.certificate.key-store-file=keystore.jks
+quarkus.http.ssl.certificate.key-store-file-type=jks
+quarkus.http.ssl.certificate.key-store-password=changeit
+quarkus.ssl.native=true</code></pre>
+</div>
+</div>
+<p class="">Possible parameters with prefix <code>quarkus.http</code>:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>ssl-port</code></dt>
+<dd>
+<p>The <em>HTTPS</em> port. (default: <code>8443</code>)</p>
+</dd>
+<dt class="hdlist1"><code>ssl.certificate.file</code></dt>
+<dd>
+<p>The file path to a service certificate or certificate chain in <em>PEM</em> format. Relative to <code>src/main/resources</code>.</p>
+</dd>
+<dt class="hdlist1"><code>ssl.certificate.key-file</code></dt>
+<dd>
+<p>The file path to the corresponding certificate private key in <em>PEM</em> format. Relative to <code>src/main/resources</code>.</p>
+</dd>
+<dt class="hdlist1"><code>ssl.certificate.key-store-file</code></dt>
+<dd>
+<p>The key store contains the certificate information. Relative to <code>src/main/resources</code>.</p>
+</dd>
+<dt class="hdlist1"><code>ssl.certificate.key-store-file-type</code></dt>
+<dd>
+<p>The key store type. It is automatically detected based on the file name or can be set manually. Supported values are: <code>JKS</code>, <code>JCEKS</code>, <code>P12</code>, <code>PKCS12</code> or <code>PFX</code>.</p>
+</dd>
+<dt class="hdlist1"><code>ssl.certificate.key-store-password</code></dt>
+<dd>
+<p>The password to open the key store file.</p>
+</dd>
+</dl>
+</div>
+<p class=""><code>ssl.certificate.trust-store-file</code>
+The trust store location which contains the certificate information of the certificates to trust. Relative to <code>src/main/resources</code>.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>ssl.certificate.trust-store-file-type</code></dt>
+<dd>
+<p>The trust store type. It is automatically detected based on the file name or can be set manually.</p>
+</dd>
+<dt class="hdlist1"><code>ssl.certificate.trust-store-password</code></dt>
+<dd>
+<p>The password to open the trust store file.</p>
+</dd>
+<dt class="hdlist1"><code>ssl.cipher-suites</code></dt>
+<dd>
+<p>A list of strings of cipher suites to use. If not provided, a reasonable default is selected.</p>
+</dd>
+<dt class="hdlist1"><code>ssl.protocols</code></dt>
+<dd>
+<p>The list of protocols to explicitly enable. (default: <code>TLSv1.3</code> and <code>TLSv1.2</code>).</p>
+</dd>
+<dt class="hdlist1"><code>ssl.client-auth</code></dt>
+<dd>
+<p>Configures the engine to require/request client authentication. Possible values are: <code>NONE</code>, <code>REQUEST</code> and  <code>REQUIRED</code>. (default:  <code>NONE</code>).</p>
+</dd>
+<dt class="hdlist1"><code>insecure-requests</code></dt>
+<dd>
+<p>Disable the HTTP port and only support secure requests. Possible values: <code>ENABLED</code>, <code>DISABLED</code>, <code>REDIRECT</code>. (default: <code>enabled</code>).</p>
+</dd>
+</dl>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1880,8 +1956,8 @@ public class Developer extends PanacheEntity {
 <p class="">And configuration in <code>src/main/resources/application.properties</code>:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.datasource.url=jdbc:mariadb://localhost:3306/mydb
-quarkus.datasource.driver=org.mariadb.jdbc.Driver
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.datasource.jdbc.url=jdbc:mariadb://localhost:3306/mydb
+quarkus.datasource.db-kind=mariadb
 quarkus.datasource.username=developer
 quarkus.datasource.password=developer
 quarkus.hibernate-orm.database.generation=update</code></pre>
@@ -1889,81 +1965,82 @@ quarkus.hibernate-orm.database.generation=update</code></pre>
 </div>
 <p class="">List of datasource parameters.</p>
 <p class=""><code>quarkus.datasource</code> as prefix is skipped in the next table.</p>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>driver</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>String</code></p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>url</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>String</code></p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>username</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>String</code></p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>password</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>String</code></p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>min-size</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>Integer</code></p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>max-size</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>Integer</code></p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>initial-size</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>Integer</code></p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>background-validation-interval</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>java.time.Duration</code></p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>acquisition-timeout</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>java.time.Duration</code></p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>leak-detection-interval</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>java.time.Duration</code></p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>idle-removal-interval</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>java.time.Duration</code></p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>transaction-isolation-level</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>io.quarkus.agroal.runtime</code>
-<code>.TransactionIsolationLevel</code></p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>enable-metrics</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>Boolean</code></p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>xa</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>Boolean</code></p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>validation-query-sql</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>Boolean</code></p></div></td>
-</tr>
-</tbody>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>db-kind</code></dt>
+<dd>
+<p>Built-in datasource kinds so the JDBC driver is resolved automatically. Possible values: <code>derby</code>, <code>h2</code>, <code>mariadb</code>, <code>mssql</code>, <code>mysql</code>, <code>postgresql</code>.</p>
+</dd>
+<dt class="hdlist1"><code>username</code></dt>
+<dd>
+<p>Username to access.</p>
+</dd>
+<dt class="hdlist1"><code>password</code></dt>
+<dd>
+<p>Password to access.</p>
+</dd>
+<dt class="hdlist1"><code>driver</code></dt>
+<dd>
+<p>JDBC Driver class. It is not necessary to set if <code>db-kind</code> used.</p>
+</dd>
+<dt class="hdlist1"><code>jdbc.url</code></dt>
+<dd>
+<p>The datasource URL.</p>
+</dd>
+<dt class="hdlist1"><code>jdbc.min-size</code></dt>
+<dd>
+<p>The datasource pool minimum size. (default: <code>0</code>)</p>
+</dd>
+<dt class="hdlist1"><code>jdbc.max-size</code></dt>
+<dd>
+<p>The datasource pool maximum size. (default: <code>20</code>)</p>
+</dd>
+<dt class="hdlist1"><code>jdbc.initial-size</code></dt>
+<dd>
+<p>The initial size of the pool.</p>
+</dd>
+<dt class="hdlist1"><code>jdbc.background-validation-interval</code></dt>
+<dd>
+<p>The interval at which we validate idle connections in the background. (default: <code>2M</code>)</p>
+</dd>
+<dt class="hdlist1"><code>jdbc.acquisition-timeout</code></dt>
+<dd>
+<p>The timeout before cancelling the acquisition of a new connection. (default: <code>5</code>)</p>
+</dd>
+<dt class="hdlist1"><code>jdbc.leak-detection-interval</code></dt>
+<dd>
+<p>The interval at which we check for connection leaks.</p>
+</dd>
+<dt class="hdlist1"><code>jdbc.idle-removal-interval</code></dt>
+<dd>
+<p>The interval at which we try to remove idle connections. (default: <code>5M</code>)</p>
+</dd>
+<dt class="hdlist1"><code>jdbc.max-lifetime</code></dt>
+<dd>
+<p>The max lifetime of a connection.</p>
+</dd>
+<dt class="hdlist1"><code>jdbc.transaction-isolation-level</code></dt>
+<dd>
+<p>The transaction isolation level. Possible values: <code>UNDEFINED</code>, <code>NONE</code>, <code>READ_UNCOMMITTED</code>, <code>READ_COMMITTED</code>, <code>REPEATABLE_READ</code>, <code>SERIALIZABLE</code>.</p>
+</dd>
+<dt class="hdlist1"><code>jdbc.detect-statement-leaks</code></dt>
+<dd>
+<p>Warn when a connection is returned to the pool without the application having closed all open statements. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>jdbc.new-connection-sql</code></dt>
+<dd>
+<p>Query executed when first using a connection.</p>
+</dd>
+<dt class="hdlist1"><code>jdbc.validation-query-sql</code></dt>
+<dd>
+<p>Query executed to validate a connection.</p>
+</dd>
+<dt class="hdlist1"><code>jdbc.enable-metrics</code></dt>
+<dd>
+<p>Enable datasource metrics collection when using <code>quarkus-smallrye-metrics</code> extension.</p>
+</dd>
+</dl>
+</div>
 <p class="">Hibernate configuration properties.
 Prefix <code>quarkus.hibernate-orm</code> is skipped.</p>
 <div class="dlist">
@@ -2159,9 +2236,21 @@ long numberOfDeleted = Developer.delete("name", "Alex");</code></pre>
 </dd>
 <dt class="hdlist1"><code>persist</code>: [<code>Iterable</code>, <code>Steram</code>, <code>Object&#8230;&#8203;</code>]</dt>
 <dd>
-<p>TIP: <code>find</code> methods defines a <code>withLock(LockModeType)</code> to define the lock type and <code>withHint(QueryHints.HINT_CACHEABLE, "true")</code> to define hints.</p>
+<p>In case of using streams, remember to close them or use a <code>try/catch</code> block: <code>try (Stream&lt;Person&gt; persons = Person.streamAll())</code>.</p>
 </dd>
 </dl>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon icon-tip">
+<span class="fa-layers"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle" class="svg-inline--fa fa-circle fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path></svg><svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="lightbulb" class="svg-inline--fa fa-lightbulb fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" style="transform-origin: 0.34375em 0.5em;"><g transform="translate(176 256)"><g transform="translate(0, 0)  scale(0.625, 0.625)  rotate(0 0 0)"><path fill="currentColor" d="M176 80c-52.94 0-96 43.06-96 96 0 8.84 7.16 16 16 16s16-7.16 16-16c0-35.3 28.72-64 64-64 8.84 0 16-7.16 16-16s-7.16-16-16-16zM96.06 459.17c0 3.15.93 6.22 2.68 8.84l24.51 36.84c2.97 4.46 7.97 7.14 13.32 7.14h78.85c5.36 0 10.36-2.68 13.32-7.14l24.51-36.84c1.74-2.62 2.67-5.7 2.68-8.84l.05-43.18H96.02l.04 43.18zM176 0C73.72 0 0 82.97 0 176c0 44.37 16.45 84.85 43.56 115.78 16.64 18.99 42.74 58.8 52.42 92.16v.06h48v-.12c-.01-4.77-.72-9.51-2.15-14.07-5.59-17.81-22.82-64.77-62.17-109.67-20.54-23.43-31.52-53.15-31.61-84.14-.2-73.64 59.67-128 127.95-128 70.58 0 128 57.42 128 128 0 30.97-11.24 60.85-31.65 84.14-39.11 44.61-56.42 91.47-62.1 109.46a47.507 47.507 0 0 0-2.22 14.3v.1h48v-.05c9.68-33.37 35.78-73.18 52.42-92.16C335.55 260.85 352 220.37 352 176 352 78.8 273.2 0 176 0z" transform="translate(-176 -256)"></path></g></g></svg></span>
+</td>
+<td class="content">
+<code>find</code> methods defines a <code>withLock(LockModeType)</code> to define the lock type and <code>withHint(QueryHints.HINT_CACHEABLE, "true")</code> to define hints.
+</td>
+</tr>
+</table>
 </div>
 <p class=""><strong>Pagination</strong></p>
 <div class="listingblock">
@@ -2229,12 +2318,12 @@ em.persist(car);</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs"># default
-quarkus.datasource.driver=org.h2.Driver
-quarkus.datasource.url=jdbc:h2:tcp://localhost/mem:default
+quarkus.datasource.db-kind=h2
+quarkus.datasource.jdbc.url=jdbc:h2:tcp://localhost/mem:default
 ....
 # users datasource
-quarkus.datasource.users.driver=org.h2.Driver
-quarkus.datasource.users.url=jdbc:h2:tcp://localhost/mem:users</code></pre>
+quarkus.datasource.users.db-kind=h2
+quarkus.datasource.users..jdbc.url=jdbc:h2:tcp://localhost/mem:users</code></pre>
 </div>
 </div>
 <p class="">Notice that after <code>datasource</code> you set the datasource name, in previous case <code>users</code>.</p>
@@ -2279,7 +2368,6 @@ public class FlywayTestResources {
 public void createDeveloper() {}</code></pre>
 </div>
 </div>
-<div class="page-break"></div>
 <p class="">You can control the transaction scope:</p>
 <div class="ulist">
 <ul>
@@ -2475,7 +2563,7 @@ org.infinispan.manager.EmbeddedCacheManager cacheManager;</code></pre>
 <div class="sect1">
 <h2 id="_flyway"><a class="anchor" href="#_flyway"></a><a class="link" href="#_flyway">Flyway</a></h2>
 <div class="sectionbody">
-<p class="">Quarkus integrates with <a href="https://flywaydb.org/" target="_blank" rel="noopener">Flyway</a> to help you on database schema migrations.</p>
+<p class="">Quarkus integrates with <a href="https://flywaydb.org/">Flyway</a> to help you on database schema migrations.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
@@ -2562,12 +2650,113 @@ Prefix for repeatable SQL migrations (default: <code>R</code>)</p>
 <p class="">To use multiple datasource in Flyway you just need to add the datasource name just after the <code>flyway</code> property:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.datasource.users.url=jdbc:h2:tcp://localhost/mem:users
-quarkus.datasource.inventory.url=jdbc:h2:tcp://localhost/mem:inventory
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.datasource.users.jdbc.url=jdbc:h2:tcp://localhost/mem:users
+quarkus.datasource.inventory.jdbc.url=jdbc:h2:tcp://localhost/mem:inventory
 # ...
 
 quarkus.flyway.users.schemas=USERS_TEST_SCHEMA
 quarkus.flyway.inventory.schemas=INVENTORY_TEST_SCHEMA
+# ...</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_liquibase"><a class="anchor" href="#_liquibase"></a><a class="link" href="#_liquibase">Liquibase</a></h2>
+<div class="sectionbody">
+<p class="">Quarkus integrates with <a href="https://www.liquibase.org/">Liquibase</a> to help you on database schema migrations.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-liquibase"</code></pre>
+</div>
+</div>
+<p class="">Then place changelog files to the (<code>src/main/resources/db</code>) folder.</p>
+<p class="">You can inject <code>org.quarkus.liquibase.LiquibaseFactory</code> to programmatically execute the migration.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+LiquibaseFactory liquibaseFactory;
+
+try (Liquibase liquibase = liquibaseFactory.createLiquibase()) {
+    ...
+}</code></pre>
+</div>
+</div>
+<p class="">Or can be automatically executed by setting <code>migrate-at-start</code> property to <code>true</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.liquibase.migrate-at-start=true</code></pre>
+</div>
+</div>
+<p class="">List of Liquibase parameters.</p>
+<p class=""><code>quarkus.liquibase</code> as prefix is skipped in the next table.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">change-log</dt>
+<dd>
+<p>The change log file. <code>XML</code>, <code>YAML</code> , <code>JSON</code>, <code>SQL</code> formats supported. (default: <code>db/changeLog.xml</code>)</p>
+</dd>
+<dt class="hdlist1">migrate-at-start</dt>
+<dd>
+<p>The migrate at start flag. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1">validate-on-migrate</dt>
+<dd>
+<p>The validate on update flag. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1">clean-at-start</dt>
+<dd>
+<p>The clean at start flag. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1">contexts</dt>
+<dd>
+<p>The list of contexts.</p>
+</dd>
+<dt class="hdlist1">labels</dt>
+<dd>
+<p>The list of labels.</p>
+</dd>
+<dt class="hdlist1">database-change-log-table-name</dt>
+<dd>
+<p>The database change log lock table name. (default: <code>DATABASECHANGELOG</code>)</p>
+</dd>
+<dt class="hdlist1">database-change-log-lock-table-name</dt>
+<dd>
+<p>The database change log lock table name. (default: <code>DATABASECHANGELOGLOCK</code>)</p>
+</dd>
+<dt class="hdlist1">default-catalog-name</dt>
+<dd>
+<p>The default catalog name.</p>
+</dd>
+<dt class="hdlist1">default-schema-name</dt>
+<dd>
+<p>The default schema name.</p>
+</dd>
+<dt class="hdlist1">liquibase-catalog-name</dt>
+<dd>
+<p>The liquibase tables catalog name.</p>
+</dd>
+<dt class="hdlist1">liquibase-schema-name</dt>
+<dd>
+<p>The liquibase tables schema name.</p>
+</dd>
+<dt class="hdlist1">liquibase-tablespace-name</dt>
+<dd>
+<p>The liquibase tables tablespace name.</p>
+</dd>
+</dl>
+</div>
+<p class=""><strong>Multiple Datasources</strong></p>
+<p class="">To use multiple datasource in Liquibase you just need to add the datasource name just after the <code>liquibase</code> property:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.datasource.users.jdbc.url=jdbc:h2:tcp://localhost/mem:users
+quarkus.datasource.inventory.jdbc.url=jdbc:h2:tcp://localhost/mem:inventory
+# ...
+
+quarkus.liquibase.users.schemas=USERS_TEST_SCHEMA
+quarkus.liquibase.inventory.schemas=INVENTORY_TEST_SCHEMA
 # ...</code></pre>
 </div>
 </div>
@@ -2694,155 +2883,132 @@ quarkus.hibernate-search.elasticsearch.
 </div>
 </div>
 <p class="">List of Hibernate-Elasticsearch properties prefixed with <code>quarkus.hibernate-search.elasticsearch</code>:</p>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>backends</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Map of configuration of additional backends.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>version</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Version of Elasticsearch</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>analysis-configurer</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Class or name of the neab used to configure.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>hosts</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">List of Elasticsearch servers hosts.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>username</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Username for auth.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>password</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Password for auth.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>connection-timeout</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Duration of connection timeout.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>max-connections</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Max number of connections to servers.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>max-connections-per-route</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Max number of connections to server.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>indexes</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Per-index specific configuration.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>discovery.enabled</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enables automatic discovery.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>discovery.refresh-interval</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Refresh interval of node list.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>discovery.default-scheme</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Scheme to be used for the new nodes.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>automatic-indexing.synchronization-strategy</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Status for which you wait before considering the operation completed (<code>queued</code>,<code>committed</code> or <code>searchable</code>).</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>automatic-indexing.enable-dirty-check</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">When enabled, re-indexing of is skipped if the changes are on properties that are not used when indexing.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>index-defaults.lifecycle.strategy</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Index lifecycle (<code>none</code>, <code>validate</code>, <code>update</code>, <code>create</code>, <code>drop-and-create</code>, <code>drop-abd-create-drop</code>)</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>index-defaults.lifecycle.required-status</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Minimal cluster status (<code>green</code>, <code>yellow</code>, <code>red</code>)</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>index-defaults.lifecycle.required-status-wait-timeout</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Waiting time before failing the bootstrap.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>index-defaults.refresh-after-write</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set if index should be refreshed after writes.</p></td>
-</tr>
-</tbody>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>backends</code></dt>
+<dd>
+<p>Map of configuration of additional backends.</p>
+</dd>
+<dt class="hdlist1"><code>version</code></dt>
+<dd>
+<p>Version of Elasticsearch</p>
+</dd>
+<dt class="hdlist1"><code>analysis-configurer</code></dt>
+<dd>
+<p>Class or name of the neab used to configure.</p>
+</dd>
+<dt class="hdlist1"><code>hosts</code></dt>
+<dd>
+<p>List of Elasticsearch servers hosts.</p>
+</dd>
+<dt class="hdlist1"><code>username</code></dt>
+<dd>
+<p>Username for auth.</p>
+</dd>
+<dt class="hdlist1"><code>password</code></dt>
+<dd>
+<p>Password for auth.</p>
+</dd>
+<dt class="hdlist1"><code>connection-timeout</code></dt>
+<dd>
+<p>Duration of connection timeout.</p>
+</dd>
+<dt class="hdlist1"><code>max-connections</code></dt>
+<dd>
+<p>Max number of connections to servers.</p>
+</dd>
+<dt class="hdlist1"><code>max-connections-per-route</code></dt>
+<dd>
+<p>Max number of connections to server.</p>
+</dd>
+<dt class="hdlist1"><code>indexes</code></dt>
+<dd>
+<p>Per-index specific configuration.</p>
+</dd>
+<dt class="hdlist1"><code>discovery.enabled</code></dt>
+<dd>
+<p>Enables automatic discovery.</p>
+</dd>
+<dt class="hdlist1"><code>discovery.refresh-interval</code></dt>
+<dd>
+<p>Refresh interval of node list.</p>
+</dd>
+<dt class="hdlist1"><code>discovery.default-scheme</code></dt>
+<dd>
+<p>Scheme to be used for the new nodes.</p>
+</dd>
+<dt class="hdlist1"><code>automatic-indexing.synchronization-strategy</code></dt>
+<dd>
+<p>Status for which you wait before considering the operation completed (<code>queued</code>,<code>committed</code> or <code>searchable</code>).</p>
+</dd>
+<dt class="hdlist1"><code>automatic-indexing.enable-dirty-check</code></dt>
+<dd>
+<p>When enabled, re-indexing of is skipped if the changes are on properties that are not used when indexing.</p>
+</dd>
+<dt class="hdlist1"><code>index-defaults.lifecycle.strategy</code></dt>
+<dd>
+<p>Index lifecycle (<code>none</code>, <code>validate</code>, <code>update</code>, <code>create</code>, <code>drop-and-create</code>, <code>drop-abd-create-drop</code>)</p>
+</dd>
+<dt class="hdlist1"><code>index-defaults.lifecycle.required-status</code></dt>
+<dd>
+<p>Minimal cluster status (<code>green</code>, <code>yellow</code>, <code>red</code>)</p>
+</dd>
+<dt class="hdlist1"><code>index-defaults.lifecycle.required-status-wait-timeout</code></dt>
+<dd>
+<p>Waiting time before failing the bootstrap.</p>
+</dd>
+<dt class="hdlist1"><code>index-defaults.refresh-after-write</code></dt>
+<dd>
+<p>Set if index should be refreshed after writes.</p>
+</dd>
+</dl>
+</div>
 <p class="">Possible annotations:</p>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>@Indexed</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Register entity as full text index</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>@FullTextField</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Full text search. Need to set an analyzer to split tokens.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>@KeywordField</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The string is kept as one single token but can be normalized.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>IndexedEmbedded</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Include the Book fields into the Author index.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>@ContainerExtraction</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Sets how to extract a value from container, e.g from a <code>Map</code>.</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>@DocumentId</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Map an unusual entity identifier to a document identifier.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>@GenericField</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Full text index for any supported type.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>@IdentifierBridgeRef</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Reference to the identifier bridge to use for a <code>@DocumentId</code>.</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>@IndexingDependency</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">How a dependency of the indexing process to a property should affect automatic reindexing.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>@ObjectPath</code></p></div></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>@ScaledNumberField</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">For <code>java.math.BigDecimal</code> or <code>java.math.BigInteger</code> that you need higher precision.</p></div></td>
-</tr>
-</tbody>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>@Indexed</code></dt>
+<dd>
+<p>Register entity as full text index</p>
+</dd>
+<dt class="hdlist1"><code>@FullTextField</code></dt>
+<dd>
+<p>Full text search. Need to set an analyzer to split tokens.</p>
+</dd>
+<dt class="hdlist1"><code>@KeywordField</code></dt>
+<dd>
+<p>The string is kept as one single token but can be normalized.</p>
+</dd>
+<dt class="hdlist1"><code>IndexedEmbedded</code></dt>
+<dd>
+<p>Include the Book fields into the Author index.</p>
+</dd>
+<dt class="hdlist1"><code>@ContainerExtraction</code></dt>
+<dd>
+<p>Sets how to extract a value from container, e.g from a <code>Map</code>.</p>
+</dd>
+<dt class="hdlist1"><code>@DocumentId</code></dt>
+<dd>
+<p>Map an unusual entity identifier to a document identifier.</p>
+</dd>
+<dt class="hdlist1"><code>@GenericField</code></dt>
+<dd>
+<p>Full text index for any supported type.</p>
+</dd>
+<dt class="hdlist1"><code>@IdentifierBridgeRef</code></dt>
+<dd>
+<p>Reference to the identifier bridge to use for a <code>@DocumentId</code>.</p>
+</dd>
+<dt class="hdlist1"><code>@IndexingDependency</code></dt>
+<dd>
+<p>How a dependency of the indexing process to a property should affect automatic reindexing.</p>
+</dd>
+<dt class="hdlist1"><code>@ObjectPath</code></dt>
+<dt class="hdlist1"><code>@ScaledNumberField</code></dt>
+<dd>
+<p>For <code>java.math.BigDecimal</code> or <code>java.math.BigInteger</code> that you need higher precision.</p>
+</dd>
+</dl>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -3891,6 +4057,93 @@ public static class ReactiveHello {
 }</code></pre>
 </div>
 </div>
+<p class="">Converting from/to <code>RxJava2</code> or <code>Reactor</code> APIs:</p>
+<p class=""><em>RxJava 2</em></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;io.smallrye.reactive&lt;/groupId&gt;
+    &lt;artifactId&gt;mutiny-rxjava&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<p class="">From <code>RxJava2</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">Uni&lt;Void&gt; uniFromCompletable = Uni.createFrom()
+                                    .converter(UniRxConverters.fromCompletable(), completable);
+Uni&lt;String&gt; uniFromSingle = Uni.createFrom()
+                                .converter(UniRxConverters.fromSingle(), single);
+Uni&lt;String&gt; uniFromObservable = Uni.createFrom()
+                                .converter(UniRxConverters.fromObservable(), observable);
+Uni&lt;String&gt; uniFromFlowable = Uni.createFrom()
+                                .converter(UniRxConverters.fromFlowable(), flowable);
+...
+
+Multi&lt;Void&gt; multiFromCompletable = Multi.createFrom()
+                                        .converter(MultiRxConverters.fromCompletable(), completable);
+Multi&lt;String&gt; multiFromObservable = Multi.createFrom()
+                                        .converter(MultiRxConverters.fromObservable(), observable);
+Multi&lt;String&gt; multiFromFlowable = Multi.createFrom()
+                                        .converter(MultiRxConverters.fromFlowable(), flowable);
+...</code></pre>
+</div>
+</div>
+<p class="">To <code>RxJava2</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">Completable completable = uni.convert().with(UniRxConverters.toCompletable());
+Single&lt;Optional&lt;String&gt;&gt; single = uni.convert().with(UniRxConverters.toSingle());
+Observable&lt;String&gt; observable = uni.convert().with(UniRxConverters.toObservable());
+Flowable&lt;String&gt; flowable = uni.convert().with(UniRxConverters.toFlowable());
+...
+
+Completable completable = multi.convert().with(MultiRxConverters.toCompletable());
+Single&lt;Optional&lt;String&gt;&gt; single = multi.convert().with(MultiRxConverters.toSingle());
+Observable&lt;String&gt; observable = multi.convert().with(MultiRxConverters.toObservable());
+Flowable&lt;String&gt; flowable = multi.convert().with(MultiRxConverters.toFlowable());
+...</code></pre>
+</div>
+</div>
+<p class=""><em>Reactor API</em></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;io.smallrye.reactive&lt;/groupId&gt;
+    &lt;artifactId&gt;mutiny-reactor&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<p class="">From <code>Reactor</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">Uni&lt;String&gt; uniFromMono = Uni.createFrom().converter(UniReactorConverters.fromMono(), mono);
+Uni&lt;String&gt; uniFromFlux = Uni.createFrom().converter(UniReactorConverters.fromFlux(), flux);
+Multi&lt;String&gt; multiFromMono = Multi.createFrom().converter(MultiReactorConverters.fromMono(), mono);
+Multi&lt;String&gt; multiFromFlux = Multi.createFrom().converter(MultiReactorConverters.fromFlux(), flux);</code></pre>
+</div>
+</div>
+<p class="">To <code>Reactor</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">Mono&lt;String&gt; mono = uni.convert().with(UniReactorConverters.toMono());
+Flux&lt;String&gt; flux = uni.convert().with(UniReactorConverters.toFlux());
+
+Mono&lt;String&gt; mono2 = multi.convert().with(MultiReactorConverters.toMono());
+Flux&lt;String&gt; flux2 = multi.convert().with(MultiReactorConverters.toFlux());</code></pre>
+</div>
+</div>
+<p class=""><em>CompletionStages</em> or <em>Publisher</em></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">CompletableFuture&lt;String&gt; future = Uni
+        .createFrom().completionStage(CompletableFuture.supplyAsync(() -&gt; "hello"));
+
+CompletationStage&lt;String&gt; cs = Uni
+        .createFrom().subscribeAsCompletionStage();</code></pre>
+</div>
+</div>
+<p class=""><code>Multi</code> implements <code>Publisher</code>.</p>
 </div>
 </div>
 <div class="sect1">
@@ -3915,6 +4168,19 @@ public class ProducerData {
     public Flowable&lt;Integer&gt; generate() {
         return Flowable.interval(5, TimeUnit.SECONDS)
                 .map(tick -&gt; random.nextInt(100));
+    }
+}</code></pre>
+</div>
+</div>
+<p class="">or in Mutiny:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ApplicationScoped
+public class ProducerData {
+    @Outgoing("my-in-memory")
+    public Multi&lt;Integer&gt; generate() {
+        return Multi.createFrom().ticks().every(Duration.ofSeconds(5))
+                .onItem().apply(n -&gt; random.nextInt(100));
     }
 }</code></pre>
 </div>
@@ -4183,8 +4449,8 @@ kafka-streams.commit.interval.ms=1000</code></pre>
 <p class="">Database configuration is the same as shown in <a href="#_persistence">Persistence</a> section, but URL is different as it is not a <em>jdbc</em>.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.datasource.url=
-    vertx-reactive:postgresql://host:5431/db</code></pre>
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.datasource.db-kind=postgresql
+quarkus.datasource.reactive.url=postgresql:///your_database</code></pre>
 </div>
 </div>
 <p class="">Then you can inject <code>io.vertx.mutiny.pgclient.PgPool</code> class.</p>
@@ -4194,8 +4460,8 @@ kafka-streams.commit.interval.ms=1000</code></pre>
 PgPool client;
 
 Uni&lt;List&lt;Fruit&gt;&gt; fruits =
-    client.query("SELECT * FROM fruits")
-    .map(rowSet -&gt; {
+    client.preparedQuery("SELECT * FROM fruits")
+    .onItem().apply(rowSet -&gt; {
         JsonArray jsonArray = new JsonArray();
         for (Row row : rowSet) {
             jsonArray.add(from(row));
@@ -4219,26 +4485,11 @@ Uni&lt;List&lt;Fruit&gt;&gt; fruits =
 <p class="">Database configuration is the same as shown in <a href="#_persistence">Persistence</a> section, but URL is different as it is not a <em>jdbc</em>.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.datasource.url=
-    vertx-reactive:mysql://localhost:3306/db</code></pre>
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.datasource.db-kind=mysql
+quarkus.datasource.reactive.url=mysql:///your_database</code></pre>
 </div>
 </div>
 <p class="">Then you can inject <code>io.vertx.mutiny.mysqlclient.MySQLPool</code> class.</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
-MySQLPool client;
-
-public static CompletionStage&lt;Fruit&gt; findById(
-    MySQLPool c, Long id) {
-    return c.preparedQuery("SELECT name FROM fruits WHERE id = $1",
-                Tuple.of(id))
-            .map(RowSet::iterator)
-            .map(iterator -&gt; iterator.hasNext() ?
-                        from(iterator.next()) : null);
-}</code></pre>
-</div>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -4276,37 +4527,22 @@ public class ArtemisConsumerManager {
 </div>
 </div>
 <p class="">You can configure ActiveMQ Artemis in <code>application.properties</code> file by using next properties prefixed with <code>quarkus</code>:</p>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>artemis.url</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Connection URL</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>artemis.username</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Username for authentication.</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>artemis.password</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Password for authentication.</p></div></td>
-</tr>
-</tbody>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>artemis.url</code></dt>
+<dd>
+<p>Connection URL.</p>
+</dd>
+<dt class="hdlist1"><code>artemis.username</code></dt>
+<dd>
+<p>Username for authentication.</p>
+</dd>
+<dt class="hdlist1"><code>artemis.password</code></dt>
+<dd>
+<p>Password for authentication.</p>
+</dd>
+</dl>
+</div>
 <p class=""><strong>Artemis JMS</strong></p>
 <p class="">If you want to use JMS with Artemis, you can do it by using its extension:</p>
 <div class="listingblock">
@@ -4346,6 +4582,62 @@ Configuration options are the same as Artemis core.
 </tr>
 </table>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_vert_x_reactive_clients"><a class="anchor" href="#_vert_x_reactive_clients"></a><a class="link" href="#_vert_x_reactive_clients">Vert.X Reactive Clients</a></h2>
+<div class="sectionbody">
+<p class="">Vert.X Reactive clients in Quarkus, the next clients are supported and you need to add the dependency to use them:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Vert.X Mail Client</dt>
+<dd>
+<p><code>io.smallrye.reactive:smallrye-mutiny-vertx-mail-client</code></p>
+</dd>
+<dt class="hdlist1">Vert.X MongoDB Client</dt>
+<dd>
+<p><code>io.smallrye.reactive:smallrye-mutiny-vertx-mongo-client</code></p>
+</dd>
+<dt class="hdlist1">Vert.X Redis Client</dt>
+<dd>
+<p><code>io.smallrye.reactive:smallrye-mutiny-vertx-redis-client</code></p>
+</dd>
+<dt class="hdlist1">Vert.X Cassandra Client</dt>
+<dd>
+<p><code>io.smallrye.reactive:smallrye-mutiny-vertx-cassandra-client</code></p>
+</dd>
+<dt class="hdlist1">Vert.X Consul Client</dt>
+<dd>
+<p><code>io.smallrye.reactive:smallrye-mutiny-vertx-consul-client</code></p>
+</dd>
+<dt class="hdlist1">Vert.X Kafka Client</dt>
+<dd>
+<p><code>io.smallrye.reactive:smallrye-mutiny-vertx-kafka-client</code></p>
+</dd>
+<dt class="hdlist1">Vert.X AMQP Client</dt>
+<dd>
+<p><code>io.smallrye.reactive:smallrye-mutiny-vertx-amqp-client</code></p>
+</dd>
+<dt class="hdlist1">Vert.X RabbitMQ Client</dt>
+<dd>
+<p><code>io.smallrye.reactive:smallrye-mutiny-vertx-rabbitmq-client</code></p>
+</dd>
+</dl>
+</div>
+<p class="">Example of Vert.X Web Client:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+Vertx vertx;
+
+private WebClient client;
+
+@PostConstruct
+void initialize() {
+    this.client = WebClient.create(vertx, ...);
+}</code></pre>
+</div>
+</div>
 <div class="page-break"></div>
 </div>
 </div>
@@ -4368,32 +4660,18 @@ Configuration options are the same as Artemis core.
 </div>
 </div>
 <p class="">Configuration options:</p>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>quarkus.jaxrs.deny-uncovered</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If true denies by default to all JAX-RS endpoints.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>quarkus.security.deny-unannotated</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If true denies by default all CDI methods and JAX-RS endpoints.</p></td>
-</tr>
-</tbody>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>quarkus.jaxrs.deny-uncovered</code></dt>
+<dd>
+<p>If true denies by default to all JAX-RS endpoints. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>quarkus.security.deny-unannotated</code></dt>
+<dd>
+<p>If true denies by default all CDI methods and JAX-RS endpoints. (default: <code>false</code>)</p>
+</dd>
+</dl>
+</div>
 <p class=""><strong>File Configuration</strong></p>
 <p class="">Defining RBAC in <code>application.properties</code> instead of using annotations.</p>
 <div class="listingblock">
@@ -4643,52 +4921,94 @@ quarkus.oidc.credentials.secret=secret</code></pre>
 </div>
 </div>
 <p class="">Configuration options with <code>quarkus.oidc</code> prefix:</p>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>auth-server-url</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">The base URL of the OpenID Connect (OIDC) server</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>introspection-path</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Relative path of the RFC7662 introspection service</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>jwks-path</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Relative path of the OIDC service returning a JWK set</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>public-key</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">Public key for the local JWT token verification</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>client-id</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">The client-id of the application.</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>credentials.secret</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class="">The client secret</p></div></td>
-</tr>
-</tbody>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>enabled</code></dt>
+<dd>
+<p>The OIDC is enabled. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>tenant-enabled</code></dt>
+<dd>
+<p>If the tenant configuration is enabled. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>application-type</code></dt>
+<dd>
+<p>The application type. Possible values: <code>web_app</code>, <code>service</code>. (default: <code>service</code>)</p>
+</dd>
+<dt class="hdlist1"><code>connection-delay</code></dt>
+<dd>
+<p>The maximum amount of time the adapter will try connecting.</p>
+</dd>
+<dt class="hdlist1"><code>auth-server-url</code></dt>
+<dd>
+<p>The base URL of the OpenID Connect (OIDC) server.</p>
+</dd>
+<dt class="hdlist1"><code>introspection-path</code></dt>
+<dd>
+<p>Relative path of the RFC7662 introspection service.</p>
+</dd>
+<dt class="hdlist1"><code>jwks-path</code></dt>
+<dd>
+<p>Relative path of the OIDC service returning a JWK set.</p>
+</dd>
+<dt class="hdlist1"><code>public-key</code></dt>
+<dd>
+<p>Public key for the local JWT token verification</p>
+</dd>
+<dt class="hdlist1"><code>client-id</code></dt>
+<dd>
+<p>The client-id of the application.</p>
+</dd>
+<dt class="hdlist1"><code>roles.role-claim-path</code></dt>
+<dd>
+<p>Path to the claim containing an array of groups. (<code>realm/groups</code>)</p>
+</dd>
+<dt class="hdlist1"><code>roles.role-claim-separator</code></dt>
+<dd>
+<p>Separator for splitting a string which may contain multiple group values.</p>
+</dd>
+<dt class="hdlist1"><code>token.issuer</code></dt>
+<dd>
+<p>Issuer claim value.</p>
+</dd>
+<dt class="hdlist1"><code>token.audience</code></dt>
+<dd>
+<p>Audience claim value.</p>
+</dd>
+<dt class="hdlist1"><code>token.expiration-grace</code></dt>
+<dd>
+<p>Expiration grace period in seconds.</p>
+</dd>
+<dt class="hdlist1"><code>token.principal-claim</code></dt>
+<dd>
+<p>Name of the claim which contains a principal name.</p>
+</dd>
+<dt class="hdlist1"><code>credentials.secret</code></dt>
+<dd>
+<p>The client secret</p>
+</dd>
+<dt class="hdlist1"><code>authentication.redirect-path</code></dt>
+<dd>
+<p>Relative path for calculating a <code>redirect_uri</code> query parameter.</p>
+</dd>
+<dt class="hdlist1"><code>authentication.restore-path-after-redirect</code></dt>
+<dd>
+<p>The original request URI used before the authentication will be restored after the user has been redirected back to the application. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>authentication.scopes</code></dt>
+<dd>
+<p>List of scopes.</p>
+</dd>
+<dt class="hdlist1"><code>authentication.extra-params</code></dt>
+<dd>
+<p>Additional properties which will be added as the query parameters .</p>
+</dd>
+<dt class="hdlist1"><code>authentication.cookie-path</code></dt>
+<dd>
+<p>Cookie path parameter.</p>
+</dd>
+</dl>
+</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -4712,6 +5032,22 @@ You can use <code>quarkus.http.cors</code> property to enable consuming form dif
 </td>
 </tr>
 </table>
+</div>
+<p class=""><strong>Multi-tenancy</strong></p>
+<p class="">Multi-tenancy is supported by adding a sub-category to OIDC configuration properties (ie <code>quarkus.oidc.{tenent_id}.property</code>).</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.oidc.auth-server-url=http://localhost:8180/auth/realms/quarkus
+quarkus.oidc.client-id=multi-tenant-client
+quarkus.oidc.application-type=web-app
+
+quarkus.oidc.tenant-b.auth-server-url=https://accounts.google.com
+quarkus.oidc.tenant-b.application-type=web-app
+quarkus.oidc.tenant-b.client-id=xxxx
+quarkus.oidc.tenant-b.credentials.secret=yyyy
+quarkus.oidc.tenant-b.token.issuer=https://accounts.google.com
+quarkus.oidc.tenant-b.authentication.scopes=email,profile,openid</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -4740,47 +5076,30 @@ quarkus.oauth2.introspection-url=http://oauth-server/introspect</code></pre>
 </div>
 </div>
 <p class="">Configuration options:</p>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>quarkus.oauth2.enabled</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>true</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Determine if the OAuth2 extension is enabled.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>quarkus.oauth2.client-id</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The OAuth2 client id used to validate the token.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>quarkus.oauth2.client-secret</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The OAuth2 client secret used to validate the token.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>quarkus.oauth2.introspection-url</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">URL used to validate the token and gather the authentication claims.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>quarkus.oauth2.role-claim</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>scope</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The claim that is used in the endpoint response to load the roles</p></td>
-</tr>
-</tbody>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>quarkus.oauth2.enabled</code></dt>
+<dd>
+<p>Determine if the OAuth2 extension is enabled. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>quarkus.oauth2.client-id</code></dt>
+<dd>
+<p>The OAuth2 client id used to validate the token.</p>
+</dd>
+<dt class="hdlist1"><code>quarkus.oauth2.client-secret</code></dt>
+<dd>
+<p>The OAuth2 client secret used to validate the token.</p>
+</dd>
+<dt class="hdlist1"><code>quarkus.oauth2.introspection-url</code></dt>
+<dd>
+<p>URL used to validate the token and gather the authentication claims.</p>
+</dd>
+<dt class="hdlist1"><code>quarkus.oauth2.role-claim</code></dt>
+<dd>
+<p>The claim that is used in the endpoint response to load the roles ((default: <code>scope</code>)</p>
+</dd>
+</dl>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -4826,55 +5145,38 @@ jdoe=p4ssw0rd</code></pre>
 jdoe=NoRolesUser</code></pre>
 </div>
 </div>
+<div class="page-break"></div>
 <p class=""><strong>IMPORTANT:</strong>  If <code>plain-text</code> is set to <code>false</code> (or omitted) then passwords must be stored in the form MD5 (<code>username</code>:`realm`:`password`).</p>
 <p class="">Elytron File Properties configuration properties.
 Prefix <code>quarkus.security.users</code> is skipped.</p>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.enabled</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The file realm is enabled</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.auth-mechanism</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>BASIC</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The authentication mechanism</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.realm-name</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>Quarkus</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The authentication realm name</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.plain-text</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If passwords are in plain or in MD5</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.users</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>users.properties</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Classpath resource of user/password</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.roles</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>roles.properties</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Classpath resource of user/role</p></td>
-</tr>
-</tbody>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>file.enabled</code></dt>
+<dd>
+<p>The file realm is enabled. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.auth-mechanism</code></dt>
+<dd>
+<p>The authentication mechanism. ( default: <code>BASIC</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.realm-name</code></dt>
+<dd>
+<p>The authentication realm name. (default: <code>Quarkus</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.plain-text</code></dt>
+<dd>
+<p>If passwords are in plain or in MD5. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.users</code></dt>
+<dd>
+<p>Classpath resource of user/password. (default: <code>users.properties</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.roles</code></dt>
+<dd>
+<p>Classpath resource of user/role. (default: <code>roles.properties</code>)</p>
+</dd>
+</dl>
+</div>
 <p class=""><strong>Embedded Realm</strong></p>
 <p class="">You can embed user/password/role in the same <code>application.properties</code>:</p>
 <div class="listingblock">
@@ -4888,52 +5190,34 @@ quarkus.security.users.embedded.auth-mechanism=BASIC</code></pre>
 </div>
 <p class=""><strong>IMPORTANT:</strong>  If plain-text is set to <code>false</code> (or omitted) then passwords must be stored in the form MD5 (<code>username</code>:`realm`:`password`).</p>
 <p class="">Prefix <code>quarkus.security.users.embedded</code> is skipped.</p>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.enabled</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The file realm is enabled</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.auth-mechanism</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>BASIC</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The authentication mechanism</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.realm-name</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>Quarkus</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The authentication realm name</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.plain-text</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If passwords are in plain or in MD5</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.users.*</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>*</code> is user and value is password</p></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>file.roles.*</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>*</code> is user and value is role</p></div></td>
-</tr>
-</tbody>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>file.enabled</code></dt>
+<dd>
+<p>The file realm is enabled. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.auth-mechanism</code></dt>
+<dd>
+<p>The authentication mechanism. (default: <code>BASIC</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.realm-name</code></dt>
+<dd>
+<p>The authentication realm name. (default: <code>Quarkus</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.plain-text</code></dt>
+<dd>
+<p>If passwords are in plain or in MD5. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>file.users.*</code></dt>
+<dd>
+<p><code>*</code> is user and value is password.</p>
+</dd>
+<dt class="hdlist1"><code>file.roles.*</code></dt>
+<dd>
+<p><code>*</code> is user and value is role.</p>
+</dd>
+</dl>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -4971,87 +5255,62 @@ quarkus.security.jdbc.principal-query
 <p class="">You need to set the index (1-based) of password and role.</p>
 <p class="">Elytron JDBC Realm configuration properties.
 Prefix <code>quarkus.security.jdbc</code> is skipped.</p>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>auth-mechanism</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>BASIC</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The authentication mechanism</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>realm-name</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>Quarkus</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The authentication realm name</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>enabled</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If the properties store is enabled</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>principal-query.sql</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The sql query to find the password</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>principal-query.datasource</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The data source to use</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>principal-query.clear-password-mapper.enabled</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If the clear-password-mapper is enabled</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>principal-query.clear-password-mapper.password-index</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>1</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The index of column containing clear password</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>principal-query.bcrypt-password-mapper.enabled</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>false</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If the bcrypt-password-mapper is enabled</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>principal-query.bcrypt-password-mapper.password-index</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>0</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The index of column containing password hash</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>principal-query.bcrypt-password-mapper.hash-encoding</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>BASE64</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A string referencing the password hash encoding (<code>BASE64</code> or <code>HEX</code>)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>principal-query.bcrypt-password-mapper.salt-index</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>0</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The index column containing the Bcrypt salt</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>principal-query.bcrypt-password-mapper.salt-encoding</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>BASE64</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A string referencing the salt encoding (<code>BASE64</code> or <code>HEX</code>)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>principal-query.bcrypt-password-mapper.iteration-count-index</code></p></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><p class=""><code>0</code></p></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The index column containing the Bcrypt iteration count</p></td>
-</tr>
-</tbody>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>auth-mechanism</code></dt>
+<dd>
+<p>The authentication mechanism. (default: <code>BASIC</code>)</p>
+</dd>
+<dt class="hdlist1"><code>realm-name</code></dt>
+<dd>
+<p>The authentication realm name. (default: <code>Quarkus</code>)</p>
+</dd>
+<dt class="hdlist1"><code>enabled</code></dt>
+<dd>
+<p>If the properties store is enabled. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>principal-query.sql</code></dt>
+<dd>
+<p>The sql query to find the password.</p>
+</dd>
+<dt class="hdlist1"><code>principal-query.datasource</code></dt>
+<dd>
+<p>The data source to use.</p>
+</dd>
+<dt class="hdlist1"><code>principal-query.clear-password-mapper.enabled</code></dt>
+<dd>
+<p>If the clear-password-mapper is enabled. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>principal-query.clear-password-mapper.password-index</code></dt>
+<dd>
+<p>The index of column containing clear password. (default: <code>1</code>)</p>
+</dd>
+<dt class="hdlist1"><code>principal-query.bcrypt-password-mapper.enabled</code></dt>
+<dd>
+<p>If the bcrypt-password-mapper is enabled. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>principal-query.bcrypt-password-mapper.password-index</code></dt>
+<dd>
+<p>The index of column containing password hash. (default: <code>0</code>)</p>
+</dd>
+<dt class="hdlist1"><code>principal-query.bcrypt-password-mapper.hash-encoding</code></dt>
+<dd>
+<p>A string referencing the password hash encoding (<code>BASE64</code> or <code>HEX</code>). (default: <code>BASE64</code>)</p>
+</dd>
+<dt class="hdlist1"><code>principal-query.bcrypt-password-mapper.salt-index</code></dt>
+<dd>
+<p>The index column containing the Bcrypt salt. (default: <code>0</code>)</p>
+</dd>
+<dt class="hdlist1"><code>principal-query.bcrypt-password-mapper.salt-encoding</code></dt>
+<dd>
+<p>A string referencing the salt encoding (<code>BASE64</code> or <code>HEX</code>). (default: <code>BASE64</code>)</p>
+</dd>
+<dt class="hdlist1"><code>principal-query.bcrypt-password-mapper.iteration-count-index</code></dt>
+<dd>
+<p>The index column containing the Bcrypt iteration count. (default: <code>0</code>)</p>
+</dd>
+</dl>
+</div>
 <p class="">For multiple datasources you can use the datasource name in the properties:</p>
 <div class="listingblock">
 <div class="content">
@@ -5179,7 +5438,12 @@ String firstName;</code></pre>
 <pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
 VaultKVSecretEngine kvSecretEngine;
 
-kvSecretEngine.readSecret("myapps/vault-quickstart/" + vaultPath).toString();</code></pre>
+kvSecretEngine.readSecret("myapps/vault-quickstart/" + vaultPath).toString();
+
+Map&lt;String, String&gt; secrets;
+kvSecretEngine.writeSecret("myapps/vault-quickstart/crud", secrets);
+
+kvSecretEngine.deleteSecret("myapps/vault-quickstart/crud");</code></pre>
 </div>
 </div>
 <p class=""><strong>Fetching credentials DB</strong></p>
@@ -6030,6 +6294,20 @@ Histogram historgram;</code></pre>
 </div>
 <p class=""><code>quarkus.hibernate-orm.metrics.enabled</code> set to <code>true</code> exposes Hibernate metrics under <code>vendor</code> scope.</p>
 <p class=""><code>quarkus.mongodb.metrics.enabled</code> set to <code>true</code> exposes MongoDB metrics under <code>vendor</code> scope.</p>
+<p class="">You can apply metrics annotations via CDI stereotypes:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Stereotype
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.FIELD })
+@Timed(name = "checksTimer",
+description = "A measure of how long it takes
+                                to perform a hello.",
+unit = MetricUnits.MILLISECONDS)
+public @interface TimedMilliseconds {
+}</code></pre>
+</div>
+</div>
 <p class=""><strong>Tracing</strong></p>
 <p class="">Quarkus can utilize the <a href="https://github.com/eclipse/microprofile-opentracing" target="_blank" rel="noopener">MicroProfile OpenTracing</a> spec.</p>
 <div class="listingblock">
@@ -6060,6 +6338,13 @@ tracer.activeSpan().setBaggageItem("key", "value");</code></pre>
 </div>
 </div>
 <p class="">You can disable <code>Jaeger</code> extension by using <code>quarkus.jaeger.enabled</code> property.</p>
+<p class="">You can log the <code>traceId</code>, <code>spanId</code> and <code>sampled</code> in normal log:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.log.console.format=%d{HH:mm:ss} %-5p traceId=%X{traceId},
+                                spanId=%X{spanId}, sampled=%X{sampled} [%c{2.}] (%t) %s%e%n</code></pre>
+</div>
+</div>
 <p class=""><strong>Additional tracers</strong></p>
 <p class=""><strong>JDBC Tracer</strong></p>
 <p class="">Adds a span for each JDBC queries.</p>
@@ -6202,7 +6487,7 @@ It provides several extensions to make it so.</p>
 </dd>
 </dl>
 </div>
-<p class=""><strong>JIB</strong></p>
+<p class=""><strong>Jib</strong></p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extensions
@@ -6287,17 +6572,17 @@ It provides several extensions to make it so.</p>
 </div>
 </div>
 <p class="">Running <code>./mvnw package</code> the Kubernetes resources are created at <code>target/kubernetes/</code> directory.</p>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>quarkus.kubernetes.group</code></dt>
-<dd>
-<p>Set Docker Username. (default: Current username OS)</p>
-</dd>
-<dt class="hdlist1"><code>quarkus.application.name</code></dt>
-<dd>
-<p>Project name. (default: Current project name)</p>
-</dd>
-</dl>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon icon-tip">
+<span class="fa-layers"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle" class="svg-inline--fa fa-circle fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path></svg><svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="lightbulb" class="svg-inline--fa fa-lightbulb fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" style="transform-origin: 0.34375em 0.5em;"><g transform="translate(176 256)"><g transform="translate(0, 0)  scale(0.625, 0.625)  rotate(0 0 0)"><path fill="currentColor" d="M176 80c-52.94 0-96 43.06-96 96 0 8.84 7.16 16 16 16s16-7.16 16-16c0-35.3 28.72-64 64-64 8.84 0 16-7.16 16-16s-7.16-16-16-16zM96.06 459.17c0 3.15.93 6.22 2.68 8.84l24.51 36.84c2.97 4.46 7.97 7.14 13.32 7.14h78.85c5.36 0 10.36-2.68 13.32-7.14l24.51-36.84c1.74-2.62 2.67-5.7 2.68-8.84l.05-43.18H96.02l.04 43.18zM176 0C73.72 0 0 82.97 0 176c0 44.37 16.45 84.85 43.56 115.78 16.64 18.99 42.74 58.8 52.42 92.16v.06h48v-.12c-.01-4.77-.72-9.51-2.15-14.07-5.59-17.81-22.82-64.77-62.17-109.67-20.54-23.43-31.52-53.15-31.61-84.14-.2-73.64 59.67-128 127.95-128 70.58 0 128 57.42 128 128 0 30.97-11.24 60.85-31.65 84.14-39.11 44.61-56.42 91.47-62.1 109.46a47.507 47.507 0 0 0-2.22 14.3v.1h48v-.05c9.68-33.37 35.78-73.18 52.42-92.16C335.55 260.85 352 220.37 352 176 352 78.8 273.2 0 176 0z" transform="translate(-176 -256)"></path></g></g></svg></span>
+</td>
+<td class="content">
+<a href="#_container_images_creation">Container Images Creation</a> integrates with Kubernetes extension, so no need of extra Kubernetes properties.
+</td>
+</tr>
+</table>
 </div>
 <p class="">Generated resource is integrated with <a href="#_observability">MicroProfile Health annotations</a>.</p>
 <p class="">Also, you can customize the generated resource by setting the new values in <code>application.properties</code>:</p>
@@ -6311,16 +6596,50 @@ quarkus.kubernetes.readiness-probe.period-seconds=45
 
 quarkus.kubernetes.mounts.github-token.path=/deployment/github
 quarkus.kubernetes.mounts.github-token.read-only=true
+
 quarkus.kubernetes.secret-volumes.github-token.volume-name=github-token
 quarkus.kubernetes.secret-volumes.github-token.secret-name=greeting-security
 quarkus.kubernetes.secret-volumes.github-token.default-mode=420
 
-quarkus.docker.registry=quay.io</code></pre>
+quarkus.kubernetes.config-map-volumes.github-token.config-map-name=my-secret
+
+quarkus.kubernetes.expose=true</code></pre>
 </div>
 </div>
 <p class="">All possible values are explained at <a href="https://quarkus.io/guides/kubernetes#configuration-options" class="bare">https://quarkus.io/guides/kubernetes#configuration-options</a>.</p>
+<p class=""><strong>Labels and Annotations</strong></p>
+<p class="">The generated manifest use the Kubernetes recommended labels and annotations.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">"labels" : {
+    "app.kubernetes.io/part-of" : "todo-app",
+    "app.kubernetes.io/name" : "todo-rest",
+    "app.kubernetes.io/version" : "1.0-rc.1"
+}
+
+"annotations": {
+    "app.quarkus.io/vcs-url" : "&lt;some url&gt;",
+    "app.quarkus.io/commit-id" : "&lt;some git SHA&gt;",
+}</code></pre>
+</div>
+</div>
+<p class="">You can override the labels by using the next properties:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.kubernetes.part-of=todo-app
+quarkus.kubernetes.name=todo-rest
+quarkus.kubernetes.version=1.0-rc.1</code></pre>
+</div>
+</div>
+<p class="">Or add new labels and/or annotations:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.kubernetes.labels.foo=bar
+quarkus.kubernetes.annotations.foo=bar</code></pre>
+</div>
+</div>
 <p class=""><strong>Kubernetes Deployment Targets</strong></p>
-<p class="">You can generate different resources setting the property <code>quarkus.kubernetes.deployment.target</code>.</p>
+<p class="">You can generate different resources setting the property <code>quarkus.kubernetes.deployment-target</code>.</p>
 <p class="">Possible values are <code>kubernetes</code>, <code>openshift</code> and <code>knative</code>.
 The default value is <code>kubernetes</code>.</p>
 <p class="">List of configuration options:</p>
@@ -6359,20 +6678,8 @@ If you set this flag to <code>true</code>, the <code>build</code> and <code>push
 </tr>
 </table>
 </div>
-<p class="">To deploy the application, the extension uses the `https://github.com/fabric8io/kubernetes-client[Fabric8 Kubernetes Client, window="_blank"].
+<p class="">To deploy the application, the extension uses the `https://github.com/fabric8io/kubernetes-client.
 All options described at <a href="#_kubernetes_client">Kubernetes Client</a> are valid here.</p>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon icon-tip">
-<span class="fa-layers"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle" class="svg-inline--fa fa-circle fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path></svg><svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="lightbulb" class="svg-inline--fa fa-lightbulb fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" style="transform-origin: 0.34375em 0.5em;"><g transform="translate(176 256)"><g transform="translate(0, 0)  scale(0.625, 0.625)  rotate(0 0 0)"><path fill="currentColor" d="M176 80c-52.94 0-96 43.06-96 96 0 8.84 7.16 16 16 16s16-7.16 16-16c0-35.3 28.72-64 64-64 8.84 0 16-7.16 16-16s-7.16-16-16-16zM96.06 459.17c0 3.15.93 6.22 2.68 8.84l24.51 36.84c2.97 4.46 7.97 7.14 13.32 7.14h78.85c5.36 0 10.36-2.68 13.32-7.14l24.51-36.84c1.74-2.62 2.67-5.7 2.68-8.84l.05-43.18H96.02l.04 43.18zM176 0C73.72 0 0 82.97 0 176c0 44.37 16.45 84.85 43.56 115.78 16.64 18.99 42.74 58.8 52.42 92.16v.06h48v-.12c-.01-4.77-.72-9.51-2.15-14.07-5.59-17.81-22.82-64.77-62.17-109.67-20.54-23.43-31.52-53.15-31.61-84.14-.2-73.64 59.67-128 127.95-128 70.58 0 128 57.42 128 128 0 30.97-11.24 60.85-31.65 84.14-39.11 44.61-56.42 91.47-62.1 109.46a47.507 47.507 0 0 0-2.22 14.3v.1h48v-.05c9.68-33.37 35.78-73.18 52.42-92.16C335.55 260.85 352 220.37 352 176 352 78.8 273.2 0 176 0z" transform="translate(-176 -256)"></path></g></g></svg></span>
-</td>
-<td class="content">
-<a href="#_container_images_creation">Container Images Creation</a> integrates with Kubernetes extension, so no need of extra properties.
-</td>
-</tr>
-</table>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -7543,14 +7850,102 @@ You can multiple cache annotations on a single method.
 <div class="sect1">
 <h2 id="_banner"><a class="anchor" href="#_banner"></a><a class="link" href="#_banner">Banner</a></h2>
 <div class="sectionbody">
-<p class="">To print a Quarkus banner at start-up:</p>
+<p class="">Banner is printed by default.
+It is not an extension but placed in the core.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>quarkus.banner.path</code></dt>
+<dd>
+<p>Path is relative to root of the classpath. (default: <code>default_banner.txt</code>)</p>
+</dd>
+<dt class="hdlist1"><code>quarkus.banner.enabled</code></dt>
+<dd>
+<p>Enables banner. (default : <code>true</code>)</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_optaplanner"><a class="anchor" href="#_optaplanner"></a><a class="link" href="#_optaplanner">OptaPlanner</a></h2>
+<div class="sectionbody">
+<p class="">Quarkus integrates with <a href="https://www.optaplanner.org/">OptaPlanner</a>.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
-  -Dextensions="banner"</code></pre>
+  -Dextensions="quarkus-optaplanner, quarkus-optaplanner-jackson"</code></pre>
 </div>
 </div>
-<p class="">Configure banner by setting <code>quarkus.banner.path</code> to a <em>txt</em> file containing the banner. Path is relative to root of the classpath.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@PlanningSolution
+public class TimeTable {
+}
+
+@Inject
+private SolverManager&lt;TimeTable, UUID&gt; solverManager;
+
+UUID problemId = UUID.randomUUID();
+SolverJob&lt;TimeTable, UUID&gt; solverJob = solverManager.solve(problemId, problem);
+TimeTable solution = solverJob.getFinalBestSolution();</code></pre>
+</div>
+</div>
+<p class="">Possible configuration options prefixed with <code>quarkus.optaplanner</code>:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>solver-config-xml</code></dt>
+<dd>
+<p>A classpath resource to read the solver configuration XML. Not mandatory.</p>
+</dd>
+<dt class="hdlist1"><code>solver.environment-mode</code></dt>
+<dd>
+<p>Enable runtime assertions to detect common bugs in your implementation during development. Possible values: <code>FAST_ASSERT</code>, <code>FULL_ASSERT</code>, <code>NON_INTRUSIVE_FULL_ASSERT</code>, <code>NON_REPRODUCIBLE</code>, <code>REPRODUCIBLE</code>. (default: <code>REPRODUCIBLE</code>)</p>
+</dd>
+<dt class="hdlist1"><code>solver.move-thread-count</code></dt>
+<dd>
+<p>Enable multithreaded solving for a single problem. Possible values: <code>MOVE_THREAD_COUNT_NONE</code>, <code>MOVE_THREAD_COUNT_AUTO</code>, a number or formula based on the available processors. (default: <code>MOVE_THREAD_COUNT_NONE</code>)</p>
+</dd>
+<dt class="hdlist1"><code>solver.termination.spent-limit</code></dt>
+<dd>
+<p>How long the solver can run. (ie <code>5s</code>)</p>
+</dd>
+<dt class="hdlist1"><code>solver.termination.unimproved-spent-limit</code></dt>
+<dd>
+<p>How long the solver can run without finding a new best solution after finding a new best solution. (ie <code>2h</code>)</p>
+</dd>
+<dt class="hdlist1"><code>solver.termination.best-score-limit</code></dt>
+<dd>
+<p>Terminates the solver when a specific or higher score has been reached. (ie <code>0hard/-1000soft</code>)</p>
+</dd>
+<dt class="hdlist1"><code>solver-manager.parallel-solver-count</code></dt>
+<dd>
+<p>The number of solvers that run in parallel. (default: <code>PARALLEL_SOLVER_COUNT_AUTO</code>)</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_context_propagation"><a class="anchor" href="#_context_propagation"></a><a class="link" href="#_context_propagation">Context Propagation</a></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-smallrye-context-propagation"</code></pre>
+</div>
+</div>
+<p class="">If using <code>mutiny</code> extension together you already get context propagation for ArC, RESTEasy and transactions.
+With <code>CompletionStage</code> you need to:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject ThreadContext threadContext;
+@Inject ManagedExecutor managedExecutor;
+
+threadContext.withContextCapture(..)
+             .thenApplyAsync(r -&gt; {}, managedExecutor);</code></pre>
+</div>
+</div>
+<p class="">If you are going to use security in a reactive environment you will likely need Smallrye Content Propagation to propagate the identity throughout the reactive callback.</p>
 <div class="page-break"></div>
 </div>
 </div>

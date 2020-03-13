@@ -1,7 +1,6 @@
 == RBAC
 
 // tag::update_10_4[]
-
 You can set RBAC using annotations or in `application.properties`.
 
 *Annotations*
@@ -25,17 +24,11 @@ quarkus.security.deny-unannotated=true
 
 Configuration options:
 
-|===	
-| Parameter | Default | Description
+`quarkus.jaxrs.deny-uncovered`::
+If true denies by default to all JAX-RS endpoints. (default: `false`)
 
-a|`quarkus.jaxrs.deny-uncovered`
-a|`false`
-|If true denies by default to all JAX-RS endpoints.
-
-a|`quarkus.security.deny-unannotated`
-a|`false`
-|If true denies by default all CDI methods and JAX-RS endpoints.
-|===
+`quarkus.security.deny-unannotated`::
+If true denies by default all CDI methods and JAX-RS endpoints. (default: `false`)
 // end::update_11_2[]
 
 *File Configuration*
@@ -263,7 +256,20 @@ quarkus.oidc.bearer-only=true
 quarkus.oidc.credentials.secret=secret
 ----
 
+// tag::update_14_39[]
 Configuration options with `quarkus.oidc` prefix:
+
+`enabled`::
+The OIDC is enabled. (default: `true`)
+
+`tenant-enabled`::
+If the tenant configuration is enabled. (default: `true`)
+
+`application-type`::
+The application type. Possible values: `web_app`, `service`. (default: `service`)
+
+`connection-delay`::
+The maximum amount of time the adapter will try connecting.
 
 `auth-server-url`::
 The base URL of the OpenID Connect (OIDC) server.
@@ -280,8 +286,42 @@ Public key for the local JWT token verification
 `client-id`::
 The client-id of the application.
 
+`roles.role-claim-path`::
+Path to the claim containing an array of groups. (`realm/groups`)
+
+`roles.role-claim-separator`::
+Separator for splitting a string which may contain multiple group values.
+
+`token.issuer`::
+Issuer claim value.
+
+`token.audience`::
+Audience claim value.
+
+`token.expiration-grace`::
+Expiration grace period in seconds.
+
+`token.principal-claim`::
+Name of the claim which contains a principal name.
+
 `credentials.secret`::
 The client secret
+
+`authentication.redirect-path`::
+Relative path for calculating a `redirect_uri` query parameter.
+
+`authentication.restore-path-after-redirect`::
+The original request URI used before the authentication will be restored after the user has been redirected back to the application. (default: `true`)
+
+`authentication.scopes`::
+List of scopes.
+
+`authentication.extra-params`::
+Additional properties which will be added as the query parameters .
+
+`authentication.cookie-path`::
+Cookie path parameter.
+// end::update_14_39[]
 
 NOTE:  With Keycloak OIDC server `https://host:port/auth/realms/{realm}` where `{realm}` has to be replaced by the name of the Keycloak realm.
 
@@ -336,29 +376,20 @@ And you can map roles to be used in security annotations.
 
 Configuration options:
 
-|===	
-| Parameter | Default | Description
+`quarkus.oauth2.enabled`::
+Determine if the OAuth2 extension is enabled. (default: `true`)
 
-a|`quarkus.oauth2.enabled`
-a|`true`
-|Determine if the OAuth2 extension is enabled.
+`quarkus.oauth2.client-id`::
+The OAuth2 client id used to validate the token.
 
-a|`quarkus.oauth2.client-id`
-a|
-|The OAuth2 client id used to validate the token.
+`quarkus.oauth2.client-secret`::
+The OAuth2 client secret used to validate the token.
 
-a|`quarkus.oauth2.client-secret`
-a|
-|The OAuth2 client secret used to validate the token.
+`quarkus.oauth2.introspection-url`::
+URL used to validate the token and gather the authentication claims.
 
-a|`quarkus.oauth2.introspection-url`
-a|
-|URL used to validate the token and gather the authentication claims.
-
-a|`quarkus.oauth2.role-claim`
-a|`scope`
-|The claim that is used in the endpoint response to load the roles
-|===
+`quarkus.oauth2.role-claim`::
+The claim that is used in the endpoint response to load the roles ((default: `scope`)
 // end::update_6_8[]
 
 == Authenticating via HTTP
@@ -412,38 +443,30 @@ scott=Admin,admin,Tester,user
 jdoe=NoRolesUser
 ----
 
+<<<
+
 *IMPORTANT:*  If `plain-text` is set to `false` (or omitted) then passwords must be stored in the form MD5 (`username`:`realm`:`password`).
 
 Elytron File Properties configuration properties.
 Prefix `quarkus.security.users` is skipped.
 
-|===	
-| Parameter | Default | Description
+`file.enabled`::
+The file realm is enabled. (default: `false`)
 
-a|`file.enabled`
-a|`false`
-|The file realm is enabled
+`file.auth-mechanism`::
+The authentication mechanism. ( default: `BASIC`)
 
-a|`file.auth-mechanism`
-a|`BASIC`
-|The authentication mechanism
+`file.realm-name`::
+The authentication realm name. (default: `Quarkus`)
 
-a|`file.realm-name`
-a|`Quarkus`
-|The authentication realm name
+`file.plain-text`::
+If passwords are in plain or in MD5. (default: `false`)
 
-a|`file.plain-text`
-a|`false`
-|If passwords are in plain or in MD5
+`file.users`::
+Classpath resource of user/password. (default: `users.properties`)
 
-a|`file.users`
-a|`users.properties`
-|Classpath resource of user/password
-
-a|`file.roles`
-a|`roles.properties`
-|Classpath resource of user/role
-|===
+`file.roles`::
+Classpath resource of user/role. (default: `roles.properties`)
 
 *Embedded Realm*
 
@@ -462,33 +485,23 @@ quarkus.security.users.embedded.auth-mechanism=BASIC
 
 Prefix `quarkus.security.users.embedded` is skipped.
 
-|===	
-| Parameter | Default | Description
+`file.enabled`::
+The file realm is enabled. (default: `false`)
 
-a|`file.enabled`
-a|`false`
-|The file realm is enabled
+`file.auth-mechanism`::
+The authentication mechanism. (default: `BASIC`)
 
-a|`file.auth-mechanism`
-a|`BASIC`
-|The authentication mechanism
+`file.realm-name`::
+The authentication realm name. (default: `Quarkus`)
 
-a|`file.realm-name`
-a|`Quarkus`
-|The authentication realm name
+`file.plain-text`::
+If passwords are in plain or in MD5. (default: `false`)
 
-a|`file.plain-text`
-a|`false`
-|If passwords are in plain or in MD5
+`file.users.*`::
+`*` is user and value is password.
 
-a|`file.users.*`
-a|
-a|`*` is user and value is password
-
-a|`file.roles.*`
-a|
-a|`*` is user and value is role
-|===
+`file.roles.*`::
+`*` is user and value is role.
 // end::update_10_2[]
 
 == Security with a JDBC Realm

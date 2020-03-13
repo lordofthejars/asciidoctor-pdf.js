@@ -689,6 +689,23 @@ Apply Micrometer compatibility mode. (default: `false`)
 `quarkus.mongodb.metrics.enabled` set to `true` exposes MongoDB metrics under `vendor` scope.
 // end::update_14_25[]
 
+// tag::update_14_41[]
+You can apply metrics annotations via CDI stereotypes:
+
+[source, java]
+----
+@Stereotype
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.FIELD })
+@Timed(name = "checksTimer", 
+description = "A measure of how long it takes 
+                                to perform a hello.", 
+unit = MetricUnits.MILLISECONDS)
+public @interface TimedMilliseconds {
+}
+----
+// end::update_14_41[]
+
 *Tracing*
 
 Quarkus can utilize the https://github.com/eclipse/microprofile-opentracing[MicroProfile OpenTracing, window="_blank"] spec.
@@ -728,6 +745,16 @@ tracer.activeSpan().setBaggageItem("key", "value");
 // tag::update_8_11[]
 You can disable `Jaeger` extension by using `quarkus.jaeger.enabled` property.
 // end::update_8_11[]
+
+// tag::update_14_40[]
+You can log the `traceId`, `spanId` and `sampled` in normal log:
+
+[source, properties]
+----
+quarkus.log.console.format=%d{HH:mm:ss} %-5p traceId=%X{traceId}, 
+                                spanId=%X{spanId}, sampled=%X{sampled} [%c{2.}] (%t) %s%e%n
+----
+// end::update_14_40[]
 
 // tag::update_8_12[]
 *Additional tracers*
