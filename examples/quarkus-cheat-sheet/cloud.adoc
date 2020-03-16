@@ -1,6 +1,4 @@
-== Cloud
-
-*Native*
+== Native Executable
 
 You can build a native image by using GraalVM.
 The common use case is creating a Docker image so you can execute the next commands:
@@ -28,29 +26,162 @@ Now `docker` (default) and `podman` are the valid options.
 To configure native application, you can create a `config` directory at the same place as the native file and place an `application.properties` file inside. `config/application.properties`.
 // end::update_1_6[]
 
-*Kubernetes*
+*SSL*
+
+// tag::update_14_28[]
+To create a native image with SSL you need to copy SunEC library and certificates:
+
+Java 8:
+
+[source, Dockerfile]
+----
+FROM quay.io/quarkus/ubi-quarkus-native-image:{graalvm-version}-java8 as nativebuilder
+RUN mkdir -p /tmp/ssl-libs/lib \
+  && cp /opt/graalvm/jre/lib/security/cacerts /tmp/ssl-libs \
+  && cp /opt/graalvm/jre/lib/amd64/libsunec.so /tmp/ssl-libs/lib/
+
+FROM registry.access.redhat.com/ubi8/ubi-minimal
+WORKDIR /work/
+COPY --from=nativebuilder /tmp/ssl-libs/ /work/
+COPY target/*-runner /work/application
+RUN chmod 775 /work /work/application
+EXPOSE 8080
+CMD ["./application", "-Dquarkus.http.host=0.0.0.0", "-Djava.library.path=/work/lib", "-Djavax.net.ssl.trustStore=/work/cacerts"]
+----
+
+Java 11:
+
+[source, Dockerfile]
+----
+FROM quay.io/quarkus/ubi-quarkus-native-image:{graalvm-version}-java11 as nativebuilder
+RUN mkdir -p /tmp/ssl-libs/lib \
+  && cp /opt/graalvm/lib/security/cacerts /tmp/ssl-libs \
+  && cp /opt/graalvm/lib/libsunec.so /tmp/ssl-libs/lib/
+
+FROM registry.access.redhat.com/ubi8/ubi-minimal
+WORKDIR /work/
+COPY --from=nativebuilder /tmp/ssl-libs/ /work/
+COPY target/*-runner /work/application
+RUN chmod 775 /work /work/application
+EXPOSE 8080
+CMD ["./application", "-Dquarkus.http.host=0.0.0.0", "-Djava.library.path=/work/lib", "-Djavax.net.ssl.trustStore=/work/cacerts"]
+----
+// end::update_14_28[]
+
+== Container Images Creation
+
+// tag::update_14_22[]
+You can levarage to Quarkus to generation and release of Docker containers.
+It provides several extensions to make it so.
+
+[source, shell-session]
+----
+mvn clean package 
+            -Dquarkus.container-image.build=true 
+            -Dquarkus.container-image.push=true 
+            -Dquarkus.container-image.registry=quay.io
+----
+
+Prefix is `quarkus.container-image`:
+
+`group`::
+The group/repository of the image. (default: the `${user.name}`)
+
+`name`::
+The name of the image. (default: the application name)
+
+`tag`::
+The tag of the image. (default: the application version)
+
+`registry`::
+The registry to use for pushing. (default: `docker.io`)
+
+`username`::
+The registry username.
+
+`password`::
+The registry password.
+
+`insecure`::
+Flag to allow insecure registries. (default: `false`)
+
+`build`::
+Boolean to set if image should be built. (default: `false`)
+
+`push`::
+Boolean to set if image should be pushed. (default: `false`)
+
+*Jib*
+
+[source, bash]
+----
+./mvnw quarkus:add-extensions 
+    -Dextensions="quarkus-container-image-jib"
+----
+
+Prefix is `quarkus.container-image-jib`:
+
+`base-jvm-image`::
+The base image to use for the jib build. (default: `fabric8/java-alpine-openjdk8-jre`)
+
+`base-native-image`::
+The base image to use for the native build. (default: `registry.access.redhat.com/ubi8/ubi-minimal`)
+
+`jvm-arguments`::
+The arguments to pass to java. (default: `-Dquarkus.http.host=0.0.0.0,-Djava.util.logging.manager=org.jboss.logmanager.LogManager`)
+
+`native-arguments`::
+The arguments to pass to the native application. (default: `-Dquarkus.http.host=0.0.0.0`)
+
+`environment-variables`::
+Map of environment variables.
+
+*Docker* 
+
+[source, bash]
+----
+./mvnw quarkus:add-extensions 
+    -Dextensions="quarkus-container-image-docker"
+----
+
+Prefix is `quarkus.container-image-s2i`:
+
+`dockerfile-jvm-path`::
+Path to the JVM Dockerfile. (default: `${project.root}/src/main/docker/Dockerfile.jvm`)
+
+`dockerfile-native-path`::
+Path to the native Dockerfile. (default: `${project.root}/src/main/docker/Dockerfile.native`)
+
+*S2I*
+
+[source, bash]
+----
+./mvnw quarkus:add-extensions 
+    -Dextensions="quarkus-container-image-s2i"
+----
+
+Prefix is `quarkus.container-image-docker`:
+
+`base-jvm-image`::
+The base image to use for the s2i build. (default: `fabric8/java-alpine-openjdk8-jre`)
+
+`base-native-image`::
+The base image to use for the native build. (default: `registry.access.redhat.com/ubi8/ubi-minimal`)
+// end::update_14_22[]
+
+== Kubernetes
 
 Quarks can use https://github.com/dekorateio/dekorate[Dekorate] to generate Kubernetes resources.
 
 [source, bash]
 ----
 ./mvnw quarkus:add-extensions 
-    -Dextensions="io.quarkus:quarkus-kubernetes"
+    -Dextensions="quarkus-kubernetes"
 ----
 
 Running `./mvnw package` the Kubernetes resources are created at `target/kubernetes/` directory.
 
-|===	
-| Property | Default | Description
-
-a|`kubernetes.group`
-a|Current username
-a|Set Docker Username.
-
-a|`quarkus.application.name`
-a|Current project name
-a|Project name
-|===
+TIP: <<Container Images Creation>> integrates with Kubernetes extension, so no need of extra Kubernetes properties.
 
 Generated resource is integrated with <<Observability, MicroProfile Health annotations>>.
 
@@ -59,27 +190,108 @@ Also, you can customize the generated resource by setting the new values in `app
 
 [source, properties]
 ----
-kubernetes.replicas=3
+quarkus.kubernetes.replicas=3
 
-kubernetes.labels[0].key=foo
-kubernetes.labels[0].value=bar
+quarkus.kubernetes.labelsfoo=bar
 
-kubernetes.readiness-probe.period-seconds=45
+quarkus.kubernetes.readiness-probe.period-seconds=45
 
-docker.registry=quay.io
+quarkus.kubernetes.mounts.github-token.path=/deployment/github
+quarkus.kubernetes.mounts.github-token.read-only=true
+
+quarkus.kubernetes.secret-volumes.github-token.volume-name=github-token
+quarkus.kubernetes.secret-volumes.github-token.secret-name=greeting-security
+quarkus.kubernetes.secret-volumes.github-token.default-mode=420
+
+quarkus.kubernetes.config-map-volumes.github-token.config-map-name=my-secret
+
+quarkus.kubernetes.expose=true
 ----
 
 All possible values are explained at https://quarkus.io/guides/kubernetes#configuration-options.
 // end::update_11_3[]
 
+*Labels and Annotations*
+
+// tag::update_14_38[]
+The generated manifest use the Kubernetes recommended labels and annotations.
+
+[source, json]
+----
+"labels" : {
+    "app.kubernetes.io/part-of" : "todo-app",
+    "app.kubernetes.io/name" : "todo-rest",
+    "app.kubernetes.io/version" : "1.0-rc.1"
+}
+
+"annotations": {
+    "app.quarkus.io/vcs-url" : "<some url>",
+    "app.quarkus.io/commit-id" : "<some git SHA>",
+}
+----
+
+You can override the labels by using the next properties:
+
+[source, properties]
+----
+quarkus.kubernetes.part-of=todo-app
+quarkus.kubernetes.name=todo-rest
+quarkus.kubernetes.version=1.0-rc.1
+----
+
+Or add new labels and/or annotations:
+
+[source, properties]
+----
+quarkus.kubernetes.labels.foo=bar
+quarkus.kubernetes.annotations.foo=bar
+----
+// end::update_14_38[]
+
 *Kubernetes Deployment Targets*
 // tag::update_12_4[]
 
-You can generate different resources setting the property `kubernetes.deployment.target`.
+You can generate different resources setting the property `quarkus.kubernetes.deployment-target`.
 
 Possible values are `kubernetes`, `openshift` and `knative`.
 The default value is `kubernetes`.
 // end::update_12_4[]
+
+// tag::update_14_23[]
+List of configuration options:
+
+kubernetes:: https://quarkus.io/guides/kubernetes#configuration-options
+openshift:: https://quarkus.io/guides/kubernetes#openshift
+Knative:: https://quarkus.io/guides/kubernetes#knative
+// end::update_14_23[]
+
+*Deployment*
+
+// tag::update_14_24[]
+To deploy automatically the generated resources, you need to set `quarkus.container.deploy` flag to `true`.
+
+[source, shell-session]
+----
+mvn clean package -Dquarkus.kubernetes.deploy=true
+----
+
+TIP: If you set this flag to `true`, the `build` and `push` flags from container-image are set to `true` too. 
+
+To deploy the application, the extension uses the `https://github.com/fabric8io/kubernetes-client.
+All options described at <<Kubernetes Client>> are valid here.
+// end::update_14_24[]
+
+== OpenShift
+
+// tag::update_14_29[]
+Instead of adding Kubernetes extension, set container image s2i and the `target` to `openshift` for working with OpenShift, an extension grouping all of the is created:
+
+[source, shell-session]
+----
+./mvnw quarkus:add-extension 
+    -Dextensions="openshift"
+----
+// end::update_14_29[]
 
 == Kubernetes Client
 // tag::update_4_5[]
@@ -96,93 +308,68 @@ List of Kubernetes client parameters.
 
 `quarkus.kubernetes-client` as prefix is skipped in the next table.
 
-|===	
-| Property | Default | Description
+`trust-certs`::
+Trust self-signed certificates. (default: `false`)
 
-a|`trust-certs`
-a|`false`
-|Trust self-signed certificates.
+`master-url`::
+URL of Kubernetes API server.
 
-a|`master-url`
-a|
-|URL of Kubernetes API server.
+`namesapce`::
+Default namespace.
 
-a|`namesapce`
-a|
-|Default namespace.
+`ca-cert-file`::
+CA certificate data.
 
-a|`ca-cert-file`
-a|
-|CA certificate data.
+`client-cert-file`::
+Client certificate file.
 
-a|`client-cert-file`
-a|
-|Client certificate file.
+`client-cert-data`::
+Client certificate data.
 
-a|`client-cert-data`
-a|
-|Client certificate data.
+`client-key-data`::
+Client key data.
 
-a|`client-key-data`
-a|
-|Client key data.
+`client-key-algorithm`::
+Client key algorithm.
 
-a|`client-key-algorithm`
-a|
-|Client key algorithm.
+`client-key-passphrase`::
+Client key passphrase.
 
-a|`client-key-passphrase`
-a|
-|Client key passphrase.
+`username`::
+Username.
 
-a|`username`
-a|
-|Username.
+`password`::
+Password.
 
-a|`password`
-a|
-|Password.
+`watch-reconnect-interval`::
+Watch reconnect interval. (default: `PT1S`)
 
-a|`watch-reconnect-interval`
-a|`PT1S`
-|Watch reconnect interval.
+`watch-reconnect-limit`::
+Maximum reconnect attempts. (default: `-1`)
 
-a|`watch-reconnect-limit`
-a|`-1`
-|Maximum reconnect attempts.
+`connection-timeout`::
+Maximum amount of time to wait for a connection. (default: `PT10S`)
 
-a|`connection-timeout`
-a|`PT10S`
-|Maximum amount of time to wait for a connection.
+`request-timeout`::
+Maximum amount of time to wait for a request. (default: `PT10S`)
 
-a|`request-timeout`
-a|`PT10S`
-|Maximum amount of time to wait for a request.
+`rolling-timeout`::
+Maximum amount of time to wait for a rollout. (default: ``PT15M``)
 
-a|`rolling-timeout`
-a|`PT15M`
-|Maximum amount of time to wait for a rollout.
+`http-proxy`::
+HTTP proxy used to access the Kubernetes.
 
-a|`http-proxy`
-a|
-|HTTP proxy used to access the Kubernetes.
+`https-proxy`::
+HTTPS proxy used to access the Kubernetes.
 
-a|`https-proxy`
-a|``
-|HTTPS proxy used to access the Kubernetes.
+`proxy-username`::
+Proxy username.
 
-a|`proxy-username`
-a|
-|Proxy username.
+`proxy-password`::
+Proxy password.
 
-a|`proxy-password`
-a|
-|Proxy password.
-
-a|`no-proxy`
-a|
-|IP addresses or hosts to exclude from proxying
-|===
+`no-proxy`::
+IP addresses or hosts to exclude from proxying
 // end::update_6_5[]
 
 Or programmatically:

@@ -98,6 +98,57 @@ example.anotherClass.value=true
 ----
 // end::update_13_3[]
 
+== Spring Cloud Config Client
+
+// tag::update_14_11[]
+Quarkus integrates https://cloud.spring.io/spring-cloud-config/multi/multi__spring_cloud_config_client.html[Spring Cloud Config Client] and MicroProfile Config spec.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-spring-cloud-config-client"
+----
+
+You need to configure the extension:
+
+[source, properties]
+----
+quarkus.scccc.uri=http://localhost:8089
+quarkus.scccc.username=user
+quarkus.scccc.password=pass
+quarkus.scccc.enabled=true
+----
+
+[source, java]
+----
+@ConfigProperty(name = "greeting.message")
+String greeting;
+----
+
+Prefix is `quarkus.scccc`.
+
+`uri`::
+Base URI where the Spring Cloud Config Server is available. (default: `localhost:8888`)
+
+`username`::
+Username to be used if the Config Server has BASIC Auth enabled.
+
+`password`::
+Password to be used if the Config Server has BASIC Auth enabled.
+
+`enabled`::
+Enables read configuration from Spring Cloud Config Server. (default: `false`)
+
+`fail-fast`::
+True to not start application if cannot access to the server. (default: `false`)
+
+`connection-timeout`::
+The amount of time to wait when initially establishing a connection before giving up and timing out. (default: `10S`)
+
+`read-timeout`::
+The amount of time to wait for a read on a socket before an exception is thrown. (default: `60S`)
+// end::update_14_11[]
+
 == Spring Web
 // tag::update_7_6[]
 
@@ -198,6 +249,15 @@ Iterator<Movie> findByRating(String rating);
 @Modifying
 @Query("delete from Movie where rating = :rating")
 void deleteByRating(@Param("rating") String rating);
+
+@Query(value = "SELECT COUNT(*), publicationYear FROM Book GROUP BY publicationYear")
+List<BookCountByYear> findAllByPublicationYear2();
+
+interface BookCountByYear {
+    int getPublicationYear();
+
+    Long getCount();
+}
 ----
 
 What is currently unsupported:

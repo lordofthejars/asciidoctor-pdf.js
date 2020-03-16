@@ -15,6 +15,260 @@ In this page you can either read what has been added in each version of the chea
 [[whatsnew]]
 == What's New in Cheat-Sheet
 
+=== Version 1.3.0.Final
+
+.Vert.X Verticle
+[%collapsible]
+====
+include::network.adoc[tag=update_14_1]
+====
+
+.Micrometer compatibility
+[%collapsible]
+====
+include::network.adoc[tag=update_14_2]
+====
+
+.Multiple cache annotations
+[%collapsible]
+====
+include::misc.adoc[tag=update_14_3]
+====
+
+.For syntax in Qute
+[%collapsible]
+====
+include::misc.adoc[tag=update_14_4]
+====
+
+.Multi MongoDB support
+[%collapsible]
+====
+include::persistence.adoc[tag=update_14_5]
+====
+
+.Env support
+[%collapsible]
+====
+include::core.adoc[tag=update_14_6]
+====
+
+.Mutiny
+[%collapsible]
+====
+include::reactive.adoc[tag=update_14_7]
+====
+
+.Security with JPA
+[%collapsible]
+====
+include::security.adoc[tag=update_14_8]
+====
+
+.Banner
+[%collapsible]
+====
+include::misc.adoc[tag=update_14_9]
+====
+
+.AWS XRay
+[%collapsible]
+====
+include::network.adoc[tag=update_14_10]
+====
+
+.Spring Cloud Config Client
+[%collapsible]
+====
+include::spring.adoc[tag=update_14_11]
+====
+
+.Reactive Panache
+[%collapsible]
+====
+include::persistence.adoc[tag=update_14_12]
+====
+
+.Reactive and Async in Qute
+[%collapsible]
+====
+include::misc.adoc[tag=update_14_13]
+====
+
+.Reactive Mail client
+[%collapsible]
+====
+include::misc.adoc[tag=update_14_14]
+====
+
+.Reactive Rest Client Mutiny
+[%collapsible]
+====
+include::core.adoc[tag=update_14_15]
+====
+
+.Mutiny and JAX-RS
+[%collapsible]
+====
+include::reactive.adoc[tag=update_14_16]
+====
+
+.New Reactive MongoDB Client
+[%collapsible]
+====
+include::persistence.adoc[tag=update_14_17]
+====
+
+.Scheduling Jobs Programmatically
+[%collapsible]
+====
+include::misc.adoc[tag=update_14_18]
+====
+
+.Neo4J Mutiny
+[%collapsible]
+====
+include::persistence.adoc[tag=update_14_19]
+====
+
+.Hibernate Properties
+[%collapsible]
+====
+include::persistence.adoc[tag=update_14_20]
+====
+
+.JWT Properties
+[%collapsible]
+====
+include::security.adoc[tag=update_14_21]
+====
+
+.Container Image Creation
+[%collapsible]
+====
+include::cloud.adoc[tag=update_14_22]
+====
+
+.Kubernetes/OpenShift/Knative Options
+[%collapsible]
+====
+include::cloud.adoc[tag=update_14_23]
+====
+
+.Kubernetes Deployment
+[%collapsible]
+====
+include::cloud.adoc[tag=update_14_24]
+====
+
+.Integration MongoDB and Metrics
+[%collapsible]
+====
+include::network.adoc[tag=update_14_25]
+====
+
+.DynamoDB and Mutiny
+[%collapsible]
+====
+include::persistence.adoc[tag=update_14_26]
+====
+
+.Qute methods
+[%collapsible]
+====
+include::misc.adoc[tag=update_14_27]
+====
+
+.SSL in Docker and Native
+[%collapsible]
+====
+include::cloud.adoc[tag=update_14_28]
+====
+
+.OpenShift Extension
+[%collapsible]
+====
+include::cloud.adoc[tag=update_14_29]
+====
+
+.Streams in Panache
+[%collapsible]
+====
+include::persistence.adoc[tag=update_14_30]
+====
+
+.Graceful Shutdown
+[%collapsible]
+====
+include::core.adoc[tag=update_14_31]
+====
+
+.HTTPS
+[%collapsible]
+====
+include::core.adoc[tag=update_14_32]
+====
+
+.Vert.X Reactive Clients
+[%collapsible]
+====
+include::reactive.adoc[tag=update_14_33]
+====
+
+.OIDC Multi-tenancy
+[%collapsible]
+====
+include::security.adoc[tag=update_14_34]
+====
+
+.OptaPlanner
+[%collapsible]
+====
+include::misc.adoc[tag=update_14_35]
+====
+
+.Context Propagation
+[%collapsible]
+====
+include::misc.adoc[tag=update_14_36]
+====
+
+.Liquibase
+[%collapsible]
+====
+include::persistence.adoc[tag=update_14_37]
+====
+
+.Labels and Annotations in Kubernetes
+[%collapsible]
+====
+include::cloud.adoc[tag=update_14_38]
+====
+
+.OIDC Configuration
+[%collapsible]
+====
+include::security.adoc[tag=update_14_39]
+====
+
+.Tracer info in Logging
+[%collapsible]
+====
+include::network.adoc[tag=update_14_40]
+====
+
+.Metrics via CDI stereotypes
+[%collapsible]
+====
+include::network.adoc[tag=update_14_41]
+====
+
+.Persistence New Configuration Properties
+[%collapsible]
+====
+include::persistence.adoc[tag=update_14_42]
+====
+
 === Version 1.2.0.Final
 
 .Qute Mail Integration
@@ -117,720 +371,6 @@ include::security.adoc[tag=update_13_16]
 [%collapsible]
 ====
 include::misc.adoc[tag=update_13_17]
-====
-
-=== Version 1.1.0.Final
-
-.Panache and Optional
-[%collapsible]
-====
-include::persistence.adoc[tag=update_12_1]
-====
-
-.Quartz
-[%collapsible]
-====
-include::misc.adoc[tag=update_12_2]
-====
-
-.Automatic Readiness Probes
-[%collapsible]
-====
-include::network.adoc[tag=update_12_3]
-====
-
-.Kubernetes Deployment Targets
-[%collapsible]
-====
-include::cloud.adoc[tag=update_12_4]
-====
-
-.Quartz Expression Type
-[%collapsible]
-====
-include::misc.adoc[tag=update_12_5]
-====
-
-.Lock and Hint
-[%collapsible]
-====
-include::persistence.adoc[tag=update_12_6]
-====
-
-.Flyway Multiple Datasource support
-[%collapsible]
-====
-include::persistence.adoc[tag=update_12_7]
-====
-
-.Qute Template engine
-[%collapsible]
-====
-include::misc.adoc[tag=update_12_8]
-====
-
-.JSON Logging Format
-[%collapsible]
-====
-include::core.adoc[tag=update_12_9]
-====
-
-.Sentry Logging
-[%collapsible]
-====
-include::misc.adoc[tag=update_12_10]
-====
-
-.Spring Security
-[%collapsible]
-====
-include::spring.adoc[tag=update_12_11]
-====
-
-.YAML Config
-[%collapsible]
-====
-include::core.adoc[tag=update_12_12]
-====
-
-=== Version 1.0.0.CR2
-
-.HTTP Form Auth
-[%collapsible]
-====
-include::security.adoc[tag=update_11_1]
-====
-
-.Alter RBAC behaviour
-[%collapsible]
-====
-include::security.adoc[tag=update_11_2]
-====
-
-.Tuning generated Kubernetes resouces
-[%collapsible]
-====
-include::cloud.adoc[tag=update_11_3]
-====
-
-.HTTPS Rest Client
-[%collapsible]
-====
-include::core.adoc[tag=update_11_4]
-====
-
-.Timeout Rest Client
-[%collapsible]
-====
-include::core.adoc[tag=update_11_5]
-====
-
-.Select Container Runtime
-[%collapsible]
-====
-include::cloud.adoc[tag=update_11_6]
-====
-
-.Spring Web supported types
-[%collapsible]
-====
-include::spring.adoc[tag=update_11_7]
-====
-
-.AWS Lambda Archetype
-[%collapsible]
-====
-include::cloud.adoc[tag=update_11_8]
-====
-
-=== Version 0.26.0
-
-.JAX-RS over Vert.X
-[%collapsible]
-====
-include::network.adoc[tag=update_10_1]
-====
-
-.Security with File Properties Realm
-[%collapsible]
-====
-include::security.adoc[tag=update_10_2]
-====
-
-.Http basic auth
-[%collapsible]
-====
-include::security.adoc[tag=update_10_3]
-====
-
-.RBAC
-[%collapsible]
-====
-include::security.adoc[tag=update_10_4]
-====
-
-.Vault Support
-[%collapsible]
-====
-include::security.adoc[tag=update_10_5]
-====
-
-.Memory Transactions
-[%collapsible]
-====
-include::misc.adoc[tag=update_10_6]
-====
-
-.Infinispan Embedded
-[%collapsible]
-====
-include::persistence.adoc[tag=update_10_7]
-====
-
-.Gradle
-[%collapsible]
-====
-include::core.adoc[tag=update_10_8]
-====
-
-.Declarative Reactive Routes
-[%collapsible]
-====
-include::network.adoc[tag=update_10_9]
-====
-
-.Multipart form-data Rest Client
-[%collapsible]
-====
-include::core.adoc[tag=update_10_10]
-====
-
-=== Version 0.24.0
-
-.Grouping Configuration Properties
-[%collapsible]
-====
-include::core.adoc[tag=update_9_1]
-====
-
-.Panache MongoDB
-[%collapsible]
-====
-include::persistence.adoc[tag=update_9_2]
-====
-
-.Panache JPA Pagination
-[%collapsible]
-====
-include::persistence.adoc[tag=update_9_3]
-====
-
-.Named Lambda Request Handlers
-[%collapsible]
-====
-include::cloud.adoc[tag=update_9_4]
-====
-
-.Vert.X Filters and Routes
-[%collapsible]
-====
-include::network.adoc[tag=update_9_5]
-====
-
-.Change Context of Static Web Resources
-[%collapsible]
-====
-include::misc.adoc[tag=update_9_6]
-====
-
-.Security with a JDBC Realm
-[%collapsible]
-====
-include::security.adoc[tag=update_9_7]
-====
-
-.XML Marshalling/Unmarshalling
-[%collapsible]
-====
-include::core.adoc[tag=update_9_8]
-====
-
-.Multiple datasources
-[%collapsible]
-====
-include::persistence.adoc[tag=update_9_9]
-====
-
-=== Version 0.23.0
-
-.JGit
-[%collapsible]
-====
-include::misc.adoc[tag=update_8_1]
-====
-
-.Spring Data JPA
-[%collapsible]
-====
-include::spring.adoc[tag=update_8_2]
-====
-
-.Amazon DynamoDB
-[%collapsible]
-====
-include::persistence.adoc[tag=update_8_3]
-====
-
-.ActiveMQ Artemis
-[%collapsible]
-====
-include::reactive.adoc[tag=update_8_4]
-====
-
-.Spring Web generation
-[%collapsible]
-====
-include::spring.adoc[tag=update_8_5]
-====
-
-.Azure Functions
-[%collapsible]
-====
-include::cloud.adoc[tag=update_8_6]
-====
-
-.Infinispan
-[%collapsible]
-====
-include::persistence.adoc[tag=update_8_7]
-====
-
-.Reactive MySQL client
-[%collapsible]
-====
-include::reactive.adoc[tag=update_8_8]
-====
-
-.Web Resources
-[%collapsible]
-====
-include::misc.adoc[tag=update_8_9]
-====
-
-.Static OpenAPI documents
-[%collapsible]
-====
-include::misc.adoc[tag=update_8_10]
-====
-
-.Disable Jaeger
-[%collapsible]
-====
-include::network.adoc[tag=update_8_11]
-====
-
-.JDBC Tracer
-[%collapsible]
-====
-include::network.adoc[tag=update_8_12]
-====
-
-.Custom Health Check Paths
-[%collapsible]
-====
-include::network.adoc[tag=update_8_13]
-====
-
-.Provided Health Check implementations
-[%collapsible]
-====
-include::network.adoc[tag=update_8_14]
-====
-
-=== Version 0.21.0
-
-.Injecting without @Inject
-[%collapsible]
-====
-include::core.adoc[tag=update_7_1]
-====
-
-.Kafka Stream support
-[%collapsible]
-====
-include::reactive.adoc[tag=update_7_2]
-====
-
-.Configuring Apache Tika
-[%collapsible]
-====
-include::misc.adoc[tag=update_7_3]
-====
-
-.GZip support
-[%collapsible]
-====
-include::network.adoc[tag=update_7_4]
-====
-
-.Spring DI
-[%collapsible]
-====
-include::spring.adoc[tag=update_7_5]
-====
-
-.Spring Web
-[%collapsible]
-====
-include::spring.adoc[tag=update_7_6]
-====
-
-=== Version 0.20.0
-
-.Jackson
-[%collapsible]
-====
-include::core.adoc[tag=update_6_1]
-====
-
-.Custom Context Path
-[%collapsible]
-====
-include::core.adoc[tag=update_6_2]
-====
-
-.Test Coverage
-[%collapsible]
-====
-include::core.adoc[tag=update_6_3]
-====
-
-.Transactions
-[%collapsible]
-====
-include::persistence.adoc[tag=update_6_4]
-====
-
-.Kubernetes Client Configuration
-[%collapsible]
-====
-include::cloud.adoc[tag=update_6_5]
-====
-
-.Customization of OpenAPI v3 output
-[%collapsible]
-====
-include::misc.adoc[tag=update_6_6]
-====
-
-.Build Tool and Profiles
-[%collapsible]
-====
-include::core.adoc[tag=update_6_7]
-====
-
-.OAuth2
-[%collapsible]
-====
-include::security.adoc[tag=update_6_8]
-====
-
-=== Version 0.19.0
-
-.Exception Mapper
-[%collapsible]
-====
-include::network.adoc[tag=update_5_1]
-====
-
-.EntityManager Injection
-[%collapsible]
-====
-include::persistence.adoc[tag=update_5_2]
-====
-
-.Hibernate Configuration
-[%collapsible]
-====
-include::persistence.adoc[tag=update_5_3]
-====
-
-.CDI Produces and Qualifiers
-[%collapsible]
-====
-include::core.adoc[tag=update_5_4]
-====
-
-.Tests and Interceptors
-[%collapsible]
-====
-include::core.adoc[tag=update_5_5]
-====
-
-.Amazon DynamoDB
-[%collapsible]
-====
-include::persistence.adoc[tag=update_5_6]
-====
-
-.Neo4j
-[%collapsible]
-====
-include::persistence.adoc[tag=update_5_7]
-====
-
-.Apache Tika
-[%collapsible]
-====
-include::misc.adoc[tag=update_5_8]
-====
-
-.Kubernetes Mock Server
-[%collapsible]
-====
-include::cloud.adoc[tag=update_5_9]
-====
-
-.MongoDB Client
-[%collapsible]
-====
-include::persistence.adoc[tag=update_5_10]
-====
-
-=== Version 0.18.0
-
-.JAX-RS
-[%collapsible]
-====
-include::network.adoc[tag=update_4_1]
-====
-
-.Quarkus Test Resource
-[%collapsible]
-====
-include::core.adoc[tag=update_4_2]
-====
-
-.H2 Quarkus Test Resource
-[%collapsible]
-====
-include::persistence.adoc[tag=update_4_3]
-====
-
-.Flushing
-[%collapsible]
-====
-include::persistence.adoc[tag=update_4_4]
-====
-
-.Fabric8 Kubernetes Client
-[%collapsible]
-====
-include::cloud.adoc[tag=update_4_5]
-====
-
-.DataSource Properties
-[%collapsible]
-====
-include::persistence.adoc[tag=update_4_6]
-====
-
-=== Version 0.17.0
-
-.Hibernate Search
-[%collapsible]
-====
-include::persistence.adoc[tag=update_3_1]
-====
-
-.Scheduled Tasks
-[%collapsible]
-====
-include::misc.adoc[tag=update_3_2]
-====
-
-.HTTP Filters
-[%collapsible]
-====
-include::network.adoc[tag=update_3_3]
-====
-
-.MicroProfile Health 2.0
-[%collapsible]
-====
-include::network.adoc[tag=update_3_4]
-====
-
-.Custom OpenAPI path
-[%collapsible]
-====
-include::misc.adoc[tag=update_3_5]
-====
-
-.Mock annotaiton
-[%collapsible]
-====
-include::core.adoc[tag=update_3_6]
-====
-
-.Email Test
-[%collapsible]
-====
-include::misc.adoc[tag=update_3_7]
-====
-
-.Refactor on configuration properties and Kafka, AMQP, MQTT support
-[%collapsible]
-====
-include::reactive.adoc[tag=update_3_8]
-====
-
-.Kogito
-[%collapsible]
-====
-include::misc.adoc[tag=update_3_9]
-====
-
-.Kafka Streams
-[%collapsible]
-====
-include::reactive.adoc[tag=update_3_10]
-====
-
-=== Version 0.16.0
-
-.Apache Camel
-[%collapsible]
-====
-include::misc.adoc[tag=update_2_1]
-====
-
-.WebSockets
-[%collapsible]
-====
-include::misc.adoc[tag=update_2_2]
-====
-
-.OpenAPI
-[%collapsible]
-====
-include::misc.adoc[tag=update_2_3]
-====
-
-.Maven List Extensions
-[%collapsible]
-====
-include::core.adoc[tag=update_2_4]
-====
-
-.Mail Sender
-[%collapsible]
-====
-include::misc.adoc[tag=update_2_5]
-====
-
-.Custom ConfigSource
-[%collapsible]
-====
-include::core.adoc[tag=update_2_6]
-====
-
-.Array config converters
-[%collapsible]
-====
-include::core.adoc[tag=update_2_7]
-====
-
-.Custom config converters
-[%collapsible]
-====
-include::core.adoc[tag=update_2_8]
-====
-
-.Configuration Profiles
-[%collapsible]
-====
-include::core.adoc[tag=update_2_9]
-====
-
-.ORM entities in external JAR
-[%collapsible]
-====
-include::persistence.adoc[tag=update_2_10]
-====
-
-.CORS Filter
-[%collapsible]
-====
-include::network.adoc[tag=update_2_11]
-====
-
-.DAO pattern
-[%collapsible]
-====
-include::persistence.adoc[tag=update_2_12]
-====
-
-=== Version 0.15.0
-
-.Headers Propagation
-[%collapsible]
-====
-include::core.adoc[tag=update_1_1]
-====
-
-.Fault Tolerance
-[%collapsible]
-====
-include::network.adoc[tag=update_1_2]
-====
-
-.Application Lifecycle
-[%collapsible]
-====
-include::core.adoc[tag=update_1_3]
-====
-
-.Reactive Messaging
-[%collapsible]
-====
-include::reactive.adoc[tag=update_1_4]
-====
-
-.JWT
-[%collapsible]
-====
-include::security.adoc[tag=update_1_5]
-====
-
-.Configuring Native
-[%collapsible]
-====
-include::cloud.adoc[tag=update_1_6]
-====
-
-.Flyway
-[%collapsible]
-====
-include::persistence.adoc[tag=update_1_7]
-====
-
-.Reactive PostgreSQL Client
-[%collapsible]
-====
-include::reactive.adoc[tag=update_1_8]
-====
-
-.Keycloak
-[%collapsible]
-====
-include::security.adoc[tag=update_1_9]
-====
-
-.Amazon Lambda
-[%collapsible]
-====
-include::cloud.adoc[tag=update_1_10]
 ====
 
 :leveloffset: +1

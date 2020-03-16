@@ -1,7 +1,6 @@
 == RBAC
 
 // tag::update_10_4[]
-
 You can set RBAC using annotations or in `application.properties`.
 
 *Annotations*
@@ -25,17 +24,11 @@ quarkus.security.deny-unannotated=true
 
 Configuration options:
 
-|===	
-| Parameter | Default | Description
+`quarkus.jaxrs.deny-uncovered`::
+If true denies by default to all JAX-RS endpoints. (default: `false`)
 
-a|`quarkus.jaxrs.deny-uncovered`
-a|`false`
-|If true denies by default to all JAX-RS endpoints.
-
-a|`quarkus.security.deny-unannotated`
-a|`false`
-|If true denies by default all CDI methods and JAX-RS endpoints.
-|===
+`quarkus.security.deny-unannotated`::
+If true denies by default all CDI methods and JAX-RS endpoints. (default: `false`)
 // end::update_11_2[]
 
 *File Configuration*
@@ -142,21 +135,32 @@ Default sub claim value.
 `smallrye.jwt.path.groups`::
 Path to the claim containing the groups.
 
-`smallrye.jwt.path.groups-separator`::
+`smallrye.jwt.groups-separator`::
 Separator for splitting a string which may contain multiple group values. (default. ` `).
 
 `smallrye.jwt.claims.groups`::
 Default groups claim value.
 
-`smallrye.jwt.jwk.refresh-interval`::
+`smallrye.jwt.jwks.refresh-interval`::
 JWK cache refresh interval in minutes. (default: `60`).
 
 `smallrye.jwt.expiration.grace`::
 Expiration grace in seconds. (default: `60`).
 
-`smallrye.jwt.verify.audience`::
+`smallrye.jwt.verify.aud`::
 Comma separated list of the audiences that a token aud claim may contain.
 // end::update_13_16[]
+
+// tag::update_14_21[]
+`smallrye.jwt.verify.algorithm`::
+Signature algorith. (defsult: `RS256`)
+
+`smallrye.jwt.token.kid`::
+If set then the verification JWK key as well every JWT token must have a matching `kid` header.
+
+`smallrye.jwt.time-to-live`::
+The maximum number of seconds that a JWT may be issued for use.
+// end::update_14_21[]
 
 Supported public key formats:
 
@@ -252,40 +256,97 @@ quarkus.oidc.bearer-only=true
 quarkus.oidc.credentials.secret=secret
 ----
 
+// tag::update_14_39[]
 Configuration options with `quarkus.oidc` prefix:
 
-|===	
-| Parameter | Default | Description
+`enabled`::
+The OIDC is enabled. (default: `true`)
 
-a|`auth-server-url`
-a|
-a|The base URL of the OpenID Connect (OIDC) server
+`tenant-enabled`::
+If the tenant configuration is enabled. (default: `true`)
 
-a|`introspection-path`
-a|
-a|Relative path of the RFC7662 introspection service
+`application-type`::
+The application type. Possible values: `web_app`, `service`. (default: `service`)
 
-a|`jwks-path`
-a|
-a|Relative path of the OIDC service returning a JWK set
+`connection-delay`::
+The maximum amount of time the adapter will try connecting.
 
-a|`public-key`
-a|
-a|Public key for the local JWT token verification
+`auth-server-url`::
+The base URL of the OpenID Connect (OIDC) server.
 
-a|`client-id`
-a|
-a|The client-id of the application.
+`introspection-path`::
+Relative path of the RFC7662 introspection service.
 
-a|`credentials.secret`
-a|
-a|The client secret
-|===
+`jwks-path`::
+Relative path of the OIDC service returning a JWK set.
+
+`public-key`::
+Public key for the local JWT token verification
+
+`client-id`::
+The client-id of the application.
+
+`roles.role-claim-path`::
+Path to the claim containing an array of groups. (`realm/groups`)
+
+`roles.role-claim-separator`::
+Separator for splitting a string which may contain multiple group values.
+
+`token.issuer`::
+Issuer claim value.
+
+`token.audience`::
+Audience claim value.
+
+`token.expiration-grace`::
+Expiration grace period in seconds.
+
+`token.principal-claim`::
+Name of the claim which contains a principal name.
+
+`credentials.secret`::
+The client secret
+
+`authentication.redirect-path`::
+Relative path for calculating a `redirect_uri` query parameter.
+
+`authentication.restore-path-after-redirect`::
+The original request URI used before the authentication will be restored after the user has been redirected back to the application. (default: `true`)
+
+`authentication.scopes`::
+List of scopes.
+
+`authentication.extra-params`::
+Additional properties which will be added as the query parameters .
+
+`authentication.cookie-path`::
+Cookie path parameter.
+// end::update_14_39[]
 
 NOTE:  With Keycloak OIDC server `https://host:port/auth/realms/{realm}` where `{realm}` has to be replaced by the name of the Keycloak realm.
 
 TIP: You can use `quarkus.http.cors` property to enable consuming form different domain.
 // end::update_1_9[]
+
+*Multi-tenancy* 
+
+// tag::update_14_34[]
+Multi-tenancy is supported by adding a sub-category to OIDC configuration properties (ie `quarkus.oidc.{tenent_id}.property`).
+
+[source, properties]
+----
+quarkus.oidc.auth-server-url=http://localhost:8180/auth/realms/quarkus
+quarkus.oidc.client-id=multi-tenant-client
+quarkus.oidc.application-type=web-app
+
+quarkus.oidc.tenant-b.auth-server-url=https://accounts.google.com
+quarkus.oidc.tenant-b.application-type=web-app
+quarkus.oidc.tenant-b.client-id=xxxx
+quarkus.oidc.tenant-b.credentials.secret=yyyy
+quarkus.oidc.tenant-b.token.issuer=https://accounts.google.com
+quarkus.oidc.tenant-b.authentication.scopes=email,profile,openid
+----
+// end::update_14_34[]
 
 == OAuth2
 // tag::update_6_8[]
@@ -315,29 +376,20 @@ And you can map roles to be used in security annotations.
 
 Configuration options:
 
-|===	
-| Parameter | Default | Description
+`quarkus.oauth2.enabled`::
+Determine if the OAuth2 extension is enabled. (default: `true`)
 
-a|`quarkus.oauth2.enabled`
-a|`true`
-|Determine if the OAuth2 extension is enabled.
+`quarkus.oauth2.client-id`::
+The OAuth2 client id used to validate the token.
 
-a|`quarkus.oauth2.client-id`
-a|
-|The OAuth2 client id used to validate the token.
+`quarkus.oauth2.client-secret`::
+The OAuth2 client secret used to validate the token.
 
-a|`quarkus.oauth2.client-secret`
-a|
-|The OAuth2 client secret used to validate the token.
+`quarkus.oauth2.introspection-url`::
+URL used to validate the token and gather the authentication claims.
 
-a|`quarkus.oauth2.introspection-url`
-a|
-|URL used to validate the token and gather the authentication claims.
-
-a|`quarkus.oauth2.role-claim`
-a|`scope`
-|The claim that is used in the endpoint response to load the roles
-|===
+`quarkus.oauth2.role-claim`::
+The claim that is used in the endpoint response to load the roles ((default: `scope`)
 // end::update_6_8[]
 
 == Authenticating via HTTP
@@ -391,38 +443,30 @@ scott=Admin,admin,Tester,user
 jdoe=NoRolesUser
 ----
 
+<<<
+
 *IMPORTANT:*  If `plain-text` is set to `false` (or omitted) then passwords must be stored in the form MD5 (`username`:`realm`:`password`).
 
 Elytron File Properties configuration properties.
 Prefix `quarkus.security.users` is skipped.
 
-|===	
-| Parameter | Default | Description
+`file.enabled`::
+The file realm is enabled. (default: `false`)
 
-a|`file.enabled`
-a|`false`
-|The file realm is enabled
+`file.auth-mechanism`::
+The authentication mechanism. ( default: `BASIC`)
 
-a|`file.auth-mechanism`
-a|`BASIC`
-|The authentication mechanism
+`file.realm-name`::
+The authentication realm name. (default: `Quarkus`)
 
-a|`file.realm-name`
-a|`Quarkus`
-|The authentication realm name
+`file.plain-text`::
+If passwords are in plain or in MD5. (default: `false`)
 
-a|`file.plain-text`
-a|`false`
-|If passwords are in plain or in MD5
+`file.users`::
+Classpath resource of user/password. (default: `users.properties`)
 
-a|`file.users`
-a|`users.properties`
-|Classpath resource of user/password
-
-a|`file.roles`
-a|`roles.properties`
-|Classpath resource of user/role
-|===
+`file.roles`::
+Classpath resource of user/role. (default: `roles.properties`)
 
 *Embedded Realm*
 
@@ -441,33 +485,23 @@ quarkus.security.users.embedded.auth-mechanism=BASIC
 
 Prefix `quarkus.security.users.embedded` is skipped.
 
-|===	
-| Parameter | Default | Description
+`file.enabled`::
+The file realm is enabled. (default: `false`)
 
-a|`file.enabled`
-a|`false`
-|The file realm is enabled
+`file.auth-mechanism`::
+The authentication mechanism. (default: `BASIC`)
 
-a|`file.auth-mechanism`
-a|`BASIC`
-|The authentication mechanism
+`file.realm-name`::
+The authentication realm name. (default: `Quarkus`)
 
-a|`file.realm-name`
-a|`Quarkus`
-|The authentication realm name
+`file.plain-text`::
+If passwords are in plain or in MD5. (default: `false`)
 
-a|`file.plain-text`
-a|`false`
-|If passwords are in plain or in MD5
+`file.users.*`::
+`*` is user and value is password.
 
-a|`file.users.*`
-a|
-a|`*` is user and value is password
-
-a|`file.roles.*`
-a|
-a|`*` is user and value is role
-|===
+`file.roles.*`::
+`*` is user and value is role.
 // end::update_10_2[]
 
 == Security with a JDBC Realm
@@ -510,61 +544,44 @@ You need to set the index (1-based) of password and role.
 Elytron JDBC Realm configuration properties.
 Prefix `quarkus.security.jdbc` is skipped.
 
-|===	
-| Parameter | Default | Description
+`auth-mechanism`::
+The authentication mechanism. (default: `BASIC`)
 
-a|`auth-mechanism`
-a|`BASIC`
-|The authentication mechanism
+`realm-name`::
+The authentication realm name. (default: `Quarkus`)
 
-a|`realm-name`
-a|`Quarkus`
-|The authentication realm name
+`enabled`::
+If the properties store is enabled. (default: `false`)
 
-a|`enabled`
-a|`false`
-|If the properties store is enabled
+`principal-query.sql`::
+The sql query to find the password.
 
-a|`principal-query.sql`
-a|
-|The sql query to find the password
+`principal-query.datasource`::
+The data source to use.
 
-a|`principal-query.datasource`
-a|
-|The data source to use
+`principal-query.clear-password-mapper.enabled`::
+If the clear-password-mapper is enabled. (default: `false`)
 
-a|`principal-query.clear-password-mapper.enabled`
-a|`false`
-|If the clear-password-mapper is enabled
+`principal-query.clear-password-mapper.password-index`::
+The index of column containing clear password. (default: `1`)
 
-a|`principal-query.clear-password-mapper.password-index`
-a|`1`
-|The index of column containing clear password
+`principal-query.bcrypt-password-mapper.enabled`::
+If the bcrypt-password-mapper is enabled. (default: `false`)
 
-a|`principal-query.bcrypt-password-mapper.enabled`
-a|`false`
-|If the bcrypt-password-mapper is enabled
+`principal-query.bcrypt-password-mapper.password-index`::
+The index of column containing password hash. (default: `0`)
 
-a|`principal-query.bcrypt-password-mapper.password-index`
-a|`0`
-|The index of column containing password hash
+`principal-query.bcrypt-password-mapper.hash-encoding`::
+A string referencing the password hash encoding (`BASE64` or `HEX`). (default: `BASE64`)
 
-a|`principal-query.bcrypt-password-mapper.hash-encoding`
-a|`BASE64`
-|A string referencing the password hash encoding (`BASE64` or `HEX`)
+`principal-query.bcrypt-password-mapper.salt-index`::
+The index column containing the Bcrypt salt. (default: `0`)
 
-a|`principal-query.bcrypt-password-mapper.salt-index`
-a|`0`
-|The index column containing the Bcrypt salt
+`principal-query.bcrypt-password-mapper.salt-encoding`::
+A string referencing the salt encoding (`BASE64` or `HEX`). (default: `BASE64`)
 
-a|`principal-query.bcrypt-password-mapper.salt-encoding`
-a|`BASE64`
-|A string referencing the salt encoding (`BASE64` or `HEX`)
-
-a|`principal-query.bcrypt-password-mapper.iteration-count-index`
-a|`0`
-|The index column containing the Bcrypt iteration count
-|===
+`principal-query.bcrypt-password-mapper.iteration-count-index`::
+The index column containing the Bcrypt iteration count. (default: `0`)
 
 For multiple datasources you can use the datasource name in the properties:
 
@@ -577,6 +594,67 @@ quarkus.datasource.permissions.url=
 quarkus.security.jdbc.principal-query.permissions.sql=
 ----
 // end::update_9_7[]
+
+== Security with JPA
+
+// tag::update_14_8[]
+You can also protect endpoints and store identities in a database using JPA.
+
+[source, bash]
+----
+mvn quarkus:add-extension 
+    -Dextensions="security-jpa"
+----
+
+NOTE: Also you might require `jdbc-postgresql`, `resteasy`, `hibernate-orm-panache`.
+
+[source, java]
+----
+@io.quarkus.security.jpa.UserDefinition
+@Table(name = "test_user")
+@Entity
+public class User extends PanacheEntity {
+    @io.quarkus.security.Username
+    public String name;
+
+    @io.quarkus.security.Password
+    public String pass;
+
+    @ManyToMany
+    @Roles
+    public List<Role> roles = new ArrayList<>();
+
+    public static void add(String username, String password) {
+        User user = new User();
+        user.username = username;
+        user.password = BcryptUtil.bcryptHash(password);
+        user.persist();
+    }
+}
+
+@Entity
+public class Role extends PanacheEntity {
+
+    @ManyToMany(mappedBy = "roles")
+    public List<ExternalRolesUserEntity> users;
+
+    @io.quarkus.security.RolesValue
+    public String role;
+}
+----
+
+You need to configure JDBC:
+
+[source, properties]
+----
+quarkus.datasource.url=jdbc:postgresql:security_jpa
+quarkus.datasource.driver=org.postgresql.Driver
+quarkus.datasource.username=quarkus
+quarkus.datasource.password=quarkus
+
+quarkus.hibernate-orm.database.generation=drop-and-create
+----
+// end::update_14_8[]
 
 == Vault
 
@@ -629,6 +707,11 @@ You can access the KV engine programmatically:
 VaultKVSecretEngine kvSecretEngine;
 
 kvSecretEngine.readSecret("myapps/vault-quickstart/" + vaultPath).toString();
+
+Map<String, String> secrets;
+kvSecretEngine.writeSecret("myapps/vault-quickstart/crud", secrets);
+
+kvSecretEngine.deleteSecret("myapps/vault-quickstart/crud");
 ----
 
 *Fetching credentials DB*
