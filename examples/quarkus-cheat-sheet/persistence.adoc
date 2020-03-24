@@ -1632,8 +1632,16 @@ Possible annotations in fields: `@BsonId` (for custom ID), `@BsonProperty` and `
 
 IMPORTANT: `@MongoEntity` is optional.
 
-Methods provided are similar of the ones shown in <<Persistence>> section.
+*Multi-tenancy with MongoDB Panache*
 
+// tag::update_15_4[]
+[source, java]
+----
+@MongoEntity(collection = "TheBook", clientName = "client2", database = "database2")
+----
+// end::update_15_4[]
+
+Methods provided are similar of the ones shown in <<Persistence>> section.
 
 [source, java]
 ----

@@ -15,6 +15,32 @@ In this page you can either read what has been added in each version of the chea
 [[whatsnew]]
 == What's New in Cheat-Sheet
 
+=== Version 1.4.0.Final
+
+.Undertow Properties
+[%collapsible]
+====
+include::core.adoc[tag=update_15_1]
+====
+
+.AWS Request Stream Handler
+[%collapsible]
+====
+include::cloud.adoc[tag=update_15_2]
+====
+
+.AWS Skill Stream Handler
+[%collapsible]
+====
+include::cloud.adoc[tag=update_15_3]
+====
+
+.Multi-tenancy MongoDB Panache
+[%collapsible]
+====
+include::persistence.adoc[tag=update_15_4]
+====
+
 === Version 1.3.0.Final
 
 .Vert.X Verticle

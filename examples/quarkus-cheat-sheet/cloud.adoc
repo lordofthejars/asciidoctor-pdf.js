@@ -451,7 +451,7 @@ public class KubernetesClientTest {
 ----
 // end::update_5_9[]
 
-== Amazon Lambda
+== AWS Lambda
 // tag::update_1_10[]
 Quarkus integrates with Amazon Lambda.
 
@@ -473,6 +473,14 @@ public class TestLambda
     }
 }
 ----
+
+// tag::update_15_2[]
+The interface `com.amazonaws.services.lambda.runtime.RequestStreamHandler` is also supported.
+// end::update_15_2[]
+
+// tag::update_15_3[]
+The interface `com.amazon.ask.SkillStreamHandler` is also supported.
+// end::update_15_3[]
 
 // tag::update_9_4[]
 You can set the handler name by using `quarkus.lambda.handler` property or by annotating the Lambda with the CDI `@Named` annotation.

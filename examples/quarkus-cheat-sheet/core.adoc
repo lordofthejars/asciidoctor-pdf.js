@@ -425,11 +425,17 @@ com.acme.config.CustomInstantConverter
 ----
 // end::update_2_8[]
 
-== Custom Context Path
-// tag::update_6_2[]
-By default Undertow will serve content from under the root context.
-If you want to change this you can use the `quarkus.servlet.context-path` config key to set the context path.
-// end::update_6_2[]
+== Undertow Properties
+
+// tag::update_15_1[]
+Possible parameters with prefix `quarkus.servlet`:
+
+`context-path`::
+The context path to serve all Servlet context from. (default: `/`)
+
+`default-charset`::
+The default charset to use for reading and writing requests. (default: `UTF-8`)
+// end::update_15_1[]
 
 == HTTPS
 
