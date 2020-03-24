@@ -113,10 +113,10 @@ You need to configure the extension:
 
 [source, properties]
 ----
-quarkus.scccc.uri=http://localhost:8089
-quarkus.scccc.username=user
-quarkus.scccc.password=pass
-quarkus.scccc.enabled=true
+quarkus.spring-cloud-config.uri=http://localhost:8089
+quarkus.spring-cloud-config.username=user
+quarkus.spring-cloud-config.password=pass
+quarkus.spring-cloud-config.enabled=true
 ----
 
 [source, java]
@@ -125,7 +125,7 @@ quarkus.scccc.enabled=true
 String greeting;
 ----
 
-Prefix is `quarkus.scccc`.
+Prefix is `quarkus.spring-cloud-config`.
 
 `uri`::
 Base URI where the Spring Cloud Config Server is available. (default: `localhost:8888`)
