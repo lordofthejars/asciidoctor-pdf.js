@@ -107,7 +107,7 @@ public class ApplicationLifecycle {
 
 // tag::update_14_31[]
 Quarkus supports graceful shutdown.
-By default tthere is no timeout but can be set by using the `quarkus.shutdown.timeout` config property.
+By default there is no timeout but can be set by using the `quarkus.shutdown.timeout` config property.
 // end::update_14_31[]
 
 == Adding Configuration Parameters
