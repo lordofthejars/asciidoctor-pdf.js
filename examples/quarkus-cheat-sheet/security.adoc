@@ -323,6 +323,20 @@ Additional properties which will be added as the query parameters .
 Cookie path parameter.
 // end::update_14_39[]
 
+// tag::update_15_9[]
+`proxy.host`::
+The host (name or IP address) of the Proxy.
+
+`proxy.port`::
+The port number of the Proxy. (default: `80`)
+
+`proxy.username`::
+The username to authenticate.
+
+`proxy.password`::
+The password to authenticate.
+// end::update_15_9[]
+
 NOTE:  With Keycloak OIDC server `https://host:port/auth/realms/{realm}` where `{realm}` has to be replaced by the name of the Keycloak realm.
 
 TIP: You can use `quarkus.http.cors` property to enable consuming form different domain.

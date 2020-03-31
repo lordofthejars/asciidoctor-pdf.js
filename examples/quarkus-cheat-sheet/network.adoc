@@ -583,6 +583,7 @@ mongoDB:: A probe to check MongoDB connection status.
 neo4j:: A probe to check Neo4J connection status.
 artemis:: A probe to check Artemis JMS connection status.
 kafka-streams:: Liveness (for stream state) and Readiness (topics created) probes.
+vault:: A probe to check Vault conection status.
 
 You can disable the automatic generation by setting `<component>.health.enabled` to false.
 
@@ -592,8 +593,40 @@ quarkus.kafka-streams.health.enabled=false
 quarkus.mongodb.health.enabled=false
 quarkus.neo4j.health.enabled=false
 ----
-
 // end::update_12_3[]
+
+// tag::update_15_8[]
+In the case of Vault you can pass parameters to modify the call of the `status` endpoint in Vault.
+
+[source, properties]
+----
+quarkus.vault.health.enabled=true
+quarkus.vault.health.stand-by-ok=true
+quarkus.vault.health.performance-stand-by-ok=true
+----
+// end::update_15_8[]
+
+// tag::update_15_5[]
+Health groups are supported to provide custom health checks groups:
+
+[source, java]
+----
+@io.smallrye.health.HealthGroup("mygroup1")
+public class SimpleHealthGroupCheck implements HealthCheck {
+}
+----
+
+You can ping group health checks by querying `/group/mygroup1`.
+
+Group root path can be configured:
+
+[source, properties]
+----
+quarkus.smallrye-health.group-path=/customgroup
+----
+
+
+// end::update_15_5[]
 
 *Metrics*
 

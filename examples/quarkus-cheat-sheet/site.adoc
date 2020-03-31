@@ -41,6 +41,36 @@ include::cloud.adoc[tag=update_15_3]
 include::persistence.adoc[tag=update_15_4]
 ====
 
+.Group Health Checks
+[%collapsible]
+====
+include::network.adoc[tag=update_15_5]
+====
+
+.Delete By Id
+[%collapsible]
+====
+include::persistence.adoc[tag=update_15_6]
+====
+
+.Range
+[%collapsible]
+====
+include::persistence.adoc[tag=update_15_7]
+====
+
+.Vault Health Check
+[%collapsible]
+====
+include::network.adoc[tag=update_15_8]
+====
+
+.OIDC Proxy configuration
+[%collapsible]
+====
+include::network.adoc[tag=update_15_8]
+====
+
 === Version 1.3.0.Final
 
 .Vert.X Verticle
