@@ -293,6 +293,56 @@ Instead of adding Kubernetes extension, set container image s2i and the `target`
 ----
 // end::update_14_29[]
 
+== Kubernetes Configuration Extension
+
+// tag::update_15_14[]
+
+Integration between MicroProfile Config spec and ConfigMaps/Secrets:
+
+[source, bash]
+----
+./mvnw quarkus:add-extensions 
+    -Dextensions="quarkus-kubernetes-config"
+----
+
+[source, properties]
+----
+quarkus.kubernetes-config.enabled=true
+quarkus.kubernetes-config.config-maps=cmap1,cmap2
+quarkus.kubernetes-config.secrets=secret1
+----
+
+[source, java]
+----
+@ConfigProperty(name = "dummysecret")
+String dummysecret;
+
+@ConfigProperty(name = "secret.prop1")
+String secretProp1;
+
+@ConfigProperty(name = "some.prop1")
+String someProp1;
+----
+
+If the config key is a Quarkus configuration file `application.properties`/`application.yaml`, the content is parsed and each key of the configuration file is used as config property.
+
+List of Kubernetes Config parameters.
+
+`quarkus.kubernetes-config` as prefix is skipped in the next table.
+
+`enabled`::
+The application will attempt to look up the configuration from the API server. (default: `false`)
+
+`fail-on-missing-config`::
+The application will not start if any of the configured config sources cannot be located. (default: `true`)
+
+`config-maps`::
+ConfigMaps to look for in the namespace that the Kubernetes Client has been configured for. Supports CSV.
+
+`secrets`::
+Secrets to look for in the namespace that the Kubernetes Client has been configured for. Supports CSV.
+// end::update_15_14[]
+
 == Kubernetes Client
 // tag::update_4_5[]
 Quarkus integrates with https://github.com/fabric8io/kubernetes-client[Fabric8 Kubernetes Client, window="_blank"].

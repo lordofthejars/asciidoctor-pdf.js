@@ -286,7 +286,7 @@ You can schedule periodic tasks with Quarkus.
 @ApplicationScoped
 public class CounterBean {
 
-    @Scheduled(every="10s")
+    @Scheduled(every="10s", delayed="1s")
     void increment() {}
 
     @Scheduled(cron="0 15 10 * * ?")
@@ -944,3 +944,15 @@ threadContext.withContextCapture(..)
 
 If you are going to use security in a reactive environment you will likely need Smallrye Content Propagation to propagate the identity throughout the reactive callback.
 // end::update_14_36[]
+
+== Amazon Alexa
+
+// tag::update_15_13[]
+You can use Amazon Alexa by adding the extension:
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-amazon-alexa"
+----
+// end::update_15_13[]

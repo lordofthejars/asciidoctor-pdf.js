@@ -68,7 +68,97 @@ include::network.adoc[tag=update_15_8]
 .OIDC Proxy configuration
 [%collapsible]
 ====
-include::network.adoc[tag=update_15_8]
+include::security.adoc[tag=update_15_9]
+====
+
+.@Produces is no longer required
+[%collapsible]
+====
+include::core.adoc[tag=update_15_10]
+====
+
+.CDI Alternatives
+[%collapsible]
+====
+include::core.adoc[tag=update_15_11]
+====
+
+.Mockito
+[%collapsible]
+====
+include::core.adoc[tag=update_15_12]
+====
+
+.Amazon Alexa
+[%collapsible]
+====
+include::misc.adoc[tag=update_15_13]
+====
+
+.Kubernetes Configuration Extension
+[%collapsible]
+====
+include::cloud.adoc[tag=update_15_14]
+====
+
+.Beans By Quarkus Profile
+[%collapsible]
+====
+include::core.adoc[tag=update_15_15]
+====
+
+.Command Mode
+[%collapsible]
+====
+include::core.adoc[tag=update_15_16]
+====
+
+.Vault TOTP
+[%collapsible]
+====
+include::security.adoc[tag=update_15_17]
+====
+
+.Named Queries
+[%collapsible]
+====
+include::persistence.adoc[tag=update_15_18]
+====
+
+.Vault Unwrap Token Support
+[%collapsible]
+====
+include::security.adoc[tag=update_15_19]
+====
+
+.LDAP Security Support
+[%collapsible]
+====
+include::security.adoc[tag=update_15_20]
+====
+
+.SimplyTimed metrics
+[%collapsible]
+====
+include::network.adoc[tag=update_15_21]
+====
+
+.Blocking annotation
+[%collapsible]
+====
+include::reactive.adoc[tag=update_15_22]
+====
+
+.Disable proactive authentication
+[%collapsible]
+====
+include::security.adoc[tag=update_15_23]
+====
+
+.DBeanValidation configuration
+[%collapsible]
+====
+include::core.adoc[tag=update_15_24]
 ====
 
 === Version 1.3.0.Final

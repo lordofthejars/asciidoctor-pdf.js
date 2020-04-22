@@ -522,14 +522,12 @@ Since health checks are CDI beans, you can do:
 @ApplicationScoped
 public class DatabaseHealthCheck {
     
-    @Produces
     @Liveness
     HealthCheck check1() {
       return io.smallrye.health.HealthStatus
                                 .up("successful-live");
     }
 
-    @Produces
     @Readiness
     HealthCheck check2() {
       return HealthStatus
@@ -551,7 +549,6 @@ Quarkus comes with some `HealthCheck` implementations for checking service statu
 
 [source, java]
 ----
-@Produces
 @Liveness
 HealthCheck check1() {
     return new UrlHealthCheck("https://www.google.com")
@@ -624,8 +621,6 @@ Group root path can be configured:
 ----
 quarkus.smallrye-health.group-path=/customgroup
 ----
-
-
 // end::update_15_5[]
 
 *Metrics*
@@ -645,6 +640,11 @@ MicroProfile Metrics annotations:
 
 `@Timed`::
 Tracks the duration.
+
+// tag::update_15_21[]
+`@SimplyTimed`::
+Tracks the duration without mean and distribution calculations.
+// end::update_15_21[]
 
 `@Metered`::
 Tracks the frequency of invocations.

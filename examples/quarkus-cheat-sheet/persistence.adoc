@@ -259,6 +259,22 @@ In case of using streams, remember to close them or use a `try/catch` block: `tr
 TIP: `find` methods defines a `withLock(LockModeType)` to define the lock type and `withHint(QueryHints.HINT_CACHEABLE, "true")` to define hints.
 // end::update_12_6[]
 
+*Named Queries*
+
+// tag::update_15_18[]
+[source, java]
+----
+@Entity
+@NamedQuery(name = "Person.getByName", query = "from Person where name = :name")
+public class Person extends PanacheEntity {
+    
+    public static Person findByName(String name){
+        return find("#Person.getByName", name).firstResult();
+    }
+}
+----
+// end::update_15_18[]
+
 *Pagination*
 
 // tag::update_9_3[]
@@ -1673,6 +1689,8 @@ List<Person> allPersons = Person.listAll();
 person = Person.findById(personId);
 List<Person> livingPersons = Person.list("status", Status.Alive);
 List<Person> persons = Person.list(Sort.by("name").and("birth"));
+
+long updated = Person.update("name", "Mortal").where("status", Status.Alive);
 
 long countAll = Person.count();
 
