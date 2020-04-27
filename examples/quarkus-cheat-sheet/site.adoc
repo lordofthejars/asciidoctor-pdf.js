@@ -155,7 +155,7 @@ include::reactive.adoc[tag=update_15_22]
 include::security.adoc[tag=update_15_23]
 ====
 
-.DBeanValidation configuration
+.BeanValidation configuration
 [%collapsible]
 ====
 include::core.adoc[tag=update_15_24]

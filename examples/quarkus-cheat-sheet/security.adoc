@@ -463,8 +463,6 @@ scott=Admin,admin,Tester,user
 jdoe=NoRolesUser
 ----
 
-<<<
-
 *IMPORTANT:*  If `plain-text` is set to `false` (or omitted) then passwords must be stored in the form MD5 (`username`:`realm`:`password`).
 
 Elytron File Properties configuration properties.

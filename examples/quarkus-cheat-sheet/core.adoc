@@ -912,6 +912,8 @@ Define whether parallel methods that define constraints should throw an exceptio
 Define whether more than one constraint on a return value may be marked for cascading validation are allowed. (default: `false`).
 // end::update_15_24[]
 
+<<<
+
 == Logging
 
 You can configure how Quarkus logs:

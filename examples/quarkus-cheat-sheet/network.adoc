@@ -372,6 +372,8 @@ public class RecoverFallback
 }
 ----
 
+<<<
+
 And set it in the annotation as value `@Fallback(RecoverFallback.class)`.
 
 In case you want to use *circuit breaker* pattern:
@@ -613,7 +615,7 @@ public class SimpleHealthGroupCheck implements HealthCheck {
 }
 ----
 
-You can ping group health checks by querying `/group/mygroup1`.
+You can ping grouped health checks by querying `/group/mygroup1`.
 
 Group root path can be configured:
 

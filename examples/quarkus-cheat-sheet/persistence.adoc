@@ -972,6 +972,8 @@ Index lifecycle (`none`, `validate`, `update`, `create`, `drop-and-create`, `dro
 `index-defaults.lifecycle.required-status`::
 Minimal cluster status (`green`, `yellow`, `red`)
 
+<<<
+
 `index-defaults.lifecycle.required-status-wait-timeout`::
 Waiting time before failing the bootstrap.
 

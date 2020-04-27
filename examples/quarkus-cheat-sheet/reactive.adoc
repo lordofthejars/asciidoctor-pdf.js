@@ -487,6 +487,8 @@ mp.messaging.incoming.prices.auto-generated-client-id=
 // end::update_3_8[]
 // end::update_1_4[]
 
+<<<
+
 == Kafka Streams
 
 // tag::update_3_10[]

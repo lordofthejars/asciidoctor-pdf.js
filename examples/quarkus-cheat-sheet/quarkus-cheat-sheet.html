@@ -470,7 +470,7 @@ svg:not(:root).svg-inline--fa {
 <div class="sectionbody">
 <p class=""><a href="https://quarkus.io/">Quarkus</a> is a Kubernetes Native Java stack tailored for GraalVM &amp; OpenJDK HotSpot, crafted from the best of breed Java libraries and standards.
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
-<p class="">Cheat-sheet tested with <strong>Quarkus 1.3.0.Final</strong>.</p>
+<p class="">Cheat-sheet tested with <strong>Quarkus 1.4.1.Final</strong>.</p>
 </div>
 </div>
 <div class="sect1">
@@ -479,19 +479,11 @@ Also focused on developer experience, making things just work with little to no 
 <p class="">Quarkus comes with a Maven archetype to scaffold a very simple starting project.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.3.0.Final:create \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.4.1.Final:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=getting-started \
     -DclassName="org.acme.quickstart.GreetingResource" \
     -Dpath="/hello"</code></pre>
-</div>
-</div>
-<p class="">To test a <strong>candidate version</strong> of Quarkus you need to run it differently:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.4.0.CR1:create -DprojectGroupId=acme.co \
-    -DprojectArtifactId=greeter -DclassName="acme.co.Greeting" -Dpath="/hello" \
-    -DplatformArtifactId=quarkus-bom -DplatformVersion=1.4.0.CR1</code></pre>
 </div>
 </div>
 <p class="">This creates a simple JAX-RS resource called <code>GreetingResource</code>.</p>
@@ -578,6 +570,26 @@ public class JavaMain {
         Quarkus.run(HelloWorldMain.class, args);
     }
 }</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon icon-important">
+<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="exclamation-circle" class="svg-inline--fa fa-exclamation-circle fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"></path></svg>
+</td>
+<td class="content">
+Use <code>@QuarkusMain</code> in only one place.
+</td>
+</tr>
+</table>
+</div>
+<p class="">Use <code>Quarkus.waitForExit()</code> from the main thread if you want to run some logic on startup, and then run like a normal application (i.e. not exit).</p>
+<p class="">You can inject command line arguments by using <code>@CommandLineArguments</code> annotation:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@CommandLineArguments
+String[] args;</code></pre>
 </div>
 </div>
 </div>
@@ -1417,6 +1429,29 @@ quarkus.locales=en-US,es-ES,fr-FR, ca_ES</code></pre>
 private String name;</code></pre>
 </div>
 </div>
+<p class="">Bean Validation can be configured .
+The prefix is: <code>quarkus.hibernate-validator</code>.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>fail-fast</code></dt>
+<dd>
+<p>When fail fast is enabled the validation will stop on the first constraint violation detected. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>method-validation.allow-overriding-parameter-constraints</code></dt>
+<dd>
+<p>Define whether overriding methods that override constraints should throw an exception. (default: <code>false</code>).</p>
+</dd>
+<dt class="hdlist1"><code>method-validation.allow-parameter-constraints-on-parallel-methods</code></dt>
+<dd>
+<p>Define whether parallel methods that define constraints should throw an exception. (default: <code>false</code>).</p>
+</dd>
+<dt class="hdlist1"><code>method-validation.allow-multiple-cascaded-validation-on-return-values</code></dt>
+<dd>
+<p>Define whether more than one constraint on a return value may be marked for cascading validation are allowed. (default: <code>false</code>).</p>
+</dd>
+</dl>
+</div>
+<div class="page-break"></div>
 </div>
 </div>
 <div class="sect1">
@@ -2024,6 +2059,22 @@ public class ExampleResource {
 </div>
 </div>
 <p class="">Mock is automatically injected and only valid for the defined test class.</p>
+<p class=""><strong>REST Client</strong></p>
+<p class="">To Mock REST Client, you need to define the interface with <code>@ApplicationScope</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ApplicationScoped
+@RegisterRestClient
+public interface GreetingService {
+}
+
+@InjectMock
+@RestClient
+GreetingService greetingService;
+
+Mockito.when(greetingService.hello()).thenReturn("hello from mockito");</code></pre>
+</div>
+</div>
 <p class=""><strong>Interceptors</strong></p>
 <p class="">Tests are actually full CDI beans, so you can apply CDI interceptors:</p>
 <div class="listingblock">
@@ -3104,6 +3155,11 @@ quarkus.hibernate-search.elasticsearch.
 <dd>
 <p>Minimal cluster status (<code>green</code>, <code>yellow</code>, <code>red</code>)</p>
 </dd>
+</dl>
+</div>
+<div class="page-break"></div>
+<div class="dlist">
+<dl>
 <dt class="hdlist1"><code>index-defaults.lifecycle.required-status-wait-timeout</code></dt>
 <dd>
 <p>Waiting time before failing the bootstrap.</p>
@@ -4568,6 +4624,7 @@ mp.messaging.incoming.prices.auto-generated-client-id=
     true</code></pre>
 </div>
 </div>
+<div class="page-break"></div>
 </div>
 </div>
 <div class="sect1">
@@ -4862,6 +4919,8 @@ void initialize() {
 </dd>
 </dl>
 </div>
+<p class="">By default in Quarkus, if an incoming request has a credential the request will always be authenticated (even if the target page does not require authentication).</p>
+<p class="">You can change this behaviour by setting <code>quarkus.http.auth.proactive</code> property to <code>false</code>.</p>
 <p class=""><strong>File Configuration</strong></p>
 <p class="">Defining RBAC in <code>application.properties</code> instead of using annotations.</p>
 <div class="listingblock">
@@ -5355,7 +5414,6 @@ jdoe=p4ssw0rd</code></pre>
 jdoe=NoRolesUser</code></pre>
 </div>
 </div>
-<div class="page-break"></div>
 <p class=""><strong>IMPORTANT:</strong>  If <code>plain-text</code> is set to <code>false</code> (or omitted) then passwords must be stored in the form MD5 (<code>username</code>:`realm`:`password`).</p>
 <p class="">Elytron File Properties configuration properties.
 Prefix <code>quarkus.security.users</code> is skipped.</p>
@@ -6286,6 +6344,7 @@ public WorldClock fallbackMethod() {
 }</code></pre>
 </div>
 </div>
+<div class="page-break"></div>
 <p class="">And set it in the annotation as value <code>@Fallback(RecoverFallback.class)</code>.</p>
 <p class="">In case you want to use <strong>circuit breaker</strong> pattern:</p>
 <div class="listingblock">
@@ -6556,7 +6615,7 @@ public class SimpleHealthGroupCheck implements HealthCheck {
 }</code></pre>
 </div>
 </div>
-<p class="">You can ping group health checks by querying <code>/group/mygroup1</code>.</p>
+<p class="">You can ping grouped health checks by querying <code>/group/mygroup1</code>.</p>
 <p class="">Group root path can be configured:</p>
 <div class="listingblock">
 <div class="content">
@@ -7050,7 +7109,7 @@ If you set this flag to <code>true</code>, the <code>build</code> and <code>push
 </tr>
 </table>
 </div>
-<p class="">To deploy the application, the extension uses the `https://github.com/fabric8io/kubernetes-client.
+<p class="">To deploy the application, the extension uses the <a href="https://github.com/fabric8io/kubernetes-client" class="bare">https://github.com/fabric8io/kubernetes-client</a>.
 All options described at <a href="#_kubernetes_client">Kubernetes Client</a> are valid here.</p>
 </div>
 </div>
@@ -7064,12 +7123,13 @@ All options described at <a href="#_kubernetes_client">Kubernetes Client</a> are
     -Dextensions="openshift"</code></pre>
 </div>
 </div>
+<div class="page-break"></div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_kubernetes_configuration_extension"><a class="anchor" href="#_kubernetes_configuration_extension"></a><a class="link" href="#_kubernetes_configuration_extension">Kubernetes Configuration Extension</a></h2>
 <div class="sectionbody">
-<p class="">Integration between MicroProfile Config spec and ConfigMaps/Secrets:</p>
+<p class="">Integration between MicroProfile Config spec and ConfigMaps:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extensions
@@ -7079,20 +7139,16 @@ All options described at <a href="#_kubernetes_client">Kubernetes Client</a> are
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.kubernetes-config.enabled=true
-quarkus.kubernetes-config.config-maps=cmap1,cmap2
-quarkus.kubernetes-config.secrets=secret1</code></pre>
+quarkus.kubernetes-config.config-maps=cmap1,cmap2</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperty(name = "dummysecret")
-String dummysecret;
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperty(name = "some.prop1")
+String someProp1;
 
-@ConfigProperty(name = "secret.prop1")
-String secretProp1;
-
-@ConfigProperty(name = "some.prop1")
-String someProp1;</code></pre>
+@ConfigProperty(name = "some.prop2")
+String someProp2;</code></pre>
 </div>
 </div>
 <p class="">If the config key is a Quarkus configuration file <code>application.properties</code>/<code>application.yaml</code>, the content is parsed and each key of the configuration file is used as config property.</p>
@@ -7138,6 +7194,11 @@ String someProp1;</code></pre>
 <dd>
 <p>Trust self-signed certificates. (default: <code>false</code>)</p>
 </dd>
+</dl>
+</div>
+<div class="page-break"></div>
+<div class="dlist">
+<dl>
 <dt class="hdlist1"><code>master-url</code></dt>
 <dd>
 <p>URL of Kubernetes API server.</p>
@@ -8584,7 +8645,7 @@ public class GreetingController {
 <span class="fa-layers"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle" class="svg-inline--fa fa-circle fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path></svg><svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="lightbulb" class="svg-inline--fa fa-lightbulb fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" style="transform-origin: 0.34375em 0.5em;"><g transform="translate(176 256)"><g transform="translate(0, 0)  scale(0.625, 0.625)  rotate(0 0 0)"><path fill="currentColor" d="M176 80c-52.94 0-96 43.06-96 96 0 8.84 7.16 16 16 16s16-7.16 16-16c0-35.3 28.72-64 64-64 8.84 0 16-7.16 16-16s-7.16-16-16-16zM96.06 459.17c0 3.15.93 6.22 2.68 8.84l24.51 36.84c2.97 4.46 7.97 7.14 13.32 7.14h78.85c5.36 0 10.36-2.68 13.32-7.14l24.51-36.84c1.74-2.62 2.67-5.7 2.68-8.84l.05-43.18H96.02l.04 43.18zM176 0C73.72 0 0 82.97 0 176c0 44.37 16.45 84.85 43.56 115.78 16.64 18.99 42.74 58.8 52.42 92.16v.06h48v-.12c-.01-4.77-.72-9.51-2.15-14.07-5.59-17.81-22.82-64.77-62.17-109.67-20.54-23.43-31.52-53.15-31.61-84.14-.2-73.64 59.67-128 127.95-128 70.58 0 128 57.42 128 128 0 30.97-11.24 60.85-31.65 84.14-39.11 44.61-56.42 91.47-62.1 109.46a47.507 47.507 0 0 0-2.22 14.3v.1h48v-.05c9.68-33.37 35.78-73.18 52.42-92.16C335.55 260.85 352 220.37 352 176 352 78.8 273.2 0 176 0z" transform="translate(-176 -256)"></path></g></g></svg></span>
 </td>
 <td class="content">
-If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.3.0.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
+If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.4.1.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
 </td>
 </tr>
 </table>
@@ -8820,7 +8881,7 @@ public void allowedForUser(String user) {}</code></pre>
 <div class="author-bio">Java Champion and Director of DevExp at Red Hat</div>
 </div>
 
-<div class="author-bio">1.3.0.Final</div>
+<div class="author-bio">1.4.1.Final</div>
 <img src="./redhat/assets/by-nc-sa.png"/>
 </div>
 
