@@ -313,6 +313,29 @@ public class ReceiverMessages {
 }
 ----
 
+// tag::update_15_22[]
+To indicate that the method should be executed on a worker pool you can use `@Blocking`:
+
+[source, java]
+----
+@Outgoing("Y")
+@Incoming("X")
+@Blocking
+----
+
+To customize:
+
+[source, java]
+----
+@Blocking(value="my-custom-pool", ordered = false)
+----
+
+[source, properties]
+----
+smallrye.messaging.worker.my-custom-pool.max-concurrency=3
+----
+// end::update_15_22[]
+
 Possible implementations are:
 
 *In-Memory*
@@ -463,6 +486,8 @@ mp.messaging.incoming.prices.auto-generated-client-id=
 ----
 // end::update_3_8[]
 // end::update_1_4[]
+
+<<<
 
 == Kafka Streams
 

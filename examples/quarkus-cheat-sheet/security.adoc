@@ -31,6 +31,12 @@ If true denies by default to all JAX-RS endpoints. (default: `false`)
 If true denies by default all CDI methods and JAX-RS endpoints. (default: `false`)
 // end::update_11_2[]
 
+// tag::update_15_23[]
+By default in Quarkus, if an incoming request has a credential the request will always be authenticated (even if the target page does not require authentication).
+
+You can change this behaviour by setting `quarkus.http.auth.proactive` property to `false`.
+// end::update_15_23[]
+
 *File Configuration*
 
 Defining RBAC in `application.properties` instead of using annotations.
@@ -323,6 +329,20 @@ Additional properties which will be added as the query parameters .
 Cookie path parameter.
 // end::update_14_39[]
 
+// tag::update_15_9[]
+`proxy.host`::
+The host (name or IP address) of the Proxy.
+
+`proxy.port`::
+The port number of the Proxy. (default: `80`)
+
+`proxy.username`::
+The username to authenticate.
+
+`proxy.password`::
+The password to authenticate.
+// end::update_15_9[]
+
 NOTE:  With Keycloak OIDC server `https://host:port/auth/realms/{realm}` where `{realm}` has to be replaced by the name of the Keycloak realm.
 
 TIP: You can use `quarkus.http.cors` property to enable consuming form different domain.
@@ -442,8 +462,6 @@ jdoe=p4ssw0rd
 scott=Admin,admin,Tester,user 
 jdoe=NoRolesUser
 ----
-
-<<<
 
 *IMPORTANT:*  If `plain-text` is set to `false` (or omitted) then passwords must be stored in the form MD5 (`username`:`realm`:`password`).
 
@@ -656,6 +674,88 @@ quarkus.hibernate-orm.database.generation=drop-and-create
 ----
 // end::update_14_8[]
 
+== Security with LDAP
+
+// tag::update_15_20[]
+You can also protect endpoints and store identities in a database using LDAP.
+
+[source, bash]
+----
+mvn quarkus:add-extension 
+    -Dextensions="elytron-security-ldap"
+----
+
+[source, properties]
+----
+quarkus.security.ldap.enabled=true
+quarkus.security.ldap.dir-context.principal=uid=tool,ou=accounts,o=YourCompany,c=DE
+quarkus.security.ldap.dir-context.url=ldaps://ldap.server.local
+quarkus.security.ldap.dir-context.password=PASSWORD
+quarkus.security.ldap.identity-mapping.rdn-identifier=uid
+quarkus.security.ldap.identity-mapping.search-base-dn=ou=users,ou=tool,o=YourCompany,c=DE
+quarkus.security.ldap.identity-mapping.attribute-mappings."0".from=cn
+quarkus.security.ldap.identity-mapping.attribute-mappings."0".to=groups
+quarkus.security.ldap.identity-mapping.attribute-mappings."0".filter=(member=uid={0})
+quarkus.security.ldap.identity-mapping.attribute-mappings."0".filter-base-dn=ou=roles,ou=tool,o=YourCompany,c=DE
+----
+
+*Testing*
+
+There is a Quarkus Test Resource that starts and stops InMemory LDAP server before and after test suite.
+It is running in `localhost` with `dc=quarkus,dc=io` and binding credentials (`"uid=admin,ou=system", "secret"`).
+Imports _LDIF_ from a file located at root of the classpath named `quarkus-io.ldif`.
+
+Register dependency io.quarkus:quarkus-test-ldap:test.
+
+And annotate the test:
+
+[source, java]
+----
+@QuarkusTestResource(io.quarkus.test.ldap.LdapServerTestResource.class)
+public class ElytronLdapExtensionTestResources {
+}
+----
+
+Elytron LDAP Realm configuration properties.
+Prefix `quarkus.security.ldap` is skipped.
+
+`enabled`::
+Enable the LDAP elytron module (default: `false`)
+
+`realm-name`::
+The elytron realm name (default: `Quarkus`)
+
+`direct-verification`::
+Provided credentials are verified against LDAP (default: `true`)
+
+`dir-context.url`::
+The url of the LDAP server.
+
+`dir-context.principal`::
+User (`bindDn`) which is used to connect to LDAP server.
+
+`dir-context.password`::
+The password (`bindCredential`) which belongs to the principal.
+
+`identity-mapping.rdn-identifier`::
+The identifier (`baseFilter`) which correlates to the provided user (default: `uid`)
+
+`identity-mapping.search-base-dn`::
+The dn where we look for users.
+
+`identity-mapping.attribute-mappings.<id>.from`::
+The `roleAttributeId` from which is mapped
+
+`identity-mapping.attribute-mappings.<id>.to`::
+The identifier whom the attribute is mapped to (default: `gropus`)
+
+`identity-mapping.attribute-mappings.<id>.filter`::
+The filter (`roleFilter`)
+
+`identity-mapping.attribute-mappings.<id>.filter-base-dn`::
+The filter base dn (`rolesContextDn`)
+// end::update_15_20[]
+
 == Vault
 
 // tag::update_10_5[]
@@ -751,7 +851,32 @@ transit.sign("my-sign-key", text);
 ----
 // end::update_13_14[]
 
-Elytron JDBC Realm configuration properties.
+*Vault TOTP*
+
+// tag::update_15_17[]
+TOTP secret engine is supported by using `io.quarkus.vault.VaultTOTPSecretEngine` class:
+
+[source, java]
+----
+@Inject
+VaultTOTPSecretEngine vaultTOTPSecretEngine;
+
+CreateKeyParameters createKeyParameters = new CreateKeyParameters("Google", "test@gmail.com");
+createKeyParameters.setPeriod("30m");
+
+/** Generate Key (QR code) */
+final Optional<KeyDefinition> myKey = vaultTOTPSecretEngine
+                                            .createKey("my_key_2", createKeyParameters);
+
+/** Generate key number to login */
+final String keyCode = vaultTOTPSecretEngine.generateCode("my_key_2");
+
+/** Login logic */
+boolean valid = vaultTOTPSecretEngine.validateCode("my_key_2", keyCode);
+----
+// end::update_15_17[]
+
+Vault configuration properties.
 Prefix `quarkus.vault` is skipped.
 
 `url`::
@@ -766,11 +891,21 @@ Role Id for AppRole auth
 `authentication.app-role.secret-id`::
 Secret Id for AppRole auth
 
+// tag::update_15_19[]
+`authentication.app-role.secret-id-wrapping-token`::
+Wrapping token containing a Secret Id. `secret-id` and `secret-id-wrapping-token` are exclusive.
+// end::update_15_19[]
+
 `authentication.userpass.username`::
 Username for userpass auth
 
 `authentication.userpass.password`::
 Password for userpass auth
+
+// tag::update_15_19[]
+`authentication.userpass.password-wrapping-token`::
+Wrapping token containing a password. `password` and `password-wrapping-token` are exclusive.
+// end::update_15_19[]
 
 `authentication.kubernetes.role`::
 Kubernetes authentication role

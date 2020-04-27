@@ -277,7 +277,7 @@ mvn clean package -Dquarkus.kubernetes.deploy=true
 
 TIP: If you set this flag to `true`, the `build` and `push` flags from container-image are set to `true` too. 
 
-To deploy the application, the extension uses the `https://github.com/fabric8io/kubernetes-client.
+To deploy the application, the extension uses the https://github.com/fabric8io/kubernetes-client.
 All options described at <<Kubernetes Client>> are valid here.
 // end::update_14_24[]
 
@@ -292,6 +292,54 @@ Instead of adding Kubernetes extension, set container image s2i and the `target`
     -Dextensions="openshift"
 ----
 // end::update_14_29[]
+
+<<<
+
+== Kubernetes Configuration Extension
+
+// tag::update_15_14[]
+
+Integration between MicroProfile Config spec and ConfigMaps:
+
+[source, bash]
+----
+./mvnw quarkus:add-extensions 
+    -Dextensions="quarkus-kubernetes-config"
+----
+
+[source, properties]
+----
+quarkus.kubernetes-config.enabled=true
+quarkus.kubernetes-config.config-maps=cmap1,cmap2
+----
+
+[source, java]
+----
+@ConfigProperty(name = "some.prop1")
+String someProp1;
+
+@ConfigProperty(name = "some.prop2")
+String someProp2;
+----
+
+If the config key is a Quarkus configuration file `application.properties`/`application.yaml`, the content is parsed and each key of the configuration file is used as config property.
+
+List of Kubernetes Config parameters.
+
+`quarkus.kubernetes-config` as prefix is skipped in the next table.
+
+`enabled`::
+The application will attempt to look up the configuration from the API server. (default: `false`)
+
+`fail-on-missing-config`::
+The application will not start if any of the configured config sources cannot be located. (default: `true`)
+
+`config-maps`::
+ConfigMaps to look for in the namespace that the Kubernetes Client has been configured for. Supports CSV.
+
+`secrets`::
+Secrets to look for in the namespace that the Kubernetes Client has been configured for. Supports CSV.
+// end::update_15_14[]
 
 == Kubernetes Client
 // tag::update_4_5[]
@@ -310,6 +358,8 @@ List of Kubernetes client parameters.
 
 `trust-certs`::
 Trust self-signed certificates. (default: `false`)
+
+<<<
 
 `master-url`::
 URL of Kubernetes API server.
@@ -451,7 +501,7 @@ public class KubernetesClientTest {
 ----
 // end::update_5_9[]
 
-== Amazon Lambda
+== AWS Lambda
 // tag::update_1_10[]
 Quarkus integrates with Amazon Lambda.
 
@@ -473,6 +523,14 @@ public class TestLambda
     }
 }
 ----
+
+// tag::update_15_2[]
+The interface `com.amazonaws.services.lambda.runtime.RequestStreamHandler` is also supported.
+// end::update_15_2[]
+
+// tag::update_15_3[]
+The interface `com.amazon.ask.SkillStreamHandler` is also supported.
+// end::update_15_3[]
 
 // tag::update_9_4[]
 You can set the handler name by using `quarkus.lambda.handler` property or by annotating the Lambda with the CDI `@Named` annotation.

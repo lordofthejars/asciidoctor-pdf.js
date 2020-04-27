@@ -68,6 +68,51 @@ dependencies {
 ----
 // end::update_10_8[]
 
+== Command mode
+
+// tag::update_15_16[]
+You can define the `main` CLI method to start Quarkus.
+There are two ways, implementing `io.quarkus.runtime.QuarkusApplication` interface or use the Java main method to launch Quarkus.
+
+[source, java]
+----
+@io.quarkus.runtime.annotations.QuarkusMain
+public class HelloWorldMain implements QuarkusApplication {
+  @Override
+  public int run(String... args) throws Exception {
+    System.out.println("Hello World");
+    return 10;
+ }
+}
+----
+
+`run` method called when Quarkus starts, and stops when it finishes.
+
+As Java `main`:
+
+[source, java]
+----
+@QuarkusMain
+public class JavaMain {
+    public static void main(String... args) {
+        Quarkus.run(HelloWorldMain.class, args);
+    }
+}
+----
+
+IMPORTANT: Use `@QuarkusMain` in only one place.
+
+Use `Quarkus.waitForExit()` from the main thread if you want to run some logic on startup, and then run like a normal application (i.e. not exit).
+
+You can inject command line arguments by using `@CommandLineArguments` annotation:
+
+[source, java]
+----
+@CommandLineArguments
+String[] args;
+----
+// end::update_15_16[]
+
 == Extensions
 
 Quarkus comes with extensions to integrate with some libraries such as JSON-B, Camel or MicroProfile spec.
@@ -425,11 +470,17 @@ com.acme.config.CustomInstantConverter
 ----
 // end::update_2_8[]
 
-== Custom Context Path
-// tag::update_6_2[]
-By default Undertow will serve content from under the root context.
-If you want to change this you can use the `quarkus.servlet.context-path` config key to set the context path.
-// end::update_6_2[]
+== Undertow Properties
+
+// tag::update_15_1[]
+Possible parameters with prefix `quarkus.servlet`:
+
+`context-path`::
+The context path to serve all Servlet context from. (default: `/`)
+
+`default-charset`::
+The default charset to use for reading and writing requests. (default: `UTF-8`)
+// end::update_15_1[]
 
 == HTTPS
 
@@ -573,6 +624,54 @@ TIP: Quarkus breaks the CDI spec by allowing you to inject qualified beans witho
 Message message;
 ----
 // end::update_7_1[]
+
+// tag::update_15_10[]
+TIP: Quarkus breaks the CDI spec by skipping the `@Produces` annotation completely if the producer method is annotated with a scope annotation, a stereotype or a qualifier. 
+
+[source,java]
+----
+@Quote("")
+Message message(InjectionPoint msg) {
+}
+
+@Quote("Aloha Beach")
+Message message;
+----
+// end::update_15_10[]
+
+*Alternatives*
+
+// tag::update_15_11[]
+It is also possible to select alternatives for an application using `application.properties`.
+
+[source, properties]
+----
+quarkus.arc.selected-alternatives=org.acme.Foo,org.acme.*,Bar
+----
+// end::update_15_11[] 
+
+*Beans by Quarkus Profile*
+
+// tag::update_15_15[]
+Using `@io.quarkus.arc.profile.IfBuildProfile` and `@io.quarkus.arc.profile.UnlessBuildProfile` annotations, you can conditionally enable a bean.
+
+[source,java]
+----
+@Dependent
+public class TracerConfiguration {
+    @Produces
+    @IfBuildProfile("prod")
+    public Tracer realTracer(Reporter reporter, Configuration configuration) {
+        return new RealTracer(reporter, configuration);
+    }
+    @Produces
+    @DefaultBean
+    public Tracer noopTracer() {
+        return new NoopTracer();
+    }
+}
+----
+// end::update_15_15[]
 
 == JSON Marshalling/Unmarshalling
 
@@ -795,6 +894,25 @@ pattern.message=No conforme al patro
 private String name;
 ----
 // end::update_13_13[]
+
+// tag::update_15_24[]
+Bean Validation can be configured .
+The prefix is: `quarkus.hibernate-validator`.
+
+`fail-fast`::
+When fail fast is enabled the validation will stop on the first constraint violation detected. (default: `false`)
+
+`method-validation.allow-overriding-parameter-constraints`::
+Define whether overriding methods that override constraints should throw an exception. (default: `false`).
+
+`method-validation.allow-parameter-constraints-on-parallel-methods`::
+Define whether parallel methods that define constraints should throw an exception. (default: `false`).
+
+`method-validation.allow-multiple-cascaded-validation-on-return-values`::
+Define whether more than one constraint on a return value may be marked for cascading validation are allowed. (default: `false`).
+// end::update_15_24[]
+
+<<<
 
 == Logging
 
@@ -1326,6 +1444,52 @@ IMPORTANT: This does not work when using native image testing.
 // tag::update_3_6[]
 A stereotype annotation `io.quarkus.test.Mock` is provided declaring `@Alternative`, `@Priority(1)` and `@Dependent`.
 // end::update_3_6[]
+
+*Mockito*
+
+// tag::update_15_12[]
+Instead of creating stubs, you can also create mocks of your services with mockito.
+Add the following dependency `io.quarkus:quarkus-junit5-mockito`:
+
+[source, java]
+----
+@InjectMock
+GreetingService greetingService;
+
+@BeforeEach
+public void setup() {
+    Mockito.when(greetingService.greet()).thenReturn("Hi");
+}
+
+@Path("/hello")
+public class ExampleResource {
+
+    @Inject
+    GreetingService greetingService;
+}
+----
+
+Mock is automatically injected and only valid for the defined test class.
+
+*REST Client*
+
+To Mock REST Client, you need to define the interface with `@ApplicationScope`:
+
+[source, java]
+----
+@ApplicationScoped
+@RegisterRestClient
+public interface GreetingService {
+}
+
+@InjectMock
+@RestClient
+GreetingService greetingService;
+
+Mockito.when(greetingService.hello()).thenReturn("hello from mockito");
+----
+
+// end::update_15_12[]
 
 *Interceptors*
 // tag::update_5_5[]

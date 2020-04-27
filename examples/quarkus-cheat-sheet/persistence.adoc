@@ -185,6 +185,7 @@ Developer developer = new Developer();
 developer.id = 1;
 developer.delete();
 
+Person.deleteById(id);
 // Delete By Query
 long numberOfDeleted = Developer.delete("name", "Alex");
 ----
@@ -243,6 +244,11 @@ Number of deleted entities.
 `delete`: `String`, [`Object...`, `Map<String, Object>`, `Parameters`]::
 Number of deleted entities meeting given query with parameters set.
 
+// tag::update_15_6[]
+`deleteById`: `boolean`, [`Object`]::
+Delete by id. Returns if deleted or not.
+// end::update_15_6[]
+
 `persist`: [`Iterable`, `Steram`, `Object...`]::
 
 // tag::update_14_30[]
@@ -252,6 +258,22 @@ In case of using streams, remember to close them or use a `try/catch` block: `tr
 // tag::update_12_6[]
 TIP: `find` methods defines a `withLock(LockModeType)` to define the lock type and `withHint(QueryHints.HINT_CACHEABLE, "true")` to define hints.
 // end::update_12_6[]
+
+*Named Queries*
+
+// tag::update_15_18[]
+[source, java]
+----
+@Entity
+@NamedQuery(name = "Person.getByName", query = "from Person where name = :name")
+public class Person extends PanacheEntity {
+    
+    public static Person findByName(String name){
+        return find("#Person.getByName", name).firstResult();
+    }
+}
+----
+// end::update_15_18[]
 
 *Pagination*
 
@@ -268,6 +290,20 @@ List<Person> firstPage = livingPersons.list();
 List<Person> secondPage = livingPersons.nextPage().list();
 ----
 // end::update_9_3[]
+
+
+*Range*
+
+// tag::update_15_7[]
+[source, java]
+----
+PanacheQuery<Person> livingPersons = Person
+            .find("status", Status.Alive);
+List<Person> secondRange = livingPersons.range(25, 49).list();
+----
+
+You cannot mix pagination and range.
+// end::update_15_7[]
 
 // tag::update_2_10[]
 If entities are defined in external JAR, you need to enable in these projects the `Jandex` plugin in project.
@@ -935,6 +971,8 @@ Index lifecycle (`none`, `validate`, `update`, `create`, `drop-and-create`, `dro
 
 `index-defaults.lifecycle.required-status`::
 Minimal cluster status (`green`, `yellow`, `red`)
+
+<<<
 
 `index-defaults.lifecycle.required-status-wait-timeout`::
 Waiting time before failing the bootstrap.
@@ -1632,8 +1670,16 @@ Possible annotations in fields: `@BsonId` (for custom ID), `@BsonProperty` and `
 
 IMPORTANT: `@MongoEntity` is optional.
 
-Methods provided are similar of the ones shown in <<Persistence>> section.
+*Multi-tenancy with MongoDB Panache*
 
+// tag::update_15_4[]
+[source, java]
+----
+@MongoEntity(collection = "TheBook", clientName = "client2", database = "database2")
+----
+// end::update_15_4[]
+
+Methods provided are similar of the ones shown in <<Persistence>> section.
 
 [source, java]
 ----
@@ -1646,8 +1692,11 @@ person = Person.findById(personId);
 List<Person> livingPersons = Person.list("status", Status.Alive);
 List<Person> persons = Person.list(Sort.by("name").and("birth"));
 
+long updated = Person.update("name", "Mortal").where("status", Status.Alive);
+
 long countAll = Person.count();
 
+Person.deleteById(id);
 Person.delete("status", Status.Alive);
 ----
 
@@ -1668,6 +1717,17 @@ List<Person> firstPage = livingPersons.list();
 // get the second page
 List<Person> secondPage = livingPersons.nextPage().list();
 ----
+
+*Range*
+
+[source, java]
+----
+PanacheQuery<Person> livingPersons = Person
+            .find("status", Status.Alive);
+List<Person> secondRange = livingPersons.range(25, 49).list();
+----
+
+You cannot mix pagination and range.
 
 *Queries*
 
@@ -1753,5 +1813,7 @@ public class ReactivePerson extends ReactivePanacheMongoEntity {
 CompletionStage<Void> cs1 = person.persist();
 CompletionStage<List<ReactivePerson>> allPersons = ReactivePerson.listAll();
 Publisher<ReactivePerson> allPersons = ReactivePerson.streamAll();
+
+Uni<List<PersonName>> persons = ReactivePersonEntity.find("lastname", name).project(PersonName.class).list();
 ----
 // end::update_14_12[]
