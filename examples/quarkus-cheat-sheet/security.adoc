@@ -94,6 +94,9 @@ String name;
 @Inject
 @Claim("groups")
 Set<String> groups;
+
+@Inject
+JWTParser parser;
 ----
 
 Set of supported types: `String`, `Set<String>`, `Long`, `Boolean, `javax.json.JsonValue`, `Optional`, `org.eclipse.microprofile.jwt.ClaimValue`.
@@ -310,6 +313,11 @@ Expiration grace period in seconds.
 `token.principal-claim`::
 Name of the claim which contains a principal name.
 
+// tag::update_16_3[]
+`token.refresh-expired`::
+If property is enabled then a refresh token request is performed.
+// end::update_16_3[]
+
 `credentials.secret`::
 The client secret
 
@@ -342,6 +350,17 @@ The username to authenticate.
 `proxy.password`::
 The password to authenticate.
 // end::update_15_9[]
+
+// tag::update_16_3[]
+`end-session-path`::
+Relative path of the OIDC `end_session_endpoint`.
+
+`logout.path`::
+The relative path of the logout endpoint at the application.
+
+`logout.post-logout-path`::
+Relative path of the application endpoint where the user should be redirected to after logging out.
+// end::update_16_3[]
 
 NOTE:  With Keycloak OIDC server `https://host:port/auth/realms/{realm}` where `{realm}` has to be replaced by the name of the Keycloak realm.
 

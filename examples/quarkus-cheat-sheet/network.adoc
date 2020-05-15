@@ -1,3 +1,187 @@
+== HTTP Configuration
+// tag::update_16_11[]
+
+You can configure HTTP parameters.
+Using `quarkus.http` prefix:
+
+`cors`::
+Enable CORS. (default: `false`)
+
+`cors.origins`::
+CSV of origins allowed. (dedault: Any request valid.)
+
+`cors.methods`::
+CSV of methods valid. (default: Any method valid.)
+
+`cors.headers`::
+CSV of valid allowed headers. (default: Any requested header valid.)
+
+`cors.exposed-headers`::
+CSV of valid exposed headers.
+
+`port`::
+The HTTP port. (default: `8080`)
+
+`test-port`::
+The HTTP test port. (default: `8081`)
+
+`host`::
+The HTTP host. (default: `0.0.0.0`)
+
+`host-enabled`::
+Enable listening to host:port. (default: `true`)
+
+`ssl-port`::
+The HTTPS port. (default `8443`)
+
+`test-ssl-port`::
+The HTTPS port used to run tests. (default `8444`)
+
+`proxy-address-forwarding`::
+The address, scheme etc will be set from headers forwarded by the proxy server.
+
+`allow-forwarded`::
+Proxy address forwarding is enabled then the standard `Forwarded` header will be used, rather than the more common but not standard `X-Forwarded-For`.
+
+`insecure-requests`::
+If insecure requests are allowed. Possible values: `enabled`, `redirect`, `disable`. (default: `enabled`)
+
+`http2`::
+Enables HTTP/2. (default: `true`)
+
+`ssl.port`::
+The _HTTPS_ port. (default: `8443`)
+
+`ssl.certificate.file`::
+The file path to a service certificate or certificate chain in _PEM_ format. Relative to `src/main/resources`.
+
+`ssl.certificate.key-file`::
+The file path to the corresponding certificate private key in _PEM_ format. Relative to `src/main/resources`.
+
+`ssl.certificate.key-store-file`::
+The key store contains the certificate information. Relative to `src/main/resources`.
+
+`ssl.certificate.key-store-file-type`::
+The key store type. It is automatically detected based on the file name or can be set manually. Supported values are: `JKS`, `JCEKS`, `P12`, `PKCS12` or `PFX`.
+
+`ssl.certificate.key-store-password`::
+The password to open the key store file.
+
+`ssl.certificate.trust-store-file`
+The trust store location which contains the certificate information of the certificates to trust. Relative to `src/main/resources`.
+
+`ssl.certificate.trust-store-file-type`::
+The trust store type. It is automatically detected based on the file name or can be set manually.
+
+`ssl.certificate.trust-store-password`::
+The password to open the trust store file.
+
+`ssl.cipher-suites`::
+A list of strings of cipher suites to use. If not provided, a reasonable default is selected.
+
+`ssl.protocols`::
+The list of protocols to explicitly enable. (default: `TLSv1.3` and `TLSv1.2`).
+
+`ssl.client-auth`::
+Configures the engine to require/request client authentication. Possible values are: `none`, `request` and  `required`. (default:  `none`).
+
+`io-threads`::
+The number if IO threads used to perform IO.
+
+`limits.max-header-size`::
+The maximum length of all headers. (default: `20k`)
+
+`limits.max-body-size`::
+The maximum size of a request body. (default: `no-limit`)
+
+`limits.max-chunk-size`::
+The max HTTP chunk size
+
+`idle-timeout`::
+Http connection idle timeout. (default: `30M`)
+
+`read-timeout`::
+Http connection read timeout for blocking IO. (default: `60s`)
+
+`body.handle-file-uploads`::
+If the files sent using `multipart/form-data` will be stored locally. (default: `true`)
+
+`body.uploads-directory`::
+The directory where the files sent using `multipart/form-data` should be stored. (default: `file-uploads`)
+
+`body.merge-from-attributes`::
+If the form attributes should be added to the request parameters. (default: `true`)
+
+`body.delete-uploaded-files-on-end`::
+If the uploaded files should be removed after serving the request.
+
+`body.preallocate-body-buffer`::
+If the body buffer should pre-allocated based on the `Content-Length` header value. (default: `1K`)
+
+`auth.session.encryption-key`::
+The encryption key that is used to store persistent logins.
+
+`so-reuse-port`::
+Enable socket reuse port.
+
+`tcp-quick-ack`::
+Enable tcp quick ack.
+
+`tcp-cork`::
+Enable tcp cork.
+
+`tcp-fast-open`::
+Enable tcp fast open.
+
+`domain-socket`::
+Path to a unix domain socket. (default: `/var/run/io.quarkus.app.socket`)
+
+`domain-socket-enabled`::
+Enables domain socket.
+
+`record-request-start-time`::
+If enabled then start time will be recorded to enable logging of total request time. (default: `false`)
+
+`access-log.enabled`::
+If access logging is enabled. (default: `false`)
+
+`access-log.pattern`::
+The access log pattern. (default: `common`)
+
+`access-log.log-to-file`::
+If logging should be done to a separate file. (default: `false`)
+
+`access-log.base-file-name`::
+The access log file base name. (default: `quarkus`)
+
+`access-log.log-directory`::
+The log directory to use when logging access to a file.
+
+`access-log.log-directory`::
+The log directory to use when logging access to a file.
+
+`access-log.log-suffix`::
+The log file suffix. (default: `.log`)
+
+`access-log.category`::
+The log category to use if logging is being done via the standard log mechanism. (default: `io.quarkus.http.access-log`)
+
+`access-log.rotate`::
+If the log should be rotated daily. (default: `true`)
+
+`same-site-cookie.<name>.case-sensitive`::
+If the cookie pattern is case sensitive.
+
+`same-site-cookie.<name>.value`::
+The value to set in the samesite attribute.
+
+`same-site-cookie.<name>.enable-client-checker`::
+Some User Agents break when sent SameSite=None, this will detect them and avoid sending the value. (default: `true`)
+
+`same-site-cookie.<name>.add-secure-for-none`::
+If this is true then the 'secure' attribute will automatically be sent on cookies with a SameSite attribute of None. (default: `true`)
+// end::update_16_11[]
+
 == JAX-RS
 // tag::update_4_1[]
 Quarkus uses JAX-RS to define https://github.com/jax-rs[REST-ful web APIs, window="_blank"].
@@ -245,6 +429,54 @@ public class MyDeclarativeRoutes {
 ----
 // end::update_10_9[]
 
+== GraphQL
+
+// tag::update_16_12[]
+Quarkus integrates with https://graphql.org/[GraphQL] using https://download.eclipse.org/microprofile/microprofile-graphql-1.0.1/microprofile-graphql.html[MicroProfile GraphQL] integration.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="graphql"
+----
+
+[source, java]
+----
+@GraphQLApi
+public class GreetingResource {
+
+    @Query
+    public String message() {
+    }
+
+    @Mutation
+    public Greetings load(Greetings greetings) {
+    }
+
+}
+----
+
+Extension can be configured with the follwoing paramters prefixed with `quarkus.smallrye-graphql`.
+
+`root-path`::
+The rootPath under which queries will be served. (default: `/graphql`)
+
+`root-path-ui`::
+The path where GraphQL UI is available. (default: `/graphql-ui`)
+
+`always-include-ui`::
+The path where GraphQL UI is available. (default: `/graphql-ui`)
+
+`root-path-ui`::
+Always include the UI. By default this will only be included in dev and test. (default: `false`)
+
+`enable-ui`::
+If GraphQL UI should be enabled. (default: `false`)
+
+`metrics.enabled`::
+Enable metrics. (default: `false`)
+// end::update_16_12[]
+
 == Vert.X Verticle
 
 // tag::update_14_1[]
@@ -271,12 +503,13 @@ public class VerticleDeployer {
         
         latch.countDown();
     }
+}
 ----
 
 Verticles can be:
 
 bare:: extending `io.vertx.core.AbstractVerticle`.
-mutiny: extendig `io.smallrye.mutiny.vertx.core.AbstractVerticle`.
+mutiny:: extendig `io.smallrye.mutiny.vertx.core.AbstractVerticle`.
 // end::update_14_1[]
 
 == GZip Support
@@ -291,33 +524,104 @@ EnableGZip. (default: `false`)
 Configure the upper limit on deflated request body. (default: `10M`)
 // end::update_7_4[]
 
-== CORS Filter
-// tag::update_2_11[]
+== GRPC
+// tag::update_16_8[]
 
-Quarkus comes with a CORS filter that can be enabled via configuration:
+Quarkus integrates with gRPC:
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-grpc"
+----
+
+Then you need to configure `build tool` with gRPC plugins. In the case of Maven, the `kr.motd.maven:os-maven-plugin` extension and `org.xolstice.maven.plugins:protobuf-maven-plugin`
+
+Protos files are stored at `src/main/proto`.
+
+When `java` files are created two service implementations are provided: one with default gRPC API and other with Mutiny support.
+
+With `quarkus.grpc.server` prefix, the next configuration properties can be set:
+
+`port`::
+The gRPC Server port. (default: `9000`)
+
+`host`::
+The gRPC server host. (default: `0.0.0.0`)
+
+`handshake-timeout`::
+The gRPC handshake timeout.
+
+`max-inbound-message-size`::
+The max inbound message size in bytes.
+
+`plain-text`::
+Use plain text. (default: `true`)
+
+`alpn`::
+TWhether ALPN should be used. (default: `true`)
+
+`enable-reflection-service`::
+Enables the gRPC Reflection Service. (default: `false`)
+
+`ssl.certificate`::
+The file path to a server certificate or certificate chain in PEM format.
+
+`ssl.key`::
+The file path to the corresponding certificate private key file in PEM format.
+
+`ssl.key-store`::
+An optional key store which holds the certificate information instead of specifying separate files.
+
+`ssl.key-store-type`::
+An optional parameter to specify the type of the key store file.
+
+`ssl.key-store-password`::
+A parameter to specify the password of the key store file. (default: `password`)
+
+`ssl.trust-store`::
+Trust store which holds the certificate information of the certificates to trust
+
+`ssl.trust-store-type`::
+Parameter to specify type of the trust store file.
+
+`ssl.trust-store-password`::
+A parameter to specify the password of the trust store file.
+
+`ssl.cipher-suites`::
+A list of the cipher suites to use.
+
+`ssl.protocols`::
+The list of protocols to explicitly enable. (default: `TLSv1.3,TLSv1.2`)
+
+`transport-security.certificate`::
+The path to the certificate file.
+
+`transport-security.key`::
+The path to the private key file.
+
+To consume the service:
+
+[source, java]
+----
+@GrpcService("hello")
+GreeterGrpc.GreeterBlockingStub client;
+
+@GrpcService("hello")
+io.grpc.Channel channel;
+----
+
+Some configuration example to set the host and the SSL parameters:
 
 [source, properties]
 ----
-quarkus.http.cors=true
+quarkus.grpc.clients.hello.host=localhost
+quarkus.grpc.clients.hello.plain-text=false
+quarkus.grpc.clients.hello.ssl.certificate=src/main/resources/tls/client.pem
+quarkus.grpc.clients.hello.ssl.key=src/main/resources/tls/client.key
+quarkus.grpc.clients.hello.ssl.trust-store=src/main/resources/tls/ca.pem
 ----
-
-Prefix is `quarkus.http`.
-
-`cors`::
-Enable CORS. (default: `false`)
-
-`cors.origins`::
-CSV of origins allowed. (dedault: Any request valid.)
-
-`cors.methods`::
-CSV of methods valid. (default: Any method valid.)
-
-`cors.headers`::
-CSV of valid allowed headers. (default: Any requested header valid.)
-
-`cors.exposed-headers`::
-CSV of valid exposed headers.
-// end::update_2_11[]
+// end::update_16_8[]
 
 == Fault Tolerance
 // tag::update_1_2[]
@@ -583,6 +887,7 @@ neo4j:: A probe to check Neo4J connection status.
 artemis:: A probe to check Artemis JMS connection status.
 kafka-streams:: Liveness (for stream state) and Readiness (topics created) probes.
 vault:: A probe to check Vault conection status.
+gRPC:: A readiness probe for the gRPC services.
 
 You can disable the automatic generation by setting `<component>.health.enabled` to false.
 
@@ -763,6 +1068,7 @@ quarkus.jaeger.service-name=myservice
 quarkus.jaeger.sampler-type=const
 quarkus.jaeger.sampler-param=1
 quarkus.jaeger.endpoint=http://localhost:14268/api/traces
+quarkus.jaeger.metrics.enabled=true 
 ----
 
 `@Traced` annotation can be set to disable tracing at class or method level.

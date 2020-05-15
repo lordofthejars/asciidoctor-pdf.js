@@ -68,6 +68,20 @@ CMD ["./application", "-Dquarkus.http.host=0.0.0.0", "-Djava.library.path=/work/
 ----
 // end::update_14_28[]
 
+*Inclusion of resources*
+// tag::update_16_2[]
+
+By default, no resources are included in native executable.
+`quarkus.native.resources.includes` allows to set glob expressions to include resources based on  `src/main/resources` path.
+
+Given `src/main/resources/foo/selected.png`:
+
+[source, properties]
+----
+quarkus.native.resources.includes=foo/**
+----
+// end::update_16_2[]
+
 == Container Images Creation
 
 // tag::update_14_22[]
@@ -92,6 +106,11 @@ The name of the image. (default: the application name)
 
 `tag`::
 The tag of the image. (default: the application version)
+
+// tag::update_16_6[]
+`additional-tags`:: 
+Additional tags of the container image.
+// end::update_16_6[]
 
 `registry`::
 The registry to use for pushing. (default: `docker.io`)
@@ -206,6 +225,10 @@ quarkus.kubernetes.secret-volumes.github-token.default-mode=420
 quarkus.kubernetes.config-map-volumes.github-token.config-map-name=my-secret
 
 quarkus.kubernetes.expose=true
+
+quarkus.kubernetes.env.vars.my-env-var=foobar
+quarkus.kubernetes.env.configmaps=my-config-map,another-config-map
+quarkus.kubernetes.env.secrets=my-secret,my-other-secret
 ----
 
 All possible values are explained at https://quarkus.io/guides/kubernetes#configuration-options.

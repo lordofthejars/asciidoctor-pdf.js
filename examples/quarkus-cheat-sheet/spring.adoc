@@ -348,3 +348,21 @@ public class PersonChecker {
 public void allowedForUser(String user) {}
 ----
 // end::update_12_11[]
+
+== Spring Cache
+
+// tag::update_16_7[]
+Quarkus provides a compatibility layer for Spring dependency injection.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="spring-cache"
+----
+
+[source, java]
+----
+@org.springframework.cache.annotation.Cacheable("someCache")
+public Greeting greet(String name) {}
+----
+// end::update_16_7[]

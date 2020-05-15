@@ -859,6 +859,10 @@ Specifies that each entry should be automatically removed from the cache once a 
 TIP: You can multiple cache annotations on a single method.
 // end::update_14_3[]
 
+// tag::update_16_4[]
+If you see a `javax.enterprise.context.ContextNotActiveException`, you need to add the `quarkus-smallrye-context-propagation` extension.
+// end::update_16_4[]
+
 == Banner
 
 // tag::update_14_9[]
