@@ -949,6 +949,84 @@ threadContext.withContextCapture(..)
 If you are going to use security in a reactive environment you will likely need Smallrye Content Propagation to propagate the identity throughout the reactive callback.
 // end::update_14_36[]
 
+== Configuration from HasiCorp Consul
+
+// tag::update_16_13[]
+You can read runtime configuration from HashiCorp Consul.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="consul-config"
+----
+
+You need to configure Consul:
+
+[source, properties]
+----
+quarkus.consul-config.enabled=true
+quarkus.consul-config.agent.host-port=localhost:8500
+quarkus.consul-config.properties-value-keys=config/consul-test
+----
+
+[source, java]
+----
+@ConfigProperty(name = "greeting.message")
+String message;
+----
+
+In Consul:
+
+[source, json]
+----
+"Key": "config/consul-test",
+"Value": "greeting.message=Hello from Consul"
+----
+
+Possible configuration parameters, prefixed with `quarkus.consul-config`:
+
+`enabled`::
+The application will attempt to look up the configuration from Consul. (default: `false`)
+
+`prefix`::
+Common prefix that all keys share when looking up the keys from Consul. 
+The prefix is *not* included in the keys of the user configuration
+
+raw-value-keys::
+Keys whose value is a raw string.
+The keys that end up in the user configuration are the keys specified her with '/' replaced by '.'
+
+`properties-value-keys`::
+Keys whose value represents a properties-like file conttent.
+
+`fail-on-missing-key`::
+If the application will not start if any of the configured config sources cannot be located. (default: `true`)
+
+`agent.host-port`::
+Consul agent host. (default: `localhost:8500`)
+
+`agent.use-https`::
+Use HTTPS when communicating with the agent. (default: `false`)
+
+`agent.token`::
+Consul token to be provided when authentication is enabled.
+
+`agent.key-store`::
+KeyStore (classpath or filesystem) to be used containing the SSL certificate used by Consul agent.
+
+`agent.key-store-password`::
+Password of KeyStore.
+
+`agent.trust-certs`::
+To trust all certificates or not.
+
+`agent.connection-timeout`::
+Connection timeout. (default: `10S`)
+
+`agent.read-timeout`::
+Reading timeout. (default: `60S`)
+// end::update_16_13[]
+
 == Amazon Alexa
 
 // tag::update_15_13[]
@@ -960,3 +1038,17 @@ You can use Amazon Alexa by adding the extension:
   -Dextensions="quarkus-amazon-alexa"
 ----
 // end::update_15_13[]
+
+== WebJar Locator
+
+// tag::update_16_18[]
+To change how you can refer to webjars skipping the version part you can use WebJars locator extension.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="webjars-locator"
+----
+
+Then the JavaScript location is changed from `/webjars/jquery/3.1.1/jquery.min.js` to `/webjars/jquery/jquery.min.js` in your HTML files.
+// end::update_16_18[]

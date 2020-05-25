@@ -89,6 +89,60 @@ include::network.adoc[tag=update_16_11]
 include::network.adoc[tag=update_16_12]
 ====
 
+.HashiCorp Consul
+[%collapsible]
+====
+include::misc.adoc[tag=update_16_13]
+====
+
+.Hibernate Multitenancy
+[%collapsible]
+====
+include::persistence.adoc[tag=update_16_14]
+====
+
+.Picocli
+[%collapsible]
+====
+include::core.adoc[tag=update_16_15]
+====
+
+.Using Existing Kubernetes Resources
+[%collapsible]
+====
+include::cloud.adoc[tag=update_16_16]
+====
+
+.JWT Builder configuration
+[%collapsible]
+====
+include::security.adoc[tag=update_16_17]
+====
+
+.WebJar Locator
+[%collapsible]
+====
+include::misc.adoc[tag=update_16_18]
+====
+
+.Amazon SQS
+[%collapsible]
+====
+include::reactive.adoc[tag=update_16_19]
+====
+
+.Amazon S3
+[%collapsible]
+====
+include::persistence.adoc[tag=update_16_20]
+====
+
+.REST Data Panache
+[%collapsible]
+====
+include::persistence.adoc[tag=update_16_21]
+====
+
 === Version 1.4.0.Final
 
 .Undertow Properties

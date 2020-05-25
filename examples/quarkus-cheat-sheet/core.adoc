@@ -113,6 +113,66 @@ String[] args;
 ----
 // end::update_15_16[]
 
+// tag::update_16_15[]
+*Picocli*
+
+You can use Picocli to implement CLI applications:
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="picocli"
+----
+
+[source, java]
+----
+@CommandLine.Command
+public class HelloCommand implements Runnable {
+    
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Who will we greet?", defaultValue = "World")
+    String name;
+    
+    private final GreetingService greetingService;
+    
+    public HelloCommand(GreetingService greetingService) {
+        this.greetingService = greetingService;
+    }
+    
+    @Override
+    public void run() {
+        greetingService.sayHello(name);
+    }
+}
+----
+
+All classes annotated with `picocli.CommandLine.Command` are registered as CDI beans.
+
+If only one class annotated with `picocli.CommandLine.Command` it will be used as entry point. 
+If you want to provide your own `@QuarkusMain`:
+
+[source, java]
+----
+@QuarkusMain
+@CommandLine.Command(name = "demo", mixinStandardHelpOptions = true)
+public class ExampleApp implements Runnable, QuarkusApplication {
+    
+    @Inject
+    CommandLine.IFactory factory;
+    
+    @Override
+    public void run() {
+    }
+
+    @Override
+    public int run(String... args) throws Exception {
+        return new CommandLine(this, factory).execute(args);
+    }
+}
+----
+
+Use `quarkus.picocli.native-image.processing.enable` to `false` to use the `picocli-codegen` annotation processor instead of build steps.
+// end::update_16_15[]
+
 == Extensions
 
 Quarkus comes with extensions to integrate with some libraries such as JSON-B, Camel or MicroProfile spec.

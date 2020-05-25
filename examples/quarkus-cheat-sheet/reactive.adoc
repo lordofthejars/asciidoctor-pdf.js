@@ -738,3 +738,93 @@ void initialize() {
 }
 ----
 // end::update_14_33[]
+
+== Amazon SQS Client
+
+// tag::update_16_19[]
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="amazon-sqs"
+----
+
+Injecting the client:
+
+[source, java]
+----
+@Inject
+software.amazon.awssdk.services.sqs.SqsClient sqs;
+
+SendMessageResponse response = sqs.sendMessage(m -> m.queueUrl(queueUrl).messageBody(message));
+
+List<Message> messages = sqs.receiveMessage(m -> m.maxNumberOfMessages(10).queueUrl(queueUrl)).messages();
+----
+
+And configure it:
+
+[source,properties]
+----
+quarkus.sqs.endpoint-override=http://localhost:8010
+quarkus.sqs.aws.region=us-east-1
+quarkus.sqs.aws.credentials.type=static
+quarkus.sqs.aws.credentials.static-provider.access-key-id=test-key
+quarkus.sqs.aws.credentials.static-provider.secret-access-key=test-secret
+----
+
+You need to set a HTTP client either `URL Connection`:
+
+[source, xml]
+----
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>url-connection-client</artifactId>
+</dependency>
+----
+
+or Apache HTTP:
+
+[source, xml]
+----
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>apache-client</artifactId>
+</dependency>
+----
+
+[source, properties]
+----
+quarkus.sqs.sync-client.type=apache
+----
+
+You can go async by using Mutiny:
+
+[source, java]
+----
+@Inject
+software.amazon.awssdk.services.sqs.SqsAsyncClient sqs;
+
+Uni.createFrom()
+    .completionStage(
+        sqs.sendMessage(m -> m.queueUrl(queueUrl).messageBody(message))
+    )
+    .onItem()...
+
+return Uni.createFrom()
+    .completionStage(
+        sqs.receiveMessage(m -> m.maxNumberOfMessages(10).queueUrl(queueUrl))
+    )
+    .onItem()
+----
+
+And you need to add the asynchronous Netty client:
+
+[source, xml]
+----
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>netty-nio-client</artifactId>
+</dependency>
+----
+
+Configuration properties are the same as <<Amazon DynamoDB>> but changing the prefix from `dynamodb` to `sqs`.
+// end::update_16_19[]

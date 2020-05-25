@@ -288,6 +288,18 @@ openshift:: https://quarkus.io/guides/kubernetes#openshift
 Knative:: https://quarkus.io/guides/kubernetes#knative
 // end::update_14_23[]
 
+*Using Existing Resources* 
+
+// tag::update_16_16[]
+You an provide your Kubernetes resources in form of yaml/json and they will provide additional resources or be used as base for the generation process:
+
+Resources are added in `src/main/kubernetes` directory with the target name (`kubernetes.json`, `openshift.json`, `knative.json`, or the yml equivalents) with one orm ore Kubernetes resources.
+Any resource found will be added in the generated manifests.
+If one of the provided resources has the same name as one of the generated ones, then the generated resource will be created on top of the provided resource, respecting existing content.
+
+To override the name of the generated resource you can use: `quarkus.kubernetes.name`, `quarkus.openshift.name` and `quarkus.knative.name`.
+// end::update_16_16[]
+
 *Deployment*
 
 // tag::update_14_24[]

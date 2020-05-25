@@ -94,6 +94,9 @@ Query executed when first using a connection.
 `jdbc.validation-query-sql`::
 Query executed to validate a connection.
 
+`jdbc.pooling-enabled`::
+Disable pooling to prevent reuse of Connections. (default: `true`)
+
 `jdbc.enable-metrics`::
 Enable datasource metrics collection when using `quarkus-smallrye-metrics` extension.
 // end::update_14_42[]
@@ -114,6 +117,12 @@ Name of the file containing the SQL statements to execute when starts.
 
 `batch-fetch-size`::
 The size of the batches. (default: -1 disabled)
+
+`multitenant`::
+Defines the method for multi-tenancy. Possible values: `DATABASE`, `NONE`, `SCHEMA`. (default: `NONE`)
+
+`multitenant-schema-datasource`::
+Defines the name of the data source to use in case of SCHEMA approach.
 
 `query.query-plan-cache-max-size`::
 The maximum size of the query plan cache.
@@ -541,6 +550,116 @@ public class CustomCredentialsProvider implements CredentialsProvider {
 quarkus.datasource.credentials-provider=custom
 ----
 // end::update_16_9[]
+
+*Hibernate Multitenancy*
+
+// tag::update_16_14[]
+Multitenancy is supported using Schema or Database approach.
+First you need to define how tenant is identified:
+
+[source, java]
+----
+@RequestScoped
+@Unremovable
+public class CustomTenantResolver implements TenantResolver {
+
+    @Inject
+    RoutingContext context;
+    
+    @Override
+    public String getDefaultTenantId() {
+        return "base";
+    }
+    
+    @Override
+    public String resolveTenantId() {
+    }
+
+}
+----
+
+_Schema approach_
+
+[source, properties]
+----
+quarkus.hibernate-orm.database.generation=none
+
+quarkus.hibernate-orm.multitenant=SCHEMA
+----
+
+_Database approach_
+
+[source, properties]
+----
+quarkus.hibernate-orm.database.generation=none
+
+quarkus.hibernate-orm.multitenant=DATABASE
+
+# default tenant
+quarkus.datasource.base.db-kind=postgresql
+quarkus.datasource.base.username=quarkus_test
+...
+# Tenant 'mycompany'
+quarkus.datasource.mycompany.db-kind=postgresql
+quarkus.datasource.mycompany.username=mycompany
+quarkus.flyway.mycompany.locations=classpath:database/mycompany
+...
+----
+
+If you need more dynamic approach implement: `@ApplicationScoped io.quarkus.hibernate.orm.runtime.tenant.TenantConnectionResolver`
+// end::update_16_14[]
+
+== REST Data Panache
+
+// tag::update_16_21[]
+REST Data with Panache extension can generate the basic CRUD endpoints for your entities and repositories.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="hibernate-orm-rest-data-panache"
+----
+
+You also need to add the JDBC driver extension and a JSON Marshaller (ie `resteasy-jackson`).
+
+Then you can define interfaces for defining endpoints:
+
+In case of Active Record pattern:
+
+[source, java]
+----
+public interface DeveloperResource extends PanacheEntityResource<Developer, Long> {
+}
+----
+
+In case of Repository:
+
+[source, java]
+----
+public interface DeveloperResource extends PanacheRepositoryResource<DeveloperRepository, Developer, Long> {
+}
+----
+
+Quarkus will generate automatically the implementation for you following the next rules:
+
+* Default path is a hyphenated lowercase resource name without a suffix of `resource` or `controller`.
+* `get(@PathParam("id"))`, `list`, `add(Developer)`, `update(@PathParam("id"), Developer)`, `delete(@PathParam("id"))`
+
+You can customize these defaults by using `@ResourceProperties` and `@MethodProperties` annotations.
+
+[source, java]
+----
+@ResourceProperties(hal = true, path = "my-developer")
+public interface DeveloperResource extends PanacheEntityResource<Developer, Long> {
+    @MethodProperties(path = "all")
+    List<Developer> list();
+    @MethodProperties(exposed = false)
+    void delete(Long id);
+}
+----
+
+If `hal` is `true`, you need to send the `Accept: application/hal+json` HTTP header to get the response.
+// end::update_16_21[]
 
 == Infinispan
 // tag::update_8_7[]
@@ -1421,6 +1540,79 @@ a| Prefix of thread names.
 |===
 // end::update_5_6[]
 // end::update_8_3[]
+
+== Amazon S3
+
+// tag::update_16_20[]
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-amazon-s3"
+----
+
+[source, java]
+----
+@Inject
+S3Client s3Client;
+----
+
+You need to set a HTTP client either `URL Connection`:
+
+[source, xml]
+----
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>url-connection-client</artifactId>
+</dependency>
+----
+
+or Apache HTTP:
+
+[source, xml]
+----
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>apache-client</artifactId>
+</dependency>
+----
+
+[source, properties]
+----
+quarkus.s3.sync-client.type=apache
+----
+
+And configure it:
+
+[source,properties]
+----
+quarkus.s3.endpoint-override=http://localhost:8008
+quarkus.s3.interceptors=io.quarkus.it.amazon.s3.S3ModifyResponse
+quarkus.s3.aws.region=us-east-1
+quarkus.s3.aws.credentials.type=static
+quarkus.s3.aws.credentials.static-provider.access-key-id=test-key
+quarkus.s3.aws.credentials.static-provider.secret-access-key=test-secret
+----
+
+You can inject asynchronous client too:
+
+[source, java]
+----
+@Inject
+S3AsyncClient s3AsyncClient;
+----
+
+And you need to add the asynchronous Netty client:
+
+[source, xml]
+----
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>netty-nio-client</artifactId>
+</dependency>
+----
+
+Configuration properties are the same as <<Amazon DynamoDB>> but changing the prefix from `dynamodb` to `s3`.
+// end::update_16_20[]
 
 == Neo4j
 // tag::update_5_7[]
