@@ -316,6 +316,20 @@ To deploy the application, the extension uses the https://github.com/fabric8io/k
 All options described at <<Kubernetes Client>> are valid here.
 // end::update_14_24[]
 
+== Minikube
+
+// tag::update_16_22[]
+Quarkus has a Minikube extension which creates Kubernetes manifests that are tailored for Minikube.
+
+[source, shell-session]
+----
+./mvnw quarkus:add-extension 
+    -Dextensions="minikube"
+----
+
+TIP: Remember to execute `eval $(minikube -p minikube docker-env)` to build images directly inside Minkube cluster.
+// end::update_16_22[]
+
 == OpenShift
 
 // tag::update_14_29[]

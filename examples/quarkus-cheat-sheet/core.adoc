@@ -1499,6 +1499,18 @@ public class ExampleResource {
 
 Mock is automatically injected and only valid for the defined test class.
 
+// tag::update_16_25[]
+Also `spy` is supported:
+
+[source, java]
+----
+@InjectSpy
+GreetingService greetingService;
+
+Mockito.verify(greetingService, Mockito.times(1)).greet();
+----
+// end::update_16_25[]
+
 *REST Client*
 
 To Mock REST Client, you need to define the interface with `@ApplicationScope`:

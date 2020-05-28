@@ -143,6 +143,30 @@ include::persistence.adoc[tag=update_16_20]
 include::persistence.adoc[tag=update_16_21]
 ====
 
+.Minikube
+[%collapsible]
+====
+include::cloud.adoc[tag=update_16_22]
+====
+
+.Amazon KMS
+[%collapsible]
+====
+include::security.adoc[tag=update_16_23]
+====
+
+== Amazon SES
+[%collapsible]
+====
+include::misc.adoc[tag=update_16_24]
+====
+
+== Inject Spy
+[%collapsible]
+====
+include::core.adoc[tag=update_16_25]
+====
+
 === Version 1.4.0.Final
 
 .Undertow Properties

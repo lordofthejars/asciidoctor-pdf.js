@@ -365,4 +365,10 @@ Quarkus provides a compatibility layer for Spring dependency injection.
 @org.springframework.cache.annotation.Cacheable("someCache")
 public Greeting greet(String name) {}
 ----
+
+Quarkus provides compatibility with the following Spring Cache annotations:
+
+* `@Cacheable`
+* `@CachePut`
+* `@CacheEvict`
 // end::update_16_7[]

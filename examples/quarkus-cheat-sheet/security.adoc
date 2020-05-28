@@ -849,20 +849,41 @@ With the next _kv_ `vault kv put secret/myapps/vault-quickstart/db password=conn
 ----
 quarkus.vault.credentials-provider.mydatabase.kv-path=
     myapps/vault-quickstart/db
-quarkus.datasource.credentials-provider=
-    mydatabase
 
-quarkus.datasource.url= 
-    jdbc:postgresql://localhost:5432/mydatabase
-quarkus.datasource.driver= 
-    org.postgresql.Driver
+quarkus.datasource.db-kind=
+    postgresql
 quarkus.datasource.username=
     sarah
+quarkus.datasource.credentials-provider=
+    mydatabase
+quarkus.datasource.jdbc.url=
+    jdbc:postgresql://localhost:5432/mydatabase
 ----
 
 No password is set as it is fetched from Vault.
 
-INFO: https://www.vaultproject.io/docs/secrets/databases/index.html[dynamic database credentials] through the `database-credentials-role` property.
+Dynamic credentials are also supported:
+
+Running the following dynamic database config in Vault:
+
+`vault write database/config/mydb plugin_name=postgresql-database-plugin .....`
+
+You can configure as:
+
+[source, properties]
+----
+quarkus.vault.credentials-provider
+    .mydatabase.database-credentials-role=mydbrole
+
+quarkus.datasource.db-kind=
+    postgresql
+quarkus.datasource.credentials-provider=
+    mydatabase
+quarkus.datasource.jdbc.url=
+    jdbc:postgresql://localhost:5432/mydatabase
+----
+
+Username and password are fetched from Vault
 
 *Transit*
 
@@ -982,3 +1003,80 @@ A path in vault kv store, where we will find the kv-key
 `credentials-provider."credentials-provider".kv-key`::
 Key name to search in vault path kv-path (default: `password`)
 // end::update_10_5[]
+
+== Amazon KMS
+
+// tag::update_16_23[]
+[source, bash]
+----
+mvn quarkus:add-extension 
+    -Dextensions="amazon-kms"
+----
+
+[source, java]
+----
+@Inject
+KmsClient kms;
+
+kms.encrypt(req -> req.keyId(keyArn).plaintext(
+        SdkBytes.fromUtf8String(data))).ciphertextBlob();
+----
+
+[source,properties]
+----
+quarkus.kms.endpoint-override=http://localhost:8011
+quarkus.kms.aws.region=us-east-1
+quarkus.kms.aws.credentials.type=static
+quarkus.kms.aws.credentials.static-provider.access-key-id=test-key
+quarkus.kms.aws.credentials.static-provider.secret-access-key=test-secret
+----
+
+You need to set a HTTP client either `URL Connection`:
+
+[source, xml]
+----
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>url-connection-client</artifactId>
+</dependency>
+----
+
+or Apache HTTP:
+
+[source, xml]
+----
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>apache-client</artifactId>
+</dependency>
+----
+
+[source, properties]
+----
+quarkus.sqs.sync-client.type=apache
+----
+
+You can go async by using Mutiny:
+
+[source, java]
+----
+@Inject
+software.amazon.awssdk.services.kms.KmsAsyncClient kms;
+
+Uni.createFrom().completionStage(
+    kms.encrypt(req -> req.keyId(keyArn).plaintext(SdkBytes.fromUtf8String(data))
+    ))
+----
+
+And you need to add the asynchronous Netty client:
+
+[source, xml]
+----
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>netty-nio-client</artifactId>
+</dependency>
+----
+
+Configuration properties are the same as <<Amazon DynamoDB>> but changing the prefix from `dynamodb` to `kms`.
+// end::update_16_23[]

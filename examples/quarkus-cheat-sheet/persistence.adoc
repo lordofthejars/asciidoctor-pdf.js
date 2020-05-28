@@ -53,7 +53,10 @@ Password to access.
 JDBC Driver class. It is not necessary to set if `db-kind` used.
 
 `credentials-provider`::
-Sets a custom credential provider.
+Sets a custom credential provider name.
+
+`credentials-provider-name`::
+It is the `@Named` value of the credentials provider bean. Not necessary if only one implementation.
 
 `jdbc.url`::
 The datasource URL.
@@ -531,23 +534,33 @@ transaction.rollback();
 // end::update_6_4[]
 
 // tag::update_16_9[]
-You can implement your custom credentials provider (ie Azure KeyVault).
+You can implement your custom credentials provider (ie Azure KeyVault) to provide a username/password for the database connection. `Name` information is not necessary if there is only one custom credential provider.
 
 [source, java]
 ----
 @ApplicationScoped
 @Unremovable
+@Named("my-credentials-provider")
 public class CustomCredentialsProvider implements CredentialsProvider {
-
-	@Override
+    @Inject
+    Config config;
+	
+    @Override
 	public Properties getCredentials(String credentialsProviderName) {
+
+        properties.put(CredentialsProvider.USER_PROPERTY_NAME, "hibernate_orm_test");
+		properties.put(CredentialsProvider.PASSWORD_PROPERTY_NAME, "hibernate_orm_test");
+
     }
 }
 ----
 
 [source, properties]
 ----
-quarkus.datasource.credentials-provider=custom
+quarkus.datasource.credentials-provider=
+    custom
+quarkus.datasource.credentials-provider-name=
+    my-credentials-provider
 ----
 // end::update_16_9[]
 

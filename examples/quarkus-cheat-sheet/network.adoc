@@ -443,10 +443,18 @@ Quarkus integrates with https://graphql.org/[GraphQL] using https://download.ecl
 [source, java]
 ----
 @GraphQLApi
-public class GreetingResource {
+public class FilmResource {
+
+    @Query("allFilms")
+    public List<String> films() {
+    }
 
     @Query
-    public String message() {
+    public String getFilm(@Name("filmId") int id)) {} 
+
+    @Query
+    public List<Hero> getHeroesWithSurname(
+        @DefaultValue("Skywalker") String surname) {
     }
 
     @Mutation
@@ -455,6 +463,11 @@ public class GreetingResource {
 
 }
 ----
+
+If name not provided, then query name is resolved from method name.
+
+You can see the full schema at `/graphql/schema.graphql`.
+Also GraphiQL UI is enabled at dev and test mode at `/graphql-ui/`.
 
 Extension can be configured with the follwoing paramters prefixed with `quarkus.smallrye-graphql`.
 

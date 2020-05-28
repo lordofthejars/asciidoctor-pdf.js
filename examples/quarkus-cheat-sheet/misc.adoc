@@ -1052,3 +1052,68 @@ To change how you can refer to webjars skipping the version part you can use Web
 
 Then the JavaScript location is changed from `/webjars/jquery/3.1.1/jquery.min.js` to `/webjars/jquery/jquery.min.js` in your HTML files.
 // end::update_16_18[]
+
+== Amazon SES
+
+// tag::update_16_24[]
+[source, bash]
+----
+mvn quarkus:add-extension 
+    -Dextensions="amazon-ses"
+----
+
+[source, java]
+----
+@Inject
+software.amazon.awssdk.services.ses.SesClient sesClient;
+
+@Inject
+software.amazon.awssdk.services.ses.SesAsyncClient sesClient;
+----
+
+[source,properties]
+----
+quarkus.ses.endpoint-override=http://localhost:8012
+quarkus.ses.aws.region=us-east-1
+quarkus.ses.aws.credentials.type=static
+quarkus.ses.aws.credentials.static-provider.access-key-id=test-key
+quarkus.ses.aws.credentials.static-provider.secret-access-key=test-secret
+----
+
+You need to set a HTTP client either `URL Connection`:
+
+[source, xml]
+----
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>url-connection-client</artifactId>
+</dependency>
+----
+
+or Apache HTTP:
+
+[source, xml]
+----
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>apache-client</artifactId>
+</dependency>
+----
+
+[source, properties]
+----
+quarkus.ses.sync-client.type=apache
+----
+
+Or async:
+
+[source, xml]
+----
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>netty-nio-client</artifactId>
+</dependency>
+----
+
+Configuration properties are the same as <<Amazon DynamoDB>> but changing the prefix from `dynamodb` to `ses`.
+// end::update_16_24[]
