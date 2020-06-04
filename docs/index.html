@@ -4,17 +4,18 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.9">
+<meta name="generator" content="Asciidoctor 2.0.7">
 <meta name="author" content="Alex Soto">
 <title>Home of Quarkus Cheat-Sheet</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
-/* Uncomment @import statement to use as custom stylesheet */
+/* Uncomment @import statement when using as custom stylesheet */
 /*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
 article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section{display:block}
-audio,video{display:inline-block}
+audio,canvas,video{display:inline-block}
 audio:not([controls]){display:none;height:0}
+script{display:none!important}
 html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
 a{background:none}
 a:focus{outline:thin dotted}
@@ -219,8 +220,8 @@ table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font
 .literalblock pre,.listingblock>.content>pre{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;overflow-x:auto;padding:1em;font-size:.8125em}
 @media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
 @media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
-.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
 .literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
+.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
 .listingblock>.content{position:relative}
 .listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
 .listingblock:hover code[data-lang]::before{display:block}
@@ -263,8 +264,7 @@ pre.pygments .lineno::before{content:"";margin-right:-.125em}
 .quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;text-align:left;margin-right:0}
 table.tableblock{max-width:100%;border-collapse:separate}
 p.tableblock:last-child{margin-bottom:0}
-td.tableblock>.content>:last-child{margin-bottom:-1.25em}
-td.tableblock>.content>:last-child.sidebarblock{margin-bottom:0}
+td.tableblock>.content{margin-bottom:-1.25em}
 table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
 table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
 table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
@@ -6314,7 +6314,7 @@ quarkus.dynamodb.credentials.type=DEFAULT</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Parameter</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Default</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"> Description</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Description</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -6369,7 +6369,7 @@ quarkus.dynamodb.credentials.type=DEFAULT</code></pre>
 <tr>
 <th class="tableblock halign-left valign-top">Parameter</th>
 <th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top"> Description</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
@@ -6408,7 +6408,7 @@ quarkus.dynamodb.credentials.type=DEFAULT</code></pre>
 <tr>
 <th class="tableblock halign-left valign-top">Parameter</th>
 <th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top"> Description</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
@@ -6532,7 +6532,7 @@ quarkus.dynamodb.credentials.type=DEFAULT</code></pre>
 <tr>
 <th class="tableblock halign-left valign-top">Parameter</th>
 <th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top"> Description</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
@@ -6749,7 +6749,7 @@ quarkus.dynamodb.credentials.type=DEFAULT</code></pre>
 <tr>
 <th class="tableblock halign-left valign-top">Parameter</th>
 <th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top"> Description</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
@@ -7243,7 +7243,7 @@ MongoClient mongoClient1;</code></pre>
 <tr>
 <th class="tableblock halign-left valign-top">Parameter</th>
 <th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top"> Description</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
@@ -12650,7 +12650,7 @@ quarkus.mailer.password=....</code></pre>
 <tr>
 <th class="tableblock halign-left valign-top">Parameter</th>
 <th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top"> Description</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
@@ -12910,7 +12910,7 @@ quartz.scheduleJob(job, trigger);</code></pre>
 <div class="sect2">
 <h3 id="_apache_tika"><a class="anchor" href="#_apache_tika"></a><a class="link" href="#_apache_tika">Apache Tika</a></h3>
 <div class="paragraph">
-<p>Quarkus integrets with <a href="https://tika.apache.org/" target="_blank" rel="noopener">Apache Tika</a> to detect and extract metadata/text from different file types:</p>
+<p>Quarkus integrates with <a href="https://tika.apache.org/" target="_blank" rel="noopener">Apache Tika</a> to detect and extract metadata/text from different file types:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -12946,7 +12946,7 @@ public String extractText(InputStream stream) {
 <tr>
 <th class="tableblock halign-left valign-top">Parameter</th>
 <th class="tableblock halign-left valign-top">Default</th>
-<th class="tableblock halign-left valign-top"> Description</th>
+<th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
@@ -12987,7 +12987,7 @@ public String extractText(InputStream stream) {
 <div class="sect2">
 <h3 id="_jgit"><a class="anchor" href="#_jgit"></a><a class="link" href="#_jgit">JGit</a></h3>
 <div class="paragraph">
-<p>Quarkus integrets with <a href="https://www.eclipse.org/jgit/" target="_blank" rel="noopener">JGit</a> to integrate with Git repositories:</p>
+<p>Quarkus integrates with <a href="https://www.eclipse.org/jgit/" target="_blank" rel="noopener">JGit</a> to integrate with Git repositories:</p>
 </div>
 <div class="listingblock">
 <div class="content">
