@@ -347,7 +347,7 @@ To start using it you only need to add the next extension:
 == Apache Tika
 // tag::update_5_8[]
 
-Quarkus integrets with https://tika.apache.org/[Apache Tika, window="_blank"] to detect and extract metadata/text from different file types:
+Quarkus integrates with https://tika.apache.org/[Apache Tika, window="_blank"] to detect and extract metadata/text from different file types:
 
 [source, bash]
 ----
@@ -394,7 +394,7 @@ a|The document may have other embedded documents. Set if autmatically append.
 == JGit
 // tag::update_8_1[]
 
-Quarkus integrets with https://www.eclipse.org/jgit/[JGit, window="_blank"] to integrate with Git repositories:
+Quarkus integrates with https://www.eclipse.org/jgit/[JGit, window="_blank"] to integrate with Git repositories:
 
 [source, bash]
 ----
