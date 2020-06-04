@@ -155,13 +155,13 @@ include::cloud.adoc[tag=update_16_22]
 include::security.adoc[tag=update_16_23]
 ====
 
-== Amazon SES
+.Amazon SES
 [%collapsible]
 ====
 include::misc.adoc[tag=update_16_24]
 ====
 
-== Inject Spy
+.Inject Spy
 [%collapsible]
 ====
 include::core.adoc[tag=update_16_25]
