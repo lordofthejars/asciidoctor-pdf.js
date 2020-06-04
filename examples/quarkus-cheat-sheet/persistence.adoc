@@ -52,6 +52,12 @@ Password to access.
 `driver`::
 JDBC Driver class. It is not necessary to set if `db-kind` used.
 
+`credentials-provider`::
+Sets a custom credential provider name.
+
+`credentials-provider-name`::
+It is the `@Named` value of the credentials provider bean. Not necessary if only one implementation.
+
 `jdbc.url`::
 The datasource URL.
 
@@ -91,6 +97,9 @@ Query executed when first using a connection.
 `jdbc.validation-query-sql`::
 Query executed to validate a connection.
 
+`jdbc.pooling-enabled`::
+Disable pooling to prevent reuse of Connections. (default: `true`)
+
 `jdbc.enable-metrics`::
 Enable datasource metrics collection when using `quarkus-smallrye-metrics` extension.
 // end::update_14_42[]
@@ -111,6 +120,12 @@ Name of the file containing the SQL statements to execute when starts.
 
 `batch-fetch-size`::
 The size of the batches. (default: -1 disabled)
+
+`multitenant`::
+Defines the method for multi-tenancy. Possible values: `DATABASE`, `NONE`, `SCHEMA`. (default: `NONE`)
+
+`multitenant-schema-datasource`::
+Defines the name of the data source to use in case of SCHEMA approach.
 
 `query.query-plan-cache-max-size`::
 The maximum size of the query plan cache.
@@ -177,6 +192,9 @@ developer.persist();
 // Find All
 Developer.findAll().list();
 
+// Hibernate Filters 
+Person.findAll().filter("Person.hasName", Parameters.with("name", "Alex"));
+
 // Find By Query
 Developer.find("name", "Alex").firstResult();
 
@@ -209,16 +227,28 @@ Returns object or `java.util.Optional`.
 // end::update_12_1[]
 
 `find`: `String`, [`Object...`, `Map<String, Object>`, `Parameters`]::
-Lists of entities meeting given query with parameters set.
+Lists of entities meeting given query with parameters set. Returning a `PanacheQuery`.
 
 `find`: `String`, `Sort`, [`Object...`, `Map<String, Object>`, `Parameters`]::
-Lists of entities meeting given query with parameters set sorted by `Sort` attribute/s.
+Lists of entities meeting given query with parameters set sorted by `Sort` attribute/s. Returning a `PanacheQuery`.
 
 `findAll`:: 
-Finds all entities.
+Finds all entities. Returning a `PanacheQuery`.
 
 `findAll`: `Sort`::
-Finds all entities sorted by `Sort` attribute/s.
+Finds all entities sorted by `Sort` attribute/s. Returning a `PanacheQuery`.
+
+`list`: `String`, [`Object...`, `Map<String, Object>`, `Parameters`]::
+Lists of entities meeting given query with parameters set. Returning a `List`.
+
+`list`: `String`, `Sort`, [`Object...`, `Map<String, Object>`, `Parameters`]::
+Lists of entities meeting given query with parameters set sorted by `Sort` attribute/s. Returning a `List`.
+
+`listAll`:: 
+Finds all entities. Returning a `List`.
+
+`listAll`: `Sort`::
+Finds all entities sorted by `Sort` attribute/s. Returning a `List`.
 
 `stream`: `String`, [`Object...`, `Map<String, Object>`, `Parameters`]::
 `java.util.stream.Stream` of entities meeting given query with parameters set.
@@ -238,6 +268,11 @@ Number of entities.
 `count`: `String`, [`Object...`, `Map<String, Object>`, `Parameters`]::
 Number of entities meeting given query with parameters set.
 
+// tag::update_16_10[]
+.filter: [String, Parameters]::
+Enables a Hibernate filter during fetching of results for this query.
+// end::update_16_10[]
+
 `deleteAll`:: 
 Number of deleted entities.
 
@@ -250,6 +285,7 @@ Delete by id. Returns if deleted or not.
 // end::update_15_6[]
 
 `persist`: [`Iterable`, `Steram`, `Object...`]::
+Persist object.
 
 // tag::update_14_30[]
 In case of using streams, remember to close them or use a `try/catch` block: `try (Stream<Person> persons = Person.streamAll())`.
@@ -291,7 +327,6 @@ List<Person> secondPage = livingPersons.nextPage().list();
 ----
 // end::update_9_3[]
 
-
 *Range*
 
 // tag::update_15_7[]
@@ -332,6 +367,38 @@ If entities are defined in external JAR, you need to enable in these projects th
 </plugin>
 ----
 // end::update_2_10[]
+
+// tag::update_16_5[]
+Panache includes an annotation processor that enhance your entities.
+If you disable annotation processors you might need to create a marker file on Panache archives at `META-INF/panache-archive.marker` manually.
+// end::update_16_5[]
+
+*Testing*
+
+// tag::update_16_3[]
+To mock using active record pattern:
+
+[source,xml]
+----
+<dependency>
+    <groupId>io.quarkus</groupId>
+    <artifactId>quarkus-panache-mock</artifactId>
+    <scope>test</scope>
+</dependency>
+----
+
+[source, java]
+----
+@Test
+public void testPanacheMocking() {
+    PanacheMock.mock(Person.class);
+    
+    Mockito.when(Person.count()).thenReturn(23l);
+    Assertions.assertEquals(23, Person.count());
+    PanacheMock.verify(Person.class, Mockito.times(1)).count();
+}
+----
+// end::update_16_3[]
 
 *DAO pattern*
 
@@ -466,6 +533,147 @@ transaction.rollback();
 ----
 // end::update_6_4[]
 
+// tag::update_16_9[]
+You can implement your custom credentials provider (ie Azure KeyVault) to provide a username/password for the database connection. `Name` information is not necessary if there is only one custom credential provider.
+
+[source, java]
+----
+@ApplicationScoped
+@Unremovable
+@Named("my-credentials-provider")
+public class CustomCredentialsProvider implements CredentialsProvider {
+    @Inject
+    Config config;
+	
+    @Override
+	public Properties getCredentials(String credentialsProviderName) {
+
+        properties.put(CredentialsProvider.USER_PROPERTY_NAME, "hibernate_orm_test");
+		properties.put(CredentialsProvider.PASSWORD_PROPERTY_NAME, "hibernate_orm_test");
+
+    }
+}
+----
+
+[source, properties]
+----
+quarkus.datasource.credentials-provider=
+    custom
+quarkus.datasource.credentials-provider-name=
+    my-credentials-provider
+----
+// end::update_16_9[]
+
+*Hibernate Multitenancy*
+
+// tag::update_16_14[]
+Multitenancy is supported using Schema or Database approach.
+First you need to define how tenant is identified:
+
+[source, java]
+----
+@RequestScoped
+@Unremovable
+public class CustomTenantResolver implements TenantResolver {
+
+    @Inject
+    RoutingContext context;
+    
+    @Override
+    public String getDefaultTenantId() {
+        return "base";
+    }
+    
+    @Override
+    public String resolveTenantId() {
+    }
+
+}
+----
+
+_Schema approach_
+
+[source, properties]
+----
+quarkus.hibernate-orm.database.generation=none
+
+quarkus.hibernate-orm.multitenant=SCHEMA
+----
+
+_Database approach_
+
+[source, properties]
+----
+quarkus.hibernate-orm.database.generation=none
+
+quarkus.hibernate-orm.multitenant=DATABASE
+
+# default tenant
+quarkus.datasource.base.db-kind=postgresql
+quarkus.datasource.base.username=quarkus_test
+...
+# Tenant 'mycompany'
+quarkus.datasource.mycompany.db-kind=postgresql
+quarkus.datasource.mycompany.username=mycompany
+quarkus.flyway.mycompany.locations=classpath:database/mycompany
+...
+----
+
+If you need more dynamic approach implement: `@ApplicationScoped io.quarkus.hibernate.orm.runtime.tenant.TenantConnectionResolver`
+// end::update_16_14[]
+
+== REST Data Panache
+
+// tag::update_16_21[]
+REST Data with Panache extension can generate the basic CRUD endpoints for your entities and repositories.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="hibernate-orm-rest-data-panache"
+----
+
+You also need to add the JDBC driver extension and a JSON Marshaller (ie `resteasy-jackson`).
+
+Then you can define interfaces for defining endpoints:
+
+In case of Active Record pattern:
+
+[source, java]
+----
+public interface DeveloperResource extends PanacheEntityResource<Developer, Long> {
+}
+----
+
+In case of Repository:
+
+[source, java]
+----
+public interface DeveloperResource extends PanacheRepositoryResource<DeveloperRepository, Developer, Long> {
+}
+----
+
+Quarkus will generate automatically the implementation for you following the next rules:
+
+* Default path is a hyphenated lowercase resource name without a suffix of `resource` or `controller`.
+* `get(@PathParam("id"))`, `list`, `add(Developer)`, `update(@PathParam("id"), Developer)`, `delete(@PathParam("id"))`
+
+You can customize these defaults by using `@ResourceProperties` and `@MethodProperties` annotations.
+
+[source, java]
+----
+@ResourceProperties(hal = true, path = "my-developer")
+public interface DeveloperResource extends PanacheEntityResource<Developer, Long> {
+    @MethodProperties(path = "all")
+    List<Developer> list();
+    @MethodProperties(exposed = false)
+    void delete(Long id);
+}
+----
+
+If `hal` is `true`, you need to send the `Accept: application/hal+json` HTTP header to get the response.
+// end::update_16_21[]
+
 == Infinispan
 // tag::update_8_7[]
 Quarkus integrates with https://infinispan.org/[Infinispan, window="_blank"]:
@@ -584,6 +792,8 @@ public class AuthorMarshaller
    }
 }
 ----
+
+<<<
 
 And producing the marshaller:
 
@@ -1020,7 +1230,7 @@ For `java.math.BigDecimal` or `java.math.BigInteger` that you need higher precis
 // tag::update_5_6[]
 // tag::update_8_3[]
 
-Quarkus integrates with https://aws.amazon.com/dynamodb/[Amazon DynamoDB, window="_blank"]:
+Quarkus integrates with https://aws.amazon.com/dynamodb/:
 
 [source, bash]
 ----
@@ -1345,6 +1555,79 @@ a| Prefix of thread names.
 |===
 // end::update_5_6[]
 // end::update_8_3[]
+
+== Amazon S3
+
+// tag::update_16_20[]
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-amazon-s3"
+----
+
+[source, java]
+----
+@Inject
+S3Client s3Client;
+----
+
+You need to set a HTTP client either `URL Connection`:
+
+[source, xml]
+----
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>url-connection-client</artifactId>
+</dependency>
+----
+
+or Apache HTTP:
+
+[source, xml]
+----
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>apache-client</artifactId>
+</dependency>
+----
+
+[source, properties]
+----
+quarkus.s3.sync-client.type=apache
+----
+
+And configure it:
+
+[source,properties]
+----
+quarkus.s3.endpoint-override=http://localhost:8008
+quarkus.s3.interceptors=io.quarkus.it.amazon.s3.S3ModifyResponse
+quarkus.s3.aws.region=us-east-1
+quarkus.s3.aws.credentials.type=static
+quarkus.s3.aws.credentials.static-provider.access-key-id=test-key
+quarkus.s3.aws.credentials.static-provider.secret-access-key=test-secret
+----
+
+You can inject asynchronous client too:
+
+[source, java]
+----
+@Inject
+S3AsyncClient s3AsyncClient;
+----
+
+And you need to add the asynchronous Netty client:
+
+[source, xml]
+----
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>netty-nio-client</artifactId>
+</dependency>
+----
+
+Configuration properties are the same as <<Amazon DynamoDB>> but changing the prefix from `dynamodb` to `s3`.
+// end::update_16_20[]
 
 == Neo4j
 // tag::update_5_7[]
@@ -1760,6 +2043,31 @@ PanacheQuery<PersonName> shortQuery = Person.find("status ", Status.Alive).proje
 <1> Entity class.
 // end::update_13_10[]
 
+*Testing*
+
+To mock using active record pattern:
+
+[source,xml]
+----
+<dependency>
+    <groupId>io.quarkus</groupId>
+    <artifactId>quarkus-panache-mock</artifactId>
+    <scope>test</scope>
+</dependency>
+----
+
+[source, java]
+----
+@Test
+public void testPanacheMocking() {
+    PanacheMock.mock(Person.class);
+    
+    Mockito.when(Person.count()).thenReturn(23l);
+    Assertions.assertEquals(23, Person.count());
+    PanacheMock.verify(Person.class, Mockito.times(1)).count();
+}
+----
+
 *DAO pattern*
 
 [source, java]
@@ -1798,6 +2106,9 @@ If entities are defined in external JAR, you need to enable in these projects th
 </plugin>
 ----
 // end::update_9_2[]
+
+Panache includes an annotation processor that enhance your entities.
+If you disable annotation processors you might need to create a marker file on Panache archives at `META-INF/panache-archive.marker` manually.
 
 *Reactive Panache*
 

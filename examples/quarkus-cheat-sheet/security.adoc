@@ -94,6 +94,9 @@ String name;
 @Inject
 @Claim("groups")
 Set<String> groups;
+
+@Inject
+JWTParser parser;
 ----
 
 Set of supported types: `String`, `Set<String>`, `Long`, `Boolean, `javax.json.JsonValue`, `Optional`, `org.eclipse.microprofile.jwt.ClaimValue`.
@@ -122,6 +125,8 @@ Relative path or URL of a public key.
 // tag::update_13_16[]
 `smallrye.jwt.token.header`::
 Sets header such as `Cookie` is used to pass the token. (default: `Authorization`).
+
+<<<
 
 `smallrye.jwt.token.cookie`::
 Name of the cookie containing a token.
@@ -167,6 +172,14 @@ If set then the verification JWK key as well every JWT token must have a matchin
 `smallrye.jwt.time-to-live`::
 The maximum number of seconds that a JWT may be issued for use.
 // end::update_14_21[]
+
+// tag::update_16_17[]
+`smallrye.jwt.sign.key-location`::
+Location of a private key which will be used to sign the claims when either a no-argument `sign()` or `innerSign()` method is called.
+
+`smallrye.jwt.encrypt.key-location`::
+Location of a public key which will be used to encrypt the claims or inner JWT when a no-argument `encrypt()` method is called.
+// end::update_16_17[]
 
 Supported public key formats:
 
@@ -310,6 +323,11 @@ Expiration grace period in seconds.
 `token.principal-claim`::
 Name of the claim which contains a principal name.
 
+// tag::update_16_3[]
+`token.refresh-expired`::
+If property is enabled then a refresh token request is performed.
+// end::update_16_3[]
+
 `credentials.secret`::
 The client secret
 
@@ -342,6 +360,17 @@ The username to authenticate.
 `proxy.password`::
 The password to authenticate.
 // end::update_15_9[]
+
+// tag::update_16_3[]
+`end-session-path`::
+Relative path of the OIDC `end_session_endpoint`.
+
+`logout.path`::
+The relative path of the logout endpoint at the application.
+
+`logout.post-logout-path`::
+Relative path of the application endpoint where the user should be redirected to after logging out.
+// end::update_16_3[]
 
 NOTE:  With Keycloak OIDC server `https://host:port/auth/realms/{realm}` where `{realm}` has to be replaced by the name of the Keycloak realm.
 
@@ -822,20 +851,41 @@ With the next _kv_ `vault kv put secret/myapps/vault-quickstart/db password=conn
 ----
 quarkus.vault.credentials-provider.mydatabase.kv-path=
     myapps/vault-quickstart/db
-quarkus.datasource.credentials-provider=
-    mydatabase
 
-quarkus.datasource.url= 
-    jdbc:postgresql://localhost:5432/mydatabase
-quarkus.datasource.driver= 
-    org.postgresql.Driver
+quarkus.datasource.db-kind=
+    postgresql
 quarkus.datasource.username=
     sarah
+quarkus.datasource.credentials-provider=
+    mydatabase
+quarkus.datasource.jdbc.url=
+    jdbc:postgresql://localhost:5432/mydatabase
 ----
 
 No password is set as it is fetched from Vault.
 
-INFO: https://www.vaultproject.io/docs/secrets/databases/index.html[dynamic database credentials] through the `database-credentials-role` property.
+Dynamic credentials are also supported:
+
+Running the following dynamic database config in Vault:
+
+`vault write database/config/mydb plugin_name=postgresql-database-plugin .....`
+
+You can configure as:
+
+[source, properties]
+----
+quarkus.vault.credentials-provider
+    .mydatabase.database-credentials-role=mydbrole
+
+quarkus.datasource.db-kind=
+    postgresql
+quarkus.datasource.credentials-provider=
+    mydatabase
+quarkus.datasource.jdbc.url=
+    jdbc:postgresql://localhost:5432/mydatabase
+----
+
+Username and password are fetched from Vault
 
 *Transit*
 
@@ -955,3 +1005,80 @@ A path in vault kv store, where we will find the kv-key
 `credentials-provider."credentials-provider".kv-key`::
 Key name to search in vault path kv-path (default: `password`)
 // end::update_10_5[]
+
+== Amazon KMS
+
+// tag::update_16_23[]
+[source, bash]
+----
+mvn quarkus:add-extension 
+    -Dextensions="amazon-kms"
+----
+
+[source, java]
+----
+@Inject
+KmsClient kms;
+
+kms.encrypt(req -> req.keyId(keyArn).plaintext(
+        SdkBytes.fromUtf8String(data))).ciphertextBlob();
+----
+
+[source,properties]
+----
+quarkus.kms.endpoint-override=http://localhost:8011
+quarkus.kms.aws.region=us-east-1
+quarkus.kms.aws.credentials.type=static
+quarkus.kms.aws.credentials.static-provider.access-key-id=test-key
+quarkus.kms.aws.credentials.static-provider.secret-access-key=test-secret
+----
+
+You need to set a HTTP client either `URL Connection`:
+
+[source, xml]
+----
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>url-connection-client</artifactId>
+</dependency>
+----
+
+or Apache HTTP:
+
+[source, xml]
+----
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>apache-client</artifactId>
+</dependency>
+----
+
+[source, properties]
+----
+quarkus.sqs.sync-client.type=apache
+----
+
+You can go async by using Mutiny:
+
+[source, java]
+----
+@Inject
+software.amazon.awssdk.services.kms.KmsAsyncClient kms;
+
+Uni.createFrom().completionStage(
+    kms.encrypt(req -> req.keyId(keyArn).plaintext(SdkBytes.fromUtf8String(data))
+    ))
+----
+
+And you need to add the asynchronous Netty client:
+
+[source, xml]
+----
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>netty-nio-client</artifactId>
+</dependency>
+----
+
+Configuration properties are the same as <<Amazon DynamoDB>> but changing the prefix from `dynamodb` to `kms`.
+// end::update_16_23[]

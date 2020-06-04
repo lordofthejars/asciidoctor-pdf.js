@@ -68,6 +68,37 @@ dependencies {
 ----
 // end::update_10_8[]
 
+== Packaging
+
+// tag::update_16_26[]
+[source, bash-shell]
+----
+mvn clean package
+----
+
+You need to distribute the `-runner.jar` file together with `lib` directory.
+
+If `quarkus.package.uber-jar` property is set to true, then a uber-jar is created with all dependencies bundled inside the JAR.
+
+If `quarkus.package.type` property is set to `fast-jar` then Quarkus brings a JAR with faster startup times.
+
+[source, properties]
+.application.properties
+----
+quarkus.package.uber-jar=true
+quarkus.package.type=fast-jar
+----
+
+To compile to native, you need to set `GRAALVM_HOME` environment variable and run the `native` profile.
+
+[source, bash-shell]
+----
+mvn clean package -Pnative
+
+./gradlew build -Dquarkus.package.type=native
+----
+// end::update_16_26[]
+
 == Command mode
 
 // tag::update_15_16[]
@@ -113,6 +144,66 @@ String[] args;
 ----
 // end::update_15_16[]
 
+// tag::update_16_15[]
+*Picocli*
+
+You can use Picocli to implement CLI applications:
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="picocli"
+----
+
+[source, java]
+----
+@CommandLine.Command
+public class HelloCommand implements Runnable {
+    
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Who will we greet?", defaultValue = "World")
+    String name;
+    
+    private final GreetingService greetingService;
+    
+    public HelloCommand(GreetingService greetingService) {
+        this.greetingService = greetingService;
+    }
+    
+    @Override
+    public void run() {
+        greetingService.sayHello(name);
+    }
+}
+----
+
+All classes annotated with `picocli.CommandLine.Command` are registered as CDI beans.
+
+If only one class annotated with `picocli.CommandLine.Command` it will be used as entry point. 
+If you want to provide your own `@QuarkusMain`:
+
+[source, java]
+----
+@QuarkusMain
+@CommandLine.Command(name = "demo", mixinStandardHelpOptions = true)
+public class ExampleApp implements Runnable, QuarkusApplication {
+    
+    @Inject
+    CommandLine.IFactory factory;
+    
+    @Override
+    public void run() {
+    }
+
+    @Override
+    public int run(String... args) throws Exception {
+        return new CommandLine(this, factory).execute(args);
+    }
+}
+----
+
+Use `quarkus.picocli.native-image.processing.enable` to `false` to use the `picocli-codegen` annotation processor instead of build steps.
+// end::update_16_15[]
+
 == Extensions
 
 Quarkus comes with extensions to integrate with some libraries such as JSON-B, Camel or MicroProfile spec.
@@ -132,6 +223,8 @@ And to register the extensions into build tool:
 [source, bash]
 ----
 ./mvnw quarkus:add-extension -Dextensions=""
+
+./mvnw quarkus:remove-extension -Dextensions=""
 ----
 
 TIP: `extensions` property supports CSV format to register more than one extension at once.
@@ -482,62 +575,6 @@ The context path to serve all Servlet context from. (default: `/`)
 The default charset to use for reading and writing requests. (default: `UTF-8`)
 // end::update_15_1[]
 
-== HTTPS
-
-// tag::update_14_32[]
-To configure HTTPS:
-
-[source, properties]
-----
-quarkus.http.ssl-port=8443
-quarkus.http.ssl.certificate.key-store-file=keystore.jks
-quarkus.http.ssl.certificate.key-store-file-type=jks
-quarkus.http.ssl.certificate.key-store-password=changeit
-quarkus.ssl.native=true
-----
-
-Possible parameters with prefix `quarkus.http`:
-
-`ssl-port`::
-The _HTTPS_ port. (default: `8443`)
-
-`ssl.certificate.file`::
-The file path to a service certificate or certificate chain in _PEM_ format. Relative to `src/main/resources`.
-
-`ssl.certificate.key-file`::
-The file path to the corresponding certificate private key in _PEM_ format. Relative to `src/main/resources`.
-
-`ssl.certificate.key-store-file`::
-The key store contains the certificate information. Relative to `src/main/resources`.
-
-`ssl.certificate.key-store-file-type`::
-The key store type. It is automatically detected based on the file name or can be set manually. Supported values are: `JKS`, `JCEKS`, `P12`, `PKCS12` or `PFX`.
-
-`ssl.certificate.key-store-password`::
-The password to open the key store file.
-
-`ssl.certificate.trust-store-file`
-The trust store location which contains the certificate information of the certificates to trust. Relative to `src/main/resources`.
-
-`ssl.certificate.trust-store-file-type`::
-The trust store type. It is automatically detected based on the file name or can be set manually.
-
-`ssl.certificate.trust-store-password`::
-The password to open the trust store file.
-
-`ssl.cipher-suites`::
-A list of strings of cipher suites to use. If not provided, a reasonable default is selected.
-
-`ssl.protocols`::
-The list of protocols to explicitly enable. (default: `TLSv1.3` and `TLSv1.2`).
-
-`ssl.client-auth`::
-Configures the engine to require/request client authentication. Possible values are: `NONE`, `REQUEST` and  `REQUIRED`. (default:  `NONE`).
-
-`insecure-requests`::
-Disable the HTTP port and only support secure requests. Possible values: `ENABLED`, `DISABLED`, `REDIRECT`. (default: `enabled`). 
-// end::update_14_32[]
-
 == Injection
 
 Quarkus is based on CDI 2.0 to implement injection of code.
@@ -673,6 +710,28 @@ public class TracerConfiguration {
 ----
 // end::update_15_15[]
 
+// tag::update_16_1[]
+Using `@io.quarkus.arc.profile.IfBuildProperty` annotation, you can conditionally enable a bean.
+`@io.quarkus.arc.DefaultBean` sets the default bean.
+
+[source, java]
+----
+@Dependent
+public class TracerConfiguration {
+    @Produces
+    @IfBuildProperty(name = "some.tracer.enabled", stringValue = "true")
+    public Tracer realTracer(Reporter reporter, Configuration configuration) {}
+    
+    @Produces
+    @DefaultBean
+    public Tracer noopTracer() {}
+}
+----
+
+NOTE: Properties set at runtime have absolutely no effect on the bean resolution using `@IfBuildProperty`.
+
+// end::update_16_1[]
+
 == JSON Marshalling/Unmarshalling
 
 To work with `JSON-B` you need to add a dependency:
@@ -743,6 +802,8 @@ public class CustomObjectMapperConfig {
 }
 ----
 // end::update_6_1[]
+
+<<<
 
 == XML Marshalling/Unmarshalling
 
@@ -1470,6 +1531,18 @@ public class ExampleResource {
 ----
 
 Mock is automatically injected and only valid for the defined test class.
+
+// tag::update_16_25[]
+Also `spy` is supported:
+
+[source, java]
+----
+@InjectSpy
+GreetingService greetingService;
+
+Mockito.verify(greetingService, Mockito.times(1)).greet();
+----
+// end::update_16_25[]
 
 *REST Client*
 
