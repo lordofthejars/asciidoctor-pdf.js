@@ -470,7 +470,7 @@ svg:not(:root).svg-inline--fa {
 <div class="sectionbody">
 <p class=""><a href="https://quarkus.io/">Quarkus</a> is a Kubernetes Native Java stack tailored for GraalVM &amp; OpenJDK HotSpot, crafted from the best of breed Java libraries and standards.
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
-<p class="">Cheat-sheet tested with <strong>Quarkus 1.4.1.Final</strong>.</p>
+<p class="">Cheat-sheet tested with <strong>Quarkus 1.5.0.Final</strong>.</p>
 </div>
 </div>
 <div class="sect1">
@@ -479,7 +479,7 @@ Also focused on developer experience, making things just work with little to no 
 <p class="">Quarkus comes with a Maven archetype to scaffold a very simple starting project.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.4.1.Final:create \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.5.0.Final:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=getting-started \
     -DclassName="org.acme.quickstart.GreetingResource" \
@@ -544,6 +544,34 @@ dependencies {
 </div>
 </div>
 <div class="sect1">
+<h2 id="_packaging"><a class="anchor" href="#_packaging"></a><a class="link" href="#_packaging">Packaging</a></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash-shell" class="language-bash-shell hljs">mvn clean package</code></pre>
+</div>
+</div>
+<p class="">You need to distribute the <code>-runner.jar</code> file together with <code>lib</code> directory.</p>
+<p class="">If <code>quarkus.package.uber-jar</code> property is set to true, then a uber-jar is created with all dependencies bundled inside the JAR.</p>
+<p class="">If <code>quarkus.package.type</code> property is set to <code>fast-jar</code> then Quarkus brings a JAR with faster startup times.</p>
+<div class="listingblock">
+<div class="title">application.properties</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.package.uber-jar=true
+quarkus.package.type=fast-jar</code></pre>
+</div>
+</div>
+<p class="">To compile to native, you need to set <code>GRAALVM_HOME</code> environment variable and run the <code>native</code> profile.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash-shell" class="language-bash-shell hljs">mvn clean package -Pnative
+
+./gradlew build -Dquarkus.package.type=native</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_command_mode"><a class="anchor" href="#_command_mode"></a><a class="link" href="#_command_mode">Command mode</a></h2>
 <div class="sectionbody">
 <p class="">You can define the <code>main</code> CLI method to start Quarkus.
@@ -592,6 +620,59 @@ Use <code>@QuarkusMain</code> in only one place.
 String[] args;</code></pre>
 </div>
 </div>
+<p class=""><strong>Picocli</strong></p>
+<p class="">You can use Picocli to implement CLI applications:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="picocli"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@CommandLine.Command
+public class HelloCommand implements Runnable {
+
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Who will we greet?", defaultValue = "World")
+    String name;
+
+    private final GreetingService greetingService;
+
+    public HelloCommand(GreetingService greetingService) {
+        this.greetingService = greetingService;
+    }
+
+    @Override
+    public void run() {
+        greetingService.sayHello(name);
+    }
+}</code></pre>
+</div>
+</div>
+<p class="">All classes annotated with <code>picocli.CommandLine.Command</code> are registered as CDI beans.</p>
+<p class="">If only one class annotated with <code>picocli.CommandLine.Command</code> it will be used as entry point.
+If you want to provide your own <code>@QuarkusMain</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@QuarkusMain
+@CommandLine.Command(name = "demo", mixinStandardHelpOptions = true)
+public class ExampleApp implements Runnable, QuarkusApplication {
+
+    @Inject
+    CommandLine.IFactory factory;
+
+    @Override
+    public void run() {
+    }
+
+    @Override
+    public int run(String... args) throws Exception {
+        return new CommandLine(this, factory).execute(args);
+    }
+}</code></pre>
+</div>
+</div>
+<p class="">Use <code>quarkus.picocli.native-image.processing.enable</code> to <code>false</code> to use the <code>picocli-codegen</code> annotation processor instead of build steps.</p>
 </div>
 </div>
 <div class="sect1">
@@ -619,7 +700,9 @@ You can use <code>-DsearchPattern=panache</code> to filter out all extensions ex
 <p class="">And to register the extensions into build tool:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension -Dextensions=""</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension -Dextensions=""
+
+./mvnw quarkus:remove-extension -Dextensions=""</code></pre>
 </div>
 </div>
 <div class="admonitionblock tip">
@@ -995,80 +1078,6 @@ Create a file with the following content:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_https"><a class="anchor" href="#_https"></a><a class="link" href="#_https">HTTPS</a></h2>
-<div class="sectionbody">
-<p class="">To configure HTTPS:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.http.ssl-port=8443
-quarkus.http.ssl.certificate.key-store-file=keystore.jks
-quarkus.http.ssl.certificate.key-store-file-type=jks
-quarkus.http.ssl.certificate.key-store-password=changeit
-quarkus.ssl.native=true</code></pre>
-</div>
-</div>
-<p class="">Possible parameters with prefix <code>quarkus.http</code>:</p>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>ssl-port</code></dt>
-<dd>
-<p>The <em>HTTPS</em> port. (default: <code>8443</code>)</p>
-</dd>
-<dt class="hdlist1"><code>ssl.certificate.file</code></dt>
-<dd>
-<p>The file path to a service certificate or certificate chain in <em>PEM</em> format. Relative to <code>src/main/resources</code>.</p>
-</dd>
-<dt class="hdlist1"><code>ssl.certificate.key-file</code></dt>
-<dd>
-<p>The file path to the corresponding certificate private key in <em>PEM</em> format. Relative to <code>src/main/resources</code>.</p>
-</dd>
-<dt class="hdlist1"><code>ssl.certificate.key-store-file</code></dt>
-<dd>
-<p>The key store contains the certificate information. Relative to <code>src/main/resources</code>.</p>
-</dd>
-<dt class="hdlist1"><code>ssl.certificate.key-store-file-type</code></dt>
-<dd>
-<p>The key store type. It is automatically detected based on the file name or can be set manually. Supported values are: <code>JKS</code>, <code>JCEKS</code>, <code>P12</code>, <code>PKCS12</code> or <code>PFX</code>.</p>
-</dd>
-<dt class="hdlist1"><code>ssl.certificate.key-store-password</code></dt>
-<dd>
-<p>The password to open the key store file.</p>
-</dd>
-</dl>
-</div>
-<p class=""><code>ssl.certificate.trust-store-file</code>
-The trust store location which contains the certificate information of the certificates to trust. Relative to <code>src/main/resources</code>.</p>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>ssl.certificate.trust-store-file-type</code></dt>
-<dd>
-<p>The trust store type. It is automatically detected based on the file name or can be set manually.</p>
-</dd>
-<dt class="hdlist1"><code>ssl.certificate.trust-store-password</code></dt>
-<dd>
-<p>The password to open the trust store file.</p>
-</dd>
-<dt class="hdlist1"><code>ssl.cipher-suites</code></dt>
-<dd>
-<p>A list of strings of cipher suites to use. If not provided, a reasonable default is selected.</p>
-</dd>
-<dt class="hdlist1"><code>ssl.protocols</code></dt>
-<dd>
-<p>The list of protocols to explicitly enable. (default: <code>TLSv1.3</code> and <code>TLSv1.2</code>).</p>
-</dd>
-<dt class="hdlist1"><code>ssl.client-auth</code></dt>
-<dd>
-<p>Configures the engine to require/request client authentication. Possible values are: <code>NONE</code>, <code>REQUEST</code> and  <code>REQUIRED</code>. (default:  <code>NONE</code>).</p>
-</dd>
-<dt class="hdlist1"><code>insecure-requests</code></dt>
-<dd>
-<p>Disable the HTTP port and only support secure requests. Possible values: <code>ENABLED</code>, <code>DISABLED</code>, <code>REDIRECT</code>. (default: <code>enabled</code>).</p>
-</dd>
-</dl>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="_injection"><a class="anchor" href="#_injection"></a><a class="link" href="#_injection">Injection</a></h2>
 <div class="sectionbody">
 <p class="">Quarkus is based on CDI 2.0 to implement injection of code.
@@ -1214,6 +1223,34 @@ public class TracerConfiguration {
 }</code></pre>
 </div>
 </div>
+<p class="">Using <code>@io.quarkus.arc.profile.IfBuildProperty</code> annotation, you can conditionally enable a bean.
+<code>@io.quarkus.arc.DefaultBean</code> sets the default bean.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Dependent
+public class TracerConfiguration {
+    @Produces
+    @IfBuildProperty(name = "some.tracer.enabled", stringValue = "true")
+    public Tracer realTracer(Reporter reporter, Configuration configuration) {}
+
+    @Produces
+    @DefaultBean
+    public Tracer noopTracer() {}
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon icon-note">
+<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="info-circle" class="svg-inline--fa fa-info-circle fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"></path></svg>
+</td>
+<td class="content">
+Properties set at runtime have absolutely no effect on the bean resolution using <code>@IfBuildProperty</code>.
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1280,6 +1317,7 @@ public class CustomObjectMapperConfig {
 }</code></pre>
 </div>
 </div>
+<div class="page-break"></div>
 </div>
 </div>
 <div class="sect1">
@@ -2059,6 +2097,15 @@ public class ExampleResource {
 </div>
 </div>
 <p class="">Mock is automatically injected and only valid for the defined test class.</p>
+<p class="">Also <code>spy</code> is supported:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@InjectSpy
+GreetingService greetingService;
+
+Mockito.verify(greetingService, Mockito.times(1)).greet();</code></pre>
+</div>
+</div>
 <p class=""><strong>REST Client</strong></p>
 <p class="">To Mock REST Client, you need to define the interface with <code>@ApplicationScope</code>:</p>
 <div class="listingblock">
@@ -2154,6 +2201,14 @@ quarkus.hibernate-orm.database.generation=update</code></pre>
 <dd>
 <p>JDBC Driver class. It is not necessary to set if <code>db-kind</code> used.</p>
 </dd>
+<dt class="hdlist1"><code>credentials-provider</code></dt>
+<dd>
+<p>Sets a custom credential provider name.</p>
+</dd>
+<dt class="hdlist1"><code>credentials-provider-name</code></dt>
+<dd>
+<p>It is the <code>@Named</code> value of the credentials provider bean. Not necessary if only one implementation.</p>
+</dd>
 <dt class="hdlist1"><code>jdbc.url</code></dt>
 <dd>
 <p>The datasource URL.</p>
@@ -2206,6 +2261,10 @@ quarkus.hibernate-orm.database.generation=update</code></pre>
 <dd>
 <p>Query executed to validate a connection.</p>
 </dd>
+<dt class="hdlist1"><code>jdbc.pooling-enabled</code></dt>
+<dd>
+<p>Disable pooling to prevent reuse of Connections. (default: <code>true</code>)</p>
+</dd>
 <dt class="hdlist1"><code>jdbc.enable-metrics</code></dt>
 <dd>
 <p>Enable datasource metrics collection when using <code>quarkus-smallrye-metrics</code> extension.</p>
@@ -2232,6 +2291,14 @@ Prefix <code>quarkus.hibernate-orm</code> is skipped.</p>
 <dt class="hdlist1"><code>batch-fetch-size</code></dt>
 <dd>
 <p>The size of the batches. (default: -1 disabled)</p>
+</dd>
+<dt class="hdlist1"><code>multitenant</code></dt>
+<dd>
+<p>Defines the method for multi-tenancy. Possible values: <code>DATABASE</code>, <code>NONE</code>, <code>SCHEMA</code>. (default: <code>NONE</code>)</p>
+</dd>
+<dt class="hdlist1"><code>multitenant-schema-datasource</code></dt>
+<dd>
+<p>Defines the name of the data source to use in case of SCHEMA approach.</p>
 </dd>
 <dt class="hdlist1"><code>query.query-plan-cache-max-size</code></dt>
 <dd>
@@ -2315,6 +2382,9 @@ developer.persist();
 // Find All
 Developer.findAll().list();
 
+// Hibernate Filters
+Person.findAll().filter("Person.hasName", Parameters.with("name", "Alex"));
+
 // Find By Query
 Developer.find("name", "Alex").firstResult();
 
@@ -2360,19 +2430,35 @@ long numberOfDeleted = Developer.delete("name", "Alex");</code></pre>
 </dd>
 <dt class="hdlist1"><code>find</code>: <code>String</code>, [<code>Object&#8230;&#8203;</code>, <code>Map&lt;String, Object&gt;</code>, <code>Parameters</code>]</dt>
 <dd>
-<p>Lists of entities meeting given query with parameters set.</p>
+<p>Lists of entities meeting given query with parameters set. Returning a <code>PanacheQuery</code>.</p>
 </dd>
 <dt class="hdlist1"><code>find</code>: <code>String</code>, <code>Sort</code>, [<code>Object&#8230;&#8203;</code>, <code>Map&lt;String, Object&gt;</code>, <code>Parameters</code>]</dt>
 <dd>
-<p>Lists of entities meeting given query with parameters set sorted by <code>Sort</code> attribute/s.</p>
+<p>Lists of entities meeting given query with parameters set sorted by <code>Sort</code> attribute/s. Returning a <code>PanacheQuery</code>.</p>
 </dd>
 <dt class="hdlist1"><code>findAll</code></dt>
 <dd>
-<p>Finds all entities.</p>
+<p>Finds all entities. Returning a <code>PanacheQuery</code>.</p>
 </dd>
 <dt class="hdlist1"><code>findAll</code>: <code>Sort</code></dt>
 <dd>
-<p>Finds all entities sorted by <code>Sort</code> attribute/s.</p>
+<p>Finds all entities sorted by <code>Sort</code> attribute/s. Returning a <code>PanacheQuery</code>.</p>
+</dd>
+<dt class="hdlist1"><code>list</code>: <code>String</code>, [<code>Object&#8230;&#8203;</code>, <code>Map&lt;String, Object&gt;</code>, <code>Parameters</code>]</dt>
+<dd>
+<p>Lists of entities meeting given query with parameters set. Returning a <code>List</code>.</p>
+</dd>
+<dt class="hdlist1"><code>list</code>: <code>String</code>, <code>Sort</code>, [<code>Object&#8230;&#8203;</code>, <code>Map&lt;String, Object&gt;</code>, <code>Parameters</code>]</dt>
+<dd>
+<p>Lists of entities meeting given query with parameters set sorted by <code>Sort</code> attribute/s. Returning a <code>List</code>.</p>
+</dd>
+<dt class="hdlist1"><code>listAll</code></dt>
+<dd>
+<p>Finds all entities. Returning a <code>List</code>.</p>
+</dd>
+<dt class="hdlist1"><code>listAll</code>: <code>Sort</code></dt>
+<dd>
+<p>Finds all entities sorted by <code>Sort</code> attribute/s. Returning a <code>List</code>.</p>
 </dd>
 <dt class="hdlist1"><code>stream</code>: <code>String</code>, [<code>Object&#8230;&#8203;</code>, <code>Map&lt;String, Object&gt;</code>, <code>Parameters</code>]</dt>
 <dd>
@@ -2398,6 +2484,11 @@ long numberOfDeleted = Developer.delete("name", "Alex");</code></pre>
 <dd>
 <p>Number of entities meeting given query with parameters set.</p>
 </dd>
+</dl>
+</div>
+<p class="">Enables a Hibernate filter during fetching of results for this query.</p>
+<div class="dlist">
+<dl>
 <dt class="hdlist1"><code>deleteAll</code></dt>
 <dd>
 <p>Number of deleted entities.</p>
@@ -2416,10 +2507,11 @@ long numberOfDeleted = Developer.delete("name", "Alex");</code></pre>
 </dd>
 <dt class="hdlist1"><code>persist</code>: [<code>Iterable</code>, <code>Steram</code>, <code>Object&#8230;&#8203;</code>]</dt>
 <dd>
-<p>In case of using streams, remember to close them or use a <code>try/catch</code> block: <code>try (Stream&lt;Person&gt; persons = Person.streamAll())</code>.</p>
+<p>Persist object.</p>
 </dd>
 </dl>
 </div>
+<p class="">In case of using streams, remember to close them or use a <code>try/catch</code> block: <code>try (Stream&lt;Person&gt; persons = Person.streamAll())</code>.</p>
 <div class="admonitionblock tip">
 <table>
 <tr>
@@ -2490,6 +2582,31 @@ List&lt;Person&gt; secondRange = livingPersons.range(25, 49).list();</code></pre
         &lt;/dependency&gt;
     &lt;/dependencies&gt;
 &lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<p class="">Panache includes an annotation processor that enhance your entities.
+If you disable annotation processors you might need to create a marker file on Panache archives at <code>META-INF/panache-archive.marker</code> manually.</p>
+<p class=""><strong>Testing</strong></p>
+<p class="">To mock using active record pattern:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-panache-mock&lt;/artifactId&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Test
+public void testPanacheMocking() {
+    PanacheMock.mock(Person.class);
+
+    Mockito.when(Person.count()).thenReturn(23l);
+    Assertions.assertEquals(23, Person.count());
+    PanacheMock.verify(Person.class, Mockito.times(1)).count();
+}</code></pre>
 </div>
 </div>
 <p class=""><strong>DAO pattern</strong></p>
@@ -2612,6 +2729,137 @@ transaction.commit();
 transaction.rollback();</code></pre>
 </div>
 </div>
+<p class="">You can implement your custom credentials provider (ie Azure KeyVault) to provide a username/password for the database connection. <code>Name</code> information is not necessary if there is only one custom credential provider.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ApplicationScoped
+@Unremovable
+@Named("my-credentials-provider")
+public class CustomCredentialsProvider implements CredentialsProvider {
+    @Inject
+    Config config;
+
+    @Override
+	public Properties getCredentials(String credentialsProviderName) {
+
+        properties.put(CredentialsProvider.USER_PROPERTY_NAME, "hibernate_orm_test");
+		properties.put(CredentialsProvider.PASSWORD_PROPERTY_NAME, "hibernate_orm_test");
+
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.datasource.credentials-provider=
+    custom
+quarkus.datasource.credentials-provider-name=
+    my-credentials-provider</code></pre>
+</div>
+</div>
+<p class=""><strong>Hibernate Multitenancy</strong></p>
+<p class="">Multitenancy is supported using Schema or Database approach.
+First you need to define how tenant is identified:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@RequestScoped
+@Unremovable
+public class CustomTenantResolver implements TenantResolver {
+
+    @Inject
+    RoutingContext context;
+
+    @Override
+    public String getDefaultTenantId() {
+        return "base";
+    }
+
+    @Override
+    public String resolveTenantId() {
+    }
+
+}</code></pre>
+</div>
+</div>
+<p class=""><em>Schema approach</em></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.hibernate-orm.database.generation=none
+
+quarkus.hibernate-orm.multitenant=SCHEMA</code></pre>
+</div>
+</div>
+<p class=""><em>Database approach</em></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.hibernate-orm.database.generation=none
+
+quarkus.hibernate-orm.multitenant=DATABASE
+
+# default tenant
+quarkus.datasource.base.db-kind=postgresql
+quarkus.datasource.base.username=quarkus_test
+...
+# Tenant 'mycompany'
+quarkus.datasource.mycompany.db-kind=postgresql
+quarkus.datasource.mycompany.username=mycompany
+quarkus.flyway.mycompany.locations=classpath:database/mycompany
+...</code></pre>
+</div>
+</div>
+<p class="">If you need more dynamic approach implement: <code>@ApplicationScoped io.quarkus.hibernate.orm.runtime.tenant.TenantConnectionResolver</code></p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rest_data_panache"><a class="anchor" href="#_rest_data_panache"></a><a class="link" href="#_rest_data_panache">REST Data Panache</a></h2>
+<div class="sectionbody">
+<p class="">REST Data with Panache extension can generate the basic CRUD endpoints for your entities and repositories.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="hibernate-orm-rest-data-panache"</code></pre>
+</div>
+</div>
+<p class="">You also need to add the JDBC driver extension and a JSON Marshaller (ie <code>resteasy-jackson</code>).</p>
+<p class="">Then you can define interfaces for defining endpoints:</p>
+<p class="">In case of Active Record pattern:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public interface DeveloperResource extends PanacheEntityResource&lt;Developer, Long&gt; {
+}</code></pre>
+</div>
+</div>
+<p class="">In case of Repository:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public interface DeveloperResource extends PanacheRepositoryResource&lt;DeveloperRepository, Developer, Long&gt; {
+}</code></pre>
+</div>
+</div>
+<p class="">Quarkus will generate automatically the implementation for you following the next rules:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Default path is a hyphenated lowercase resource name without a suffix of <code>resource</code> or <code>controller</code>.</p>
+</li>
+<li>
+<p><code>get(@PathParam("id"))</code>, <code>list</code>, <code>add(Developer)</code>, <code>update(@PathParam("id"), Developer)</code>, <code>delete(@PathParam("id"))</code></p>
+</li>
+</ul>
+</div>
+<p class="">You can customize these defaults by using <code>@ResourceProperties</code> and <code>@MethodProperties</code> annotations.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ResourceProperties(hal = true, path = "my-developer")
+public interface DeveloperResource extends PanacheEntityResource&lt;Developer, Long&gt; {
+    @MethodProperties(path = "all")
+    List&lt;Developer&gt; list();
+    @MethodProperties(exposed = false)
+    void delete(Long id);
+}</code></pre>
+</div>
+</div>
+<p class="">If <code>hal</code> is <code>true</code>, you need to send the <code>Accept: application/hal+json</code> HTTP header to get the response.</p>
 </div>
 </div>
 <div class="sect1">
@@ -2721,6 +2969,7 @@ FileDescriptorSource bookProtoDefinition() {
 }</code></pre>
 </div>
 </div>
+<div class="page-break"></div>
 <p class="">And producing the marshaller:</p>
 <div class="listingblock">
 <div class="content">
@@ -3221,7 +3470,7 @@ quarkus.hibernate-search.elasticsearch.
 <div class="sect1">
 <h2 id="_amazon_dynamodb"><a class="anchor" href="#_amazon_dynamodb"></a><a class="link" href="#_amazon_dynamodb">Amazon DynamoDB</a></h2>
 <div class="sectionbody">
-<p class="">Quarkus integrates with <a href="https://aws.amazon.com/dynamodb/" target="_blank" rel="noopener">Amazon DynamoDB</a>:</p>
+<p class="">Quarkus integrates with <a href="https://aws.amazon.com/dynamodb/" class="bare">https://aws.amazon.com/dynamodb/</a>:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
@@ -3665,6 +3914,74 @@ quarkus.dynamodb.credentials.type=DEFAULT</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_amazon_s3"><a class="anchor" href="#_amazon_s3"></a><a class="link" href="#_amazon_s3">Amazon S3</a></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-amazon-s3"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+S3Client s3Client;</code></pre>
+</div>
+</div>
+<p class="">You need to set a HTTP client either <code>URL Connection</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;software.amazon.awssdk&lt;/groupId&gt;
+    &lt;artifactId&gt;url-connection-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<p class="">or Apache HTTP:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;software.amazon.awssdk&lt;/groupId&gt;
+    &lt;artifactId&gt;apache-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.s3.sync-client.type=apache</code></pre>
+</div>
+</div>
+<p class="">And configure it:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.s3.endpoint-override=http://localhost:8008
+quarkus.s3.interceptors=io.quarkus.it.amazon.s3.S3ModifyResponse
+quarkus.s3.aws.region=us-east-1
+quarkus.s3.aws.credentials.type=static
+quarkus.s3.aws.credentials.static-provider.access-key-id=test-key
+quarkus.s3.aws.credentials.static-provider.secret-access-key=test-secret</code></pre>
+</div>
+</div>
+<p class="">You can inject asynchronous client too:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+S3AsyncClient s3AsyncClient;</code></pre>
+</div>
+</div>
+<p class="">And you need to add the asynchronous Netty client:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;software.amazon.awssdk&lt;/groupId&gt;
+    &lt;artifactId&gt;netty-nio-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<p class="">Configuration properties are the same as <a href="#_amazon_dynamodb">Amazon DynamoDB</a> but changing the prefix from <code>dynamodb</code> to <code>s3</code>.</p>
 </div>
 </div>
 <div class="sect1">
@@ -4143,6 +4460,29 @@ PanacheQuery&lt;PersonName&gt; shortQuery = Person.find("status ", Status.Alive)
 </tr>
 </table>
 </div>
+<p class=""><strong>Testing</strong></p>
+<p class="">To mock using active record pattern:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-panache-mock&lt;/artifactId&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Test
+public void testPanacheMocking() {
+    PanacheMock.mock(Person.class);
+
+    Mockito.when(Person.count()).thenReturn(23l);
+    Assertions.assertEquals(23, Person.count());
+    PanacheMock.verify(Person.class, Mockito.times(1)).count();
+}</code></pre>
+</div>
+</div>
 <p class=""><strong>DAO pattern</strong></p>
 <div class="listingblock">
 <div class="content">
@@ -4178,6 +4518,8 @@ public class PersonRepository
 &lt;/plugin&gt;</code></pre>
 </div>
 </div>
+<p class="">Panache includes an annotation processor that enhance your entities.
+If you disable annotation processors you might need to create a marker file on Panache archives at <code>META-INF/panache-archive.marker</code> manually.</p>
 <p class=""><strong>Reactive Panache</strong></p>
 <p class="">MongoDB with Panache allows using reactive implementation too by using <code>ReactivePanacheMongoEntity</code> or <code>ReactivePanacheMongoEntityBase</code> or <code>ReactivePanacheMongoRepository</code> or <code>ReactivePanacheMongoRepositoryBase</code> depending on your style.</p>
 <div class="listingblock">
@@ -4885,6 +5227,90 @@ void initialize() {
 }</code></pre>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_amazon_sqs_client"><a class="anchor" href="#_amazon_sqs_client"></a><a class="link" href="#_amazon_sqs_client">Amazon SQS Client</a></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="amazon-sqs"</code></pre>
+</div>
+</div>
+<p class="">Injecting the client:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+software.amazon.awssdk.services.sqs.SqsClient sqs;
+
+SendMessageResponse response = sqs.sendMessage(m -&gt; m.queueUrl(queueUrl).messageBody(message));
+
+List&lt;Message&gt; messages = sqs.receiveMessage(m -&gt; m.maxNumberOfMessages(10).queueUrl(queueUrl)).messages();</code></pre>
+</div>
+</div>
+<p class="">And configure it:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.sqs.endpoint-override=http://localhost:8010
+quarkus.sqs.aws.region=us-east-1
+quarkus.sqs.aws.credentials.type=static
+quarkus.sqs.aws.credentials.static-provider.access-key-id=test-key
+quarkus.sqs.aws.credentials.static-provider.secret-access-key=test-secret</code></pre>
+</div>
+</div>
+<p class="">You need to set a HTTP client either <code>URL Connection</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;software.amazon.awssdk&lt;/groupId&gt;
+    &lt;artifactId&gt;url-connection-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<p class="">or Apache HTTP:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;software.amazon.awssdk&lt;/groupId&gt;
+    &lt;artifactId&gt;apache-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.sqs.sync-client.type=apache</code></pre>
+</div>
+</div>
+<p class="">You can go async by using Mutiny:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+software.amazon.awssdk.services.sqs.SqsAsyncClient sqs;
+
+Uni.createFrom()
+    .completionStage(
+        sqs.sendMessage(m -&gt; m.queueUrl(queueUrl).messageBody(message))
+    )
+    .onItem()...
+
+return Uni.createFrom()
+    .completionStage(
+        sqs.receiveMessage(m -&gt; m.maxNumberOfMessages(10).queueUrl(queueUrl))
+    )
+    .onItem()</code></pre>
+</div>
+</div>
+<p class="">And you need to add the asynchronous Netty client:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;software.amazon.awssdk&lt;/groupId&gt;
+    &lt;artifactId&gt;netty-nio-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<p class="">Configuration properties are the same as <a href="#_amazon_dynamodb">Amazon DynamoDB</a> but changing the prefix from <code>dynamodb</code> to <code>sqs</code>.</p>
 <div class="page-break"></div>
 </div>
 </div>
@@ -4972,7 +5398,10 @@ String name;
 
 @Inject
 @Claim("groups")
-Set&lt;String&gt; groups;</code></pre>
+Set&lt;String&gt; groups;
+
+@Inject
+JWTParser parser;</code></pre>
 </div>
 </div>
 <p class="">Set of supported types: <code>String</code>, <code>Set&lt;String&gt;</code>, <code>Long</code>, <code>Boolean, `javax.json.JsonValue</code>, <code>Optional</code>, <code>org.eclipse.microprofile.jwt.ClaimValue</code>.</p>
@@ -5010,6 +5439,11 @@ Relative path or URL of a public key.</p>
 <dd>
 <p>Sets header such as <code>Cookie</code> is used to pass the token. (default: <code>Authorization</code>).</p>
 </dd>
+</dl>
+</div>
+<div class="page-break"></div>
+<div class="dlist">
+<dl>
 <dt class="hdlist1"><code>smallrye.jwt.token.cookie</code></dt>
 <dd>
 <p>Name of the cookie containing a token.</p>
@@ -5069,6 +5503,18 @@ Relative path or URL of a public key.</p>
 <dt class="hdlist1"><code>smallrye.jwt.time-to-live</code></dt>
 <dd>
 <p>The maximum number of seconds that a JWT may be issued for use.</p>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>smallrye.jwt.sign.key-location</code></dt>
+<dd>
+<p>Location of a private key which will be used to sign the claims when either a no-argument <code>sign()</code> or <code>innerSign()</code> method is called.</p>
+</dd>
+<dt class="hdlist1"><code>smallrye.jwt.encrypt.key-location</code></dt>
+<dd>
+<p>Location of a public key which will be used to encrypt the claims or inner JWT when a no-argument <code>encrypt()</code> method is called.</p>
 </dd>
 </dl>
 </div>
@@ -5232,6 +5678,14 @@ quarkus.oidc.credentials.secret=secret</code></pre>
 <dd>
 <p>Name of the claim which contains a principal name.</p>
 </dd>
+</dl>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>token.refresh-expired</code></dt>
+<dd>
+<p>If property is enabled then a refresh token request is performed.</p>
+</dd>
 <dt class="hdlist1"><code>credentials.secret</code></dt>
 <dd>
 <p>The client secret</p>
@@ -5275,6 +5729,22 @@ quarkus.oidc.credentials.secret=secret</code></pre>
 <dt class="hdlist1"><code>proxy.password</code></dt>
 <dd>
 <p>The password to authenticate.</p>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>end-session-path</code></dt>
+<dd>
+<p>Relative path of the OIDC <code>end_session_endpoint</code>.</p>
+</dd>
+<dt class="hdlist1"><code>logout.path</code></dt>
+<dd>
+<p>The relative path of the logout endpoint at the application.</p>
+</dd>
+<dt class="hdlist1"><code>logout.post-logout-path</code></dt>
+<dd>
+<p>Relative path of the application endpoint where the user should be redirected to after logging out.</p>
 </dd>
 </dl>
 </div>
@@ -5813,19 +6283,36 @@ kvSecretEngine.deleteSecret("myapps/vault-quickstart/crud");</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.vault.credentials-provider.mydatabase.kv-path=
     myapps/vault-quickstart/db
+
+quarkus.datasource.db-kind=
+    postgresql
+quarkus.datasource.username=
+    sarah
 quarkus.datasource.credentials-provider=
     mydatabase
-
-quarkus.datasource.url=
-    jdbc:postgresql://localhost:5432/mydatabase
-quarkus.datasource.driver=
-    org.postgresql.Driver
-quarkus.datasource.username=
-    sarah</code></pre>
+quarkus.datasource.jdbc.url=
+    jdbc:postgresql://localhost:5432/mydatabase</code></pre>
 </div>
 </div>
 <p class="">No password is set as it is fetched from Vault.</p>
-<p class="">INFO: <a href="https://www.vaultproject.io/docs/secrets/databases/index.html">dynamic database credentials</a> through the <code>database-credentials-role</code> property.</p>
+<p class="">Dynamic credentials are also supported:</p>
+<p class="">Running the following dynamic database config in Vault:</p>
+<p class=""><code>vault write database/config/mydb plugin_name=postgresql-database-plugin &#8230;&#8203;..</code></p>
+<p class="">You can configure as:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.vault.credentials-provider
+    .mydatabase.database-credentials-role=mydbrole
+
+quarkus.datasource.db-kind=
+    postgresql
+quarkus.datasource.credentials-provider=
+    mydatabase
+quarkus.datasource.jdbc.url=
+    jdbc:postgresql://localhost:5432/mydatabase</code></pre>
+</div>
+</div>
+<p class="">Username and password are fetched from Vault</p>
 <p class=""><strong>Transit</strong></p>
 <div class="listingblock">
 <div class="content">
@@ -5970,7 +6457,334 @@ Kv secret engine path (default: <code>secret</code>)</p>
 </dd>
 </dl>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_amazon_kms"><a class="anchor" href="#_amazon_kms"></a><a class="link" href="#_amazon_kms">Amazon KMS</a></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn quarkus:add-extension
+    -Dextensions="amazon-kms"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+KmsClient kms;
+
+kms.encrypt(req -&gt; req.keyId(keyArn).plaintext(
+        SdkBytes.fromUtf8String(data))).ciphertextBlob();</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.kms.endpoint-override=http://localhost:8011
+quarkus.kms.aws.region=us-east-1
+quarkus.kms.aws.credentials.type=static
+quarkus.kms.aws.credentials.static-provider.access-key-id=test-key
+quarkus.kms.aws.credentials.static-provider.secret-access-key=test-secret</code></pre>
+</div>
+</div>
+<p class="">You need to set a HTTP client either <code>URL Connection</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;software.amazon.awssdk&lt;/groupId&gt;
+    &lt;artifactId&gt;url-connection-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<p class="">or Apache HTTP:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;software.amazon.awssdk&lt;/groupId&gt;
+    &lt;artifactId&gt;apache-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.sqs.sync-client.type=apache</code></pre>
+</div>
+</div>
+<p class="">You can go async by using Mutiny:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+software.amazon.awssdk.services.kms.KmsAsyncClient kms;
+
+Uni.createFrom().completionStage(
+    kms.encrypt(req -&gt; req.keyId(keyArn).plaintext(SdkBytes.fromUtf8String(data))
+    ))</code></pre>
+</div>
+</div>
+<p class="">And you need to add the asynchronous Netty client:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;software.amazon.awssdk&lt;/groupId&gt;
+    &lt;artifactId&gt;netty-nio-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<p class="">Configuration properties are the same as <a href="#_amazon_dynamodb">Amazon DynamoDB</a> but changing the prefix from <code>dynamodb</code> to <code>kms</code>.</p>
 <div class="page-break"></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_http_configuration"><a class="anchor" href="#_http_configuration"></a><a class="link" href="#_http_configuration">HTTP Configuration</a></h2>
+<div class="sectionbody">
+<p class="">You can configure HTTP parameters.
+Using <code>quarkus.http</code> prefix:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>cors</code></dt>
+<dd>
+<p>Enable CORS. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>cors.origins</code></dt>
+<dd>
+<p>CSV of origins allowed. (dedault: Any request valid.)</p>
+</dd>
+<dt class="hdlist1"><code>cors.methods</code></dt>
+<dd>
+<p>CSV of methods valid. (default: Any method valid.)</p>
+</dd>
+<dt class="hdlist1"><code>cors.headers</code></dt>
+<dd>
+<p>CSV of valid allowed headers. (default: Any requested header valid.)</p>
+</dd>
+<dt class="hdlist1"><code>cors.exposed-headers</code></dt>
+<dd>
+<p>CSV of valid exposed headers.</p>
+</dd>
+<dt class="hdlist1"><code>port</code></dt>
+<dd>
+<p>The HTTP port. (default: <code>8080</code>)</p>
+</dd>
+<dt class="hdlist1"><code>test-port</code></dt>
+<dd>
+<p>The HTTP test port. (default: <code>8081</code>)</p>
+</dd>
+<dt class="hdlist1"><code>host</code></dt>
+<dd>
+<p>The HTTP host. (default: <code>0.0.0.0</code>)</p>
+</dd>
+<dt class="hdlist1"><code>host-enabled</code></dt>
+<dd>
+<p>Enable listening to host:port. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>ssl-port</code></dt>
+<dd>
+<p>The HTTPS port. (default <code>8443</code>)</p>
+</dd>
+<dt class="hdlist1"><code>test-ssl-port</code></dt>
+<dd>
+<p>The HTTPS port used to run tests. (default <code>8444</code>)</p>
+</dd>
+<dt class="hdlist1"><code>proxy-address-forwarding</code></dt>
+<dd>
+<p>The address, scheme etc will be set from headers forwarded by the proxy server.</p>
+</dd>
+<dt class="hdlist1"><code>allow-forwarded</code></dt>
+<dd>
+<p>Proxy address forwarding is enabled then the standard <code>Forwarded</code> header will be used, rather than the more common but not standard <code>X-Forwarded-For</code>.</p>
+</dd>
+<dt class="hdlist1"><code>insecure-requests</code></dt>
+<dd>
+<p>If insecure requests are allowed. Possible values: <code>enabled</code>, <code>redirect</code>, <code>disable</code>. (default: <code>enabled</code>)</p>
+</dd>
+<dt class="hdlist1"><code>http2</code></dt>
+<dd>
+<p>Enables HTTP/2. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>ssl.port</code></dt>
+<dd>
+<p>The <em>HTTPS</em> port. (default: <code>8443</code>)</p>
+</dd>
+<dt class="hdlist1"><code>ssl.certificate.file</code></dt>
+<dd>
+<p>The file path to a service certificate or certificate chain in <em>PEM</em> format. Relative to <code>src/main/resources</code>.</p>
+</dd>
+<dt class="hdlist1"><code>ssl.certificate.key-file</code></dt>
+<dd>
+<p>The file path to the corresponding certificate private key in <em>PEM</em> format. Relative to <code>src/main/resources</code>.</p>
+</dd>
+<dt class="hdlist1"><code>ssl.certificate.key-store-file</code></dt>
+<dd>
+<p>The key store contains the certificate information. Relative to <code>src/main/resources</code>.</p>
+</dd>
+<dt class="hdlist1"><code>ssl.certificate.key-store-file-type</code></dt>
+<dd>
+<p>The key store type. It is automatically detected based on the file name or can be set manually. Supported values are: <code>JKS</code>, <code>JCEKS</code>, <code>P12</code>, <code>PKCS12</code> or <code>PFX</code>.</p>
+</dd>
+<dt class="hdlist1"><code>ssl.certificate.key-store-password</code></dt>
+<dd>
+<p>The password to open the key store file.</p>
+</dd>
+</dl>
+</div>
+<p class=""><code>ssl.certificate.trust-store-file</code>
+The trust store location which contains the certificate information of the certificates to trust. Relative to <code>src/main/resources</code>.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>ssl.certificate.trust-store-file-type</code></dt>
+<dd>
+<p>The trust store type. It is automatically detected based on the file name or can be set manually.</p>
+</dd>
+<dt class="hdlist1"><code>ssl.certificate.trust-store-password</code></dt>
+<dd>
+<p>The password to open the trust store file.</p>
+</dd>
+<dt class="hdlist1"><code>ssl.cipher-suites</code></dt>
+<dd>
+<p>A list of strings of cipher suites to use. If not provided, a reasonable default is selected.</p>
+</dd>
+<dt class="hdlist1"><code>ssl.protocols</code></dt>
+<dd>
+<p>The list of protocols to explicitly enable. (default: <code>TLSv1.3</code> and <code>TLSv1.2</code>).</p>
+</dd>
+<dt class="hdlist1"><code>ssl.client-auth</code></dt>
+<dd>
+<p>Configures the engine to require/request client authentication. Possible values are: <code>none</code>, <code>request</code> and  <code>required</code>. (default:  <code>none</code>).</p>
+</dd>
+<dt class="hdlist1"><code>io-threads</code></dt>
+<dd>
+<p>The number if IO threads used to perform IO.</p>
+</dd>
+<dt class="hdlist1"><code>limits.max-header-size</code></dt>
+<dd>
+<p>The maximum length of all headers. (default: <code>20k</code>)</p>
+</dd>
+<dt class="hdlist1"><code>limits.max-body-size</code></dt>
+<dd>
+<p>The maximum size of a request body. (default: <code>no-limit</code>)</p>
+</dd>
+<dt class="hdlist1"><code>limits.max-chunk-size</code></dt>
+<dd>
+<p>The max HTTP chunk size</p>
+</dd>
+<dt class="hdlist1"><code>idle-timeout</code></dt>
+<dd>
+<p>Http connection idle timeout. (default: <code>30M</code>)</p>
+</dd>
+</dl>
+</div>
+<div class="page-break"></div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>read-timeout</code></dt>
+<dd>
+<p>Http connection read timeout for blocking IO. (default: <code>60s</code>)</p>
+</dd>
+<dt class="hdlist1"><code>body.handle-file-uploads</code></dt>
+<dd>
+<p>If the files sent using <code>multipart/form-data</code> will be stored locally. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>body.uploads-directory</code></dt>
+<dd>
+<p>The directory where the files sent using <code>multipart/form-data</code> should be stored. (default: <code>file-uploads</code>)</p>
+</dd>
+<dt class="hdlist1"><code>body.merge-from-attributes</code></dt>
+<dd>
+<p>If the form attributes should be added to the request parameters. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>body.delete-uploaded-files-on-end</code></dt>
+<dd>
+<p>If the uploaded files should be removed after serving the request.</p>
+</dd>
+<dt class="hdlist1"><code>body.preallocate-body-buffer</code></dt>
+<dd>
+<p>If the body buffer should pre-allocated based on the <code>Content-Length</code> header value. (default: <code>1K</code>)</p>
+</dd>
+<dt class="hdlist1"><code>auth.session.encryption-key</code></dt>
+<dd>
+<p>The encryption key that is used to store persistent logins.</p>
+</dd>
+<dt class="hdlist1"><code>so-reuse-port</code></dt>
+<dd>
+<p>Enable socket reuse port.</p>
+</dd>
+<dt class="hdlist1"><code>tcp-quick-ack</code></dt>
+<dd>
+<p>Enable tcp quick ack.</p>
+</dd>
+<dt class="hdlist1"><code>tcp-cork</code></dt>
+<dd>
+<p>Enable tcp cork.</p>
+</dd>
+<dt class="hdlist1"><code>tcp-fast-open</code></dt>
+<dd>
+<p>Enable tcp fast open.</p>
+</dd>
+<dt class="hdlist1"><code>domain-socket</code></dt>
+<dd>
+<p>Path to a unix domain socket. (default: <code>/var/run/io.quarkus.app.socket</code>)</p>
+</dd>
+<dt class="hdlist1"><code>domain-socket-enabled</code></dt>
+<dd>
+<p>Enables domain socket.</p>
+</dd>
+<dt class="hdlist1"><code>record-request-start-time</code></dt>
+<dd>
+<p>If enabled then start time will be recorded to enable logging of total request time. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>access-log.enabled</code></dt>
+<dd>
+<p>If access logging is enabled. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>access-log.pattern</code></dt>
+<dd>
+<p>The access log pattern. (default: <code>common</code>)</p>
+</dd>
+<dt class="hdlist1"><code>access-log.log-to-file</code></dt>
+<dd>
+<p>If logging should be done to a separate file. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>access-log.base-file-name</code></dt>
+<dd>
+<p>The access log file base name. (default: <code>quarkus</code>)</p>
+</dd>
+<dt class="hdlist1"><code>access-log.log-directory</code></dt>
+<dd>
+<p>The log directory to use when logging access to a file.</p>
+</dd>
+<dt class="hdlist1"><code>access-log.log-directory</code></dt>
+<dd>
+<p>The log directory to use when logging access to a file.</p>
+</dd>
+<dt class="hdlist1"><code>access-log.log-suffix</code></dt>
+<dd>
+<p>The log file suffix. (default: <code>.log</code>)</p>
+</dd>
+<dt class="hdlist1"><code>access-log.category</code></dt>
+<dd>
+<p>The log category to use if logging is being done via the standard log mechanism. (default: <code>io.quarkus.http.access-log</code>)</p>
+</dd>
+<dt class="hdlist1"><code>access-log.rotate</code></dt>
+<dd>
+<p>If the log should be rotated daily. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>same-site-cookie.&lt;name&gt;.case-sensitive</code></dt>
+<dd>
+<p>If the cookie pattern is case sensitive.</p>
+</dd>
+<dt class="hdlist1"><code>same-site-cookie.&lt;name&gt;.value</code></dt>
+<dd>
+<p>The value to set in the samesite attribute.</p>
+</dd>
+<dt class="hdlist1"><code>same-site-cookie.&lt;name&gt;.enable-client-checker</code></dt>
+<dd>
+<p>Some User Agents break when sent SameSite=None, this will detect them and avoid sending the value. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>same-site-cookie.&lt;name&gt;.add-secure-for-none</code></dt>
+<dd>
+<p>If this is true then the 'secure' attribute will automatically be sent on cookies with a SameSite attribute of None. (default: <code>true</code>)</p>
+</dd>
+</dl>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -6204,6 +7018,74 @@ public class MyDeclarativeRoutes {
 </div>
 </div>
 <div class="sect1">
+<h2 id="_graphql"><a class="anchor" href="#_graphql"></a><a class="link" href="#_graphql">GraphQL</a></h2>
+<div class="sectionbody">
+<p class="">Quarkus integrates with <a href="https://graphql.org/">GraphQL</a> using <a href="https://download.eclipse.org/microprofile/microprofile-graphql-1.0.1/microprofile-graphql.html">MicroProfile GraphQL</a> integration.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="graphql"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@GraphQLApi
+public class FilmResource {
+
+    @Query("allFilms")
+    public List&lt;String&gt; films() {
+    }
+
+    @Query
+    public String getFilm(@Name("filmId") int id)) {}
+
+    @Query
+    public List&lt;Hero&gt; getHeroesWithSurname(
+        @DefaultValue("Skywalker") String surname) {
+    }
+
+    @Mutation
+    public Greetings load(Greetings greetings) {
+    }
+
+}</code></pre>
+</div>
+</div>
+<p class="">If name not provided, then query name is resolved from method name.</p>
+<p class="">You can see the full schema at <code>/graphql/schema.graphql</code>.
+Also GraphiQL UI is enabled at dev and test mode at <code>/graphql-ui/</code>.</p>
+<p class="">Extension can be configured with the follwoing paramters prefixed with <code>quarkus.smallrye-graphql</code>.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>root-path</code></dt>
+<dd>
+<p>The rootPath under which queries will be served. (default: <code>/graphql</code>)</p>
+</dd>
+<dt class="hdlist1"><code>root-path-ui</code></dt>
+<dd>
+<p>The path where GraphQL UI is available. (default: <code>/graphql-ui</code>)</p>
+</dd>
+<dt class="hdlist1"><code>always-include-ui</code></dt>
+<dd>
+<p>The path where GraphQL UI is available. (default: <code>/graphql-ui</code>)</p>
+</dd>
+<dt class="hdlist1"><code>root-path-ui</code></dt>
+<dd>
+<p>Always include the UI. By default this will only be included in dev and test. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>enable-ui</code></dt>
+<dd>
+<p>If GraphQL UI should be enabled. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>metrics.enabled</code></dt>
+<dd>
+<p>Enable metrics. (default: <code>false</code>)</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_vert_x_verticle"><a class="anchor" href="#_vert_x_verticle"></a><a class="link" href="#_vert_x_verticle">Vert.X Verticle</a></h2>
 <div class="sectionbody">
 <p class="">Vert.X Verticles are also supported:</p>
@@ -6227,7 +7109,8 @@ public class VerticleDeployer {
             .thenAccept(x -&gt; latch.countDown());
 
         latch.countDown();
-    }</code></pre>
+    }
+}</code></pre>
 </div>
 </div>
 <p class="">Verticles can be:</p>
@@ -6235,8 +7118,11 @@ public class VerticleDeployer {
 <dl>
 <dt class="hdlist1">bare</dt>
 <dd>
-<p>extending <code>io.vertx.core.AbstractVerticle</code>.
-mutiny: extendig <code>io.smallrye.mutiny.vertx.core.AbstractVerticle</code>.</p>
+<p>extending <code>io.vertx.core.AbstractVerticle</code>.</p>
+</dd>
+<dt class="hdlist1">mutiny</dt>
+<dd>
+<p>extendig <code>io.smallrye.mutiny.vertx.core.AbstractVerticle</code>.</p>
 </dd>
 </dl>
 </div>
@@ -6261,38 +7147,118 @@ mutiny: extendig <code>io.smallrye.mutiny.vertx.core.AbstractVerticle</code>.</p
 </div>
 </div>
 <div class="sect1">
-<h2 id="_cors_filter"><a class="anchor" href="#_cors_filter"></a><a class="link" href="#_cors_filter">CORS Filter</a></h2>
+<h2 id="_grpc"><a class="anchor" href="#_grpc"></a><a class="link" href="#_grpc">GRPC</a></h2>
 <div class="sectionbody">
-<p class="">Quarkus comes with a CORS filter that can be enabled via configuration:</p>
+<p class="">Quarkus integrates with gRPC:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.http.cors=true</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-grpc"</code></pre>
 </div>
 </div>
-<p class="">Prefix is <code>quarkus.http</code>.</p>
+<p class="">Then you need to configure <code>build tool</code> with gRPC plugins. In the case of Maven, the <code>kr.motd.maven:os-maven-plugin</code> extension and <code>org.xolstice.maven.plugins:protobuf-maven-plugin</code></p>
+<p class="">Protos files are stored at <code>src/main/proto</code>.</p>
+<p class="">When <code>java</code> files are created two service implementations are provided: one with default gRPC API and other with Mutiny support.</p>
+<p class="">With <code>quarkus.grpc.server</code> prefix, the next configuration properties can be set:</p>
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><code>cors</code></dt>
+<dt class="hdlist1"><code>port</code></dt>
 <dd>
-<p>Enable CORS. (default: <code>false</code>)</p>
+<p>The gRPC Server port. (default: <code>9000</code>)</p>
 </dd>
-<dt class="hdlist1"><code>cors.origins</code></dt>
+<dt class="hdlist1"><code>host</code></dt>
 <dd>
-<p>CSV of origins allowed. (dedault: Any request valid.)</p>
+<p>The gRPC server host. (default: <code>0.0.0.0</code>)</p>
 </dd>
-<dt class="hdlist1"><code>cors.methods</code></dt>
+<dt class="hdlist1"><code>handshake-timeout</code></dt>
 <dd>
-<p>CSV of methods valid. (default: Any method valid.)</p>
+<p>The gRPC handshake timeout.</p>
 </dd>
-<dt class="hdlist1"><code>cors.headers</code></dt>
+<dt class="hdlist1"><code>max-inbound-message-size</code></dt>
 <dd>
-<p>CSV of valid allowed headers. (default: Any requested header valid.)</p>
+<p>The max inbound message size in bytes.</p>
 </dd>
-<dt class="hdlist1"><code>cors.exposed-headers</code></dt>
+<dt class="hdlist1"><code>plain-text</code></dt>
 <dd>
-<p>CSV of valid exposed headers.</p>
+<p>Use plain text. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>alpn</code></dt>
+<dd>
+<p>TWhether ALPN should be used. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>enable-reflection-service</code></dt>
+<dd>
+<p>Enables the gRPC Reflection Service. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>ssl.certificate</code></dt>
+<dd>
+<p>The file path to a server certificate or certificate chain in PEM format.</p>
+</dd>
+<dt class="hdlist1"><code>ssl.key</code></dt>
+<dd>
+<p>The file path to the corresponding certificate private key file in PEM format.</p>
+</dd>
+<dt class="hdlist1"><code>ssl.key-store</code></dt>
+<dd>
+<p>An optional key store which holds the certificate information instead of specifying separate files.</p>
+</dd>
+<dt class="hdlist1"><code>ssl.key-store-type</code></dt>
+<dd>
+<p>An optional parameter to specify the type of the key store file.</p>
+</dd>
+<dt class="hdlist1"><code>ssl.key-store-password</code></dt>
+<dd>
+<p>A parameter to specify the password of the key store file. (default: <code>password</code>)</p>
+</dd>
+<dt class="hdlist1"><code>ssl.trust-store</code></dt>
+<dd>
+<p>Trust store which holds the certificate information of the certificates to trust</p>
+</dd>
+<dt class="hdlist1"><code>ssl.trust-store-type</code></dt>
+<dd>
+<p>Parameter to specify type of the trust store file.</p>
+</dd>
+<dt class="hdlist1"><code>ssl.trust-store-password</code></dt>
+<dd>
+<p>A parameter to specify the password of the trust store file.</p>
+</dd>
+<dt class="hdlist1"><code>ssl.cipher-suites</code></dt>
+<dd>
+<p>A list of the cipher suites to use.</p>
+</dd>
+<dt class="hdlist1"><code>ssl.protocols</code></dt>
+<dd>
+<p>The list of protocols to explicitly enable. (default: <code>TLSv1.3,TLSv1.2</code>)</p>
+</dd>
+<dt class="hdlist1"><code>transport-security.certificate</code></dt>
+<dd>
+<p>The path to the certificate file.</p>
+</dd>
+<dt class="hdlist1"><code>transport-security.key</code></dt>
+<dd>
+<p>The path to the private key file.</p>
 </dd>
 </dl>
+</div>
+<p class="">To consume the service:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@GrpcService("hello")
+GreeterGrpc.GreeterBlockingStub client;
+
+@GrpcService("hello")
+io.grpc.Channel channel;</code></pre>
+</div>
+</div>
+<p class="">Some configuration example to set the host and the SSL parameters:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.grpc.clients.hello.host=localhost
+quarkus.grpc.clients.hello.plain-text=false
+quarkus.grpc.clients.hello.ssl.certificate=src/main/resources/tls/client.pem
+quarkus.grpc.clients.hello.ssl.key=src/main/resources/tls/client.key
+quarkus.grpc.clients.hello.ssl.trust-store=src/main/resources/tls/ca.pem</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -6344,7 +7310,6 @@ public WorldClock fallbackMethod() {
 }</code></pre>
 </div>
 </div>
-<div class="page-break"></div>
 <p class="">And set it in the annotation as value <code>@Fallback(RecoverFallback.class)</code>.</p>
 <p class="">In case you want to use <strong>circuit breaker</strong> pattern:</p>
 <div class="listingblock">
@@ -6589,6 +7554,10 @@ quarkus.smallrye-health.readiness-path=/customready</code></pre>
 <dd>
 <p>A probe to check Vault conection status.</p>
 </dd>
+<dt class="hdlist1">gRPC</dt>
+<dd>
+<p>A readiness probe for the gRPC services.</p>
+</dd>
 </dl>
 </div>
 <p class="">You can disable the automatic generation by setting <code>&lt;component&gt;.health.enabled</code> to false.</p>
@@ -6755,7 +7724,8 @@ public @interface TimedMilliseconds {
 <pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.jaeger.service-name=myservice
 quarkus.jaeger.sampler-type=const
 quarkus.jaeger.sampler-param=1
-quarkus.jaeger.endpoint=http://localhost:14268/api/traces</code></pre>
+quarkus.jaeger.endpoint=http://localhost:14268/api/traces
+quarkus.jaeger.metrics.enabled=true</code></pre>
 </div>
 </div>
 <p class=""><code>@Traced</code> annotation can be set to disable tracing at class or method level.</p>
@@ -6862,6 +7832,15 @@ EXPOSE 8080
 CMD ["./application", "-Dquarkus.http.host=0.0.0.0", "-Djava.library.path=/work/lib", "-Djavax.net.ssl.trustStore=/work/cacerts"]</code></pre>
 </div>
 </div>
+<p class=""><strong>Inclusion of resources</strong></p>
+<p class="">By default, no resources are included in native executable.
+<code>quarkus.native.resources.includes</code> allows to set glob expressions to include resources based on  <code>src/main/resources</code> path.</p>
+<p class="">Given <code>src/main/resources/foo/selected.png</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.native.resources.includes=foo/**</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -6891,6 +7870,14 @@ It provides several extensions to make it so.</p>
 <dt class="hdlist1"><code>tag</code></dt>
 <dd>
 <p>The tag of the image. (default: the application version)</p>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>additional-tags</code></dt>
+<dd>
+<p>Additional tags of the container image.</p>
 </dd>
 <dt class="hdlist1"><code>registry</code></dt>
 <dd>
@@ -7034,7 +8021,11 @@ quarkus.kubernetes.secret-volumes.github-token.default-mode=420
 
 quarkus.kubernetes.config-map-volumes.github-token.config-map-name=my-secret
 
-quarkus.kubernetes.expose=true</code></pre>
+quarkus.kubernetes.expose=true
+
+quarkus.kubernetes.env.vars.my-env-var=foobar
+quarkus.kubernetes.env.configmaps=my-config-map,another-config-map
+quarkus.kubernetes.env.secrets=my-secret,my-other-secret</code></pre>
 </div>
 </div>
 <p class="">All possible values are explained at <a href="https://quarkus.io/guides/kubernetes#configuration-options" class="bare">https://quarkus.io/guides/kubernetes#configuration-options</a>.</p>
@@ -7090,6 +8081,12 @@ The default value is <code>kubernetes</code>.</p>
 </dd>
 </dl>
 </div>
+<p class=""><strong>Using Existing Resources</strong></p>
+<p class="">You an provide your Kubernetes resources in form of yaml/json and they will provide additional resources or be used as base for the generation process:</p>
+<p class="">Resources are added in <code>src/main/kubernetes</code> directory with the target name (<code>kubernetes.json</code>, <code>openshift.json</code>, <code>knative.json</code>, or the yml equivalents) with one orm ore Kubernetes resources.
+Any resource found will be added in the generated manifests.
+If one of the provided resources has the same name as one of the generated ones, then the generated resource will be created on top of the provided resource, respecting existing content.</p>
+<p class="">To override the name of the generated resource you can use: <code>quarkus.kubernetes.name</code>, <code>quarkus.openshift.name</code> and <code>quarkus.knative.name</code>.</p>
 <p class=""><strong>Deployment</strong></p>
 <p class="">To deploy automatically the generated resources, you need to set <code>quarkus.container.deploy</code> flag to <code>true</code>.</p>
 <div class="listingblock">
@@ -7111,6 +8108,30 @@ If you set this flag to <code>true</code>, the <code>build</code> and <code>push
 </div>
 <p class="">To deploy the application, the extension uses the <a href="https://github.com/fabric8io/kubernetes-client" class="bare">https://github.com/fabric8io/kubernetes-client</a>.
 All options described at <a href="#_kubernetes_client">Kubernetes Client</a> are valid here.</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_minikube"><a class="anchor" href="#_minikube"></a><a class="link" href="#_minikube">Minikube</a></h2>
+<div class="sectionbody">
+<p class="">Quarkus has a Minikube extension which creates Kubernetes manifests that are tailored for Minikube.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="shell-session" class="language-shell-session hljs">./mvnw quarkus:add-extension
+    -Dextensions="minikube"</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon icon-tip">
+<span class="fa-layers"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle" class="svg-inline--fa fa-circle fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path></svg><svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="lightbulb" class="svg-inline--fa fa-lightbulb fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" style="transform-origin: 0.34375em 0.5em;"><g transform="translate(176 256)"><g transform="translate(0, 0)  scale(0.625, 0.625)  rotate(0 0 0)"><path fill="currentColor" d="M176 80c-52.94 0-96 43.06-96 96 0 8.84 7.16 16 16 16s16-7.16 16-16c0-35.3 28.72-64 64-64 8.84 0 16-7.16 16-16s-7.16-16-16-16zM96.06 459.17c0 3.15.93 6.22 2.68 8.84l24.51 36.84c2.97 4.46 7.97 7.14 13.32 7.14h78.85c5.36 0 10.36-2.68 13.32-7.14l24.51-36.84c1.74-2.62 2.67-5.7 2.68-8.84l.05-43.18H96.02l.04 43.18zM176 0C73.72 0 0 82.97 0 176c0 44.37 16.45 84.85 43.56 115.78 16.64 18.99 42.74 58.8 52.42 92.16v.06h48v-.12c-.01-4.77-.72-9.51-2.15-14.07-5.59-17.81-22.82-64.77-62.17-109.67-20.54-23.43-31.52-53.15-31.61-84.14-.2-73.64 59.67-128 127.95-128 70.58 0 128 57.42 128 128 0 30.97-11.24 60.85-31.65 84.14-39.11 44.61-56.42 91.47-62.1 109.46a47.507 47.507 0 0 0-2.22 14.3v.1h48v-.05c9.68-33.37 35.78-73.18 52.42-92.16C335.55 260.85 352 220.37 352 176 352 78.8 273.2 0 176 0z" transform="translate(-176 -256)"></path></g></g></svg></span>
+</td>
+<td class="content">
+Remember to execute <code>eval $(minikube -p minikube docker-env)</code> to build images directly inside Minkube cluster.
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -7423,6 +8444,125 @@ public void testLambda() {
   -DarchetypeGroupId=io.quarkus \
   -DarchetypeArtifactId=quarkus-azure-functions-http-archetype \
   -DarchetypeVersion={version}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_funqy"><a class="anchor" href="#_funqy"></a><a class="link" href="#_funqy">Funqy</a></h2>
+<div class="sectionbody">
+<p class="">Quarkus Funqy is part of Quarkus’s serverless strategy and aims to provide a portable Java API to write functions deployable to various FaaS environments like AWS Lambda, Azure Functions, Knative, and Knative events.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class GreetingFunction {
+
+    @Inject
+    GreetingService service;
+
+    @io.quarkus.funqy.Funq
+    public String greet(String name) {}
+
+    @io.quarkus.funqy.Funq("HelloCustomer")
+    public String greet(Customer name) {}
+
+    @Funq
+    public Greeting greet(Friend friend,
+        @io.quarkus.funqy.Context AwsContext ctx) {}
+}</code></pre>
+</div>
+</div>
+<p class="">In case of Amazon Lambda, only one Funqy function can be exported per Amazon Lambda deployment.
+If there is only one method annotated with <code>@Funq</code> then no prob, if not, you need to set the function name with <code>quarkus.funqy.export</code> property.</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_funqy_http"><a class="anchor" href="#_funqy_http"></a><a class="link" href="#_funqy_http">Funqy HTTP</a></h2>
+<div class="sectionbody">
+<p class="">You can invoke on Funqy functions in a pure HTTP environment with simple adding the Funqy HTTP extension.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-funqy-http&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_funqy_cloud_events"><a class="anchor" href="#_funqy_cloud_events"></a><a class="link" href="#_funqy_cloud_events">Funqy Cloud Events</a></h2>
+<div class="sectionbody">
+<p class="">Add the extension:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-funqy-knative-events&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Funq
+public String defaultChain(String input) {}</code></pre>
+</div>
+</div>
+<p class="">The Cloud Event type that triggers the function is <code>defaultChain</code>.
+It generates a response that triggers a new Cloud Event whose type is <code>defaultChain.output</code> and the event source is <code>defaultChain</code>.</p>
+<p class="">It can be changed by using the next properties:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.funqy.knative-events.mapping.defaultChain.trigger=configChain.output
+quarkus.funqy.knative-events.mapping.defaultChain.response-type=annotated
+quarkus.funqy.knative-events.mapping.defaultChain.response-source=configChain</code></pre>
+</div>
+</div>
+<p class="">The properties are of form: <code>quarkus.funqy.knative-events.mapping.{function name}.</code>.</p>
+<p class="">Also can be overriden with <code>@io.quarkus.funqy.knative.events.CloudEventMapping</code> annotation.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Funq
+@CloudEventMapping(trigger = "annotated", responseSource = "annotated", responseType = "lastChainLink")
+public String annotatedChain(String input) {}</code></pre>
+</div>
+</div>
+<p class=""><code>responseType</code> chains <code>annotatedChain</code> response to <code>lastChainLink</code> function.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Funq
+public void lastChainLink(String input,
+            @Context io.quarkus.funqy.knative.events.CloudEvent event) {}</code></pre>
+</div>
+</div>
+<p class="">A K-Native Trigger looks like:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="yaml" class="language-yaml hljs">apiVersion: eventing.knative.dev/v1alpha1
+kind: Trigger
+metadata:
+  name: defaultchain
+spec:
+  filter:
+    attributes:
+      type: defaultChain
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: funqy-knative-events-quickstart</code></pre>
+</div>
+</div>
+<p class="">And to <code>curl</code> from inside the Kubernetes cluster:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash-shell" class="language-bash-shell hljs">curl -v "http://default-broker.knativetutorial.svc.cluster.local" \
+-X POST \
+-H "Ce-Id: 1234" \
+-H "Ce-Specversion: 1.0" \
+-H "Ce-Type: defaultChain" \
+-H "Ce-Source: curl" \
+-H "Content-Type: application/json" \
+-d '"Start"'</code></pre>
 </div>
 </div>
 <div class="page-break"></div>
@@ -8334,6 +9474,7 @@ You can multiple cache annotations on a single method.
 </tr>
 </table>
 </div>
+<p class="">If you see a <code>javax.enterprise.context.ContextNotActiveException</code>, you need to add the <code>quarkus-smallrye-context-propagation</code> extension.</p>
 </div>
 </div>
 <div class="sect1">
@@ -8438,6 +9579,98 @@ threadContext.withContextCapture(..)
 </div>
 </div>
 <div class="sect1">
+<h2 id="_configuration_from_hasicorp_consul"><a class="anchor" href="#_configuration_from_hasicorp_consul"></a><a class="link" href="#_configuration_from_hasicorp_consul">Configuration from HasiCorp Consul</a></h2>
+<div class="sectionbody">
+<p class="">You can read runtime configuration from HashiCorp Consul.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="consul-config"</code></pre>
+</div>
+</div>
+<p class="">You need to configure Consul:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.consul-config.enabled=true
+quarkus.consul-config.agent.host-port=localhost:8500
+quarkus.consul-config.properties-value-keys=config/consul-test</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperty(name = "greeting.message")
+String message;</code></pre>
+</div>
+</div>
+<p class="">In Consul:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">"Key": "config/consul-test",
+"Value": "greeting.message=Hello from Consul"</code></pre>
+</div>
+</div>
+<p class="">Possible configuration parameters, prefixed with <code>quarkus.consul-config</code>:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>enabled</code></dt>
+<dd>
+<p>The application will attempt to look up the configuration from Consul. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>prefix</code></dt>
+<dd>
+<p>Common prefix that all keys share when looking up the keys from Consul.
+The prefix is <strong>not</strong> included in the keys of the user configuration</p>
+</dd>
+<dt class="hdlist1">raw-value-keys</dt>
+<dd>
+<p>Keys whose value is a raw string.
+The keys that end up in the user configuration are the keys specified her with '/' replaced by '.'</p>
+</dd>
+<dt class="hdlist1"><code>properties-value-keys</code></dt>
+<dd>
+<p>Keys whose value represents a properties-like file conttent.</p>
+</dd>
+<dt class="hdlist1"><code>fail-on-missing-key</code></dt>
+<dd>
+<p>If the application will not start if any of the configured config sources cannot be located. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>agent.host-port</code></dt>
+<dd>
+<p>Consul agent host. (default: <code>localhost:8500</code>)</p>
+</dd>
+<dt class="hdlist1"><code>agent.use-https</code></dt>
+<dd>
+<p>Use HTTPS when communicating with the agent. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>agent.token</code></dt>
+<dd>
+<p>Consul token to be provided when authentication is enabled.</p>
+</dd>
+<dt class="hdlist1"><code>agent.key-store</code></dt>
+<dd>
+<p>KeyStore (classpath or filesystem) to be used containing the SSL certificate used by Consul agent.</p>
+</dd>
+<dt class="hdlist1"><code>agent.key-store-password</code></dt>
+<dd>
+<p>Password of KeyStore.</p>
+</dd>
+<dt class="hdlist1"><code>agent.trust-certs</code></dt>
+<dd>
+<p>To trust all certificates or not.</p>
+</dd>
+<dt class="hdlist1"><code>agent.connection-timeout</code></dt>
+<dd>
+<p>Connection timeout. (default: <code>10S</code>)</p>
+</dd>
+<dt class="hdlist1"><code>agent.read-timeout</code></dt>
+<dd>
+<p>Reading timeout. (default: <code>60S</code>)</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_amazon_alexa"><a class="anchor" href="#_amazon_alexa"></a><a class="link" href="#_amazon_alexa">Amazon Alexa</a></h2>
 <div class="sectionbody">
 <p class="">You can use Amazon Alexa by adding the extension:</p>
@@ -8447,6 +9680,81 @@ threadContext.withContextCapture(..)
   -Dextensions="quarkus-amazon-alexa"</code></pre>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_webjar_locator"><a class="anchor" href="#_webjar_locator"></a><a class="link" href="#_webjar_locator">WebJar Locator</a></h2>
+<div class="sectionbody">
+<p class="">To change how you can refer to webjars skipping the version part you can use WebJars locator extension.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="webjars-locator"</code></pre>
+</div>
+</div>
+<p class="">Then the JavaScript location is changed from <code>/webjars/jquery/3.1.1/jquery.min.js</code> to <code>/webjars/jquery/jquery.min.js</code> in your HTML files.</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_amazon_ses"><a class="anchor" href="#_amazon_ses"></a><a class="link" href="#_amazon_ses">Amazon SES</a></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn quarkus:add-extension
+    -Dextensions="amazon-ses"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+software.amazon.awssdk.services.ses.SesClient sesClient;
+
+@Inject
+software.amazon.awssdk.services.ses.SesAsyncClient sesClient;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.ses.endpoint-override=http://localhost:8012
+quarkus.ses.aws.region=us-east-1
+quarkus.ses.aws.credentials.type=static
+quarkus.ses.aws.credentials.static-provider.access-key-id=test-key
+quarkus.ses.aws.credentials.static-provider.secret-access-key=test-secret</code></pre>
+</div>
+</div>
+<p class="">You need to set a HTTP client either <code>URL Connection</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;software.amazon.awssdk&lt;/groupId&gt;
+    &lt;artifactId&gt;url-connection-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<p class="">or Apache HTTP:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;software.amazon.awssdk&lt;/groupId&gt;
+    &lt;artifactId&gt;apache-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.ses.sync-client.type=apache</code></pre>
+</div>
+</div>
+<p class="">Or async:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;software.amazon.awssdk&lt;/groupId&gt;
+    &lt;artifactId&gt;netty-nio-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<p class="">Configuration properties are the same as <a href="#_amazon_dynamodb">Amazon DynamoDB</a> but changing the prefix from <code>dynamodb</code> to <code>ses</code>.</p>
 <div class="page-break"></div>
 </div>
 </div>
@@ -8645,7 +9953,7 @@ public class GreetingController {
 <span class="fa-layers"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle" class="svg-inline--fa fa-circle fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path></svg><svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="lightbulb" class="svg-inline--fa fa-lightbulb fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" style="transform-origin: 0.34375em 0.5em;"><g transform="translate(176 256)"><g transform="translate(0, 0)  scale(0.625, 0.625)  rotate(0 0 0)"><path fill="currentColor" d="M176 80c-52.94 0-96 43.06-96 96 0 8.84 7.16 16 16 16s16-7.16 16-16c0-35.3 28.72-64 64-64 8.84 0 16-7.16 16-16s-7.16-16-16-16zM96.06 459.17c0 3.15.93 6.22 2.68 8.84l24.51 36.84c2.97 4.46 7.97 7.14 13.32 7.14h78.85c5.36 0 10.36-2.68 13.32-7.14l24.51-36.84c1.74-2.62 2.67-5.7 2.68-8.84l.05-43.18H96.02l.04 43.18zM176 0C73.72 0 0 82.97 0 176c0 44.37 16.45 84.85 43.56 115.78 16.64 18.99 42.74 58.8 52.42 92.16v.06h48v-.12c-.01-4.77-.72-9.51-2.15-14.07-5.59-17.81-22.82-64.77-62.17-109.67-20.54-23.43-31.52-53.15-31.61-84.14-.2-73.64 59.67-128 127.95-128 70.58 0 128 57.42 128 128 0 30.97-11.24 60.85-31.65 84.14-39.11 44.61-56.42 91.47-62.1 109.46a47.507 47.507 0 0 0-2.22 14.3v.1h48v-.05c9.68-33.37 35.78-73.18 52.42-92.16C335.55 260.85 352 220.37 352 176 352 78.8 273.2 0 176 0z" transform="translate(-176 -256)"></path></g></g></svg></span>
 </td>
 <td class="content">
-If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.4.1.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
+If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.5.0.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
 </td>
 </tr>
 </table>
@@ -8855,6 +10163,38 @@ public class PersonChecker {
 public void allowedForUser(String user) {}</code></pre>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_spring_cache"><a class="anchor" href="#_spring_cache"></a><a class="link" href="#_spring_cache">Spring Cache</a></h2>
+<div class="sectionbody">
+<p class="">Quarkus provides a compatibility layer for Spring dependency injection.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="spring-cache"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@org.springframework.cache.annotation.Cacheable("someCache")
+public Greeting greet(String name) {}</code></pre>
+</div>
+</div>
+<p class="">Quarkus provides compatibility with the following Spring Cache annotations:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>@Cacheable</code></p>
+</li>
+<li>
+<p><code>@CachePut</code></p>
+</li>
+<li>
+<p><code>@CacheEvict</code></p>
+</li>
+</ul>
+</div>
 <div class="page-break"></div>
 </div>
 </div>
@@ -8881,7 +10221,7 @@ public void allowedForUser(String user) {}</code></pre>
 <div class="author-bio">Java Champion and Director of DevExp at Red Hat</div>
 </div>
 
-<div class="author-bio">1.4.1.Final</div>
+<div class="author-bio">1.5.0.Final</div>
 <img src="./redhat/assets/by-nc-sa.png"/>
 </div>
 

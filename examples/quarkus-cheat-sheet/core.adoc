@@ -68,6 +68,37 @@ dependencies {
 ----
 // end::update_10_8[]
 
+== Packaging
+
+// tag::update_16_26[]
+[source, bash-shell]
+----
+mvn clean package
+----
+
+You need to distribute the `-runner.jar` file together with `lib` directory.
+
+If `quarkus.package.uber-jar` property is set to true, then a uber-jar is created with all dependencies bundled inside the JAR.
+
+If `quarkus.package.type` property is set to `fast-jar` then Quarkus brings a JAR with faster startup times.
+
+[source, properties]
+.application.properties
+----
+quarkus.package.uber-jar=true
+quarkus.package.type=fast-jar
+----
+
+To compile to native, you need to set `GRAALVM_HOME` environment variable and run the `native` profile.
+
+[source, bash-shell]
+----
+mvn clean package -Pnative
+
+./gradlew build -Dquarkus.package.type=native
+----
+// end::update_16_26[]
+
 == Command mode
 
 // tag::update_15_16[]
@@ -771,6 +802,8 @@ public class CustomObjectMapperConfig {
 }
 ----
 // end::update_6_1[]
+
+<<<
 
 == XML Marshalling/Unmarshalling
 

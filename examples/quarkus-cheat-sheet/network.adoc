@@ -100,6 +100,8 @@ The max HTTP chunk size
 `idle-timeout`::
 Http connection idle timeout. (default: `30M`)
 
+<<<
+
 `read-timeout`::
 Http connection read timeout for blocking IO. (default: `60s`)
 
@@ -688,8 +690,6 @@ public class RecoverFallback
     }
 }
 ----
-
-<<<
 
 And set it in the annotation as value `@Fallback(RecoverFallback.class)`.
 

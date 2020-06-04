@@ -637,3 +637,132 @@ mvn archetype:generate \
   -DarchetypeVersion={version}
 ----
 // end::update_8_6[]
+
+== Funqy
+
+// tag::update_16_27[]
+Quarkus Funqy is part of Quarkus’s serverless strategy and aims to provide a portable Java API to write functions deployable to various FaaS environments like AWS Lambda, Azure Functions, Knative, and Knative events.
+
+[source, java]
+----
+public class GreetingFunction {
+
+    @Inject
+    GreetingService service;
+
+    @io.quarkus.funqy.Funq
+    public String greet(String name) {}
+
+    @io.quarkus.funqy.Funq("HelloCustomer")
+    public String greet(Customer name) {}
+
+    @Funq
+    public Greeting greet(Friend friend, 
+        @io.quarkus.funqy.Context AwsContext ctx) {}
+}
+----
+
+In case of Amazon Lambda, only one Funqy function can be exported per Amazon Lambda deployment.
+If there is only one method annotated with `@Funq` then no prob, if not, you need to set the function name with `quarkus.funqy.export` property.
+
+// end::update_16_27[]
+
+== Funqy HTTP
+
+// tag::update_16_28[]
+You can invoke on Funqy functions in a pure HTTP environment with simple adding the Funqy HTTP extension.
+
+[source, xml]
+----
+<dependency>
+    <groupId>io.quarkus</groupId>
+    <artifactId>quarkus-funqy-http</artifactId>
+</dependency>
+----
+// end::update_16_28[]
+
+== Funqy Cloud Events
+
+// tag::update_16_29[]
+
+Add the extension:
+
+[source, xml]
+----
+<dependency>
+    <groupId>io.quarkus</groupId>
+    <artifactId>quarkus-funqy-knative-events</artifactId>
+</dependency>
+----
+
+[source, java]
+----
+@Funq
+public String defaultChain(String input) {}
+----
+
+The Cloud Event type that triggers the function is `defaultChain`. 
+It generates a response that triggers a new Cloud Event whose type is `defaultChain.output` and the event source is `defaultChain`.
+
+It can be changed by using the next properties:
+
+[source, properties]
+----
+quarkus.funqy.knative-events.mapping.defaultChain.trigger=configChain.output
+quarkus.funqy.knative-events.mapping.defaultChain.response-type=annotated
+quarkus.funqy.knative-events.mapping.defaultChain.response-source=configChain
+----
+
+The properties are of form: `quarkus.funqy.knative-events.mapping.{function name}.`.
+
+Also can be overriden with `@io.quarkus.funqy.knative.events.CloudEventMapping` annotation.
+
+[source, java]
+----
+@Funq
+@CloudEventMapping(trigger = "annotated", responseSource = "annotated", responseType = "lastChainLink")
+public String annotatedChain(String input) {}
+----
+
+`responseType` chains `annotatedChain` response to `lastChainLink` function.
+
+[source, java]
+----
+@Funq
+public void lastChainLink(String input, 
+            @Context io.quarkus.funqy.knative.events.CloudEvent event) {}
+----
+
+A K-Native Trigger looks like:
+
+[source, yaml]
+----
+apiVersion: eventing.knative.dev/v1alpha1
+kind: Trigger
+metadata:
+  name: defaultchain
+spec:
+  filter:
+    attributes:
+      type: defaultChain
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: funqy-knative-events-quickstart
+----
+
+And to `curl` from inside the Kubernetes cluster:
+
+[source, bash-shell]
+----
+curl -v "http://default-broker.knativetutorial.svc.cluster.local" \
+-X POST \
+-H "Ce-Id: 1234" \
+-H "Ce-Specversion: 1.0" \
+-H "Ce-Type: defaultChain" \
+-H "Ce-Source: curl" \
+-H "Content-Type: application/json" \
+-d '"Start"'
+----
+// end::update_16_29[]

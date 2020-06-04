@@ -167,6 +167,30 @@ include::misc.adoc[tag=update_16_24]
 include::core.adoc[tag=update_16_25]
 ====
 
+.Packaging
+[%collapsible]
+====
+include::core.adoc[tag=update_16_26]
+====
+
+.Funqy
+[%collapsible]
+====
+include::cloud.adoc[tag=update_16_27]
+====
+
+.Funqy HTTP
+[%collapsible]
+====
+include::cloud.adoc[tag=update_16_28]
+====
+
+.Funqy Cloud Events
+[%collapsible]
+====
+include::cloud.adoc[tag=update_16_29]
+====
+
 === Version 1.4.0.Final
 
 .Undertow Properties
@@ -307,368 +331,10 @@ include::reactive.adoc[tag=update_15_22]
 include::security.adoc[tag=update_15_23]
 ====
 
-.BeanValidation configuration
+.Bean Validation configuration
 [%collapsible]
 ====
 include::core.adoc[tag=update_15_24]
-====
-
-=== Version 1.3.0.Final
-
-.Vert.X Verticle
-[%collapsible]
-====
-include::network.adoc[tag=update_14_1]
-====
-
-.Micrometer compatibility
-[%collapsible]
-====
-include::network.adoc[tag=update_14_2]
-====
-
-.Multiple cache annotations
-[%collapsible]
-====
-include::misc.adoc[tag=update_14_3]
-====
-
-.For syntax in Qute
-[%collapsible]
-====
-include::misc.adoc[tag=update_14_4]
-====
-
-.Multi MongoDB support
-[%collapsible]
-====
-include::persistence.adoc[tag=update_14_5]
-====
-
-.Env support
-[%collapsible]
-====
-include::core.adoc[tag=update_14_6]
-====
-
-.Mutiny
-[%collapsible]
-====
-include::reactive.adoc[tag=update_14_7]
-====
-
-.Security with JPA
-[%collapsible]
-====
-include::security.adoc[tag=update_14_8]
-====
-
-.Banner
-[%collapsible]
-====
-include::misc.adoc[tag=update_14_9]
-====
-
-.AWS XRay
-[%collapsible]
-====
-include::network.adoc[tag=update_14_10]
-====
-
-.Spring Cloud Config Client
-[%collapsible]
-====
-include::spring.adoc[tag=update_14_11]
-====
-
-.Reactive Panache
-[%collapsible]
-====
-include::persistence.adoc[tag=update_14_12]
-====
-
-.Reactive and Async in Qute
-[%collapsible]
-====
-include::misc.adoc[tag=update_14_13]
-====
-
-.Reactive Mail client
-[%collapsible]
-====
-include::misc.adoc[tag=update_14_14]
-====
-
-.Reactive Rest Client Mutiny
-[%collapsible]
-====
-include::core.adoc[tag=update_14_15]
-====
-
-.Mutiny and JAX-RS
-[%collapsible]
-====
-include::reactive.adoc[tag=update_14_16]
-====
-
-.New Reactive MongoDB Client
-[%collapsible]
-====
-include::persistence.adoc[tag=update_14_17]
-====
-
-.Scheduling Jobs Programmatically
-[%collapsible]
-====
-include::misc.adoc[tag=update_14_18]
-====
-
-.Neo4J Mutiny
-[%collapsible]
-====
-include::persistence.adoc[tag=update_14_19]
-====
-
-.Hibernate Properties
-[%collapsible]
-====
-include::persistence.adoc[tag=update_14_20]
-====
-
-.JWT Properties
-[%collapsible]
-====
-include::security.adoc[tag=update_14_21]
-====
-
-.Container Image Creation
-[%collapsible]
-====
-include::cloud.adoc[tag=update_14_22]
-====
-
-.Kubernetes/OpenShift/Knative Options
-[%collapsible]
-====
-include::cloud.adoc[tag=update_14_23]
-====
-
-.Kubernetes Deployment
-[%collapsible]
-====
-include::cloud.adoc[tag=update_14_24]
-====
-
-.Integration MongoDB and Metrics
-[%collapsible]
-====
-include::network.adoc[tag=update_14_25]
-====
-
-.DynamoDB and Mutiny
-[%collapsible]
-====
-include::persistence.adoc[tag=update_14_26]
-====
-
-.Qute methods
-[%collapsible]
-====
-include::misc.adoc[tag=update_14_27]
-====
-
-.SSL in Docker and Native
-[%collapsible]
-====
-include::cloud.adoc[tag=update_14_28]
-====
-
-.OpenShift Extension
-[%collapsible]
-====
-include::cloud.adoc[tag=update_14_29]
-====
-
-.Streams in Panache
-[%collapsible]
-====
-include::persistence.adoc[tag=update_14_30]
-====
-
-.Graceful Shutdown
-[%collapsible]
-====
-include::core.adoc[tag=update_14_31]
-====
-
-.HTTPS
-[%collapsible]
-====
-include::core.adoc[tag=update_14_32]
-====
-
-.Vert.X Reactive Clients
-[%collapsible]
-====
-include::reactive.adoc[tag=update_14_33]
-====
-
-.OIDC Multi-tenancy
-[%collapsible]
-====
-include::security.adoc[tag=update_14_34]
-====
-
-.OptaPlanner
-[%collapsible]
-====
-include::misc.adoc[tag=update_14_35]
-====
-
-.Context Propagation
-[%collapsible]
-====
-include::misc.adoc[tag=update_14_36]
-====
-
-.Liquibase
-[%collapsible]
-====
-include::persistence.adoc[tag=update_14_37]
-====
-
-.Labels and Annotations in Kubernetes
-[%collapsible]
-====
-include::cloud.adoc[tag=update_14_38]
-====
-
-.OIDC Configuration
-[%collapsible]
-====
-include::security.adoc[tag=update_14_39]
-====
-
-.Tracer info in Logging
-[%collapsible]
-====
-include::network.adoc[tag=update_14_40]
-====
-
-.Metrics via CDI stereotypes
-[%collapsible]
-====
-include::network.adoc[tag=update_14_41]
-====
-
-.Persistence New Configuration Properties
-[%collapsible]
-====
-include::persistence.adoc[tag=update_14_42]
-====
-
-=== Version 1.2.0.Final
-
-.Qute Mail Integration
-[%collapsible]
-====
-include::misc.adoc[tag=update_13_1]
-====
-
-.JSch
-[%collapsible]
-====
-include::misc.adoc[tag=update_13_2]
-====
-
-.Spring Boot Configuration
-[%collapsible]
-====
-include::spring.adoc[tag=update_13_3]
-====
-
-.GELF handler
-[%collapsible]
-====
-include::core.adoc[tag=update_13_4]
-====
-
-.Get Active Profile
-[%collapsible]
-====
-include::core.adoc[tag=update_13_5]
-====
-
-.Flyway Validate on Migrate
-[%collapsible]
-====
-include::persistence.adoc[tag=update_13_6]
-====
-
-.Appplication Name and Version available at Runtime
-[%collapsible]
-====
-include::core.adoc[tag=update_13_7]
-====
-
-.Qute Method Parameters
-[%collapsible]
-====
-include::misc.adoc[tag=update_13_8]
-====
-
-.Caching
-[%collapsible]
-====
-include::network.adoc[tag=update_13_9]
-====
-
-.MongoDB Projections
-[%collapsible]
-====
-include::persistence.adoc[tag=update_13_10]
-====
-
-.Config Naming Strategy
-[%collapsible]
-====
-include::core.adoc[tag=update_13_11]
-====
-
-.Hibernate ORM Metrics
-[%collapsible]
-====
-include::network.adoc[tag=update_13_12]
-====
-
-.Bean Validation and Localization
-[%collapsible]
-====
-include::core.adoc[tag=update_13_13]
-====
-
-.Vault Transit Engine
-[%collapsible]
-====
-include::security.adoc[tag=update_13_14]
-====
-
-.JWT Generation API
-[%collapsible]
-====
-include::security.adoc[tag=update_13_15]
-====
-
-.JWT Properties
-[%collapsible]
-====
-include::security.adoc[tag=update_13_16]
-====
-
-.Cache with Caffeine
-[%collapsible]
-====
-include::misc.adoc[tag=update_13_17]
 ====
 
 :leveloffset: +1

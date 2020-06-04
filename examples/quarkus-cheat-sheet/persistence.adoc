@@ -793,6 +793,8 @@ public class AuthorMarshaller
 }
 ----
 
+<<<
+
 And producing the marshaller:
 
 [source, java]
