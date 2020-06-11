@@ -674,6 +674,50 @@ public interface DeveloperResource extends PanacheEntityResource<Developer, Long
 If `hal` is `true`, you need to send the `Accept: application/hal+json` HTTP header to get the response.
 // end::update_16_21[]
 
+== Hibernate Reactive
+
+// tag::update_17_4[]
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-hibernate-reactive, quarkus-resteasy-mutiny, "
+----
+
+Also you need to add the reactive driver (ie `quarkus-reactive-pg-client`).
+
+You can use: `org.hibernate.reactive.mutiny.Mutiny` or `org.hibernate.reactive.stage.Stage`.
+
+[source, java]
+----
+@Entity
+@Table(name = "dev")
+public class Developer {
+}
+
+@Inject
+CompletionStage<Stage.Session> stageSession;
+
+@Inject
+Uni<Mutiny.Session> mutinySession;
+
+public Uni<Long> reactivePersist() {
+    return mutinySession
+        .flatMap(s -> s.persist(new Developer(1, "Alex"))
+        .flatMap(v -> session.flush())
+        ....
+
+}
+
+public CompletionStage<Developer> reactiveFind() {
+    return stageSession
+        .thenCompose(session -> {
+            session.find(Developer.class, 1);
+        });
+}
+----
+// end::update_17_4[]
+
 == Infinispan
 // tag::update_8_7[]
 Quarkus integrates with https://infinispan.org/[Infinispan, window="_blank"]:

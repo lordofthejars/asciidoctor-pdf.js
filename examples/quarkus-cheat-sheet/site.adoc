@@ -15,6 +15,32 @@ In this page you can either read what has been added in each version of the chea
 [[whatsnew]]
 == What's New in Cheat-Sheet
 
+=== Version 1.6.0.Final
+
+.Configure CDI beans with PicoCLI
+[%collapsible]
+====
+include::core.adoc[tag=update_17_1]
+====
+
+.ConfigIgnore
+[%collapsible]
+====
+include::core.adoc[tag=update_17_2]
+====
+
+.Reactive DB2
+[%collapsible]
+====
+include::reactive.adoc[tag=update_17_3]
+====
+
+.Hibernate Reactive
+[%collapsible]
+====
+include::persistence.adoc[tag=update_17_4]
+====
+
 === Version 1.5.0.Final
 
 .Enabling Beans with Quarkus Properties
