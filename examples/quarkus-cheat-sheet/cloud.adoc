@@ -138,6 +138,10 @@ Boolean to set if image should be pushed. (default: `false`)
     -Dextensions="quarkus-container-image-jib"
 ----
 
+// tag::update_17_6[]
+Quarkus copies any file under `src/main/jib` into the built container image.
+// end::update_17_6[]
+
 Prefix is `quarkus.container-image-jib`:
 
 `base-jvm-image`::
@@ -154,6 +158,14 @@ The arguments to pass to the native application. (default: `-Dquarkus.http.host=
 
 `environment-variables`::
 Map of environment variables.
+
+// tag::update_17_7[]
+`jvm-entrypoint`::
+A custom entry point of the container image in JVM mode.
+
+`native-entrypoint`::
+A custom entry point of the container image in native mode.
+// end::update_17_7[]
 
 *Docker* 
 

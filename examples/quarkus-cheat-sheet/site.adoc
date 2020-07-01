@@ -41,6 +41,36 @@ include::reactive.adoc[tag=update_17_3]
 include::persistence.adoc[tag=update_17_4]
 ====
 
+.Package types
+[%collapsible]
+====
+include::core.adoc[tag=update_17_5]
+====
+
+.Including Extra Files in JiB
+[%collapsible]
+====
+include::cloud.adoc[tag=update_17_6]
+====
+
+.Custom Entrypoint for JiB
+[%collapsible]
+====
+include::cloud.adoc[tag=update_17_7]
+====
+
+.SSL Client Auth for Consul
+[%collapsible]
+====
+include::misc.adoc[tag=update_17_8]
+====
+
+.Reactive Transactions
+[%collapsible]
+====
+include::reactive.adoc[tag=update_17_9]
+====
+
 === Version 1.5.0.Final
 
 .Enabling Beans with Quarkus Properties

@@ -634,6 +634,20 @@ quarkus.datasource.reactive.url=vertx-reactive:db2://localhost:50005/hreact
 Then you can inject `io.vertx.mutiny.db2client.DB2Pool` class.
 // end::update_17_3[]
 
+== Reactive Transactions
+
+// tag::update_17_9[]
+`io.vertx.mutiny.sqlclient.SqlClientHelper` is an util class that allows you to run reactive persisten code within a transaction.
+
+[source, java]
+----
+Uni<Void> r = SqlClientHelper.inTransactionUni(client, tx -> {
+        Uni<RowSet<Row>> insertOne = tx.preparedQuery("INSERT INTO fruits (name) VALUES ($1) RETURNING (id)")
+                .execute(Tuple.of(fruit1.name));
+});
+----
+// end::update_17_9[]
+
 == ActiveMQ Artemis
 
 // tag::update_8_4[]

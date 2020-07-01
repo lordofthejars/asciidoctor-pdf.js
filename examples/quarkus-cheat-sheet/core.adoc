@@ -99,6 +99,10 @@ mvn clean package -Pnative
 ----
 // end::update_16_26[]
 
+// tag::update_17_5[]
+Possible `quarkus.package.type` are: `jar`, `fast-jar`, `uber-jar` and `native`.
+// end::update_17_5[]
+
 == Command mode
 
 // tag::update_15_16[]
