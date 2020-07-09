@@ -372,3 +372,26 @@ Quarkus provides compatibility with the following Spring Cache annotations:
 * `@CachePut`
 * `@CacheEvict`
 // end::update_16_7[]
+
+== Spring Schedule
+
+// tag::update_17_13[]
+Quarkus provides a compatibility layer for Spring Scheduled annotation.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="spring-scheduled"
+----
+
+[source, java]
+----
+@org.springframework.scheduling.annotation.Scheduled(cron="*/5 * * * * ?")   
+void cronJob() {
+    System.out.println("Cron expression hardcoded");
+}
+
+@Scheduled(fixedRate = 1000) 
+@Scheduled(cron = "{cron.expr}") 
+----
+// end::update_17_13[]

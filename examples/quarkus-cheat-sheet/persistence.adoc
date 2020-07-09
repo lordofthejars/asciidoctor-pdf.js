@@ -221,6 +221,8 @@ If queries start with the keyword `from` then they are treated as _HQL_ query, i
 `findById`: `Object`::
 Returns object or null if not found. Overloaded version with `LockModeType` is provided.
 
+<<<
+
 // tag::update_12_1[]
 `findByIdOptional`: `Optional<Object>`::
 Returns object or `java.util.Optional`.
@@ -837,8 +839,6 @@ public class AuthorMarshaller
 }
 ----
 
-<<<
-
 And producing the marshaller:
 
 [source, java]
@@ -858,6 +858,8 @@ MessageMarshaller authorMarshaller() {
 ./mvnw quarkus:add-extension 
   -Dextensions="infinispan-embeddedy"
 ----
+
+<<<
 
 Configuration in `infinispan.xml`:
 
@@ -2172,3 +2174,83 @@ Publisher<ReactivePerson> allPersons = ReactivePerson.streamAll();
 Uni<List<PersonName>> persons = ReactivePersonEntity.find("lastname", name).project(PersonName.class).list();
 ----
 // end::update_14_12[]
+
+== Cassandra
+
+// tag::update_17_12[]
+Quarkus integrates with Cassandra and DataStax Object Mapper.
+
+[source, xml]
+----
+<dependency>
+  <groupId>com.datastax.oss.quarkus</groupId>
+  <artifactId>cassandra-quarkus-client</artifactId>
+</dependency>
+----
+
+Enities and DAOs are generated as you have been doing with DataStax Object Mapper.
+
+You need to create a DaoProducer:
+
+[source, java]
+----
+@Inject
+public FruitDaoProducer(QuarkusCqlSession session) {
+  FruitMapper mapper = new FruitMapperBuilder(session).build();
+  fruitDao = mapper.fruitDao();
+}
+
+@Produces
+@ApplicationScoped
+FruitDao produceFruitDao() {
+  return fruitDao;
+}
+----
+
+Cassandra configuration:
+
+[source, properties]
+----
+quarkus.cassandra.contact-points=127.0.0.1:9042
+quarkus.cassandra.local-datacenter=datacenter1
+quarkus.cassandra.keyspace=k1
+quarkus.cassandra.auth.username=john
+quarkus.cassandra.auth.password=s3cr3t
+----
+
+You can configure other Cassandra Java driver settings using `application.conf` or `application.json` files. They need to be located in the classpath of your application.
+https://docs.datastax.com/en/developer/java-driver/latest/manual/core/configuration/reference/[Driver settings reference].
+
+If MicroProfile Metrics extension is registered, the Cassandra extension can provide (if enabled) metrics about the session:
+
+[source, properties]
+----
+quarkus.cassandra.metrics.enabled=true
+quarkus.cassandra.metrics.session-enabled=connected-nodes,bytes-sent
+quarkus.cassandra.metrics.node-enabled=pool.open-connections
+----
+
+*Reactive*
+
+You can also use Mutiny to define a reactive DAO:
+
+[source, java]
+----
+@Dao
+public interface FruitDaoReactive {
+
+  @Update
+  Uni<Void> update(Fruit fruit);
+
+  @Select
+  MutinyMappedReactiveResultSet<Fruit> findById(String storeId);
+}
+
+@Mapper
+public interface FruitMapper {
+
+  @DaoFactory
+  FruitDaoReactive fruitDaoReactive();
+}
+----
+// end::update_17_12[]

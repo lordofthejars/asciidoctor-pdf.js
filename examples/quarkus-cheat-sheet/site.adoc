@@ -71,6 +71,36 @@ include::misc.adoc[tag=update_17_8]
 include::reactive.adoc[tag=update_17_9]
 ====
 
+.RESTEasy Metrics
+[%collapsible]
+====
+include::network.adoc[tag=update_17_10]
+====
+
+.AppCDS
+[%collapsible]
+====
+include::core.adoc[tag=update_17_11]
+====
+
+.Apache Cassandra
+[%collapsible]
+====
+include::persistence.adoc[tag=update_17_12]
+====
+
+.Spring Scheduled
+[%collapsible]
+====
+include::spring.adoc[tag=update_17_13]
+====
+
+.Dev Mode
+[%collapsible]
+====
+include::core.adoc[tag=update_17_14]
+====
+
 === Version 1.5.0.Final
 
 .Enabling Beans with Quarkus Properties

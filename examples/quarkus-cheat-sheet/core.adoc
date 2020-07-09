@@ -103,6 +103,14 @@ mvn clean package -Pnative
 Possible `quarkus.package.type` are: `jar`, `fast-jar`, `uber-jar` and `native`.
 // end::update_17_5[]
 
+*AppCDS*
+
+// tag::update_17_11[]
+Automatically generate AppCDS as part of the build process set the next property: `quarkus.package.create-appcds=true`.
+
+To make use of it, just run `java -jar -XX:SharedArchiveFile=app-cds.jsa myapp.jar`.
+// end::update_17_11[]
+
 == Command mode
 
 // tag::update_15_16[]
@@ -277,6 +285,23 @@ public class ApplicationLifecycle {
 Quarkus supports graceful shutdown.
 By default there is no timeout but can be set by using the `quarkus.shutdown.timeout` config property.
 // end::update_14_31[]
+
+== Dev Mode
+
+// tag::update_17_14[]
+[source, bash]
+----
+./mvnw compile quarkus:dev
+
+./gradlew quarkusDev
+----
+
+Endpoints are registered automatically to provide some basic debug info in dev mode:
+
+* `HTTP GET /quarkus/arc/beans`
+** Query Parameters: `scope`, `beanClass`, `kind`.
+* `HTTP GET /quarkus/arc/observers`
+// end::update_17_14[]
 
 == Adding Configuration Parameters
 
@@ -794,6 +819,8 @@ public class Sauce {
 }
 ----
 
+<<<
+
 JSON equivalent:
 
 [source, json]
@@ -843,8 +870,6 @@ public class CustomObjectMapperConfig {
 ----
 // end::update_6_1[]
 
-<<<
-
 == XML Marshalling/Unmarshalling
 
 // tag::update_9_8[]
@@ -864,7 +889,7 @@ Then annotated POJOs are converted to XML.
 public class Message {
 }
 
- @GET
+@GET
 @Produces(MediaType.APPLICATION_XML)
 public Message hello() {
     return message;
@@ -1012,8 +1037,6 @@ Define whether parallel methods that define constraints should throw an exceptio
 `method-validation.allow-multiple-cascaded-validation-on-return-values`::
 Define whether more than one constraint on a return value may be marked for cascading validation are allowed. (default: `false`).
 // end::update_15_24[]
-
-<<<
 
 == Logging
 
@@ -1484,6 +1507,8 @@ URL url;
 
 // tag::update_4_2[]
 You can execute some logic before the first test run (`start`) and execute some logic at the end of the test suite (`stop`).
+
+<<<
 
 You need to create a class implementing `QuarkusTestResourceLifecycleManager` interface and register it in the test via `@QuarkusTestResource` annotation.
 
