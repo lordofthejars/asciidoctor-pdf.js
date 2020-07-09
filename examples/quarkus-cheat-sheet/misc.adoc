@@ -808,6 +808,8 @@ Quarkus can cache method calls by using as key the tuple (method + arguments).
 public String getDailyForecast(LocalDate date, String city) {}
 ----
 
+<<<
+
 `@CacheInvalidate` removes the element represented by the calculated cache key from cache.
 `@CacheInvalidateAll` removes all entries from the cache.
 `@CacheKey` to specifically set the arguments to be used as key instead of all.
@@ -1001,6 +1003,17 @@ Keys whose value represents a properties-like file conttent.
 
 `fail-on-missing-key`::
 If the application will not start if any of the configured config sources cannot be located. (default: `true`)
+
+// tag::update_17_8[]
+`trust-store`::
+TrustStore to be used containing the SSL certificate used by Consul agent.
+
+`trust-store-password`::
+Password of TrustStore to be used containing the SSL certificate used by Consul agent.
+
+`key-password`::
+Password to recover key from KeyStore for SSL client authentication with Consul agent.
+// end::update_17_8[]
 
 `agent.host-port`::
 Consul agent host. (default: `localhost:8500`)

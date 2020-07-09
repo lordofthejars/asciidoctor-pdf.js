@@ -99,6 +99,18 @@ mvn clean package -Pnative
 ----
 // end::update_16_26[]
 
+// tag::update_17_5[]
+Possible `quarkus.package.type` are: `jar`, `fast-jar`, `uber-jar` and `native`.
+// end::update_17_5[]
+
+*AppCDS*
+
+// tag::update_17_11[]
+Automatically generate AppCDS as part of the build process set the next property: `quarkus.package.create-appcds=true`.
+
+To make use of it, just run `java -jar -XX:SharedArchiveFile=app-cds.jsa myapp.jar`.
+// end::update_17_11[]
+
 == Command mode
 
 // tag::update_15_16[]
@@ -204,6 +216,32 @@ public class ExampleApp implements Runnable, QuarkusApplication {
 Use `quarkus.picocli.native-image.processing.enable` to `false` to use the `picocli-codegen` annotation processor instead of build steps.
 // end::update_16_15[]
 
+// tag::update_17_1[]
+You can also configure CDI beans with PicoCLI arguments:
+
+[source, java]
+----
+@CommandLine.Command
+public class EntryCommand implements Runnable {
+    @CommandLine.Option(names = "-c", description = "JDBC connection string")
+    String connectionString;
+    
+    @Inject
+    DataSource dataSource;
+}
+
+@ApplicationScoped
+class DatasourceConfiguration {
+    
+    @Produces
+    @ApplicationScoped
+    DataSource dataSource(CommandLine.ParseResult parseResult) {
+        System.out.println(parseResult.matchedOption("c").getValue().toString());
+    }
+}
+----
+// end::update_17_1[]
+
 == Extensions
 
 Quarkus comes with extensions to integrate with some libraries such as JSON-B, Camel or MicroProfile spec.
@@ -247,6 +285,23 @@ public class ApplicationLifecycle {
 Quarkus supports graceful shutdown.
 By default there is no timeout but can be set by using the `quarkus.shutdown.timeout` config property.
 // end::update_14_31[]
+
+== Dev Mode
+
+// tag::update_17_14[]
+[source, bash]
+----
+./mvnw compile quarkus:dev
+
+./gradlew quarkusDev
+----
+
+Endpoints are registered automatically to provide some basic debug info in dev mode:
+
+* `HTTP GET /quarkus/arc/beans`
+** Query Parameters: `scope`, `beanClass`, `kind`.
+* `HTTP GET /quarkus/arc/observers`
+// end::update_17_14[]
 
 == Adding Configuration Parameters
 
@@ -421,6 +476,16 @@ TIP: `prefix` attribute is not mandatory. If not provided, attribute is determin
 // tag::update_13_11[]
 Naming strategy can be changed with property `namingStrategy`. `KEBAB_CASE` (whatever.foo-bar) or `VERBATIM` (whatever.fooBar).
 // end::update_13_11[]
+
+// tag::update_17_2[]
+`@io.quarkus.arc.config.ConfigIgnore` annotation can be used to ignore the injection of configuration elements.
+
+[source, java]
+----
+@ConfigIgnore
+public Integer ignored;
+----
+// end::update_17_2[]
 
 *YAML Config*
 // tag::update_12_12[]
@@ -754,6 +819,8 @@ public class Sauce {
 }
 ----
 
+<<<
+
 JSON equivalent:
 
 [source, json]
@@ -803,8 +870,6 @@ public class CustomObjectMapperConfig {
 ----
 // end::update_6_1[]
 
-<<<
-
 == XML Marshalling/Unmarshalling
 
 // tag::update_9_8[]
@@ -824,7 +889,7 @@ Then annotated POJOs are converted to XML.
 public class Message {
 }
 
- @GET
+@GET
 @Produces(MediaType.APPLICATION_XML)
 public Message hello() {
     return message;
@@ -972,8 +1037,6 @@ Define whether parallel methods that define constraints should throw an exceptio
 `method-validation.allow-multiple-cascaded-validation-on-return-values`::
 Define whether more than one constraint on a return value may be marked for cascading validation are allowed. (default: `false`).
 // end::update_15_24[]
-
-<<<
 
 == Logging
 
@@ -1444,6 +1507,8 @@ URL url;
 
 // tag::update_4_2[]
 You can execute some logic before the first test run (`start`) and execute some logic at the end of the test suite (`stop`).
+
+<<<
 
 You need to create a class implementing `QuarkusTestResourceLifecycleManager` interface and register it in the test via `@QuarkusTestResource` annotation.
 

@@ -593,7 +593,7 @@ Uni<List<Fruit>> fruits =
 == Reactive MySQL Client
 
 // tag::update_8_8[]
-You can use Reactive MySQL to execute queries to MySQL database in a reactive way, instead of using JDBC way.
+You can use Reactive MySQL to execute queries to MySQL database in a reactive way, instead of using JDBC.
 
 [source, bash]
 ----
@@ -611,6 +611,42 @@ quarkus.datasource.reactive.url=mysql:///your_database
 
 Then you can inject `io.vertx.mutiny.mysqlclient.MySQLPool` class.
 // end::update_8_8[]
+
+== Reactive DB2 Client
+
+// tag::update_17_3[]
+You can use Reactive DB2 to execute queries to DB2 database in a reactive way, instead of using JDBC.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="quarkus-reactive-db2-client"
+----
+
+Database configuration is the same as shown in <<Persistence>> section, but URL is different as it is not a _jdbc_.
+
+[source, properties]
+----
+quarkus.datasource.db-kind=db2
+quarkus.datasource.reactive.url=vertx-reactive:db2://localhost:50005/hreact
+----
+
+Then you can inject `io.vertx.mutiny.db2client.DB2Pool` class.
+// end::update_17_3[]
+
+== Reactive Transactions
+
+// tag::update_17_9[]
+`io.vertx.mutiny.sqlclient.SqlClientHelper` is an util class that allows you to run reactive persisten code within a transaction.
+
+[source, java]
+----
+Uni<Void> r = SqlClientHelper.inTransactionUni(client, tx -> {
+        Uni<RowSet<Row>> insertOne = tx.preparedQuery("INSERT INTO fruits (name) VALUES ($1) RETURNING (id)")
+                .execute(Tuple.of(fruit1.name));
+});
+----
+// end::update_17_9[]
 
 == ActiveMQ Artemis
 

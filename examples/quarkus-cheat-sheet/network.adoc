@@ -92,7 +92,7 @@ The number if IO threads used to perform IO.
 The maximum length of all headers. (default: `20k`)
 
 `limits.max-body-size`::
-The maximum size of a request body. (default: `no-limit`)
+The maximum size of a request body. (default: `10M`)
 
 `limits.max-chunk-size`::
 The max HTTP chunk size
@@ -183,6 +183,10 @@ Some User Agents break when sent SameSite=None, this will detect them and avoid 
 `same-site-cookie.<name>.add-secure-for-none`::
 If this is true then the 'secure' attribute will automatically be sent on cookies with a SameSite attribute of None. (default: `true`)
 // end::update_16_11[]
+
+// tag::update_17_10[]
+If metrics extension is registered, you can enable to get HTTP metrics by setting `quarkus.resteasy.metrics.enabled` to true.
+// end::update_17_10[]
 
 == JAX-RS
 // tag::update_4_1[]
@@ -901,6 +905,7 @@ artemis:: A probe to check Artemis JMS connection status.
 kafka-streams:: Liveness (for stream state) and Readiness (topics created) probes.
 vault:: A probe to check Vault conection status.
 gRPC:: A readiness probe for the gRPC services.
+Cassandra:: A readiness probe to check Cassandra connection status.
 
 You can disable the automatic generation by setting `<component>.health.enabled` to false.
 

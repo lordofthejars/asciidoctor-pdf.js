@@ -470,7 +470,7 @@ svg:not(:root).svg-inline--fa {
 <div class="sectionbody">
 <p class=""><a href="https://quarkus.io/">Quarkus</a> is a Kubernetes Native Java stack tailored for GraalVM &amp; OpenJDK HotSpot, crafted from the best of breed Java libraries and standards.
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
-<p class="">Cheat-sheet tested with <strong>Quarkus 1.5.0.Final</strong>.</p>
+<p class="">Cheat-sheet tested with <strong>Quarkus 1.6.0.Final</strong>.</p>
 </div>
 </div>
 <div class="sect1">
@@ -479,7 +479,7 @@ Also focused on developer experience, making things just work with little to no 
 <p class="">Quarkus comes with a Maven archetype to scaffold a very simple starting project.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.5.0.Final:create \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.6.0.Final:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=getting-started \
     -DclassName="org.acme.quickstart.GreetingResource" \
@@ -569,6 +569,10 @@ quarkus.package.type=fast-jar</code></pre>
 ./gradlew build -Dquarkus.package.type=native</code></pre>
 </div>
 </div>
+<p class="">Possible <code>quarkus.package.type</code> are: <code>jar</code>, <code>fast-jar</code>, <code>uber-jar</code> and <code>native</code>.</p>
+<p class=""><strong>AppCDS</strong></p>
+<p class="">Automatically generate AppCDS as part of the build process set the next property: <code>quarkus.package.create-appcds=true</code>.</p>
+<p class="">To make use of it, just run <code>java -jar -XX:SharedArchiveFile=app-cds.jsa myapp.jar</code>.</p>
 </div>
 </div>
 <div class="sect1">
@@ -673,6 +677,29 @@ public class ExampleApp implements Runnable, QuarkusApplication {
 </div>
 </div>
 <p class="">Use <code>quarkus.picocli.native-image.processing.enable</code> to <code>false</code> to use the <code>picocli-codegen</code> annotation processor instead of build steps.</p>
+<p class="">You can also configure CDI beans with PicoCLI arguments:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@CommandLine.Command
+public class EntryCommand implements Runnable {
+    @CommandLine.Option(names = "-c", description = "JDBC connection string")
+    String connectionString;
+
+    @Inject
+    DataSource dataSource;
+}
+
+@ApplicationScoped
+class DatasourceConfiguration {
+
+    @Produces
+    @ApplicationScoped
+    DataSource dataSource(CommandLine.ParseResult parseResult) {
+        System.out.println(parseResult.matchedOption("c").getValue().toString());
+    }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -734,6 +761,36 @@ public class ApplicationLifecycle {
 </div>
 <p class="">Quarkus supports graceful shutdown.
 By default there is no timeout but can be set by using the <code>quarkus.shutdown.timeout</code> config property.</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dev_mode"><a class="anchor" href="#_dev_mode"></a><a class="link" href="#_dev_mode">Dev Mode</a></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw compile quarkus:dev
+
+./gradlew quarkusDev</code></pre>
+</div>
+</div>
+<p class="">Endpoints are registered automatically to provide some basic debug info in dev mode:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>HTTP GET /quarkus/arc/beans</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Query Parameters: <code>scope</code>, <code>beanClass</code>, <code>kind</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>HTTP GET /quarkus/arc/observers</code></p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -936,6 +993,13 @@ greeting.hidden.recipients=Jane,John</code></pre>
 </table>
 </div>
 <p class="">Naming strategy can be changed with property <code>namingStrategy</code>. <code>KEBAB_CASE</code> (whatever.foo-bar) or <code>VERBATIM</code> (whatever.fooBar).</p>
+<p class=""><code>@io.quarkus.arc.config.ConfigIgnore</code> annotation can be used to ignore the injection of configuration elements.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigIgnore
+public Integer ignored;</code></pre>
+</div>
+</div>
 <p class=""><strong>YAML Config</strong></p>
 <p class="">YAML configuration is also supported.
 The configuration file is called <code>application.yaml</code> and you need to register a dependency to enable its support:</p>
@@ -1274,6 +1338,7 @@ Properties set at runtime have absolutely no effect on the bean resolution using
 }</code></pre>
 </div>
 </div>
+<div class="page-break"></div>
 <p class="">JSON equivalent:</p>
 <div class="listingblock">
 <div class="content">
@@ -1317,7 +1382,6 @@ public class CustomObjectMapperConfig {
 }</code></pre>
 </div>
 </div>
-<div class="page-break"></div>
 </div>
 </div>
 <div class="sect1">
@@ -1337,7 +1401,7 @@ public class CustomObjectMapperConfig {
 public class Message {
 }
 
- @GET
+@GET
 @Produces(MediaType.APPLICATION_XML)
 public Message hello() {
     return message;
@@ -1489,7 +1553,6 @@ The prefix is: <code>quarkus.hibernate-validator</code>.</p>
 </dd>
 </dl>
 </div>
-<div class="page-break"></div>
 </div>
 </div>
 <div class="sect1">
@@ -2002,6 +2065,7 @@ URL url;</code></pre>
 </div>
 <p class=""><strong>Quarkus Test Resource</strong></p>
 <p class="">You can execute some logic before the first test run (<code>start</code>) and execute some logic at the end of the test suite (<code>stop</code>).</p>
+<div class="page-break"></div>
 <p class="">You need to create a class implementing <code>QuarkusTestResourceLifecycleManager</code> interface and register it in the test via <code>@QuarkusTestResource</code> annotation.</p>
 <div class="listingblock">
 <div class="content">
@@ -2422,6 +2486,7 @@ long numberOfDeleted = Developer.delete("name", "Alex");</code></pre>
 </dd>
 </dl>
 </div>
+<div class="page-break"></div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1"><code>findByIdOptional</code>: <code>Optional&lt;Object&gt;</code></dt>
@@ -2863,6 +2928,48 @@ public interface DeveloperResource extends PanacheEntityResource&lt;Developer, L
 </div>
 </div>
 <div class="sect1">
+<h2 id="_hibernate_reactive"><a class="anchor" href="#_hibernate_reactive"></a><a class="link" href="#_hibernate_reactive">Hibernate Reactive</a></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-hibernate-reactive, quarkus-resteasy-mutiny, "</code></pre>
+</div>
+</div>
+<p class="">Also you need to add the reactive driver (ie <code>quarkus-reactive-pg-client</code>).</p>
+<p class="">You can use: <code>org.hibernate.reactive.mutiny.Mutiny</code> or <code>org.hibernate.reactive.stage.Stage</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Entity
+@Table(name = "dev")
+public class Developer {
+}
+
+@Inject
+CompletionStage&lt;Stage.Session&gt; stageSession;
+
+@Inject
+Uni&lt;Mutiny.Session&gt; mutinySession;
+
+public Uni&lt;Long&gt; reactivePersist() {
+    return mutinySession
+        .flatMap(s -&gt; s.persist(new Developer(1, "Alex"))
+        .flatMap(v -&gt; session.flush())
+        ....
+
+}
+
+public CompletionStage&lt;Developer&gt; reactiveFind() {
+    return stageSession
+        .thenCompose(session -&gt; {
+            session.find(Developer.class, 1);
+        });
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_infinispan"><a class="anchor" href="#_infinispan"></a><a class="link" href="#_infinispan">Infinispan</a></h2>
 <div class="sectionbody">
 <p class="">Quarkus integrates with <a href="https://infinispan.org/" target="_blank" rel="noopener">Infinispan</a>:</p>
@@ -2969,7 +3076,6 @@ FileDescriptorSource bookProtoDefinition() {
 }</code></pre>
 </div>
 </div>
-<div class="page-break"></div>
 <p class="">And producing the marshaller:</p>
 <div class="listingblock">
 <div class="content">
@@ -2986,6 +3092,7 @@ MessageMarshaller authorMarshaller() {
   -Dextensions="infinispan-embeddedy"</code></pre>
 </div>
 </div>
+<div class="page-break"></div>
 <p class="">Configuration in <code>infinispan.xml</code>:</p>
 <div class="listingblock">
 <div class="content">
@@ -4535,6 +4642,79 @@ Publisher&lt;ReactivePerson&gt; allPersons = ReactivePerson.streamAll();
 Uni&lt;List&lt;PersonName&gt;&gt; persons = ReactivePersonEntity.find("lastname", name).project(PersonName.class).list();</code></pre>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cassandra"><a class="anchor" href="#_cassandra"></a><a class="link" href="#_cassandra">Cassandra</a></h2>
+<div class="sectionbody">
+<p class="">Quarkus integrates with Cassandra and DataStax Object Mapper.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+  &lt;groupId&gt;com.datastax.oss.quarkus&lt;/groupId&gt;
+  &lt;artifactId&gt;cassandra-quarkus-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<p class="">Enities and DAOs are generated as you have been doing with DataStax Object Mapper.</p>
+<p class="">You need to create a DaoProducer:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+public FruitDaoProducer(QuarkusCqlSession session) {
+  FruitMapper mapper = new FruitMapperBuilder(session).build();
+  fruitDao = mapper.fruitDao();
+}
+
+@Produces
+@ApplicationScoped
+FruitDao produceFruitDao() {
+  return fruitDao;
+}</code></pre>
+</div>
+</div>
+<p class="">Cassandra configuration:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.cassandra.contact-points=127.0.0.1:9042
+quarkus.cassandra.local-datacenter=datacenter1
+quarkus.cassandra.keyspace=k1
+quarkus.cassandra.auth.username=john
+quarkus.cassandra.auth.password=s3cr3t</code></pre>
+</div>
+</div>
+<p class="">You can configure other Cassandra Java driver settings using <code>application.conf</code> or <code>application.json</code> files. They need to be located in the classpath of your application.
+<a href="https://docs.datastax.com/en/developer/java-driver/latest/manual/core/configuration/reference/">Driver settings reference</a>.</p>
+<p class="">If MicroProfile Metrics extension is registered, the Cassandra extension can provide (if enabled) metrics about the session:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.cassandra.metrics.enabled=true
+quarkus.cassandra.metrics.session-enabled=connected-nodes,bytes-sent
+quarkus.cassandra.metrics.node-enabled=pool.open-connections</code></pre>
+</div>
+</div>
+<p class=""><strong>Reactive</strong></p>
+<p class="">You can also use Mutiny to define a reactive DAO:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Dao
+public interface FruitDaoReactive {
+
+  @Update
+  Uni&lt;Void&gt; update(Fruit fruit);
+
+  @Select
+  MutinyMappedReactiveResultSet&lt;Fruit&gt; findById(String storeId);
+}
+
+@Mapper
+public interface FruitMapper {
+
+  @DaoFactory
+  FruitDaoReactive fruitDaoReactive();
+}</code></pre>
+</div>
+</div>
 <div class="page-break"></div>
 </div>
 </div>
@@ -5064,7 +5244,7 @@ Uni&lt;List&lt;Fruit&gt;&gt; fruits =
 <div class="sect1">
 <h2 id="_reactive_mysql_client"><a class="anchor" href="#_reactive_mysql_client"></a><a class="link" href="#_reactive_mysql_client">Reactive MySQL Client</a></h2>
 <div class="sectionbody">
-<p class="">You can use Reactive MySQL to execute queries to MySQL database in a reactive way, instead of using JDBC way.</p>
+<p class="">You can use Reactive MySQL to execute queries to MySQL database in a reactive way, instead of using JDBC.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
@@ -5079,6 +5259,40 @@ quarkus.datasource.reactive.url=mysql:///your_database</code></pre>
 </div>
 </div>
 <p class="">Then you can inject <code>io.vertx.mutiny.mysqlclient.MySQLPool</code> class.</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reactive_db2_client"><a class="anchor" href="#_reactive_db2_client"></a><a class="link" href="#_reactive_db2_client">Reactive DB2 Client</a></h2>
+<div class="sectionbody">
+<p class="">You can use Reactive DB2 to execute queries to DB2 database in a reactive way, instead of using JDBC.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-reactive-db2-client"</code></pre>
+</div>
+</div>
+<p class="">Database configuration is the same as shown in <a href="#_persistence">Persistence</a> section, but URL is different as it is not a <em>jdbc</em>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.datasource.db-kind=db2
+quarkus.datasource.reactive.url=vertx-reactive:db2://localhost:50005/hreact</code></pre>
+</div>
+</div>
+<p class="">Then you can inject <code>io.vertx.mutiny.db2client.DB2Pool</code> class.</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reactive_transactions"><a class="anchor" href="#_reactive_transactions"></a><a class="link" href="#_reactive_transactions">Reactive Transactions</a></h2>
+<div class="sectionbody">
+<p class=""><code>io.vertx.mutiny.sqlclient.SqlClientHelper</code> is an util class that allows you to run reactive persisten code within a transaction.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">Uni&lt;Void&gt; r = SqlClientHelper.inTransactionUni(client, tx -&gt; {
+        Uni&lt;RowSet&lt;Row&gt;&gt; insertOne = tx.preparedQuery("INSERT INTO fruits (name) VALUES ($1) RETURNING (id)")
+                .execute(Tuple.of(fruit1.name));
+});</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -6660,7 +6874,7 @@ The trust store location which contains the certificate information of the certi
 </dd>
 <dt class="hdlist1"><code>limits.max-body-size</code></dt>
 <dd>
-<p>The maximum size of a request body. (default: <code>no-limit</code>)</p>
+<p>The maximum size of a request body. (default: <code>10M</code>)</p>
 </dd>
 <dt class="hdlist1"><code>limits.max-chunk-size</code></dt>
 <dd>
@@ -6785,6 +6999,7 @@ The trust store location which contains the certificate information of the certi
 </dd>
 </dl>
 </div>
+<p class="">If metrics extension is registered, you can enable to get HTTP metrics by setting <code>quarkus.resteasy.metrics.enabled</code> to true.</p>
 </div>
 </div>
 <div class="sect1">
@@ -7558,6 +7773,10 @@ quarkus.smallrye-health.readiness-path=/customready</code></pre>
 <dd>
 <p>A readiness probe for the gRPC services.</p>
 </dd>
+<dt class="hdlist1">Cassandra</dt>
+<dd>
+<p>A readiness probe to check Cassandra connection status.</p>
+</dd>
 </dl>
 </div>
 <p class="">You can disable the automatic generation by setting <code>&lt;component&gt;.health.enabled</code> to false.</p>
@@ -7912,6 +8131,7 @@ It provides several extensions to make it so.</p>
     -Dextensions="quarkus-container-image-jib"</code></pre>
 </div>
 </div>
+<p class="">Quarkus copies any file under <code>src/main/jib</code> into the built container image.</p>
 <p class="">Prefix is <code>quarkus.container-image-jib</code>:</p>
 <div class="dlist">
 <dl>
@@ -7934,6 +8154,18 @@ It provides several extensions to make it so.</p>
 <dt class="hdlist1"><code>environment-variables</code></dt>
 <dd>
 <p>Map of environment variables.</p>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>jvm-entrypoint</code></dt>
+<dd>
+<p>A custom entry point of the container image in JVM mode.</p>
+</dd>
+<dt class="hdlist1"><code>native-entrypoint</code></dt>
+<dd>
+<p>A custom entry point of the container image in native mode.</p>
 </dd>
 </dl>
 </div>
@@ -8144,7 +8376,6 @@ Remember to execute <code>eval $(minikube -p minikube docker-env)</code> to buil
     -Dextensions="openshift"</code></pre>
 </div>
 </div>
-<div class="page-break"></div>
 </div>
 </div>
 <div class="sect1">
@@ -8215,11 +8446,6 @@ String someProp2;</code></pre>
 <dd>
 <p>Trust self-signed certificates. (default: <code>false</code>)</p>
 </dd>
-</dl>
-</div>
-<div class="page-break"></div>
-<div class="dlist">
-<dl>
 <dt class="hdlist1"><code>master-url</code></dt>
 <dd>
 <p>URL of Kubernetes API server.</p>
@@ -9412,6 +9638,7 @@ session.connect();</code></pre>
 public String getDailyForecast(LocalDate date, String city) {}</code></pre>
 </div>
 </div>
+<div class="page-break"></div>
 <p class=""><code>@CacheInvalidate</code> removes the element represented by the calculated cache key from cache.
 <code>@CacheInvalidateAll</code> removes all entries from the cache.
 <code>@CacheKey</code> to specifically set the arguments to be used as key instead of all.</p>
@@ -9633,6 +9860,22 @@ The keys that end up in the user configuration are the keys specified her with '
 <dt class="hdlist1"><code>fail-on-missing-key</code></dt>
 <dd>
 <p>If the application will not start if any of the configured config sources cannot be located. (default: <code>true</code>)</p>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>trust-store</code></dt>
+<dd>
+<p>TrustStore to be used containing the SSL certificate used by Consul agent.</p>
+</dd>
+<dt class="hdlist1"><code>trust-store-password</code></dt>
+<dd>
+<p>Password of TrustStore to be used containing the SSL certificate used by Consul agent.</p>
+</dd>
+<dt class="hdlist1"><code>key-password</code></dt>
+<dd>
+<p>Password to recover key from KeyStore for SSL client authentication with Consul agent.</p>
 </dd>
 <dt class="hdlist1"><code>agent.host-port</code></dt>
 <dd>
@@ -9953,7 +10196,7 @@ public class GreetingController {
 <span class="fa-layers"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle" class="svg-inline--fa fa-circle fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path></svg><svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="lightbulb" class="svg-inline--fa fa-lightbulb fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" style="transform-origin: 0.34375em 0.5em;"><g transform="translate(176 256)"><g transform="translate(0, 0)  scale(0.625, 0.625)  rotate(0 0 0)"><path fill="currentColor" d="M176 80c-52.94 0-96 43.06-96 96 0 8.84 7.16 16 16 16s16-7.16 16-16c0-35.3 28.72-64 64-64 8.84 0 16-7.16 16-16s-7.16-16-16-16zM96.06 459.17c0 3.15.93 6.22 2.68 8.84l24.51 36.84c2.97 4.46 7.97 7.14 13.32 7.14h78.85c5.36 0 10.36-2.68 13.32-7.14l24.51-36.84c1.74-2.62 2.67-5.7 2.68-8.84l.05-43.18H96.02l.04 43.18zM176 0C73.72 0 0 82.97 0 176c0 44.37 16.45 84.85 43.56 115.78 16.64 18.99 42.74 58.8 52.42 92.16v.06h48v-.12c-.01-4.77-.72-9.51-2.15-14.07-5.59-17.81-22.82-64.77-62.17-109.67-20.54-23.43-31.52-53.15-31.61-84.14-.2-73.64 59.67-128 127.95-128 70.58 0 128 57.42 128 128 0 30.97-11.24 60.85-31.65 84.14-39.11 44.61-56.42 91.47-62.1 109.46a47.507 47.507 0 0 0-2.22 14.3v.1h48v-.05c9.68-33.37 35.78-73.18 52.42-92.16C335.55 260.85 352 220.37 352 176 352 78.8 273.2 0 176 0z" transform="translate(-176 -256)"></path></g></g></svg></span>
 </td>
 <td class="content">
-If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.5.0.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
+If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.6.0.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
 </td>
 </tr>
 </table>
@@ -10195,6 +10438,29 @@ public Greeting greet(String name) {}</code></pre>
 </li>
 </ul>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_spring_schedule"><a class="anchor" href="#_spring_schedule"></a><a class="link" href="#_spring_schedule">Spring Schedule</a></h2>
+<div class="sectionbody">
+<p class="">Quarkus provides a compatibility layer for Spring Scheduled annotation.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="spring-scheduled"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@org.springframework.scheduling.annotation.Scheduled(cron="*/5 * * * * ?")
+void cronJob() {
+    System.out.println("Cron expression hardcoded");
+}
+
+@Scheduled(fixedRate = 1000)
+@Scheduled(cron = "{cron.expr}")</code></pre>
+</div>
+</div>
 <div class="page-break"></div>
 </div>
 </div>
@@ -10221,7 +10487,7 @@ public Greeting greet(String name) {}</code></pre>
 <div class="author-bio">Java Champion and Director of DevExp at Red Hat</div>
 </div>
 
-<div class="author-bio">1.5.0.Final</div>
+<div class="author-bio">1.6.0.Final</div>
 <img src="./redhat/assets/by-nc-sa.png"/>
 </div>
 
