@@ -95,7 +95,10 @@ The maximum length of all headers. (default: `20k`)
 The maximum size of a request body. (default: `10M`)
 
 `limits.max-chunk-size`::
-The max HTTP chunk size
+The max HTTP chunk size.
+
+`limits.max-initial-line-length`::
+The maximum length of the initial line. (default: `4096`)
 
 `idle-timeout`::
 Http connection idle timeout. (default: `30M`)
@@ -430,6 +433,15 @@ public class MyDeclarativeRoutes {
          rc.response().putHeader("X-Filter", "filter 2");
          rc.next();
     }
+    
+    @Route
+    String hello(@Param Optional<String> name) {}
+
+    @Route
+    String helloFromHeader(@Header("My-Header") String header) {}
+
+    @Route
+    String createPerson(@Body Person person) {}
 
 }
 ----
@@ -906,6 +918,7 @@ kafka-streams:: Liveness (for stream state) and Readiness (topics created) probe
 vault:: A probe to check Vault conection status.
 gRPC:: A readiness probe for the gRPC services.
 Cassandra:: A readiness probe to check Cassandra connection status.
+Redis:: A readiness probe to check Redis connection status.
 
 You can disable the automatic generation by setting `<component>.health.enabled` to false.
 

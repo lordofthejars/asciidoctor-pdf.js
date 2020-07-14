@@ -712,7 +712,7 @@ String output = report
 [source, java]
 ----
 CompletionStage<String> async = report.renderAsync();
-Publisher<String> publisher = report.publisher();
+Multi<String> publisher = report.createMulti();
 
 Uni<String> content = io.smallrye.mutiny.Uni.createFrom()
                             .completionStage(() -> report.renderAsync());
