@@ -583,6 +583,7 @@ Templates can be defined in any format, in case of HTML:
 </head>
 <body>
     <h1>{item.name ?: 'Unknown'}</h1>
+    <h2>{str:reverse('Hello')}</h2>
     <div>Price: {item.price}</div>
     {#if item.price > 100}
     <div>Discounted Price: {item.discountedPrice}</div>
@@ -615,6 +616,13 @@ public TemplateInstance get(@PathParam("id") Integer id) {
 @TemplateExtension
 static BigDecimal discountedPrice(Item item) {
     return item.price.multiply(new BigDecimal("0.9"));
+}
+
+@TemplateExtension(namespace = "str")
+public static class StringExtensions {
+  static String reverse(String val) {
+      return new StringBuilder(val).reverse().toString();
+   }
 }
 ----
 

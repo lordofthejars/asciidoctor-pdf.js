@@ -956,6 +956,34 @@ boolean valid = vaultTOTPSecretEngine.validateCode("my_key_2", keyCode);
 ----
 // end::update_15_17[]
 
+// tag::update_18_7[]
+*Vault Provisioning*
+
+Vault extension offers façade classes to Vault provisioning functions:
+
+[source, java]
+----
+@Inject
+VaultSystemBackendEngine vaultSystemBackendEngine;
+
+@Inject
+VaultKubernetesAuthService vaultKubernetesAuthService;
+
+String rules = "path \"transit/*\" {\n" +
+          "  capabilities = [ \"create\", \"read\", \"update\" ]\n" +
+          "}";
+String policyName = "sys-test-policy";
+
+vaultSystemBackendEngine.createUpdatePolicy(policyName, rules);
+
+vaultKubernetesAuthService
+    .createRole(roleName, new VaultKubernetesAuthRole()
+          .setBoundServiceAccountNames(boundServiceAccountNames)
+          .setBoundServiceAccountNamespaces(boundServiceAccountNamespaces)
+          .setTokenPolicies(tokenPolicies));
+----
+// end::update_18_7[]
+
 Vault configuration properties.
 Prefix `quarkus.vault` is skipped.
 

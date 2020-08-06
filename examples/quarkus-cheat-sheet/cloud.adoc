@@ -373,7 +373,7 @@ Instead of adding Kubernetes extension, set container image s2i and the `target`
 
 // tag::update_15_14[]
 
-Integration between MicroProfile Config spec and ConfigMaps:
+Integration between MicroProfile Config spec and ConfigMaps & Secrets:
 
 [source, bash]
 ----
@@ -412,8 +412,13 @@ The application will not start if any of the configured config sources cannot be
 ConfigMaps to look for in the namespace that the Kubernetes Client has been configured for. Supports CSV.
 
 `namespace`::
-Access to ConfigMaps from a specific namespace
+Access to ConfigMaps from a specific namespace.
 // end::update_15_14[]
+
+// tag::update_18_10[]
+`secrets.enabled`::
+Whether or not configuration can be read from secrets. (default: `false`)
+// end::update_18_10[]
 
 == Kubernetes Client
 // tag::update_4_5[]
