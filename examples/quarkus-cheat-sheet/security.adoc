@@ -68,6 +68,36 @@ quarkus.http.auth.permission.deny1.policy=
 You need to provide permissions set by using the `roles-allowed` property or use the built-in ones `deny`, `permit` or `authenticated`. 
 // end::update_10_4[]
 
+*Testing*
+
+// tag::update_18_2[]
+Quarkus provides explicit support for testing with different users, and with the security subsystem disabled.
+
+[source, xml]
+----
+<dependency>
+    <groupId>io.quarkus</groupId>
+    <artifactId>quarkus-test-security</artifactId>
+    <scope>test</scope>
+</dependency>
+----
+
+[source, java]
+----
+@Test
+@TestSecurity(authorizationEnabled = false)
+void someTestMethod() {
+...
+}
+
+@Test
+@TestSecurity(user = "testUser", roles = {"admin", "user"})
+void someTestMethod() {
+...
+}
+----
+// end::update_18_2[]
+
 == JWT
 // tag::update_1_5[]
 Quarkus implements https://github.com/eclipse/microprofile-jwt-auth[MicroProfile JWT RBAC spec, window="_blank"].
@@ -125,8 +155,6 @@ Relative path or URL of a public key.
 // tag::update_13_16[]
 `smallrye.jwt.token.header`::
 Sets header such as `Cookie` is used to pass the token. (default: `Authorization`).
-
-<<<
 
 `smallrye.jwt.token.cookie`::
 Name of the cookie containing a token.
@@ -925,6 +953,34 @@ final String keyCode = vaultTOTPSecretEngine.generateCode("my_key_2");
 boolean valid = vaultTOTPSecretEngine.validateCode("my_key_2", keyCode);
 ----
 // end::update_15_17[]
+
+// tag::update_18_7[]
+*Vault Provisioning*
+
+Vault extension offers façade classes to Vault provisioning functions:
+
+[source, java]
+----
+@Inject
+VaultSystemBackendEngine vaultSystemBackendEngine;
+
+@Inject
+VaultKubernetesAuthService vaultKubernetesAuthService;
+
+String rules = "path \"transit/*\" {\n" +
+          "  capabilities = [ \"create\", \"read\", \"update\" ]\n" +
+          "}";
+String policyName = "sys-test-policy";
+
+vaultSystemBackendEngine.createUpdatePolicy(policyName, rules);
+
+vaultKubernetesAuthService
+    .createRole(roleName, new VaultKubernetesAuthRole()
+          .setBoundServiceAccountNames(boundServiceAccountNames)
+          .setBoundServiceAccountNamespaces(boundServiceAccountNamespaces)
+          .setTokenPolicies(tokenPolicies));
+----
+// end::update_18_7[]
 
 Vault configuration properties.
 Prefix `quarkus.vault` is skipped.

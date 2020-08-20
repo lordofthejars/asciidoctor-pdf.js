@@ -797,6 +797,29 @@ NOTE: Properties set at runtime have absolutely no effect on the bean resolution
 
 // end::update_16_1[]
 
+// tag::update_18_8[]
+*Container-managed Concurrency*
+
+Quarkus provides `@io.quarkus.arc.Lock` and a built-in interceptor for concurrency control.
+
+[source, java]
+----
+@Lock
+@ApplicationScoped
+class SharedService {
+  
+    void addAmount(BigDecimal amout) {
+    }
+  
+    @Lock(value = Lock.Type.READ, time = 1, unit = TimeUnit.SECONDS)
+    BigDecimal getAmount() {
+    }
+}
+----
+
+By default the class is in write mode (so no concurrent calls allowed) except when lock type is `READ` where the method can be called concurrently if no write operation in process.
+// end::update_18_8[]
+
 == JSON Marshalling/Unmarshalling
 
 To work with `JSON-B` you need to add a dependency:
@@ -818,8 +841,6 @@ public class Sauce {
     // getter/setters
 }
 ----
-
-<<<
 
 JSON equivalent:
 
@@ -1502,6 +1523,62 @@ You can also inject the URL where Quarkus is started:
 @TestHTTPResource("index.html")
 URL url;
 ----
+
+// tag::update_18_9[]
+[source, java]
+----
+@TestHTTPEndpoint(GreetingResource.class)
+@TestHTTPResource
+URL url;
+----
+
+[source, java]
+----
+@QuarkusTest
+@TestHTTPEndpoint(GreetingResource.class)
+public class GreetingResourceTest {
+    @Test
+    public void testHelloEndpoint() {
+        given()
+          .when().get()
+          .then()
+             .statusCode(200)
+             .body(is("hello"));
+    }
+}
+----
+
+Root path is calculated automatically, not necessary to explicitly set.
+// end::update_18_9[]
+
+*QuarkusTestProfile*
+
+// tag::update_18_5[]
+You can define for each Test class a different configuration options.
+
+IMPORTANT: This implies that the Quarkus service is restarted.
+
+[source, java]
+----
+public class MyProfile implements io.quarkus.test.junit.QuarkusTestProfile {
+    
+    @Override
+    public Map<String, String> getConfigOverrides() {
+        return Map.of("greetings.message", "This is a Test");
+    }
+
+    @Override
+    public String getConfigProfile() {
+        return "my-test-profile";
+    }
+}
+
+@QuarkusTest
+@TestProfile(MyProfile.class)
+public class MyTestClass {
+}
+----
+// end::update_18_5[]
 
 *Quarkus Test Resource*
 

@@ -15,6 +15,68 @@ In this page you can either read what has been added in each version of the chea
 [[whatsnew]]
 == What's New in Cheat-Sheet
 
+=== Version 1.7.0.Final
+
+.Hibernate Envers
+[%collapsible]
+====
+include::persistence.adoc[tag=update_18_1]
+====
+
+.Test Security
+[%collapsible]
+====
+include::security.adoc[tag=update_18_2]
+====
+
+.Kubernetes & Prometheus
+[%collapsible]
+====
+include::cloud.adoc[tag=update_18_3]
+====
+
+.Redis
+[%collapsible]
+====
+include::persistence.adoc[tag=update_18_4]
+====
+
+.Quarkus Test Profile
+[%collapsible]
+====
+include::core.adoc[tag=update_18_5]
+====
+
+.Flyway Suffix/Prefix
+[%collapsible]
+====
+include::persistence.adoc[tag=update_18_6]
+====
+
+.Vault Provisioning
+[%collapsible]
+====
+include::security.adoc[tag=update_18_7]
+====
+
+.Container-managed Concurrency
+[%collapsible]
+====
+include::core.adoc[tag=update_18_8]
+====
+
+.Specify Endpoints in tests
+[%collapsible]
+====
+include::core.adoc[tag=update_18_9]
+====
+
+.Kubernetes ConfigMap & Secrets
+[%collapsible]
+====
+include::cloud.adoc[tag=update_18_10]
+====
+
 === Version 1.6.0.Final
 
 .Configure CDI beans with PicoCLI

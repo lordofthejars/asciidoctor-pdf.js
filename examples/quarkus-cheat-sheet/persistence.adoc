@@ -41,7 +41,7 @@ List of datasource parameters.
 `quarkus.datasource` as prefix is skipped in the next table.
 
 `db-kind`::
-Built-in datasource kinds so the JDBC driver is resolved automatically. Possible values: `derby`, `h2`, `mariadb`, `mssql`, `mysql`, `postgresql`.
+Built-in datasource kinds so the JDBC driver is resolved automatically. Possible values: `derby`, `h2`, `mariadb`, `mssql`, `mysql`, `postgresql`, `db2`.
 
 `username`::
 Username to access.
@@ -624,6 +624,18 @@ quarkus.flyway.mycompany.locations=classpath:database/mycompany
 If you need more dynamic approach implement: `@ApplicationScoped io.quarkus.hibernate.orm.runtime.tenant.TenantConnectionResolver`
 // end::update_16_14[]
 
+== Hibernate Envers
+
+// tag::update_18_1[]
+Quarkus supports Hibernate Envers.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="hibernate-envers"
+----
+// end::update_18_1[]
+
 == REST Data Panache
 
 // tag::update_16_21[]
@@ -888,6 +900,80 @@ org.infinispan.manager.EmbeddedCacheManager cacheManager;
 ----
 // end::update_10_7[]
 
+== Redis
+
+// tag::update_18_4[]
+Quarkus integrates with Redis.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="redis-client"
+----
+
+Configure Redis location:
+
+[source, properties]
+----
+quarkus.redis.hosts=localhost:6379
+----
+
+You can use synchronous or reactive clients:
+
+[source, java]
+----
+@Inject
+RedisClient redisClient;
+
+@Inject
+ReactiveRedisClient reactiveRedisClient;
+----
+
+[source, java]
+----
+void increment(String key, Integer incrementBy) {
+    redisClient.incrby(key, incrementBy.toString());
+}
+
+Uni<List<String>> keys() {
+    return reactiveRedisClient
+        .keys("*")
+        .map(response -> {
+            List<String> result = new ArrayList<>();
+            for (Response r : response) {
+                result.add(r.toString());
+            }
+            return result;
+        });
+}
+----
+
+List of Redis parameters.
+
+`quarkus.redis` as prefix is skipped in the next table.
+
+`health.enabled`::
+Health check is published in case the smallrye-health extension is present. (default: `true`) 
+
+`password`::
+The Redis password.
+
+`hosts`::
+The Redis hosts. (default: `localhost:6379`) 
+
+`database`::
+The Redis database. 
+
+`timeout`::
+The maximum delay to wait before a blocking command to redis server times out. (default: `10s`)
+
+`ssl`::
+Enables or disables the SSL on connect.
+
+`clinet-type`::
+The Redis client type. Possible values: `standalone`, `cluster`, `sentinel` (default: `standalone`)
+// end::update_18_4[]
+
 == Flyway
 
 // tag::update_1_7[]
@@ -960,6 +1046,14 @@ Description to tag an existing schema with when executing baseline (default: `Fl
 `validate-on-migrate`::
 Validate the applied migrations against the available ones (default: `true`)
 // end::update_13_6[]
+
+// tag::update_18_6[]
+`placeholder-prefix`::
+Prefix of every placeholder (default: `${`)
+
+`placeholder-suffix`::
+Suffix of every placeholder (default: `}`)
+// end::update_18_6[]
 
 *Multiple Datasources*
 // tag::update_12_7[]

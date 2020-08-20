@@ -221,9 +221,11 @@ Also, you can customize the generated resource by setting the new values in `app
 
 [source, properties]
 ----
+quarkus.kubernetes.namespace=mynamespace
+
 quarkus.kubernetes.replicas=3
 
-quarkus.kubernetes.labelsfoo=bar
+quarkus.kubernetes.labels.foo=bar
 
 quarkus.kubernetes.readiness-probe.period-seconds=45
 
@@ -282,6 +284,19 @@ quarkus.kubernetes.labels.foo=bar
 quarkus.kubernetes.annotations.foo=bar
 ----
 // end::update_14_38[]
+
+// tag::update_18_3[]
+*metrics*
+
+When using metrics extension, Prometheus annotations are generated:
+
+[source, yaml]
+----
+prometheus.io/scrape: "true"
+prometheus.io/path: /metrics
+prometheus.io/port: "8080"
+----
+// end::update_18_3[]
 
 *Kubernetes Deployment Targets*
 // tag::update_12_4[]
@@ -358,7 +373,7 @@ Instead of adding Kubernetes extension, set container image s2i and the `target`
 
 // tag::update_15_14[]
 
-Integration between MicroProfile Config spec and ConfigMaps:
+Integration between MicroProfile Config spec and ConfigMaps & Secrets:
 
 [source, bash]
 ----
@@ -396,9 +411,14 @@ The application will not start if any of the configured config sources cannot be
 `config-maps`::
 ConfigMaps to look for in the namespace that the Kubernetes Client has been configured for. Supports CSV.
 
-`secrets`::
-Secrets to look for in the namespace that the Kubernetes Client has been configured for. Supports CSV.
+`namespace`::
+Access to ConfigMaps from a specific namespace.
 // end::update_15_14[]
+
+// tag::update_18_10[]
+`secrets.enabled`::
+Whether or not configuration can be read from secrets. (default: `false`)
+// end::update_18_10[]
 
 == Kubernetes Client
 // tag::update_4_5[]
