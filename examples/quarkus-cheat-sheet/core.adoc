@@ -842,8 +842,6 @@ public class Sauce {
 }
 ----
 
-<<<
-
 JSON equivalent:
 
 [source, json]

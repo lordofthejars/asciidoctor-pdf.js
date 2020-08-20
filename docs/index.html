@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.9">
+<meta name="generator" content="Asciidoctor 2.0.10">
 <meta name="author" content="Alex Soto">
 <title>Home of Quarkus Cheat-Sheet</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
@@ -241,7 +241,7 @@ table.linenotable td.linenos{border-right:1px solid currentColor;opacity:.35;pad
 pre.pygments .lineno{border-right:1px solid currentColor;opacity:.35;display:inline-block;margin-right:.75em}
 pre.pygments .lineno::before{content:"";margin-right:-.125em}
 .quoteblock{margin:0 1em 1.25em 1.5em;display:table}
-.quoteblock>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock:not(.excerpt)>.title{margin-left:-1.5em;margin-bottom:.75em}
 .quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
 .quoteblock blockquote{margin:0;padding:0;border:0}
 .quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
@@ -258,7 +258,8 @@ pre.pygments .lineno::before{content:"";margin-right:-.125em}
 .quoteblock.abstract blockquote,.quoteblock.abstract p,.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{line-height:1.6;word-spacing:0}
 .quoteblock.abstract{margin:0 1em 1.25em;display:block}
 .quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
-.quoteblock.excerpt,.quoteblock .quoteblock{margin:0 0 1.25em;padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt>blockquote,.quoteblock .quoteblock{padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
 .quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
 .quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;text-align:left;margin-right:0}
 table.tableblock{max-width:100%;border-collapse:separate}
@@ -449,20 +450,342 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.18/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
+<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.19/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
 </div>
 <div class="paragraph">
 <p>Quarkus (<a href="https://quarkus.io/" class="bare">https://quarkus.io/</a>) is a Kubernetes Native Java stack tailored for GraalVM &amp; OpenJDK HotSpot, crafted from the best of breed Java libraries and standards.
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
 </div>
 <div class="paragraph">
-<p>In this page you can either read what has been added in each version of the cheat-sheet individually in <a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a> section, see the full cheat-sheet as HTML <span class="icon"><i class="fa fa-html5"></i></span> <a href="#quarkuscheatsheet">Quarkus Cheat-Sheet</a> format or <span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.18/quarkus-cheat-sheet.pdf">download the full cheat-sheet as PDF</a>.</p>
+<p>In this page you can either read what has been added in each version of the cheat-sheet individually in <a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a> section, see the full cheat-sheet as HTML <span class="icon"><i class="fa fa-html5"></i></span> <a href="#quarkuscheatsheet">Quarkus Cheat-Sheet</a> format or <span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.19/quarkus-cheat-sheet.pdf">download the full cheat-sheet as PDF</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="whatsnew"><a class="anchor" href="#whatsnew"></a><a class="link" href="#whatsnew">What&#8217;s New in Cheat-Sheet</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_version_1_7_0_final"><a class="anchor" href="#_version_1_7_0_final"></a><a class="link" href="#_version_1_7_0_final">Version 1.7.0.Final</a></h3>
+<details>
+<summary class="title">Hibernate Envers</summary>
+<div class="content">
+<div class="paragraph">
+<p>Quarkus supports Hibernate Envers.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="hibernate-envers"</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Test Security</summary>
+<div class="content">
+<div class="paragraph">
+<p>Quarkus provides explicit support for testing with different users, and with the security subsystem disabled.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-test-security&lt;/artifactId&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Test
+@TestSecurity(authorizationEnabled = false)
+void someTestMethod() {
+...
+}
+
+@Test
+@TestSecurity(user = "testUser", roles = {"admin", "user"})
+void someTestMethod() {
+...
+}</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Kubernetes &amp; Prometheus</summary>
+<div class="content">
+<div class="paragraph">
+<p><strong>metrics</strong></p>
+</div>
+<div class="paragraph">
+<p>When using metrics extension, Prometheus annotations are generated:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="yaml" class="language-yaml hljs">prometheus.io/scrape: "true"
+prometheus.io/path: /metrics
+prometheus.io/port: "8080"</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Redis</summary>
+<div class="content">
+<div class="paragraph">
+<p>Quarkus integrates with Redis.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="redis-client"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Configure Redis location:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.redis.hosts=localhost:6379</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can use synchronous or reactive clients:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+RedisClient redisClient;
+
+@Inject
+ReactiveRedisClient reactiveRedisClient;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">void increment(String key, Integer incrementBy) {
+    redisClient.incrby(key, incrementBy.toString());
+}
+
+Uni&lt;List&lt;String&gt;&gt; keys() {
+    return reactiveRedisClient
+        .keys("*")
+        .map(response -&gt; {
+            List&lt;String&gt; result = new ArrayList&lt;&gt;();
+            for (Response r : response) {
+                result.add(r.toString());
+            }
+            return result;
+        });
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>List of Redis parameters.</p>
+</div>
+<div class="paragraph">
+<p><code>quarkus.redis</code> as prefix is skipped in the next table.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>health.enabled</code></dt>
+<dd>
+<p>Health check is published in case the smallrye-health extension is present. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>password</code></dt>
+<dd>
+<p>The Redis password.</p>
+</dd>
+<dt class="hdlist1"><code>hosts</code></dt>
+<dd>
+<p>The Redis hosts. (default: <code>localhost:6379</code>)</p>
+</dd>
+<dt class="hdlist1"><code>database</code></dt>
+<dd>
+<p>The Redis database.</p>
+</dd>
+<dt class="hdlist1"><code>timeout</code></dt>
+<dd>
+<p>The maximum delay to wait before a blocking command to redis server times out. (default: <code>10s</code>)</p>
+</dd>
+<dt class="hdlist1"><code>ssl</code></dt>
+<dd>
+<p>Enables or disables the SSL on connect.</p>
+</dd>
+<dt class="hdlist1"><code>clinet-type</code></dt>
+<dd>
+<p>The Redis client type. Possible values: <code>standalone</code>, <code>cluster</code>, <code>sentinel</code> (default: <code>standalone</code>)</p>
+</dd>
+</dl>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Quarkus Test Profile</summary>
+<div class="content">
+<div class="paragraph">
+<p>You can define for each Test class a different configuration options.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+This implies that the Quarkus service is restarted.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class MyProfile implements io.quarkus.test.junit.QuarkusTestProfile {
+
+    @Override
+    public Map&lt;String, String&gt; getConfigOverrides() {
+        return Map.of("greetings.message", "This is a Test");
+    }
+
+    @Override
+    public String getConfigProfile() {
+        return "my-test-profile";
+    }
+}
+
+@QuarkusTest
+@TestProfile(MyProfile.class)
+public class MyTestClass {
+}</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Flyway Suffix/Prefix</summary>
+<div class="content">
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>placeholder-prefix</code></dt>
+<dd>
+<p>Prefix of every placeholder (default: <code>${</code>)</p>
+</dd>
+<dt class="hdlist1"><code>placeholder-suffix</code></dt>
+<dd>
+<p>Suffix of every placeholder (default: <code>}</code>)</p>
+</dd>
+</dl>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Vault Provisioning</summary>
+<div class="content">
+<div class="paragraph">
+<p><strong>Vault Provisioning</strong></p>
+</div>
+<div class="paragraph">
+<p>Vault extension offers façade classes to Vault provisioning functions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+VaultSystemBackendEngine vaultSystemBackendEngine;
+
+@Inject
+VaultKubernetesAuthService vaultKubernetesAuthService;
+
+String rules = "path \"transit/*\" {\n" +
+          "  capabilities = [ \"create\", \"read\", \"update\" ]\n" +
+          "}";
+String policyName = "sys-test-policy";
+
+vaultSystemBackendEngine.createUpdatePolicy(policyName, rules);
+
+vaultKubernetesAuthService
+    .createRole(roleName, new VaultKubernetesAuthRole()
+          .setBoundServiceAccountNames(boundServiceAccountNames)
+          .setBoundServiceAccountNamespaces(boundServiceAccountNamespaces)
+          .setTokenPolicies(tokenPolicies));</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Container-managed Concurrency</summary>
+<div class="content">
+<div class="paragraph">
+<p><strong>Container-managed Concurrency</strong></p>
+</div>
+<div class="paragraph">
+<p>Quarkus provides <code>@io.quarkus.arc.Lock</code> and a built-in interceptor for concurrency control.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Lock
+@ApplicationScoped
+class SharedService {
+
+    void addAmount(BigDecimal amout) {
+    }
+
+    @Lock(value = Lock.Type.READ, time = 1, unit = TimeUnit.SECONDS)
+    BigDecimal getAmount() {
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default the class is in write mode (so no concurrent calls allowed) except when lock type is <code>READ</code> where the method can be called concurrently if no write operation in process.</p>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Specify Endpoints in tests</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@TestHTTPEndpoint(GreetingResource.class)
+@TestHTTPResource
+URL url;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@QuarkusTest
+@TestHTTPEndpoint(GreetingResource.class)
+public class GreetingResourceTest {
+    @Test
+    public void testHelloEndpoint() {
+        given()
+          .when().get()
+          .then()
+             .statusCode(200)
+             .body(is("hello"));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Root path is calculated automatically, not necessary to explicitly set.</p>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Kubernetes ConfigMap &amp; Secrets</summary>
+<div class="content">
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>secrets.enabled</code></dt>
+<dd>
+<p>Whether or not configuration can be read from secrets. (default: <code>false</code>)</p>
+</dd>
+</dl>
+</div>
+</div>
+</details>
+</div>
 <div class="sect2">
 <h3 id="_version_1_6_0_final"><a class="anchor" href="#_version_1_6_0_final"></a><a class="link" href="#_version_1_6_0_final">Version 1.6.0.Final</a></h3>
 <details>
@@ -1271,7 +1594,11 @@ The trust store location which contains the certificate information of the certi
 </dd>
 <dt class="hdlist1"><code>limits.max-chunk-size</code></dt>
 <dd>
-<p>The max HTTP chunk size</p>
+<p>The max HTTP chunk size.</p>
+</dd>
+<dt class="hdlist1"><code>limits.max-initial-line-length</code></dt>
+<dd>
+<p>The maximum length of the initial line. (default: <code>4096</code>)</p>
 </dd>
 <dt class="hdlist1"><code>idle-timeout</code></dt>
 <dd>
@@ -2643,7 +2970,7 @@ Mockito.when(greetingService.hello()).thenReturn("hello from mockito");</code></
 <summary class="title">Kubernetes Configuration Extension</summary>
 <div class="content">
 <div class="paragraph">
-<p>Integration between MicroProfile Config spec and ConfigMaps:</p>
+<p>Integration between MicroProfile Config spec and ConfigMaps &amp; Secrets:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2689,9 +3016,9 @@ String someProp2;</code></pre>
 <dd>
 <p>ConfigMaps to look for in the namespace that the Kubernetes Client has been configured for. Supports CSV.</p>
 </dd>
-<dt class="hdlist1"><code>secrets</code></dt>
+<dt class="hdlist1"><code>namespace</code></dt>
 <dd>
-<p>Secrets to look for in the namespace that the Kubernetes Client has been configured for. Supports CSV.</p>
+<p>Access to ConfigMaps from a specific namespace.</p>
 </dd>
 </dl>
 </div>
@@ -3037,13 +3364,14 @@ The prefix is: <code>quarkus.hibernate-validator</code>.</p>
 <h2 id="quarkuscheatsheet"><a class="anchor" href="#quarkuscheatsheet"></a><a class="link" href="#quarkuscheatsheet">Quarkus Cheat-Sheet</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.18/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
+<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.19/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
 </div>
 <div id="toc" class="toc">
 <div id="toctitle" class="title">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a>
 <ul class="sectlevel2">
+<li><a href="#_version_1_7_0_final">Version 1.7.0.Final</a></li>
 <li><a href="#_version_1_6_0_final">Version 1.6.0.Final</a></li>
 <li><a href="#_version_1_5_0_final">Version 1.5.0.Final</a></li>
 <li><a href="#_version_1_4_0_final">Version 1.4.0.Final</a></li>
@@ -3069,9 +3397,11 @@ The prefix is: <code>quarkus.hibernate-validator</code>.</p>
 <li><a href="#_rest_client">Rest Client</a></li>
 <li><a href="#_testing">Testing</a></li>
 <li><a href="#_persistence">Persistence</a></li>
+<li><a href="#_hibernate_envers">Hibernate Envers</a></li>
 <li><a href="#_rest_data_panache">REST Data Panache</a></li>
 <li><a href="#_hibernate_reactive">Hibernate Reactive</a></li>
 <li><a href="#_infinispan">Infinispan</a></li>
+<li><a href="#_redis">Redis</a></li>
 <li><a href="#_flyway">Flyway</a></li>
 <li><a href="#_liquibase">Liquibase</a></li>
 <li><a href="#_hibernate_search">Hibernate Search</a></li>
@@ -3165,7 +3495,7 @@ The prefix is: <code>quarkus.hibernate-validator</code>.</p>
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
 </div>
 <div class="paragraph">
-<p>Cheat-sheet tested with <strong>Quarkus 1.6.0.Final</strong>.</p>
+<p>Cheat-sheet tested with <strong>Quarkus 1.7.0.Final</strong>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -3175,7 +3505,7 @@ Also focused on developer experience, making things just work with little to no 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.6.0.Final:create \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.7.0.Final:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=getting-started \
     -DclassName="org.acme.quickstart.GreetingResource" \
@@ -4141,6 +4471,30 @@ Properties set at runtime have absolutely no effect on the bean resolution using
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p><strong>Container-managed Concurrency</strong></p>
+</div>
+<div class="paragraph">
+<p>Quarkus provides <code>@io.quarkus.arc.Lock</code> and a built-in interceptor for concurrency control.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Lock
+@ApplicationScoped
+class SharedService {
+
+    void addAmount(BigDecimal amout) {
+    }
+
+    @Lock(value = Lock.Type.READ, time = 1, unit = TimeUnit.SECONDS)
+    BigDecimal getAmount() {
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default the class is in write mode (so no concurrent calls allowed) except when lock type is <code>READ</code> where the method can be called concurrently if no write operation in process.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_json_marshallingunmarshalling"><a class="anchor" href="#_json_marshallingunmarshalling"></a><a class="link" href="#_json_marshallingunmarshalling">JSON Marshalling/Unmarshalling</a></h3>
@@ -4166,7 +4520,6 @@ Properties set at runtime have absolutely no effect on the bean resolution using
 }</code></pre>
 </div>
 </div>
-<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>JSON equivalent:</p>
 </div>
@@ -4985,6 +5338,71 @@ public class GreetingResourceTest {
 URL url;</code></pre>
 </div>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@TestHTTPEndpoint(GreetingResource.class)
+@TestHTTPResource
+URL url;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@QuarkusTest
+@TestHTTPEndpoint(GreetingResource.class)
+public class GreetingResourceTest {
+    @Test
+    public void testHelloEndpoint() {
+        given()
+          .when().get()
+          .then()
+             .statusCode(200)
+             .body(is("hello"));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Root path is calculated automatically, not necessary to explicitly set.</p>
+</div>
+<div class="paragraph">
+<p><strong>QuarkusTestProfile</strong></p>
+</div>
+<div class="paragraph">
+<p>You can define for each Test class a different configuration options.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+This implies that the Quarkus service is restarted.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class MyProfile implements io.quarkus.test.junit.QuarkusTestProfile {
+
+    @Override
+    public Map&lt;String, String&gt; getConfigOverrides() {
+        return Map.of("greetings.message", "This is a Test");
+    }
+
+    @Override
+    public String getConfigProfile() {
+        return "my-test-profile";
+    }
+}
+
+@QuarkusTest
+@TestProfile(MyProfile.class)
+public class MyTestClass {
+}</code></pre>
+</div>
+</div>
 <div class="paragraph">
 <p><strong>Quarkus Test Resource</strong></p>
 </div>
@@ -5217,7 +5635,7 @@ quarkus.hibernate-orm.database.generation=update</code></pre>
 <dl>
 <dt class="hdlist1"><code>db-kind</code></dt>
 <dd>
-<p>Built-in datasource kinds so the JDBC driver is resolved automatically. Possible values: <code>derby</code>, <code>h2</code>, <code>mariadb</code>, <code>mssql</code>, <code>mysql</code>, <code>postgresql</code>.</p>
+<p>Built-in datasource kinds so the JDBC driver is resolved automatically. Possible values: <code>derby</code>, <code>h2</code>, <code>mariadb</code>, <code>mssql</code>, <code>mysql</code>, <code>postgresql</code>, <code>db2</code>.</p>
 </dd>
 <dt class="hdlist1"><code>username</code></dt>
 <dd>
@@ -5924,6 +6342,18 @@ quarkus.flyway.mycompany.locations=classpath:database/mycompany
 </div>
 </div>
 <div class="sect2">
+<h3 id="_hibernate_envers"><a class="anchor" href="#_hibernate_envers"></a><a class="link" href="#_hibernate_envers">Hibernate Envers</a></h3>
+<div class="paragraph">
+<p>Quarkus supports Hibernate Envers.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="hibernate-envers"</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_rest_data_panache"><a class="anchor" href="#_rest_data_panache"></a><a class="link" href="#_rest_data_panache">REST Data Panache</a></h3>
 <div class="paragraph">
 <p>REST Data with Panache extension can generate the basic CRUD endpoints for your entities and repositories.</p>
@@ -6217,6 +6647,95 @@ org.infinispan.manager.EmbeddedCacheManager cacheManager;</code></pre>
 </div>
 </div>
 <div class="sect2">
+<h3 id="_redis"><a class="anchor" href="#_redis"></a><a class="link" href="#_redis">Redis</a></h3>
+<div class="paragraph">
+<p>Quarkus integrates with Redis.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="redis-client"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Configure Redis location:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.redis.hosts=localhost:6379</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can use synchronous or reactive clients:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+RedisClient redisClient;
+
+@Inject
+ReactiveRedisClient reactiveRedisClient;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">void increment(String key, Integer incrementBy) {
+    redisClient.incrby(key, incrementBy.toString());
+}
+
+Uni&lt;List&lt;String&gt;&gt; keys() {
+    return reactiveRedisClient
+        .keys("*")
+        .map(response -&gt; {
+            List&lt;String&gt; result = new ArrayList&lt;&gt;();
+            for (Response r : response) {
+                result.add(r.toString());
+            }
+            return result;
+        });
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>List of Redis parameters.</p>
+</div>
+<div class="paragraph">
+<p><code>quarkus.redis</code> as prefix is skipped in the next table.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>health.enabled</code></dt>
+<dd>
+<p>Health check is published in case the smallrye-health extension is present. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>password</code></dt>
+<dd>
+<p>The Redis password.</p>
+</dd>
+<dt class="hdlist1"><code>hosts</code></dt>
+<dd>
+<p>The Redis hosts. (default: <code>localhost:6379</code>)</p>
+</dd>
+<dt class="hdlist1"><code>database</code></dt>
+<dd>
+<p>The Redis database.</p>
+</dd>
+<dt class="hdlist1"><code>timeout</code></dt>
+<dd>
+<p>The maximum delay to wait before a blocking command to redis server times out. (default: <code>10s</code>)</p>
+</dd>
+<dt class="hdlist1"><code>ssl</code></dt>
+<dd>
+<p>Enables or disables the SSL on connect.</p>
+</dd>
+<dt class="hdlist1"><code>clinet-type</code></dt>
+<dd>
+<p>The Redis client type. Possible values: <code>standalone</code>, <code>cluster</code>, <code>sentinel</code> (default: <code>standalone</code>)</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_flyway"><a class="anchor" href="#_flyway"></a><a class="link" href="#_flyway">Flyway</a></h3>
 <div class="paragraph">
 <p>Quarkus integrates with <a href="https://flywaydb.org/">Flyway</a> to help you on database schema migrations.</p>
@@ -6312,6 +6831,18 @@ Prefix for repeatable SQL migrations (default: <code>R</code>)</p>
 <dt class="hdlist1"><code>validate-on-migrate</code></dt>
 <dd>
 <p>Validate the applied migrations against the available ones (default: <code>true</code>)</p>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>placeholder-prefix</code></dt>
+<dd>
+<p>Prefix of every placeholder (default: <code>${</code>)</p>
+</dd>
+<dt class="hdlist1"><code>placeholder-suffix</code></dt>
+<dd>
+<p>Suffix of every placeholder (default: <code>}</code>)</p>
 </dd>
 </dl>
 </div>
@@ -9422,6 +9953,36 @@ quarkus.http.auth.permission.deny1.policy=
 <div class="paragraph">
 <p>You need to provide permissions set by using the <code>roles-allowed</code> property or use the built-in ones <code>deny</code>, <code>permit</code> or <code>authenticated</code>.</p>
 </div>
+<div class="paragraph">
+<p><strong>Testing</strong></p>
+</div>
+<div class="paragraph">
+<p>Quarkus provides explicit support for testing with different users, and with the security subsystem disabled.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+    &lt;artifactId&gt;quarkus-test-security&lt;/artifactId&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Test
+@TestSecurity(authorizationEnabled = false)
+void someTestMethod() {
+...
+}
+
+@Test
+@TestSecurity(user = "testUser", roles = {"admin", "user"})
+void someTestMethod() {
+...
+}</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_jwt"><a class="anchor" href="#_jwt"></a><a class="link" href="#_jwt">JWT</a></h3>
@@ -9500,11 +10061,6 @@ Relative path or URL of a public key.</p>
 <dd>
 <p>Sets header such as <code>Cookie</code> is used to pass the token. (default: <code>Authorization</code>).</p>
 </dd>
-</dl>
-</div>
-<div style="page-break-after: always;"></div>
-<div class="dlist">
-<dl>
 <dt class="hdlist1"><code>smallrye.jwt.token.cookie</code></dt>
 <dd>
 <p>Name of the cookie containing a token.</p>
@@ -10511,6 +11067,34 @@ boolean valid = vaultTOTPSecretEngine.validateCode("my_key_2", keyCode);</code><
 </div>
 </div>
 <div class="paragraph">
+<p><strong>Vault Provisioning</strong></p>
+</div>
+<div class="paragraph">
+<p>Vault extension offers façade classes to Vault provisioning functions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+VaultSystemBackendEngine vaultSystemBackendEngine;
+
+@Inject
+VaultKubernetesAuthService vaultKubernetesAuthService;
+
+String rules = "path \"transit/*\" {\n" +
+          "  capabilities = [ \"create\", \"read\", \"update\" ]\n" +
+          "}";
+String policyName = "sys-test-policy";
+
+vaultSystemBackendEngine.createUpdatePolicy(policyName, rules);
+
+vaultKubernetesAuthService
+    .createRole(roleName, new VaultKubernetesAuthRole()
+          .setBoundServiceAccountNames(boundServiceAccountNames)
+          .setBoundServiceAccountNamespaces(boundServiceAccountNamespaces)
+          .setTokenPolicies(tokenPolicies));</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Vault configuration properties.
 Prefix <code>quarkus.vault</code> is skipped.</p>
 </div>
@@ -10843,7 +11427,11 @@ The trust store location which contains the certificate information of the certi
 </dd>
 <dt class="hdlist1"><code>limits.max-chunk-size</code></dt>
 <dd>
-<p>The max HTTP chunk size</p>
+<p>The max HTTP chunk size.</p>
+</dd>
+<dt class="hdlist1"><code>limits.max-initial-line-length</code></dt>
+<dd>
+<p>The maximum length of the initial line. (default: <code>4096</code>)</p>
 </dd>
 <dt class="hdlist1"><code>idle-timeout</code></dt>
 <dd>
@@ -11225,6 +11813,15 @@ public class MyDeclarativeRoutes {
          rc.response().putHeader("X-Filter", "filter 2");
          rc.next();
     }
+
+    @Route
+    String hello(@Param Optional&lt;String&gt; name) {}
+
+    @Route
+    String helloFromHeader(@Header("My-Header") String header) {}
+
+    @Route
+    String createPerson(@Body Person person) {}
 
 }</code></pre>
 </div>
@@ -11862,6 +12459,10 @@ quarkus.smallrye-health.readiness-path=/customready</code></pre>
 <dd>
 <p>A readiness probe to check Cassandra connection status.</p>
 </dd>
+<dt class="hdlist1">Redis</dt>
+<dd>
+<p>A readiness probe to check Redis connection status.</p>
+</dd>
 </dl>
 </div>
 <div class="paragraph">
@@ -12425,9 +13026,11 @@ It provides several extensions to make it so.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.kubernetes.replicas=3
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.kubernetes.namespace=mynamespace
 
-quarkus.kubernetes.labelsfoo=bar
+quarkus.kubernetes.replicas=3
+
+quarkus.kubernetes.labels.foo=bar
 
 quarkus.kubernetes.readiness-probe.period-seconds=45
 
@@ -12487,6 +13090,19 @@ quarkus.kubernetes.version=1.0-rc.1</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.kubernetes.labels.foo=bar
 quarkus.kubernetes.annotations.foo=bar</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>metrics</strong></p>
+</div>
+<div class="paragraph">
+<p>When using metrics extension, Prometheus annotations are generated:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="yaml" class="language-yaml hljs">prometheus.io/scrape: "true"
+prometheus.io/path: /metrics
+prometheus.io/port: "8080"</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -12599,7 +13215,7 @@ Remember to execute <code>eval $(minikube -p minikube docker-env)</code> to buil
 <div class="sect2">
 <h3 id="_kubernetes_configuration_extension"><a class="anchor" href="#_kubernetes_configuration_extension"></a><a class="link" href="#_kubernetes_configuration_extension">Kubernetes Configuration Extension</a></h3>
 <div class="paragraph">
-<p>Integration between MicroProfile Config spec and ConfigMaps:</p>
+<p>Integration between MicroProfile Config spec and ConfigMaps &amp; Secrets:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -12645,9 +13261,17 @@ String someProp2;</code></pre>
 <dd>
 <p>ConfigMaps to look for in the namespace that the Kubernetes Client has been configured for. Supports CSV.</p>
 </dd>
-<dt class="hdlist1"><code>secrets</code></dt>
+<dt class="hdlist1"><code>namespace</code></dt>
 <dd>
-<p>Secrets to look for in the namespace that the Kubernetes Client has been configured for. Supports CSV.</p>
+<p>Access to ConfigMaps from a specific namespace.</p>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>secrets.enabled</code></dt>
+<dd>
+<p>Whether or not configuration can be read from secrets. (default: <code>false</code>)</p>
 </dd>
 </dl>
 </div>
@@ -13849,6 +14473,7 @@ Templates should be placed by default at <code>src/main/resources/templates</cod
 &lt;/head&gt;
 &lt;body&gt;
     &lt;h1&gt;{item.name ?: 'Unknown'}&lt;/h1&gt;
+    &lt;h2&gt;{str:reverse('Hello')}&lt;/h2&gt;
     &lt;div&gt;Price: {item.price}&lt;/div&gt;
     {#if item.price &gt; 100}
     &lt;div&gt;Discounted Price: {item.discountedPrice}&lt;/div&gt;
@@ -13883,6 +14508,13 @@ public TemplateInstance get(@PathParam("id") Integer id) {
 @TemplateExtension
 static BigDecimal discountedPrice(Item item) {
     return item.price.multiply(new BigDecimal("0.9"));
+}
+
+@TemplateExtension(namespace = "str")
+public static class StringExtensions {
+  static String reverse(String val) {
+      return new StringBuilder(val).reverse().toString();
+   }
 }</code></pre>
 </div>
 </div>
@@ -13980,7 +14612,7 @@ String output = report
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">CompletionStage&lt;String&gt; async = report.renderAsync();
-Publisher&lt;String&gt; publisher = report.publisher();
+Multi&lt;String&gt; publisher = report.createMulti();
 
 Uni&lt;String&gt; content = io.smallrye.mutiny.Uni.createFrom()
                             .completionStage(() -&gt; report.renderAsync());</code></pre>
@@ -14087,7 +14719,6 @@ session.connect();</code></pre>
 public String getDailyForecast(LocalDate date, String city) {}</code></pre>
 </div>
 </div>
-<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p><code>@CacheInvalidate</code> removes the element represented by the calculated cache key from cache.
 <code>@CacheInvalidateAll</code> removes all entries from the cache.
@@ -14689,7 +15320,7 @@ public class GreetingController {
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.6.0.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
+If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.7.0.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
 </td>
 </tr>
 </table>

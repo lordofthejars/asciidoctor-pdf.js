@@ -816,8 +816,6 @@ Quarkus can cache method calls by using as key the tuple (method + arguments).
 public String getDailyForecast(LocalDate date, String city) {}
 ----
 
-<<<
-
 `@CacheInvalidate` removes the element represented by the calculated cache key from cache.
 `@CacheInvalidateAll` removes all entries from the cache.
 `@CacheKey` to specifically set the arguments to be used as key instead of all.

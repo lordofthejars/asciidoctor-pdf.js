@@ -156,8 +156,6 @@ Relative path or URL of a public key.
 `smallrye.jwt.token.header`::
 Sets header such as `Cookie` is used to pass the token. (default: `Authorization`).
 
-<<<
-
 `smallrye.jwt.token.cookie`::
 Name of the cookie containing a token.
 
