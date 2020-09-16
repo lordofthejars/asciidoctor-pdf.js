@@ -552,6 +552,55 @@ kafka-streams.commit.interval.ms=1000
 // end::update_7_2[]
 // end::update_3_10[]
 
+== Reactive DataSource Properties
+
+// tag::update_19_3[]
+
+Common Reeactive DataSource Client configuration properties prefixed with `quarkus.datasource`:
+
+`reactive.cache-prepared-statements`::
+Prepared statements should be cached on the client side. (default: `false`)
+
+`reactive.url`::
+The datasource URL.
+
+`reactive.max-size`::
+The datasource pool maximum size.
+
+`reactive.trust-all`::
+All server certificates should be trusted. (default: `false`)
+
+`reactive.trust-certificate-pem`::
+Trust configuration in the PEM format.
+
+`reactive.trust-certificate-jks`::
+Trust configuration in the JKS format.
+
+`reactive.trust-certificate-pfx`::
+Trust configuration in the PFX format.
+
+`reactive.key-certificate-pem`::
+Key/cert configuration in the PEM format.
+
+`reactive.key-certificate-jks`::
+Key/cert configuration in the JKS format.
+
+`reactive.key-certificate-pfx`::
+Key/cert configuration in the PFX format.
+
+`reactive.thread-local`::
+Use one connection pool per thread.
+
+`reactive.reconnect-attempts`::
+The number of reconnection attempts when a pooled connection cannot be established on first try. (default: `0`)
+
+`reactive.reconnect-interval`::
+The interval between reconnection attempts when a pooled connection cannot be established on first try. (default: `PT1S`)
+
+`reactive.idle-timeout`::
+The maximum time without data written to or read from a connection before it is removed from the pool.
+// end::update_19_3[]
+
 == Reactive PostgreSQL Client
 
 // tag::update_1_8[]

@@ -470,7 +470,7 @@ svg:not(:root).svg-inline--fa {
 <div class="sectionbody">
 <p class=""><a href="https://quarkus.io/">Quarkus</a> is a Kubernetes Native Java stack tailored for GraalVM &amp; OpenJDK HotSpot, crafted from the best of breed Java libraries and standards.
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
-<p class="">Cheat-sheet tested with <strong>Quarkus 1.7.0.Final</strong>.</p>
+<p class="">Cheat-sheet tested with <strong>Quarkus 1.8.0.Final</strong>.</p>
 </div>
 </div>
 <div class="sect1">
@@ -479,7 +479,7 @@ Also focused on developer experience, making things just work with little to no 
 <p class="">Quarkus comes with a Maven archetype to scaffold a very simple starting project.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.7.0.Final:create \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.8.0.Final:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=getting-started \
     -DclassName="org.acme.quickstart.GreetingResource" \
@@ -2432,6 +2432,10 @@ Prefix <code>quarkus.hibernate-orm</code> is skipped.</p>
 <dd>
 <p>The size of the batches. (default: -1 disabled)</p>
 </dd>
+<dt class="hdlist1"><code>maxFetchDepth</code></dt>
+<dd>
+<p>The maximum depth of outer join fetch tree for single-ended associations.</p>
+</dd>
 <dt class="hdlist1"><code>multitenant</code></dt>
 <dd>
 <p>Defines the method for multi-tenancy. Possible values: <code>DATABASE</code>, <code>NONE</code>, <code>SCHEMA</code>. (default: <code>NONE</code>)</p>
@@ -2455,6 +2459,10 @@ Prefix <code>quarkus.hibernate-orm</code> is skipped.</p>
 <dt class="hdlist1"><code>database.generation.halt-on-error</code></dt>
 <dd>
 <p>Stop on the first error when applying the schema. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>database.generation.create-schemas</code></dt>
+<dd>
+<p>Hibernate ORM should create the schemas automatically (for databases supporting them).</p>
 </dd>
 <dt class="hdlist1"><code>database.default-catalog</code></dt>
 <dd>
@@ -2562,7 +2570,6 @@ long numberOfDeleted = Developer.delete("name", "Alex");</code></pre>
 </dd>
 </dl>
 </div>
-<div class="page-break"></div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1"><code>findByIdOptional</code>: <code>Optional&lt;Object&gt;</code></dt>
@@ -3341,6 +3348,14 @@ flyway.migrate();</code></pre>
 <dd>
 <p>The name of Flyway’s schema history table (default: <code>flyway_schema_history</code>)</p>
 </dd>
+<dt class="hdlist1"><code>out-of-order</code></dt>
+<dd>
+<p>Allows migrations to be run "out of order".</p>
+</dd>
+<dt class="hdlist1"><code>ignore-missing-migrations</code></dt>
+<dd>
+<p>Ignore missing migrations when reading the history table.</p>
+</dd>
 <dt class="hdlist1"><code>sql-migration-prefix</code></dt>
 <dd>
 <p>Prefix for versioned SQL migrations (default: <code>V</code>)</p>
@@ -3692,11 +3707,6 @@ quarkus.hibernate-search.elasticsearch.
 <dd>
 <p>Minimal cluster status (<code>green</code>, <code>yellow</code>, <code>red</code>)</p>
 </dd>
-</dl>
-</div>
-<div class="page-break"></div>
-<div class="dlist">
-<dl>
 <dt class="hdlist1"><code>index-defaults.lifecycle.required-status-wait-timeout</code></dt>
 <dd>
 <p>Waiting time before failing the bootstrap.</p>
@@ -4321,11 +4331,6 @@ org.neo4j.driver.Driver driver;</code></pre>
 <dd>
 <p>Max amount of connections. (default: <code>100</code>)</p>
 </dd>
-</dl>
-</div>
-<div class="page-break"></div>
-<div class="dlist">
-<dl>
 <dt class="hdlist1"><code>pool.max-connection-lifetime</code></dt>
 <dd>
 <p>Pooled connections older will be closed and removed from the pool. (default: <code>1H</code>)</p>
@@ -4429,7 +4434,6 @@ quarkus.mongodb.inventory.connection-string = mongodb://mongo3:27017/invdb</code
 MongoClient mongoClient1;</code></pre>
 </div>
 </div>
-<div class="page-break"></div>
 <p class=""><code>quarkus.mongodb</code> as prefix is skipped in the next table.</p>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -5384,6 +5388,72 @@ kafka-streams.commit.interval.ms=1000</code></pre>
 </div>
 </div>
 <p class=""><strong>IMPORTANT:</strong> All the properties within the <code>kafka-streams</code> namespace are passed through as-is to the Kafka Streams engine. Changing their values requires a rebuild of the application.</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reactive_datasource_properties"><a class="anchor" href="#_reactive_datasource_properties"></a><a class="link" href="#_reactive_datasource_properties">Reactive DataSource Properties</a></h2>
+<div class="sectionbody">
+<p class="">Common Reeactive DataSource Client configuration properties prefixed with <code>quarkus.datasource</code>:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>reactive.cache-prepared-statements</code></dt>
+<dd>
+<p>Prepared statements should be cached on the client side. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>reactive.url</code></dt>
+<dd>
+<p>The datasource URL.</p>
+</dd>
+<dt class="hdlist1"><code>reactive.max-size</code></dt>
+<dd>
+<p>The datasource pool maximum size.</p>
+</dd>
+<dt class="hdlist1"><code>reactive.trust-all</code></dt>
+<dd>
+<p>All server certificates should be trusted. (default: <code>false</code>)</p>
+</dd>
+<dt class="hdlist1"><code>reactive.trust-certificate-pem</code></dt>
+<dd>
+<p>Trust configuration in the PEM format.</p>
+</dd>
+<dt class="hdlist1"><code>reactive.trust-certificate-jks</code></dt>
+<dd>
+<p>Trust configuration in the JKS format.</p>
+</dd>
+<dt class="hdlist1"><code>reactive.trust-certificate-pfx</code></dt>
+<dd>
+<p>Trust configuration in the PFX format.</p>
+</dd>
+<dt class="hdlist1"><code>reactive.key-certificate-pem</code></dt>
+<dd>
+<p>Key/cert configuration in the PEM format.</p>
+</dd>
+<dt class="hdlist1"><code>reactive.key-certificate-jks</code></dt>
+<dd>
+<p>Key/cert configuration in the JKS format.</p>
+</dd>
+<dt class="hdlist1"><code>reactive.key-certificate-pfx</code></dt>
+<dd>
+<p>Key/cert configuration in the PFX format.</p>
+</dd>
+<dt class="hdlist1"><code>reactive.thread-local</code></dt>
+<dd>
+<p>Use one connection pool per thread.</p>
+</dd>
+<dt class="hdlist1"><code>reactive.reconnect-attempts</code></dt>
+<dd>
+<p>The number of reconnection attempts when a pooled connection cannot be established on first try. (default: <code>0</code>)</p>
+</dd>
+<dt class="hdlist1"><code>reactive.reconnect-interval</code></dt>
+<dd>
+<p>The interval between reconnection attempts when a pooled connection cannot be established on first try. (default: <code>PT1S</code>)</p>
+</dd>
+<dt class="hdlist1"><code>reactive.idle-timeout</code></dt>
+<dd>
+<p>The maximum time without data written to or read from a connection before it is removed from the pool.</p>
+</dd>
+</dl>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -7114,11 +7184,10 @@ The trust store location which contains the certificate information of the certi
 <dd>
 <p>Http connection idle timeout. (default: <code>30M</code>)</p>
 </dd>
-</dl>
-</div>
-<div class="page-break"></div>
-<div class="dlist">
-<dl>
+<dt class="hdlist1"><code>enable-compression</code></dt>
+<dd>
+<p>If responses should be compressed.</p>
+</dd>
 <dt class="hdlist1"><code>read-timeout</code></dt>
 <dd>
 <p>Http connection read timeout for blocking IO. (default: <code>60s</code>)</p>
@@ -8170,6 +8239,100 @@ public @interface TimedMilliseconds {
 }</code></pre>
 </div>
 </div>
+<p class="">There is a tight integration with Micrometer in the form of an extension:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="micrometer"</code></pre>
+</div>
+</div>
+<p class="">Add a micrometer dependency for the registry of your choosing:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;io.micrometer&lt;/groupId&gt;
+    &lt;artifactId&gt;micrometer-registry-prometheus&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<p class="">You can configure Micrometer.
+Prefix is <code>quarkus.micrometer</code>:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>enabled</code></dt>
+<dd>
+<p>Micrometer metrics support. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>registry-enabled-default</code></dt>
+<dd>
+<p>Micrometer MeterRegistry discovery. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>binder-enabled-default</code></dt>
+<dd>
+<p>Micrometer MeterBinder discovery. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>binder.vertx.enabled</code></dt>
+<dd>
+<p>Vert.x metrics support.</p>
+</dd>
+<dt class="hdlist1"><code>binder.mp-metrics.enabled</code></dt>
+<dd>
+<p>Microprofile Metrics support.</p>
+</dd>
+<dt class="hdlist1"><code>binder.jvm</code></dt>
+<dd>
+<p>Micrometer JVM metrics support. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>binder.system</code></dt>
+<dd>
+<p>Micrometer System metrics support. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>export.datadog.enabled</code></dt>
+<dd>
+<p>Support for export to Datadog Support for Datadog.</p>
+</dd>
+<dt class="hdlist1"><code>export.jmx.enabled</code></dt>
+<dd>
+<p>Support for export to JMX Support for JMX.</p>
+</dd>
+<dt class="hdlist1"><code>export.prometheus.enabled</code></dt>
+<dd>
+<p>Support for export to Prometheus.</p>
+</dd>
+<dt class="hdlist1"><code>export.prometheus.path</code></dt>
+<dd>
+<p>The path for the prometheus metrics endpoint (produces text/plain). (default: <code>/metrics</code>)</p>
+</dd>
+<dt class="hdlist1"><code>export.stackdriver.enabled</code></dt>
+<dd>
+<p>Micrometer metrics support. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>binder.vertx.match-patterns</code></dt>
+<dd>
+<p>Comma-separated case-sensitive list of regular expressions defining Paths that should be matched and used as tags</p>
+</dd>
+<dt class="hdlist1"><code>binder.vertx.ignore-patterns</code></dt>
+<dd>
+<p>Comma-separated case-sensitive list of regular expressions defining Paths that should be ignored / not measured.</p>
+</dd>
+<dt class="hdlist1"><code>export.datadog</code></dt>
+<dd>
+<p>Datadog MeterRegistry configuration in <code>Map&lt;String, String&gt;</code> format.</p>
+</dd>
+<dt class="hdlist1"><code>export.jmx</code></dt>
+<dd>
+<p>JMX registry configuration properties in <code>Map&lt;String, String&gt;</code> format.</p>
+</dd>
+<dt class="hdlist1"><code>export.prometheus</code></dt>
+<dd>
+<p>Prometheus registry configuration properties in <code>Map&lt;String, String&gt;</code> format.</p>
+</dd>
+<dt class="hdlist1"><code>export.stackdriver</code></dt>
+<dd>
+<p>Stackdriver registry configuration properties in <code>Map&lt;String, String&gt;</code> format.</p>
+</dd>
+</dl>
+</div>
 <p class=""><strong>Tracing</strong></p>
 <p class="">Quarkus can utilize the <a href="https://github.com/eclipse/microprofile-opentracing" target="_blank" rel="noopener">MicroProfile OpenTracing</a> spec.</p>
 <div class="listingblock">
@@ -9145,6 +9308,7 @@ public Response createDeveloper(
 <p class="">A request to <code>/openapi</code> will serve the combined OpenAPI document from the static file and the generated from annotations.
 You can disable the scanning documents by adding the next configuration property: <code>mp.openapi.scan.disable=true</code>.</p>
 <p class="">Other valid document paths are: <code>META-INF/openapi.yml</code>, <code>META-INF/openapi.json</code>, <code>WEB-INF/classes/META-INF/openapi.yml</code>, <code>WEB-INF/classes/META-INF/openapi.yaml</code>, <code>WEB-INF/classes/META-INF/openapi.json</code>.</p>
+<p class="">You can store generated OpenAPI schema if <code>quarkus.swagger-ui.store-schema-directory</code> is set.</p>
 </div>
 </div>
 <div class="sect1">
@@ -9666,6 +9830,67 @@ You need to define the datasource used by clustered mode and also import the dat
 </tr>
 </table>
 </div>
+<p class="">Quartz can be configured usinf the following properties with <code>quarkus.quartz</code> prefix:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>clustered</code></dt>
+<dd>
+<p>Enable cluster mode or not.</p>
+</dd>
+<dt class="hdlist1"><code>store-type</code></dt>
+<dd>
+<p>The type of store to use. Possible values: <code>ram</code>, <code>db</code> (default: <code>ram</code>)</p>
+</dd>
+<dt class="hdlist1"><code>datasource</code></dt>
+<dd>
+<p>The name of the datasource to use.</p>
+</dd>
+<dt class="hdlist1"><code>table-prefix</code></dt>
+<dd>
+<p>The prefix for quartz job store tables. (default: <code>QRTZ_</code>)</p>
+</dd>
+<dt class="hdlist1"><code>trigger-listeners.&lt;name&gt;.class</code></dt>
+<dd>
+<p>Class name for the trigger.</p>
+</dd>
+<dt class="hdlist1"><code>trigger-listeners.&lt;name&gt;.property-name</code></dt>
+<dd>
+<p>The properties passed to the class.</p>
+</dd>
+<dt class="hdlist1"><code>job-listeners.&lt;name&gt;.class</code></dt>
+<dd>
+<p>Class name for the job.</p>
+</dd>
+<dt class="hdlist1"><code>job-listeners.&lt;name&gt;.property-name</code></dt>
+<dd>
+<p>The properties passed to the class.</p>
+</dd>
+<dt class="hdlist1"><code>plugins.&lt;name&gt;.class</code></dt>
+<dd>
+<p>Class name for the plugin.</p>
+</dd>
+<dt class="hdlist1"><code>plugins.&lt;name&gt;.property-name</code></dt>
+<dd>
+<p>The properties passed to the class.</p>
+</dd>
+<dt class="hdlist1"><code>instance-name</code></dt>
+<dd>
+<p>The name of the Quartz instance. (default: <code>QuarkusQuartzScheduler</code>)</p>
+</dd>
+<dt class="hdlist1"><code>thread-count</code></dt>
+<dd>
+<p>The size of scheduler thread pool. (default: <code>25</code>)</p>
+</dd>
+<dt class="hdlist1"><code>thread-priority</code></dt>
+<dd>
+<p>Thread priority of worker threads in the pool. (default: <code>5</code>)</p>
+</dd>
+<dt class="hdlist1"><code>force-start</code></dt>
+<dd>
+<p>The scheduler will be started even if no scheduled business methods are found.</p>
+</dd>
+</dl>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -9702,6 +9927,20 @@ Templates should be placed by default at <code>src/main/resources/templates</cod
 </div>
 </div>
 <p class="">First line is not mandatory but helps on doing property checks at compilation time.</p>
+<p class="">Including templates passing parameters:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="html" class="language-html hljs">&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset="UTF-8"&gt;
+&lt;title&gt;Simple Include&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  {#include foo limit=10 /}
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+</div>
 <p class="">To render the template:</p>
 <div class="listingblock">
 <div class="content">
@@ -9927,6 +10166,7 @@ public class CachedBean {
 }</code></pre>
 </div>
 </div>
+<p class="">You can disable the caching system by setting <code>quarkus.cache.enabled</code> property to <code>false</code>.</p>
 <p class="">This extension uses <a href="https://github.com/ben-manes/caffeine">Caffeine</a> as its underlying caching provider.</p>
 <p class="">Each cache can be configured individually:</p>
 <div class="listingblock">
@@ -10267,6 +10507,45 @@ quarkus.ses.aws.credentials.static-provider.secret-access-key=test-secret</code>
 </div>
 </div>
 <p class="">Configuration properties are the same as <a href="#_amazon_dynamodb">Amazon DynamoDB</a> but changing the prefix from <code>dynamodb</code> to <code>ses</code>.</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_jbang"><a class="anchor" href="#_jbang"></a><a class="link" href="#_jbang">Jbang</a></h2>
+<div class="sectionbody">
+<p class="">Creating an initial script:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">jbang scripting/quarkusapp.java</code></pre>
+</div>
+</div>
+<p class="">Adding Quarkus dependencies in script:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">//DEPS io.quarkus:quarkus-resteasy:{quarkus-version}</code></pre>
+</div>
+</div>
+<p class="">Put some Quarkus CLI code:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Path("/hello")
+@ApplicationScoped
+public class quarkusapp {
+    @GET
+    public String sayHello() {
+        return "hello";
+    }
+    public static void main(String[] args) {
+        Quarkus.run(args);
+    }
+}</code></pre>
+</div>
+</div>
+<p class="">To run the script:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">jbang quarkusapp.java</code></pre>
+</div>
+</div>
 <div class="page-break"></div>
 </div>
 </div>
@@ -10465,7 +10744,7 @@ public class GreetingController {
 <span class="fa-layers"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle" class="svg-inline--fa fa-circle fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path></svg><svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="lightbulb" class="svg-inline--fa fa-lightbulb fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" style="transform-origin: 0.34375em 0.5em;"><g transform="translate(176 256)"><g transform="translate(0, 0)  scale(0.625, 0.625)  rotate(0 0 0)"><path fill="currentColor" d="M176 80c-52.94 0-96 43.06-96 96 0 8.84 7.16 16 16 16s16-7.16 16-16c0-35.3 28.72-64 64-64 8.84 0 16-7.16 16-16s-7.16-16-16-16zM96.06 459.17c0 3.15.93 6.22 2.68 8.84l24.51 36.84c2.97 4.46 7.97 7.14 13.32 7.14h78.85c5.36 0 10.36-2.68 13.32-7.14l24.51-36.84c1.74-2.62 2.67-5.7 2.68-8.84l.05-43.18H96.02l.04 43.18zM176 0C73.72 0 0 82.97 0 176c0 44.37 16.45 84.85 43.56 115.78 16.64 18.99 42.74 58.8 52.42 92.16v.06h48v-.12c-.01-4.77-.72-9.51-2.15-14.07-5.59-17.81-22.82-64.77-62.17-109.67-20.54-23.43-31.52-53.15-31.61-84.14-.2-73.64 59.67-128 127.95-128 70.58 0 128 57.42 128 128 0 30.97-11.24 60.85-31.65 84.14-39.11 44.61-56.42 91.47-62.1 109.46a47.507 47.507 0 0 0-2.22 14.3v.1h48v-.05c9.68-33.37 35.78-73.18 52.42-92.16C335.55 260.85 352 220.37 352 176 352 78.8 273.2 0 176 0z" transform="translate(-176 -256)"></path></g></g></svg></span>
 </td>
 <td class="content">
-If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.7.0.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
+If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.8.0.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
 </td>
 </tr>
 </table>
@@ -10756,7 +11035,7 @@ void cronJob() {
 <div class="author-bio">Java Champion and Director of DevExp at Red Hat</div>
 </div>
 
-<div class="author-bio">1.7.0.Final</div>
+<div class="author-bio">1.8.0.Final</div>
 <img src="./redhat/assets/by-nc-sa.png"/>
 </div>
 
