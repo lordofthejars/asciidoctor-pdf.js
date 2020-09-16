@@ -103,7 +103,8 @@ The maximum length of the initial line. (default: `4096`)
 `idle-timeout`::
 Http connection idle timeout. (default: `30M`)
 
-<<<
+`enable-compression`::
+If responses should be compressed.
 
 `read-timeout`::
 Http connection read timeout for blocking IO. (default: `60s`)
@@ -1076,6 +1077,83 @@ public @interface TimedMilliseconds {
 }
 ----
 // end::update_14_41[]
+
+// tag::update_19_7[]
+There is a tight integration with Micrometer in the form of an extension:
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="micrometer"
+----
+
+Add a micrometer dependency for the registry of your choosing:
+
+[source, xml]
+----
+<dependency>
+    <groupId>io.micrometer</groupId>
+    <artifactId>micrometer-registry-prometheus</artifactId>
+</dependency>
+----
+
+You can configure Micrometer.
+Prefix is `quarkus.micrometer`:
+
+`enabled`::
+Micrometer metrics support. (default: `true`)
+
+`registry-enabled-default`::
+Micrometer MeterRegistry discovery. (default: `true`)
+
+`binder-enabled-default`::
+Micrometer MeterBinder discovery. (default: `true`)
+
+`binder.vertx.enabled`::
+Vert.x metrics support.
+
+`binder.mp-metrics.enabled`::
+Microprofile Metrics support.
+
+`binder.jvm`::
+Micrometer JVM metrics support. (default: `true`)
+
+`binder.system`::
+Micrometer System metrics support. (default: `true`)
+
+`export.datadog.enabled`::
+Support for export to Datadog Support for Datadog.
+
+`export.jmx.enabled`::
+Support for export to JMX Support for JMX.
+
+`export.prometheus.enabled`::
+Support for export to Prometheus.
+
+`export.prometheus.path`::
+The path for the prometheus metrics endpoint (produces text/plain). (default: `/metrics`)
+
+`export.stackdriver.enabled`::
+Micrometer metrics support. (default: `true`)
+
+`binder.vertx.match-patterns`::
+Comma-separated case-sensitive list of regular expressions defining Paths that should be matched and used as tags
+
+`binder.vertx.ignore-patterns`::
+Comma-separated case-sensitive list of regular expressions defining Paths that should be ignored / not measured.
+
+`export.datadog`::
+Datadog MeterRegistry configuration in `Map<String, String>` format.
+
+`export.jmx`::
+JMX registry configuration properties in `Map<String, String>` format.
+
+`export.prometheus`::
+Prometheus registry configuration properties in `Map<String, String>` format.
+
+`export.stackdriver`::
+Stackdriver registry configuration properties in `Map<String, String>` format.
+// end::update_19_7[]
 
 *Tracing*
 

@@ -121,6 +121,9 @@ Name of the file containing the SQL statements to execute when starts.
 `batch-fetch-size`::
 The size of the batches. (default: -1 disabled)
 
+`maxFetchDepth`::
+The maximum depth of outer join fetch tree for single-ended associations.
+
 `multitenant`::
 Defines the method for multi-tenancy. Possible values: `DATABASE`, `NONE`, `SCHEMA`. (default: `NONE`)
 
@@ -138,6 +141,9 @@ Database schema is generation. Possible values: `none`, `create`, `drop-and-crea
 
 `database.generation.halt-on-error`::
 Stop on the first error when applying the schema. (default: `false`)
+
+`database.generation.create-schemas`::
+Hibernate ORM should create the schemas automatically (for databases supporting them).
 
 `database.default-catalog`::
 Default catalog.
@@ -220,8 +226,6 @@ If queries start with the keyword `from` then they are treated as _HQL_ query, i
 
 `findById`: `Object`::
 Returns object or null if not found. Overloaded version with `LockModeType` is provided.
-
-<<<
 
 // tag::update_12_1[]
 `findByIdOptional`: `Optional<Object>`::
@@ -1026,6 +1030,12 @@ CSV case-sensitive list of schemas managed (default: none)
 `table`::
 The name of Flyway’s schema history table (default: `flyway_schema_history`)
 
+`out-of-order`::
+Allows migrations to be run "out of order".
+
+`ignore-missing-migrations`::
+Ignore missing migrations when reading the history table.
+
 `sql-migration-prefix`::
 Prefix for versioned SQL migrations (default: `V`)
 
@@ -1321,8 +1331,6 @@ Index lifecycle (`none`, `validate`, `update`, `create`, `drop-and-create`, `dro
 
 `index-defaults.lifecycle.required-status`::
 Minimal cluster status (`green`, `yellow`, `red`)
-
-<<<
 
 `index-defaults.lifecycle.required-status-wait-timeout`::
 Waiting time before failing the bootstrap.
@@ -1812,8 +1820,6 @@ Enable leaked sessions logging. (default:`false`)
 `pool.max-connection-pool-size`::
 Max amount of connections. (default: `100`)
 
-<<<
-
 `pool.max-connection-lifetime`::
 Pooled connections older will be closed and removed from the pool. (default: `1H`)
 
@@ -1925,8 +1931,6 @@ Inject the instance using `@io.quarkus.mongodb.runtime.MongoClientName` annotati
 MongoClient mongoClient1;
 ----
 // end::update_14_5[]
-
-<<<
 
 `quarkus.mongodb` as prefix is skipped in the next table.
 

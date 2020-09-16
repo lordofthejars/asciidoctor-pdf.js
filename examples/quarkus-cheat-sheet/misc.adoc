@@ -103,6 +103,10 @@ You can disable the scanning documents by adding the next configuration property
 Other valid document paths are: `META-INF/openapi.yml`, `META-INF/openapi.json`, `WEB-INF/classes/META-INF/openapi.yml`, `WEB-INF/classes/META-INF/openapi.yaml`, `WEB-INF/classes/META-INF/openapi.json`.
 // end::update_8_10[]
 
+// tag::update_19_4[]
+You can store generated OpenAPI schema if `quarkus.swagger-ui.store-schema-directory` is set.
+// end::update_19_4[]
+
 == Mail Sender
 // tag::update_2_5[]
 You can send emails by using Quarkus Mailer extension:
@@ -331,6 +335,7 @@ quartz.scheduleJob(job, trigger);
 ----
 // end::update_14_18[]
 
+
 == Kogito
 // tag::update_3_9[]
 Quarkus integrates with http://www.kiegroup.org/[Kogito, window="_blank"], a next-generation business automation toolkit from Drools and jBPM projects for adding business automation capabilities.
@@ -557,6 +562,52 @@ quarkus.quartz.store-type=db
 IMPORTANT: You need to define the datasource used by clustered mode and also import the database tables following the Quartz schema.
 // end::update_12_2[]
 
+// tag::update_19_5[]
+Quartz can be configured usinf the following properties with `quarkus.quartz` prefix:
+
+`clustered`::
+Enable cluster mode or not.
+
+`store-type`::
+The type of store to use. Possible values: `ram`, `db` (default: `ram`)
+
+`datasource`::
+The name of the datasource to use.
+
+`table-prefix`::
+The prefix for quartz job store tables. (default: `QRTZ_`)
+
+`trigger-listeners.<name>.class`::
+Class name for the trigger.
+
+`trigger-listeners.<name>.property-name`::
+The properties passed to the class.
+
+`job-listeners.<name>.class`::
+Class name for the job.
+
+`job-listeners.<name>.property-name`::
+The properties passed to the class.
+
+`plugins.<name>.class`::
+Class name for the plugin.
+
+`plugins.<name>.property-name`::
+The properties passed to the class.
+
+`instance-name`::
+The name of the Quartz instance. (default: `QuarkusQuartzScheduler`)
+
+`thread-count`::
+The size of scheduler thread pool. (default: `25`)
+
+`thread-priority`::
+Thread priority of worker threads in the pool. (default: `5`)
+
+`force-start`::
+The scheduler will be started even if no scheduled business methods are found.
+// end::update_19_5[]
+
 == Qute
 
 // tag::update_12_8[]
@@ -593,6 +644,23 @@ Templates can be defined in any format, in case of HTML:
 ----
 
 First line is not mandatory but helps on doing property checks at compilation time.
+
+// tag::update_19_2[]
+Including templates passing parameters:
+
+[source, html]
+----
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Simple Include</title>
+</head>
+<body>
+  {#include foo limit=10 /}
+</body>
+</html>
+----
+// end::update_19_2[]
 
 To render the template:
 
@@ -835,6 +903,10 @@ public class CachedBean {
     public void invalidateAll() {}
 }
 ----
+
+// tag::update_19_1[]
+You can disable the caching system by setting `quarkus.cache.enabled` property to `false`.
+// end::update_19_1[]
 
 This extension uses https://github.com/ben-manes/caffeine[Caffeine] as its underlying caching provider.
 
@@ -1136,3 +1208,46 @@ Or async:
 
 Configuration properties are the same as <<Amazon DynamoDB>> but changing the prefix from `dynamodb` to `ses`.
 // end::update_16_24[]
+
+
+== Jbang
+
+// tag::update_19_6[]
+Creating an initial script:
+
+[source, bash]
+----
+jbang scripting/quarkusapp.java
+----
+
+Adding Quarkus dependencies in script:
+
+[source, bash]
+----
+//DEPS io.quarkus:quarkus-resteasy:{quarkus-version}
+----
+
+Put some Quarkus CLI code:
+
+[source, java]
+----
+@Path("/hello")
+@ApplicationScoped
+public class quarkusapp {
+    @GET
+    public String sayHello() {
+        return "hello";
+    }
+    public static void main(String[] args) {
+        Quarkus.run(args);
+    }
+}
+----
+
+To run the script:
+
+[source, bash]
+----
+jbang quarkusapp.java
+----
+// end::update_19_6[]

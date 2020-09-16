@@ -15,6 +15,50 @@ In this page you can either read what has been added in each version of the chea
 [[whatsnew]]
 == What's New in Cheat-Sheet
 
+=== Version 1.8.0.Final
+
+.Disable cache extension
+[%collapsible]
+====
+include::misc.adoc[tag=update_19_1]
+====
+
+.Include Qute templates
+[%collapsible]
+====
+include::misc.adoc[tag=update_19_2]
+====
+
+.Common Reactive DataSource Configuration
+[%collapsible]
+====
+include::reactive.adoc[tag=update_19_3]
+====
+
+.Export OpenAPI schema
+[%collapsible]
+====
+include::misc.adoc[tag=update_19_4]
+====
+
+.Quartz Configuration values
+[%collapsible]
+====
+include::misc.adoc[tag=update_19_5]
+====
+
+.JBang
+[%collapsible]
+====
+include::misc.adoc[tag=update_19_6]
+====
+
+.Micrometer extension
+[%collapsible]
+====
+include::network.adoc[tag=update_19_7]
+====
+
 === Version 1.7.0.Final
 
 .Hibernate Envers
@@ -161,328 +205,6 @@ include::spring.adoc[tag=update_17_13]
 [%collapsible]
 ====
 include::core.adoc[tag=update_17_14]
-====
-
-=== Version 1.5.0.Final
-
-.Enabling Beans with Quarkus Properties
-[%collapsible]
-====
-include::core.adoc[tag=update_16_1]
-====
-
-.Including resources to native executable
-[%collapsible]
-====
-include::cloud.adoc[tag=update_16_2]
-====
-
-.Logout OIDC
-[%collapsible]
-====
-include::security.adoc[tag=update_16_3]
-====
-
-.Context Propagation & Cache
-[%collapsible]
-====
-include::misc.adoc[tag=update_16_4]
-====
-
-.Marker for Panache entities
-[%collapsible]
-====
-include::persistence.adoc[tag=update_16_5]
-====
-
-.Container Images Additional Tags
-[%collapsible]
-====
-include::cloud.adoc[tag=update_16_6]
-====
-
-.Spring Cache
-[%collapsible]
-====
-include::spring.adoc[tag=update_16_7]
-====
-
-.gRPC
-[%collapsible]
-====
-include::network.adoc[tag=update_16_8]
-====
-
-.Credentials Provider
-[%collapsible]
-====
-include::persistence.adoc[tag=update_16_9]
-====
-
-.Hibernate Filtering
-[%collapsible]
-====
-include::persistence.adoc[tag=update_16_10]
-====
-
-.HTTP Configuration
-[%collapsible]
-====
-include::network.adoc[tag=update_16_11]
-====
-
-.GraphQL
-[%collapsible]
-====
-include::network.adoc[tag=update_16_12]
-====
-
-.HashiCorp Consul
-[%collapsible]
-====
-include::misc.adoc[tag=update_16_13]
-====
-
-.Hibernate Multitenancy
-[%collapsible]
-====
-include::persistence.adoc[tag=update_16_14]
-====
-
-.Picocli
-[%collapsible]
-====
-include::core.adoc[tag=update_16_15]
-====
-
-.Using Existing Kubernetes Resources
-[%collapsible]
-====
-include::cloud.adoc[tag=update_16_16]
-====
-
-.JWT Builder configuration
-[%collapsible]
-====
-include::security.adoc[tag=update_16_17]
-====
-
-.WebJar Locator
-[%collapsible]
-====
-include::misc.adoc[tag=update_16_18]
-====
-
-.Amazon SQS
-[%collapsible]
-====
-include::reactive.adoc[tag=update_16_19]
-====
-
-.Amazon S3
-[%collapsible]
-====
-include::persistence.adoc[tag=update_16_20]
-====
-
-.REST Data Panache
-[%collapsible]
-====
-include::persistence.adoc[tag=update_16_21]
-====
-
-.Minikube
-[%collapsible]
-====
-include::cloud.adoc[tag=update_16_22]
-====
-
-.Amazon KMS
-[%collapsible]
-====
-include::security.adoc[tag=update_16_23]
-====
-
-.Amazon SES
-[%collapsible]
-====
-include::misc.adoc[tag=update_16_24]
-====
-
-.Inject Spy
-[%collapsible]
-====
-include::core.adoc[tag=update_16_25]
-====
-
-.Packaging
-[%collapsible]
-====
-include::core.adoc[tag=update_16_26]
-====
-
-.Funqy
-[%collapsible]
-====
-include::cloud.adoc[tag=update_16_27]
-====
-
-.Funqy HTTP
-[%collapsible]
-====
-include::cloud.adoc[tag=update_16_28]
-====
-
-.Funqy Cloud Events
-[%collapsible]
-====
-include::cloud.adoc[tag=update_16_29]
-====
-
-=== Version 1.4.0.Final
-
-.Undertow Properties
-[%collapsible]
-====
-include::core.adoc[tag=update_15_1]
-====
-
-.AWS Request Stream Handler
-[%collapsible]
-====
-include::cloud.adoc[tag=update_15_2]
-====
-
-.AWS Skill Stream Handler
-[%collapsible]
-====
-include::cloud.adoc[tag=update_15_3]
-====
-
-.Multi-tenancy MongoDB Panache
-[%collapsible]
-====
-include::persistence.adoc[tag=update_15_4]
-====
-
-.Group Health Checks
-[%collapsible]
-====
-include::network.adoc[tag=update_15_5]
-====
-
-.Delete By Id
-[%collapsible]
-====
-include::persistence.adoc[tag=update_15_6]
-====
-
-.Range
-[%collapsible]
-====
-include::persistence.adoc[tag=update_15_7]
-====
-
-.Vault Health Check
-[%collapsible]
-====
-include::network.adoc[tag=update_15_8]
-====
-
-.OIDC Proxy configuration
-[%collapsible]
-====
-include::security.adoc[tag=update_15_9]
-====
-
-.@Produces is no longer required
-[%collapsible]
-====
-include::core.adoc[tag=update_15_10]
-====
-
-.CDI Alternatives
-[%collapsible]
-====
-include::core.adoc[tag=update_15_11]
-====
-
-.Mockito
-[%collapsible]
-====
-include::core.adoc[tag=update_15_12]
-====
-
-.Amazon Alexa
-[%collapsible]
-====
-include::misc.adoc[tag=update_15_13]
-====
-
-.Kubernetes Configuration Extension
-[%collapsible]
-====
-include::cloud.adoc[tag=update_15_14]
-====
-
-.Beans By Quarkus Profile
-[%collapsible]
-====
-include::core.adoc[tag=update_15_15]
-====
-
-.Command Mode
-[%collapsible]
-====
-include::core.adoc[tag=update_15_16]
-====
-
-.Vault TOTP
-[%collapsible]
-====
-include::security.adoc[tag=update_15_17]
-====
-
-.Named Queries
-[%collapsible]
-====
-include::persistence.adoc[tag=update_15_18]
-====
-
-.Vault Unwrap Token Support
-[%collapsible]
-====
-include::security.adoc[tag=update_15_19]
-====
-
-.LDAP Security Support
-[%collapsible]
-====
-include::security.adoc[tag=update_15_20]
-====
-
-.SimplyTimed metrics
-[%collapsible]
-====
-include::network.adoc[tag=update_15_21]
-====
-
-.Blocking annotation
-[%collapsible]
-====
-include::reactive.adoc[tag=update_15_22]
-====
-
-.Disable proactive authentication
-[%collapsible]
-====
-include::security.adoc[tag=update_15_23]
-====
-
-.Bean Validation configuration
-[%collapsible]
-====
-include::core.adoc[tag=update_15_24]
 ====
 
 :leveloffset: +1
