@@ -918,6 +918,25 @@ public Message hello() {
 ----
 // end::update_9_8[]
 
+== JAXP
+
+// tag::update_20_1[]
+To work with `JAX-P` you need to add a dependency:
+
+[source, bash]
+----
+./mvnw quarkus:add-extension
+  -Dextensions="jaxp"
+----
+
+[source, java]
+----
+final DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+final Document doc = dBuilder.parse(in);
+return doc.getDocumentElement().getTextContent();
+----
+// end::update_20_1[]
+
 == Validator
 
 Quarkus uses https://hibernate.org/validator/[Hibernate Validator, window="_blank"] to validate input/output of REST services and business services using Bean validation spec.
@@ -1371,7 +1390,7 @@ CompletionStage<WorldClock> getNow();
 
 // tag::update_14_15[]
 Rest Client also integrates with reactive library named Mutiny.
-To start using it you need to add the `quarkus-resteasy-mutiny`.
+To start using it you need to add the `quarkus-rest-client-mutiny`.
 
 After that, a methodon a client interface can return a `io.smallrye.mutiny.Uni` instance.
 
@@ -1494,6 +1513,17 @@ org.acme.quickstart.WorldClockService/mp-rest/readTimeout=
 ----
 // end::update_11_5[]
 
+*Instantiate client programmatically*
+
+// tag::update_20_4[]
+[source, java]
+----
+MovieReviewService reviewSvc = RestClientBuilder.newBuilder()
+            .baseUri(apiUri)
+            .build(WorldClockService.class);
+----
+// end::update_20_4[]
+
 == Testing
 
 Quarkus archetype adds test dependencies with JUnit 5 and Rest-Assured library to test REST endpoints.
@@ -1515,6 +1545,7 @@ public class GreetingResourceTest {
 ----
 
 Test port can be set in `quarkus.http.test-port` property.
+Timeout can be set in `quarkus.http.test-timeout` property.
 
 You can also inject the URL where Quarkus is started:
 
@@ -1550,6 +1581,10 @@ public class GreetingResourceTest {
 
 Root path is calculated automatically, not necessary to explicitly set.
 // end::update_18_9[]
+
+// tag::update_20_3[]
+If you want any changes made to be rolled back at the end ofthe test you can use the `io.quarkus.test.TestTransaction` annotation.
+// end::update_20_3[]
 
 *QuarkusTestProfile*
 
@@ -1628,6 +1663,34 @@ And the usage:
 public class MyTest {
 }
 ----
+
+*Testing Callbacks*
+
+//tag::update_20_6[]
+You can enrich *all* your `@QuarkusTest` classes by implementing the following callback interfaces:
+
+* `io.quarkus.test.junit.callback.QuarkusTestBeforeClassCallback`
+* `io.quarkus.test.junit.callback.QuarkusTestAfterConstructCallback`
+* `io.quarkus.test.junit.callback.QuarkusTestBeforeEachCallback`
+* `io.quarkus.test.junit.callback.QuarkusTestAfterEachCallback`
+
+[source, java]
+----
+public class SimpleAnnotationCheckerBeforeClassCallback implements QuarkusTestBeforeClassCallback {
+   @Override
+    public void beforeClass(Class<?> testClass) {
+    }
+}
+----
+
+And needs to be registered as Java SPI:
+
+[source]
+.META-INF/services/io.quarkus.test.junit.callback.QuarkusTestBeforeClassCallback
+----
+io.quarkus.it.main.SimpleAnnotationCheckerBeforeClassCallback
+----
+//end::update_20_6[]
 
 // end::update_4_2[]
 *Mocking*

@@ -1133,6 +1133,12 @@ Support for export to Prometheus.
 `export.prometheus.path`::
 The path for the prometheus metrics endpoint (produces text/plain). (default: `/metrics`)
 
+`export.azuremonitor.enabled`::
+Support for export to Azure Monitor.
+
+`export.azuremonitor.instrumentation-key`::
+The path for the azure monitor instrumentationKey.
+
 `export.stackdriver.enabled`::
 Micrometer metrics support. (default: `true`)
 

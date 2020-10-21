@@ -450,20 +450,196 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.20/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
+<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.21/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
 </div>
 <div class="paragraph">
 <p>Quarkus (<a href="https://quarkus.io/" class="bare">https://quarkus.io/</a>) is a Kubernetes Native Java stack tailored for GraalVM &amp; OpenJDK HotSpot, crafted from the best of breed Java libraries and standards.
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
 </div>
 <div class="paragraph">
-<p>In this page you can either read what has been added in each version of the cheat-sheet individually in <a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a> section, see the full cheat-sheet as HTML <span class="icon"><i class="fa fa-html5"></i></span> <a href="#quarkuscheatsheet">Quarkus Cheat-Sheet</a> format or <span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.20/quarkus-cheat-sheet.pdf">download the full cheat-sheet as PDF</a>.</p>
+<p>In this page you can either read what has been added in each version of the cheat-sheet individually in <a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a> section, see the full cheat-sheet as HTML <span class="icon"><i class="fa fa-html5"></i></span> <a href="#quarkuscheatsheet">Quarkus Cheat-Sheet</a> format or <span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.21/quarkus-cheat-sheet.pdf">download the full cheat-sheet as PDF</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="whatsnew"><a class="anchor" href="#whatsnew"></a><a class="link" href="#whatsnew">What&#8217;s New in Cheat-Sheet</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_version_1_9_0_final"><a class="anchor" href="#_version_1_9_0_final"></a><a class="link" href="#_version_1_9_0_final">Version 1.9.0.Final</a></h3>
+<details>
+<summary class="title">JAXP</summary>
+<div class="content">
+<div class="paragraph">
+<p>To work with <code>JAX-P</code> you need to add a dependency:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="jaxp"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">final DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+final Document doc = dBuilder.parse(in);
+return doc.getDocumentElement().getTextContent();</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Multiple Redis Clients</summary>
+<div class="content">
+<div class="paragraph">
+<p><strong>Multiple Redis Clients</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.redis.hosts = localhost:6379
+quarkus.redis.second.hosts = localhost:6379</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+RedisClient defaultRedisClient;
+
+@Inject
+@RedisClientName("second")
+RedisClient redisClient2;</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">TestTransaction</summary>
+<div class="content">
+<div class="paragraph">
+<p>If you want any changes made to be rolled back at the end ofthe test you can use the <code>io.quarkus.test.TestTransaction</code> annotation.</p>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Instantiate client programmatically</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">MovieReviewService reviewSvc = RestClientBuilder.newBuilder()
+            .baseUri(apiUri)
+            .build(WorldClockService.class);</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Message Bundling and Localization</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@io.quarkus.qute.i18n.MessageBundle
+public interface AppMessages {
+    @io.quarkus.qute.i18n.Message("Hello {name}!")
+    String hello_name(String name);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are 3 methods to inject the message:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">MessageBundles.get(AppMessages.class).hello_name("Lucie");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject AppMessages app;
+
+app.hello_name("Lucie");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="html" class="language-html hljs">&lt;p&gt;{msg:hello_name('Lucie')}&lt;/p&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Localization</strong></p>
+</div>
+<div class="paragraph">
+<p>There are two ways to set localized message:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@io.quarkus.qute.i18n.Localized("de")
+public interface GermanAppMessages {
+
+    @Override
+    @io.quarkus.qute.i18n.Message("Hallo {name}!")
+    String hello_name(String name);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="listingblock">
+<div class="title">msg_de.properties</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">hello_name=Hallo {name}!</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Testing Callback</summary>
+<div class="content">
+<div class="paragraph">
+<p>You can enrich <strong>all</strong> your <code>@QuarkusTest</code> classes by implementing the following callback interfaces:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>io.quarkus.test.junit.callback.QuarkusTestBeforeClassCallback</code></p>
+</li>
+<li>
+<p><code>io.quarkus.test.junit.callback.QuarkusTestAfterConstructCallback</code></p>
+</li>
+<li>
+<p><code>io.quarkus.test.junit.callback.QuarkusTestBeforeEachCallback</code></p>
+</li>
+<li>
+<p><code>io.quarkus.test.junit.callback.QuarkusTestAfterEachCallback</code></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class SimpleAnnotationCheckerBeforeClassCallback implements QuarkusTestBeforeClassCallback {
+   @Override
+    public void beforeClass(Class&lt;?&gt; testClass) {
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And needs to be registered as Java SPI:</p>
+</div>
+<div class="listingblock">
+<div class="title">META-INF/services/io.quarkus.test.junit.callback.QuarkusTestBeforeClassCallback</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">io.quarkus.it.main.SimpleAnnotationCheckerBeforeClassCallback</code></pre>
+</div>
+</div>
+</div>
+</details>
+</div>
 <div class="sect2">
 <h3 id="_version_1_8_0_final"><a class="anchor" href="#_version_1_8_0_final"></a><a class="link" href="#_version_1_8_0_final">Version 1.8.0.Final</a></h3>
 <details>
@@ -759,6 +935,14 @@ Prefix is <code>quarkus.micrometer</code>:</p>
 <dd>
 <p>The path for the prometheus metrics endpoint (produces text/plain). (default: <code>/metrics</code>)</p>
 </dd>
+<dt class="hdlist1"><code>export.azuremonitor.enabled</code></dt>
+<dd>
+<p>Support for export to Azure Monitor.</p>
+</dd>
+<dt class="hdlist1"><code>export.azuremonitor.instrumentation-key</code></dt>
+<dd>
+<p>The path for the azure monitor instrumentationKey.</p>
+</dd>
 <dt class="hdlist1"><code>export.stackdriver.enabled</code></dt>
 <dd>
 <p>Micrometer metrics support. (default: <code>true</code>)</p>
@@ -907,6 +1091,25 @@ Uni&lt;List&lt;String&gt;&gt; keys() {
             return result;
         });
 }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Multiple Redis Clients</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.redis.hosts = localhost:6379
+quarkus.redis.second.hosts = localhost:6379</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+RedisClient defaultRedisClient;
+
+@Inject
+@RedisClientName("second")
+RedisClient redisClient2;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1474,13 +1677,14 @@ void cronJob() {
 <h2 id="quarkuscheatsheet"><a class="anchor" href="#quarkuscheatsheet"></a><a class="link" href="#quarkuscheatsheet">Quarkus Cheat-Sheet</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.20/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
+<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.21/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
 </div>
 <div id="toc" class="toc">
 <div id="toctitle" class="title">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a>
 <ul class="sectlevel2">
+<li><a href="#_version_1_9_0_final">Version 1.9.0.Final</a></li>
 <li><a href="#_version_1_8_0_final">Version 1.8.0.Final</a></li>
 <li><a href="#_version_1_7_0_final">Version 1.7.0.Final</a></li>
 <li><a href="#_version_1_6_0_final">Version 1.6.0.Final</a></li>
@@ -1501,6 +1705,7 @@ void cronJob() {
 <li><a href="#_injection">Injection</a></li>
 <li><a href="#_json_marshallingunmarshalling">JSON Marshalling/Unmarshalling</a></li>
 <li><a href="#_xml_marshallingunmarshalling">XML Marshalling/Unmarshalling</a></li>
+<li><a href="#_jaxp">JAXP</a></li>
 <li><a href="#_validator">Validator</a></li>
 <li><a href="#_logging">Logging</a></li>
 <li><a href="#_rest_client">Rest Client</a></li>
@@ -1606,7 +1811,7 @@ void cronJob() {
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
 </div>
 <div class="paragraph">
-<p>Cheat-sheet tested with <strong>Quarkus 1.8.0.Final</strong>.</p>
+<p>Cheat-sheet tested with <strong>Quarkus 1.9.0.Final</strong>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1616,7 +1821,7 @@ Also focused on developer experience, making things just work with little to no 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.8.0.Final:create \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.9.0.Final:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=getting-started \
     -DclassName="org.acme.quickstart.GreetingResource" \
@@ -2712,6 +2917,25 @@ public Message hello() {
 </div>
 </div>
 <div class="sect2">
+<h3 id="_jaxp"><a class="anchor" href="#_jaxp"></a><a class="link" href="#_jaxp">JAXP</a></h3>
+<div class="paragraph">
+<p>To work with <code>JAX-P</code> you need to add a dependency:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="jaxp"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">final DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+final Document doc = dBuilder.parse(in);
+return doc.getDocumentElement().getTextContent();</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_validator"><a class="anchor" href="#_validator"></a><a class="link" href="#_validator">Validator</a></h3>
 <div class="paragraph">
 <p>Quarkus uses <a href="https://hibernate.org/validator/" target="_blank" rel="noopener">Hibernate Validator</a> to validate input/output of REST services and business services using Bean validation spec.</p>
@@ -3278,7 +3502,7 @@ CompletionStage&lt;WorldClock&gt; getNow();</code></pre>
 </div>
 <div class="paragraph">
 <p>Rest Client also integrates with reactive library named Mutiny.
-To start using it you need to add the <code>quarkus-resteasy-mutiny</code>.</p>
+To start using it you need to add the <code>quarkus-rest-client-mutiny</code>.</p>
 </div>
 <div class="paragraph">
 <p>After that, a methodon a client interface can return a <code>io.smallrye.mutiny.Uni</code> instance.</p>
@@ -3415,6 +3639,16 @@ org.acme.quickstart.WorldClockService/mp-rest/readTimeout=
     2000</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p><strong>Instantiate client programmatically</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">MovieReviewService reviewSvc = RestClientBuilder.newBuilder()
+            .baseUri(apiUri)
+            .build(WorldClockService.class);</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_testing"><a class="anchor" href="#_testing"></a><a class="link" href="#_testing">Testing</a></h3>
@@ -3438,7 +3672,8 @@ public class GreetingResourceTest {
 </div>
 </div>
 <div class="paragraph">
-<p>Test port can be set in <code>quarkus.http.test-port</code> property.</p>
+<p>Test port can be set in <code>quarkus.http.test-port</code> property.
+Timeout can be set in <code>quarkus.http.test-timeout</code> property.</p>
 </div>
 <div class="paragraph">
 <p>You can also inject the URL where Quarkus is started:</p>
@@ -3474,6 +3709,9 @@ public class GreetingResourceTest {
 </div>
 <div class="paragraph">
 <p>Root path is calculated automatically, not necessary to explicitly set.</p>
+</div>
+<div class="paragraph">
+<p>If you want any changes made to be rolled back at the end ofthe test you can use the <code>io.quarkus.test.TestTransaction</code> annotation.</p>
 </div>
 <div class="paragraph">
 <p><strong>QuarkusTestProfile</strong></p>
@@ -3573,6 +3811,46 @@ Returning new system properties implies running parallel tests in different JVMs
 <pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@QuarkusTestResource(MyCustomTestResource.class)
 public class MyTest {
 }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Testing Callbacks</strong></p>
+</div>
+<div class="paragraph">
+<p>You can enrich <strong>all</strong> your <code>@QuarkusTest</code> classes by implementing the following callback interfaces:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>io.quarkus.test.junit.callback.QuarkusTestBeforeClassCallback</code></p>
+</li>
+<li>
+<p><code>io.quarkus.test.junit.callback.QuarkusTestAfterConstructCallback</code></p>
+</li>
+<li>
+<p><code>io.quarkus.test.junit.callback.QuarkusTestBeforeEachCallback</code></p>
+</li>
+<li>
+<p><code>io.quarkus.test.junit.callback.QuarkusTestAfterEachCallback</code></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class SimpleAnnotationCheckerBeforeClassCallback implements QuarkusTestBeforeClassCallback {
+   @Override
+    public void beforeClass(Class&lt;?&gt; testClass) {
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And needs to be registered as Java SPI:</p>
+</div>
+<div class="listingblock">
+<div class="title">META-INF/services/io.quarkus.test.junit.callback.QuarkusTestBeforeClassCallback</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">io.quarkus.it.main.SimpleAnnotationCheckerBeforeClassCallback</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3827,6 +4105,10 @@ quarkus.hibernate-orm.database.generation=update</code></pre>
 <dt class="hdlist1"><code>jdbc.enable-metrics</code></dt>
 <dd>
 <p>Enable datasource metrics collection when using <code>quarkus-smallrye-metrics</code> extension.</p>
+</dd>
+<dt class="hdlist1"><code>jdbc.additional-jdbc-properties.&lt;extraProperty&gt;</code></dt>
+<dd>
+<p>Unspecified properties to be passed to the JDBC driver when creating new connections.</p>
 </dd>
 </dl>
 </div>
@@ -4815,6 +5097,25 @@ Uni&lt;List&lt;String&gt;&gt; keys() {
 </div>
 </div>
 <div class="paragraph">
+<p><strong>Multiple Redis Clients</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.redis.hosts = localhost:6379
+quarkus.redis.second.hosts = localhost:6379</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+RedisClient defaultRedisClient;
+
+@Inject
+@RedisClientName("second")
+RedisClient redisClient2;</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>List of Redis parameters.</p>
 </div>
 <div class="paragraph">
@@ -5036,6 +5337,10 @@ try (Liquibase liquibase = liquibaseFactory.createLiquibase()) {
 <dt class="hdlist1">change-log</dt>
 <dd>
 <p>The change log file. <code>XML</code>, <code>YAML</code> , <code>JSON</code>, <code>SQL</code> formats supported. (default: <code>db/changeLog.xml</code>)</p>
+</dd>
+<dt class="hdlist1">change-log-parameters."&lt;parameter-name&gt;"</dt>
+<dd>
+<p>Liquibase changelog parameters.</p>
 </dd>
 <dt class="hdlist1">migrate-at-start</dt>
 <dd>
@@ -8564,6 +8869,10 @@ quarkus.oidc.credentials.secret=secret</code></pre>
 <dd>
 <p>Relative path of the application endpoint where the user should be redirected to after logging out.</p>
 </dd>
+<dt class="hdlist1"><code>tls.verification</code></dt>
+<dd>
+<p>Sets the TLs verification. Possible values: <code>REQUIRED</code>, <code>NONE</code>. (default: <code>REQUIRED</code>).</p>
+</dd>
 </dl>
 </div>
 <div class="admonitionblock note">
@@ -10895,6 +11204,14 @@ Prefix is <code>quarkus.micrometer</code>:</p>
 <dd>
 <p>The path for the prometheus metrics endpoint (produces text/plain). (default: <code>/metrics</code>)</p>
 </dd>
+<dt class="hdlist1"><code>export.azuremonitor.enabled</code></dt>
+<dd>
+<p>Support for export to Azure Monitor.</p>
+</dd>
+<dt class="hdlist1"><code>export.azuremonitor.instrumentation-key</code></dt>
+<dd>
+<p>The path for the azure monitor instrumentationKey.</p>
+</dd>
 <dt class="hdlist1"><code>export.stackdriver.enabled</code></dt>
 <dd>
 <p>Micrometer metrics support. (default: <code>true</code>)</p>
@@ -12876,7 +13193,7 @@ static BigDecimal discountedPrice(Item item) {
 public static class StringExtensions {
   static String reverse(String val) {
       return new StringBuilder(val).reverse().toString();
-   }
+  }
 }</code></pre>
 </div>
 </div>
@@ -12952,6 +13269,70 @@ public class MyExtensions {
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="html" class="language-html hljs">{#if counter.mod(5) == 0}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Message Bundling</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@io.quarkus.qute.i18n.MessageBundle
+public interface AppMessages {
+    @io.quarkus.qute.i18n.Message("Hello {name}!")
+    String hello_name(String name);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are 3 methods to inject the message:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">MessageBundles.get(AppMessages.class).hello_name("Lucie");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject AppMessages app;
+
+app.hello_name("Lucie");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="html" class="language-html hljs">&lt;p&gt;{msg:hello_name('Lucie')}&lt;/p&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Localization</strong></p>
+</div>
+<div class="paragraph">
+<p>There are two ways to set localized message:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@io.quarkus.qute.i18n.Localized("de")
+public interface GermanAppMessages {
+
+    @Override
+    @io.quarkus.qute.i18n.Message("Hallo {name}!")
+    String hello_name(String name);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="listingblock">
+<div class="title">msg_de.properties</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">hello_name=Hallo {name}!</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -13730,7 +14111,7 @@ public class GreetingController {
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.8.0.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
+If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.9.0.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
 </td>
 </tr>
 </table>
