@@ -690,7 +690,7 @@ static BigDecimal discountedPrice(Item item) {
 public static class StringExtensions {
   static String reverse(String val) {
       return new StringBuilder(val).reverse().toString();
-   }
+  }
 }
 ----
 
@@ -766,6 +766,66 @@ The next number methods are supported:
 {#if counter.mod(5) == 0}
 ----
 // end::update_14_27[]
+
+*Message Bundling*
+
+// tag::update_20_5[]
+
+[source, java]
+----
+@io.quarkus.qute.i18n.MessageBundle 
+public interface AppMessages {
+    @io.quarkus.qute.i18n.Message("Hello {name}!") 
+    String hello_name(String name); 
+}
+----
+
+There are 3 methods to inject the message:
+
+[source, java]
+----
+MessageBundles.get(AppMessages.class).hello_name("Lucie");
+----
+
+or
+
+[source, java]
+----
+@Inject AppMessages app;
+
+app.hello_name("Lucie");
+----
+
+or
+
+[source, html]
+----
+<p>{msg:hello_name('Lucie')}</p>
+----
+
+*Localization*
+
+There are two ways to set localized message:
+
+[source, java]
+----
+@io.quarkus.qute.i18n.Localized("de") 
+public interface GermanAppMessages {
+
+    @Override
+    @io.quarkus.qute.i18n.Message("Hallo {name}!") 
+    String hello_name(String name);
+}
+----
+
+or
+
+[source, properties]
+.msg_de.properties
+----
+hello_name=Hallo {name}!
+----
+// end::update_20_5[]
 
 You can render programmaticaly the templates too:
 

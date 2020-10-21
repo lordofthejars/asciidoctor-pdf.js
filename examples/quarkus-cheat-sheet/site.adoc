@@ -15,6 +15,44 @@ In this page you can either read what has been added in each version of the chea
 [[whatsnew]]
 == What's New in Cheat-Sheet
 
+=== Version 1.9.0.Final
+
+.JAXP
+[%collapsible]
+====
+include::core.adoc[tag=update_20_1]
+====
+
+.Multiple Redis Clients
+[%collapsible]
+====
+include::persistence.adoc[tag=update_20_2]
+====
+
+.TestTransaction
+[%collapsible]
+====
+include::core.adoc[tag=update_20_3]
+====
+
+.Instantiate client programmatically
+[%collapsible]
+====
+include::core.adoc[tag=update_20_4]
+====
+
+.Message Bundling and Localization
+[%collapsible]
+====
+include::misc.adoc[tag=update_20_5]
+====
+
+.Testing Callback
+[%collapsible]
+====
+include::core.adoc[tag=update_20_6]
+====
+
 === Version 1.8.0.Final
 
 .Disable cache extension

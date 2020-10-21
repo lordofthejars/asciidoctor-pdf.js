@@ -102,6 +102,9 @@ Disable pooling to prevent reuse of Connections. (default: `true`)
 
 `jdbc.enable-metrics`::
 Enable datasource metrics collection when using `quarkus-smallrye-metrics` extension.
+
+`jdbc.additional-jdbc-properties.<extraProperty>`::
+Unspecified properties to be passed to the JDBC driver when creating new connections.
 // end::update_14_42[]
 
 // tag::update_5_3[]
@@ -952,6 +955,27 @@ Uni<List<String>> keys() {
 }
 ----
 
+// tag::update_20_2[]
+*Multiple Redis Clients*
+
+[source, properties]
+----
+quarkus.redis.hosts = localhost:6379
+quarkus.redis.second.hosts = localhost:6379
+----
+
+[source, java]
+----
+@Inject
+RedisClient defaultRedisClient;
+
+@Inject
+@RedisClientName("second")
+RedisClient redisClient2;
+----
+
+// end::update_20_2[]
+
 List of Redis parameters.
 
 `quarkus.redis` as prefix is skipped in the next table.
@@ -1120,6 +1144,9 @@ List of Liquibase parameters.
 
 change-log::
 The change log file. `XML`, `YAML` , `JSON`, `SQL` formats supported. (default: `db/changeLog.xml`)
+
+change-log-parameters."<parameter-name>"::
+Liquibase changelog parameters.
 
 migrate-at-start::
 The migrate at start flag. (default: `false`)

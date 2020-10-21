@@ -470,7 +470,7 @@ svg:not(:root).svg-inline--fa {
 <div class="sectionbody">
 <p class=""><a href="https://quarkus.io/">Quarkus</a> is a Kubernetes Native Java stack tailored for GraalVM &amp; OpenJDK HotSpot, crafted from the best of breed Java libraries and standards.
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
-<p class="">Cheat-sheet tested with <strong>Quarkus 1.8.0.Final</strong>.</p>
+<p class="">Cheat-sheet tested with <strong>Quarkus 1.9.0.Final</strong>.</p>
 </div>
 </div>
 <div class="sect1">
@@ -479,7 +479,7 @@ Also focused on developer experience, making things just work with little to no 
 <p class="">Quarkus comes with a Maven archetype to scaffold a very simple starting project.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.8.0.Final:create \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.9.0.Final:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=getting-started \
     -DclassName="org.acme.quickstart.GreetingResource" \
@@ -1428,6 +1428,25 @@ public Message hello() {
 </div>
 </div>
 <div class="sect1">
+<h2 id="_jaxp"><a class="anchor" href="#_jaxp"></a><a class="link" href="#_jaxp">JAXP</a></h2>
+<div class="sectionbody">
+<p class="">To work with <code>JAX-P</code> you need to add a dependency:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="jaxp"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">final DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+final Document doc = dBuilder.parse(in);
+return doc.getDocumentElement().getTextContent();</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_validator"><a class="anchor" href="#_validator"></a><a class="link" href="#_validator">Validator</a></h2>
 <div class="sectionbody">
 <p class="">Quarkus uses <a href="https://hibernate.org/validator/" target="_blank" rel="noopener">Hibernate Validator</a> to validate input/output of REST services and business services using Bean validation spec.</p>
@@ -1934,7 +1953,7 @@ CompletionStage&lt;WorldClock&gt; getNow();</code></pre>
 </div>
 <p class=""><strong>Reactive</strong></p>
 <p class="">Rest Client also integrates with reactive library named Mutiny.
-To start using it you need to add the <code>quarkus-resteasy-mutiny</code>.</p>
+To start using it you need to add the <code>quarkus-rest-client-mutiny</code>.</p>
 <p class="">After that, a methodon a client interface can return a <code>io.smallrye.mutiny.Uni</code> instance.</p>
 <div class="listingblock">
 <div class="content">
@@ -2050,6 +2069,14 @@ org.acme.quickstart.WorldClockService/mp-rest/readTimeout=
     2000</code></pre>
 </div>
 </div>
+<p class=""><strong>Instantiate client programmatically</strong></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">MovieReviewService reviewSvc = RestClientBuilder.newBuilder()
+            .baseUri(apiUri)
+            .build(WorldClockService.class);</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -2072,7 +2099,8 @@ public class GreetingResourceTest {
 }</code></pre>
 </div>
 </div>
-<p class="">Test port can be set in <code>quarkus.http.test-port</code> property.</p>
+<p class="">Test port can be set in <code>quarkus.http.test-port</code> property.
+Timeout can be set in <code>quarkus.http.test-timeout</code> property.</p>
 <p class="">You can also inject the URL where Quarkus is started:</p>
 <div class="listingblock">
 <div class="content">
@@ -2104,6 +2132,7 @@ public class GreetingResourceTest {
 </div>
 </div>
 <p class="">Root path is calculated automatically, not necessary to explicitly set.</p>
+<p class="">If you want any changes made to be rolled back at the end ofthe test you can use the <code>io.quarkus.test.TestTransaction</code> annotation.</p>
 <p class=""><strong>QuarkusTestProfile</strong></p>
 <p class="">You can define for each Test class a different configuration options.</p>
 <div class="admonitionblock important">
@@ -2190,6 +2219,40 @@ Returning new system properties implies running parallel tests in different JVMs
 <pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@QuarkusTestResource(MyCustomTestResource.class)
 public class MyTest {
 }</code></pre>
+</div>
+</div>
+<p class=""><strong>Testing Callbacks</strong></p>
+<p class="">You can enrich <strong>all</strong> your <code>@QuarkusTest</code> classes by implementing the following callback interfaces:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>io.quarkus.test.junit.callback.QuarkusTestBeforeClassCallback</code></p>
+</li>
+<li>
+<p><code>io.quarkus.test.junit.callback.QuarkusTestAfterConstructCallback</code></p>
+</li>
+<li>
+<p><code>io.quarkus.test.junit.callback.QuarkusTestBeforeEachCallback</code></p>
+</li>
+<li>
+<p><code>io.quarkus.test.junit.callback.QuarkusTestAfterEachCallback</code></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class SimpleAnnotationCheckerBeforeClassCallback implements QuarkusTestBeforeClassCallback {
+   @Override
+    public void beforeClass(Class&lt;?&gt; testClass) {
+    }
+}</code></pre>
+</div>
+</div>
+<p class="">And needs to be registered as Java SPI:</p>
+<div class="listingblock">
+<div class="title">META-INF/services/io.quarkus.test.junit.callback.QuarkusTestBeforeClassCallback</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">io.quarkus.it.main.SimpleAnnotationCheckerBeforeClassCallback</code></pre>
 </div>
 </div>
 <p class=""><strong>Mocking</strong></p>
@@ -2408,6 +2471,10 @@ quarkus.hibernate-orm.database.generation=update</code></pre>
 <dt class="hdlist1"><code>jdbc.enable-metrics</code></dt>
 <dd>
 <p>Enable datasource metrics collection when using <code>quarkus-smallrye-metrics</code> extension.</p>
+</dd>
+<dt class="hdlist1"><code>jdbc.additional-jdbc-properties.&lt;extraProperty&gt;</code></dt>
+<dd>
+<p>Unspecified properties to be passed to the JDBC driver when creating new connections.</p>
 </dd>
 </dl>
 </div>
@@ -3258,6 +3325,23 @@ Uni&lt;List&lt;String&gt;&gt; keys() {
 }</code></pre>
 </div>
 </div>
+<p class=""><strong>Multiple Redis Clients</strong></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.redis.hosts = localhost:6379
+quarkus.redis.second.hosts = localhost:6379</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+RedisClient defaultRedisClient;
+
+@Inject
+@RedisClientName("second")
+RedisClient redisClient2;</code></pre>
+</div>
+</div>
 <p class="">List of Redis parameters.</p>
 <p class=""><code>quarkus.redis</code> as prefix is skipped in the next table.</p>
 <div class="dlist">
@@ -3450,6 +3534,10 @@ try (Liquibase liquibase = liquibaseFactory.createLiquibase()) {
 <dt class="hdlist1">change-log</dt>
 <dd>
 <p>The change log file. <code>XML</code>, <code>YAML</code> , <code>JSON</code>, <code>SQL</code> formats supported. (default: <code>db/changeLog.xml</code>)</p>
+</dd>
+<dt class="hdlist1">change-log-parameters."&lt;parameter-name&gt;"</dt>
+<dd>
+<p>Liquibase changelog parameters.</p>
 </dd>
 <dt class="hdlist1">migrate-at-start</dt>
 <dd>
@@ -6232,6 +6320,10 @@ quarkus.oidc.credentials.secret=secret</code></pre>
 <dd>
 <p>Relative path of the application endpoint where the user should be redirected to after logging out.</p>
 </dd>
+<dt class="hdlist1"><code>tls.verification</code></dt>
+<dd>
+<p>Sets the TLs verification. Possible values: <code>REQUIRED</code>, <code>NONE</code>. (default: <code>REQUIRED</code>).</p>
+</dd>
 </dl>
 </div>
 <div class="admonitionblock note">
@@ -8303,6 +8395,14 @@ Prefix is <code>quarkus.micrometer</code>:</p>
 <dd>
 <p>The path for the prometheus metrics endpoint (produces text/plain). (default: <code>/metrics</code>)</p>
 </dd>
+<dt class="hdlist1"><code>export.azuremonitor.enabled</code></dt>
+<dd>
+<p>Support for export to Azure Monitor.</p>
+</dd>
+<dt class="hdlist1"><code>export.azuremonitor.instrumentation-key</code></dt>
+<dd>
+<p>The path for the azure monitor instrumentationKey.</p>
+</dd>
 <dt class="hdlist1"><code>export.stackdriver.enabled</code></dt>
 <dd>
 <p>Micrometer metrics support. (default: <code>true</code>)</p>
@@ -9968,7 +10068,7 @@ static BigDecimal discountedPrice(Item item) {
 public static class StringExtensions {
   static String reverse(String val) {
       return new StringBuilder(val).reverse().toString();
-   }
+  }
 }</code></pre>
 </div>
 </div>
@@ -10030,6 +10130,56 @@ public class MyExtensions {
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="html" class="language-html hljs">{#if counter.mod(5) == 0}</code></pre>
+</div>
+</div>
+<p class=""><strong>Message Bundling</strong></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@io.quarkus.qute.i18n.MessageBundle
+public interface AppMessages {
+    @io.quarkus.qute.i18n.Message("Hello {name}!")
+    String hello_name(String name);
+}</code></pre>
+</div>
+</div>
+<p class="">There are 3 methods to inject the message:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">MessageBundles.get(AppMessages.class).hello_name("Lucie");</code></pre>
+</div>
+</div>
+<p class="">or</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject AppMessages app;
+
+app.hello_name("Lucie");</code></pre>
+</div>
+</div>
+<p class="">or</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="html" class="language-html hljs">&lt;p&gt;{msg:hello_name('Lucie')}&lt;/p&gt;</code></pre>
+</div>
+</div>
+<p class=""><strong>Localization</strong></p>
+<p class="">There are two ways to set localized message:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@io.quarkus.qute.i18n.Localized("de")
+public interface GermanAppMessages {
+
+    @Override
+    @io.quarkus.qute.i18n.Message("Hallo {name}!")
+    String hello_name(String name);
+}</code></pre>
+</div>
+</div>
+<p class="">or</p>
+<div class="listingblock">
+<div class="title">msg_de.properties</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">hello_name=Hallo {name}!</code></pre>
 </div>
 </div>
 <p class="">You can render programmaticaly the templates too:</p>
@@ -10744,7 +10894,7 @@ public class GreetingController {
 <span class="fa-layers"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle" class="svg-inline--fa fa-circle fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path></svg><svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="lightbulb" class="svg-inline--fa fa-lightbulb fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" style="transform-origin: 0.34375em 0.5em;"><g transform="translate(176 256)"><g transform="translate(0, 0)  scale(0.625, 0.625)  rotate(0 0 0)"><path fill="currentColor" d="M176 80c-52.94 0-96 43.06-96 96 0 8.84 7.16 16 16 16s16-7.16 16-16c0-35.3 28.72-64 64-64 8.84 0 16-7.16 16-16s-7.16-16-16-16zM96.06 459.17c0 3.15.93 6.22 2.68 8.84l24.51 36.84c2.97 4.46 7.97 7.14 13.32 7.14h78.85c5.36 0 10.36-2.68 13.32-7.14l24.51-36.84c1.74-2.62 2.67-5.7 2.68-8.84l.05-43.18H96.02l.04 43.18zM176 0C73.72 0 0 82.97 0 176c0 44.37 16.45 84.85 43.56 115.78 16.64 18.99 42.74 58.8 52.42 92.16v.06h48v-.12c-.01-4.77-.72-9.51-2.15-14.07-5.59-17.81-22.82-64.77-62.17-109.67-20.54-23.43-31.52-53.15-31.61-84.14-.2-73.64 59.67-128 127.95-128 70.58 0 128 57.42 128 128 0 30.97-11.24 60.85-31.65 84.14-39.11 44.61-56.42 91.47-62.1 109.46a47.507 47.507 0 0 0-2.22 14.3v.1h48v-.05c9.68-33.37 35.78-73.18 52.42-92.16C335.55 260.85 352 220.37 352 176 352 78.8 273.2 0 176 0z" transform="translate(-176 -256)"></path></g></g></svg></span>
 </td>
 <td class="content">
-If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.8.0.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
+If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.9.0.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
 </td>
 </tr>
 </table>
@@ -11035,7 +11185,7 @@ void cronJob() {
 <div class="author-bio">Java Champion and Director of DevExp at Red Hat</div>
 </div>
 
-<div class="author-bio">1.8.0.Final</div>
+<div class="author-bio">1.9.0.Final</div>
 <img src="./redhat/assets/by-nc-sa.png"/>
 </div>
 
