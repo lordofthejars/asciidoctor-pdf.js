@@ -68,6 +68,10 @@ quarkus.http.auth.permission.deny1.policy=
 You need to provide permissions set by using the `roles-allowed` property or use the built-in ones `deny`, `permit` or `authenticated`. 
 // end::update_10_4[]
 
+// tag::update_21_3[]
+You can use `enabled` property (ie `quarkus.http.auth.permission.permit1.enabled`) to enable the entire permission set.
+// end::update_21_3[]
+
 *Testing*
 
 // tag::update_18_2[]
@@ -97,6 +101,18 @@ void someTestMethod() {
 }
 ----
 // end::update_18_2[]
+
+== BouncyCastle
+
+// tag::update_21_5[]
+Quarkus supports BouncyCastle, you only need to add the BouncyCastle dependency and configure the security provider:
+
+[source, properties]
+----
+quarkus.security.security-providers=BC
+quarkus.security.security-providers=BCJSSE
+----
+// end::update_21_5[]
 
 == JWT
 // tag::update_1_5[]
@@ -562,6 +578,11 @@ quarkus.security.users.embedded.auth-mechanism=BASIC
 *IMPORTANT:*  If plain-text is set to `false` (or omitted) then passwords must be stored in the form MD5 (`username`:`realm`:`password`).
 
 Prefix `quarkus.security.users.embedded` is skipped.
+
+// tag::update_21_1[]
+`algorithm`::
+ Determine which algorithm to use. Possible values: `DIGEST_MD5`, `DIGEST_SHA`, `DIGEST_SHA_256`, `DIGEST_SHA_384`, `DIGEST_SHA_512`, `DIGEST_SHA_512_256`. (default: `DIGEST_MD5`)
+// end::update_21_1[]
 
 `file.enabled`::
 The file realm is enabled. (default: `false`)
@@ -1141,3 +1162,63 @@ And you need to add the asynchronous Netty client:
 
 Configuration properties are the same as <<Amazon DynamoDB>> but changing the prefix from `dynamodb` to `kms`.
 // end::update_16_23[]
+
+== Amazon IAM
+
+// tag::update_21_9[]
+[source, bash]
+----
+mvn quarkus:add-extension 
+    -Dextensions="quarkus-amazon-iam"
+----
+
+You need to set a HTTP client either `URL Connection`:
+
+[source, xml]
+----
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>url-connection-client</artifactId>
+</dependency>
+----
+
+or Apache HTTP:
+
+[source, xml]
+----
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>apache-client</artifactId>
+</dependency>
+----
+
+And you need to add the asynchronous Netty client:
+
+[source, xml]
+----
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>netty-nio-client</artifactId>
+</dependency>
+----
+
+[source, java]
+----
+@Inject
+IamClient client;
+
+@Inject
+IamAsyncClient async;
+----
+
+[source, properties]
+----
+quarkus.iam.endpoint-override=${iam.url}
+quarkus.iam.aws.region=us-east-1
+quarkus.iam.aws.credentials.type=static
+quarkus.iam.aws.credentials.static-provider.access-key-id=test-key
+quarkus.iam.aws.credentials.static-provider.secret-access-key=test-secret
+----
+
+Configuration properties are the same as <<Amazon DynamoDB>> but changing the prefix from `dynamodb` to `iam`.
+// end::update_21_9[]

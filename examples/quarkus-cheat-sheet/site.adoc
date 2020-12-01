@@ -15,6 +15,62 @@ In this page you can either read what has been added in each version of the chea
 [[whatsnew]]
 == What's New in Cheat-Sheet
 
+=== Version 1.10.0.Final
+
+.Add algorithms to hash passwords in embeded mode
+[%collapsible]
+====
+include::security.adoc[tag=update_21_1]
+====
+
+.Panache MongoDB Rest Data
+[%collapsible]
+====
+include::persistence.adoc[tag=update_21_2]
+====
+
+.Enabling permissions
+[%collapsible]
+====
+include::security.adoc[tag=update_21_3]
+====
+
+.OpenTracing Kafka Integration
+[%collapsible]
+====
+include::network.adoc[tag=update_21_4]
+====
+
+.BouncyCastle
+[%collapsible]
+====
+include::security.adoc[tag=update_21_5]
+====
+
+.Knative Properties
+[%collapsible]
+====
+include::cloud.adoc[tag=update_21_6]
+====
+
+.Swagger UI Properties
+[%collapsible]
+====
+include::misc.adoc[tag=update_21_7]
+====
+
+.Default to JSON
+[%collapsible]
+====
+include::core.adoc[tag=update_21_8]
+====
+
+.Amazon IAM
+[%collapsible]
+====
+include::security.adoc[tag=update_21_9]
+====
+
 === Version 1.9.0.Final
 
 .JAXP

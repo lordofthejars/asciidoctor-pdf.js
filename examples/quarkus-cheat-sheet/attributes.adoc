@@ -1,5 +1,5 @@
 :logo: quarkus.png
-:version: 1.9.0.Final
+:version: 1.10.2.Final
 :source-highlighter: highlightjs
 :sectlinks:
 :linkattrs:

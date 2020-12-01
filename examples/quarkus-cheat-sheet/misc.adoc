@@ -65,6 +65,112 @@ quarkus.swagger-ui.path=/my-custom-path
 ----
 // end::update_2_3[]
 
+// tag::update_21_7[]
+Possible Swagger UI options with `quarkus.swagger-ui` prefix:
+
+`urls`::
+The urls that will be included as options. (ie `quarkus.swagger-ui.urls.petstore=https://petstore.swagger.io/v2/swagger.json`)
+
+`urls-primary-name`::
+If urls option is used, this will be the name of the default selection.
+
+`title`::
+The html title for the page.
+
+`theme`::
+Swagger UI theme to be used.
+
+`footer`::
+A footer for the html page. Nothing by default.
+
+`deep-linking`::
+Enables deep linking for tags and operations.
+
+`display-operation-id`::
+Controls the display of operationId in operations list.
+
+`default-models-expand-depth`::
+The default expansion depth for models.
+
+`default-model-expand-depth`::
+The default expansion depth for the model on the model-example section.
+
+`default-model-rendering`::
+Controls how the model is shown when the API is first rendered.
+
+`display-request-duration`::
+Controls the display of the request duration (in milliseconds) for "Try it out" requests.
+
+`doc-expansion`::
+Controls the default expansion setting for the operations and tags.
+
+`filter`::
+Enables filtering.
+
+`max-displayed-tags`::
+Limits the number of tagged operations displayed to at most this many.
+
+`operations-sorter`::
+Apply a sort to the operation list of each API. (`alpha`, `method`, `function`)
+
+`show-extensions`::
+Controls the display of vendor extension.
+
+`show-common-extensions`::
+Controls the display of extensions.
+
+`tag-sorter`::
+Apply a sort to the tag list of each API.
+
+`on-complete`::
+Provides a mechanism to be notified when Swagger UI has finished rendering a newly provided definition.
+
+`syntax-highlight`::
+Set to false to deactivate syntax highlighting of payloads and cURL command.
+
+`oauth2-redirect-url`::
+OAuth redirect URL.
+
+`request-interceptor`::
+Function to intercept remote definition, "Try it out", and OAuth 2.0 requests.
+
+`request-curl-options`::
+Array of command line options available to the curl command.
+
+`response-interceptor`::
+ Function to intercept remote definition, "Try it out", and OAuth 2.0 responses.
+
+`show-mutated-request`::
+Uses the mutated request returned from a requestInterceptor to produce the curl command in the UI.
+
+`supported-submit-methods`::
+List of HTTP methods that have the "Try it out" feature enabled.
+
+`validator-url`::
+Swagger UI attempts to validate specs against swagger.io's online validator.
+
+`with-credentials`::
+Enables passing credentials, as defined in the Fetch standard, in CORS requests that are sent by the browser.
+
+`model-property-macro`::
+Function to set default values to each property in model.
+
+`parameter-macro`::
+Function to set default value to parameters.
+
+`persist-authorization`::
+It persists authorization data and it would not be lost on browser close/refresh.
+
+`layout`::
+The name of a component available via the plugin system to use as the top-level layout for Swagger UI.
+
+`plugins`::
+A list of plugin functions to use in Swagger UI.
+
+`presets`::
+A list of presets to use in Swagger UI.
+// end::update_21_7[]
+
 // tag::update_6_6[]
 You can customize the output by using Open API v3 annotations.
 

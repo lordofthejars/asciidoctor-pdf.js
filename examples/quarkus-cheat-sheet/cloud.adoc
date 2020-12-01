@@ -243,6 +243,11 @@ quarkus.kubernetes.expose=true
 quarkus.kubernetes.env.vars.my-env-var=foobar
 quarkus.kubernetes.env.configmaps=my-config-map,another-config-map
 quarkus.kubernetes.env.secrets=my-secret,my-other-secret
+
+quarkus.kubernetes.resources.requests.memory=64Mi
+quarkus.kubernetes.resources.requests.cpu=250m
+quarkus.kubernetes.resources.limits.memory=512Mi
+quarkus.kubernetes.resources.limits.cpu=1000m
 ----
 
 All possible values are explained at https://quarkus.io/guides/kubernetes#configuration-options.
@@ -306,6 +311,21 @@ You can generate different resources setting the property `quarkus.kubernetes.de
 Possible values are `kubernetes`, `openshift` and `knative`.
 The default value is `kubernetes`.
 // end::update_12_4[]
+
+// tag::update_21_6[]
+*Knative Properties*
+
+Most of the Kubernetes properties are valid in Knative output by just changing the `kubernetes` prefix to `knative` prefix (ie `quarkus.kubernetes.readiness-probe.period-seconds` to `quarkus.knative.readiness-probe.period-seconds`).
+
+There are also specific properties for Knative:
+
+[source, properties]
+----
+quarkus.kubernetes.deployment-target=knative
+quarkus.knative.revision-name=my-revision
+quarkus.knative.traffic.my-revision.percentage=80
+----
+// end::update_21_6[]
 
 // tag::update_14_23[]
 List of configuration options:
