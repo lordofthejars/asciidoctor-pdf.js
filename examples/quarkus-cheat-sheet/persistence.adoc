@@ -2300,6 +2300,38 @@ Uni<List<PersonName>> persons = ReactivePersonEntity.find("lastname", name).proj
 ----
 // end::update_14_12[]
 
+== MongoDB REST Data Panache
+
+// tag::update_21_2[]
+MongoDB REST Data with Panache extension can generate the basic CRUD endpoints for your entities and repositories.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="mongodb-rest-data-panache"
+----
+
+You also need to add the JDBC driver extension and a JSON Marshaller (ie `resteasy-jackson`).
+
+Then you can define interfaces for defining endpoints:
+
+In case of Active Record pattern:
+
+[source, java]
+----
+public interface DeveloperResource extends PanacheMongoEntityResource<Developer, Long> {
+}
+----
+
+In case of Repository:
+
+[source, java]
+----
+public interface DeveloperResource extends PanacheMongoRepositoryResource<DeveloperRepository, Developer, Long> {
+}
+----
+// end::update_21_2[]
+
 == Cassandra
 
 // tag::update_17_12[]

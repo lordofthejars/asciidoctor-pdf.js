@@ -1139,8 +1139,20 @@ Support for export to Azure Monitor.
 `export.azuremonitor.instrumentation-key`::
 The path for the azure monitor instrumentationKey.
 
+`export.statsd.enabled`::
+Support for export to StatsD.
+
 `export.stackdriver.enabled`::
 Micrometer metrics support. (default: `true`)
+
+`export.signalfx.enabled`::
+Micrometer metrics support. (default: `true`)
+
+`export.signalfx.uri`::
+Signalfx URI.
+
+`export.signalfx.access-token`::
+Access Token.
 
 `binder.vertx.match-patterns`::
 Comma-separated case-sensitive list of regular expressions defining Paths that should be matched and used as tags
@@ -1240,6 +1252,34 @@ quarkus.hibernate-orm.dialect=
     org.hibernate.dialect.PostgreSQLDialect
 ----
 // end::update_8_12[]
+
+// tag::update_21_4[]
+*Kafka Tracer*
+
+Adds a span for each message sent to or received from a Kafka topic.
+
+[source, xml]
+----
+<dependency>
+    <groupId>io.opentracing.contrib</groupId>
+    <artifactId>opentracing-kafka-client<</artifactId>
+</dependency>
+----
+
+And configure it:
+
+[source, properties]
+----
+...
+mp.messaging.outgoing.generated-price.topic=prices
+
+# For Produces
+mp.messaging.outgoing.generated-price.interceptor.classes=io.opentracing.contrib.kafka.TracingProducerInterceptor
+...
+# For consumers
+mp.messaging.incoming.prices.interceptor.classes=io.opentracing.contrib.kafka.TracingConsumerInterceptor
+----
+// end::update_21_4[]
 
 *AWS XRay*
 

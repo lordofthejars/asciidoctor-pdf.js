@@ -465,6 +465,367 @@ Also focused on developer experience, making things just work with little to no 
 <h2 id="whatsnew"><a class="anchor" href="#whatsnew"></a><a class="link" href="#whatsnew">What&#8217;s New in Cheat-Sheet</a></h2>
 <div class="sectionbody">
 <div class="sect2">
+<h3 id="_version_1_10_0_final"><a class="anchor" href="#_version_1_10_0_final"></a><a class="link" href="#_version_1_10_0_final">Version 1.10.0.Final</a></h3>
+<details>
+<summary class="title">Add algorithms to hash passwords in embeded mode</summary>
+<div class="content">
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>algorithm</code></dt>
+<dd>
+<p>Determine which algorithm to use. Possible values: <code>DIGEST_MD5</code>, <code>DIGEST_SHA</code>, <code>DIGEST_SHA_256</code>, <code>DIGEST_SHA_384</code>, <code>DIGEST_SHA_512</code>, <code>DIGEST_SHA_512_256</code>. (default: <code>DIGEST_MD5</code>)</p>
+</dd>
+</dl>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Panache MongoDB Rest Data</summary>
+<div class="content">
+<div class="paragraph">
+<p>MongoDB REST Data with Panache extension can generate the basic CRUD endpoints for your entities and repositories.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="mongodb-rest-data-panache"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You also need to add the JDBC driver extension and a JSON Marshaller (ie <code>resteasy-jackson</code>).</p>
+</div>
+<div class="paragraph">
+<p>Then you can define interfaces for defining endpoints:</p>
+</div>
+<div class="paragraph">
+<p>In case of Active Record pattern:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public interface DeveloperResource extends PanacheMongoEntityResource&lt;Developer, Long&gt; {
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In case of Repository:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public interface DeveloperResource extends PanacheMongoRepositoryResource&lt;DeveloperRepository, Developer, Long&gt; {
+}</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Enabling permissions</summary>
+<div class="content">
+<div class="paragraph">
+<p>You can use <code>enabled</code> property (ie <code>quarkus.http.auth.permission.permit1.enabled</code>) to enable the entire permission set.</p>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">OpenTracing Kafka Integration</summary>
+<div class="content">
+<div class="paragraph">
+<p><strong>Kafka Tracer</strong></p>
+</div>
+<div class="paragraph">
+<p>Adds a span for each message sent to or received from a Kafka topic.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;io.opentracing.contrib&lt;/groupId&gt;
+    &lt;artifactId&gt;opentracing-kafka-client&lt;&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And configure it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">...
+mp.messaging.outgoing.generated-price.topic=prices
+
+# For Produces
+mp.messaging.outgoing.generated-price.interceptor.classes=io.opentracing.contrib.kafka.TracingProducerInterceptor
+...
+# For consumers
+mp.messaging.incoming.prices.interceptor.classes=io.opentracing.contrib.kafka.TracingConsumerInterceptor</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">BouncyCastle</summary>
+<div class="content">
+<div class="paragraph">
+<p>Quarkus supports BouncyCastle, you only need to add the BouncyCastle dependency and configure the security provider:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.security.security-providers=BC
+quarkus.security.security-providers=BCJSSE</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Knative Properties</summary>
+<div class="content">
+<div class="paragraph">
+<p><strong>Knative Properties</strong></p>
+</div>
+<div class="paragraph">
+<p>Most of the Kubernetes properties are valid in Knative output by just changing the <code>kubernetes</code> prefix to <code>knative</code> prefix (ie <code>quarkus.kubernetes.readiness-probe.period-seconds</code> to <code>quarkus.knative.readiness-probe.period-seconds</code>).</p>
+</div>
+<div class="paragraph">
+<p>There are also specific properties for Knative:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.kubernetes.deployment-target=knative
+quarkus.knative.revision-name=my-revision
+quarkus.knative.traffic.my-revision.percentage=80</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Swagger UI Properties</summary>
+<div class="content">
+<div class="paragraph">
+<p>Possible Swagger UI options with <code>quarkus.swagger-ui</code> prefix:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>urls</code></dt>
+<dd>
+<p>The urls that will be included as options. (ie <code>quarkus.swagger-ui.urls.petstore=https://petstore.swagger.io/v2/swagger.json</code>)</p>
+</dd>
+<dt class="hdlist1"><code>urls-primary-name</code></dt>
+<dd>
+<p>If urls option is used, this will be the name of the default selection.</p>
+</dd>
+<dt class="hdlist1"><code>title</code></dt>
+<dd>
+<p>The html title for the page.</p>
+</dd>
+<dt class="hdlist1"><code>theme</code></dt>
+<dd>
+<p>Swagger UI theme to be used.</p>
+</dd>
+<dt class="hdlist1"><code>footer</code></dt>
+<dd>
+<p>A footer for the html page. Nothing by default.</p>
+</dd>
+<dt class="hdlist1"><code>deep-linking</code></dt>
+<dd>
+<p>Enables deep linking for tags and operations.</p>
+</dd>
+<dt class="hdlist1"><code>display-operation-id</code></dt>
+<dd>
+<p>Controls the display of operationId in operations list.</p>
+</dd>
+<dt class="hdlist1"><code>default-models-expand-depth</code></dt>
+<dd>
+<p>The default expansion depth for models.</p>
+</dd>
+<dt class="hdlist1"><code>default-model-expand-depth</code></dt>
+<dd>
+<p>The default expansion depth for the model on the model-example section.</p>
+</dd>
+<dt class="hdlist1"><code>default-model-rendering</code></dt>
+<dd>
+<p>Controls how the model is shown when the API is first rendered.</p>
+</dd>
+<dt class="hdlist1"><code>display-request-duration</code></dt>
+<dd>
+<p>Controls the display of the request duration (in milliseconds) for "Try it out" requests.</p>
+</dd>
+<dt class="hdlist1"><code>doc-expansion</code></dt>
+<dd>
+<p>Controls the default expansion setting for the operations and tags.</p>
+</dd>
+<dt class="hdlist1"><code>filter</code></dt>
+<dd>
+<p>Enables filtering.</p>
+</dd>
+<dt class="hdlist1"><code>max-displayed-tags</code></dt>
+<dd>
+<p>Limits the number of tagged operations displayed to at most this many.</p>
+</dd>
+<dt class="hdlist1"><code>operations-sorter</code></dt>
+<dd>
+<p>Apply a sort to the operation list of each API. (<code>alpha</code>, <code>method</code>, <code>function</code>)</p>
+</dd>
+<dt class="hdlist1"><code>show-extensions</code></dt>
+<dd>
+<p>Controls the display of vendor extension.</p>
+</dd>
+<dt class="hdlist1"><code>show-common-extensions</code></dt>
+<dd>
+<p>Controls the display of extensions.</p>
+</dd>
+<dt class="hdlist1"><code>tag-sorter</code></dt>
+<dd>
+<p>Apply a sort to the tag list of each API.</p>
+</dd>
+<dt class="hdlist1"><code>on-complete</code></dt>
+<dd>
+<p>Provides a mechanism to be notified when Swagger UI has finished rendering a newly provided definition.</p>
+</dd>
+<dt class="hdlist1"><code>syntax-highlight</code></dt>
+<dd>
+<p>Set to false to deactivate syntax highlighting of payloads and cURL command.</p>
+</dd>
+<dt class="hdlist1"><code>oauth2-redirect-url</code></dt>
+<dd>
+<p>OAuth redirect URL.</p>
+</dd>
+<dt class="hdlist1"><code>request-interceptor</code></dt>
+<dd>
+<p>Function to intercept remote definition, "Try it out", and OAuth 2.0 requests.</p>
+</dd>
+<dt class="hdlist1"><code>request-curl-options</code></dt>
+<dd>
+<p>Array of command line options available to the curl command.</p>
+</dd>
+<dt class="hdlist1"><code>response-interceptor</code></dt>
+<dd>
+<p>Function to intercept remote definition, "Try it out", and OAuth 2.0 responses.</p>
+</dd>
+<dt class="hdlist1"><code>show-mutated-request</code></dt>
+<dd>
+<p>Uses the mutated request returned from a requestInterceptor to produce the curl command in the UI.</p>
+</dd>
+<dt class="hdlist1"><code>supported-submit-methods</code></dt>
+<dd>
+<p>List of HTTP methods that have the "Try it out" feature enabled.</p>
+</dd>
+<dt class="hdlist1"><code>validator-url</code></dt>
+<dd>
+<p>Swagger UI attempts to validate specs against swagger.io&#8217;s online validator.</p>
+</dd>
+<dt class="hdlist1"><code>with-credentials</code></dt>
+<dd>
+<p>Enables passing credentials, as defined in the Fetch standard, in CORS requests that are sent by the browser.</p>
+</dd>
+<dt class="hdlist1"><code>model-property-macro</code></dt>
+<dd>
+<p>Function to set default values to each property in model.</p>
+</dd>
+<dt class="hdlist1"><code>parameter-macro</code></dt>
+<dd>
+<p>Function to set default value to parameters.</p>
+</dd>
+<dt class="hdlist1"><code>persist-authorization</code></dt>
+<dd>
+<p>It persists authorization data and it would not be lost on browser close/refresh.</p>
+</dd>
+<dt class="hdlist1"><code>layout</code></dt>
+<dd>
+<p>The name of a component available via the plugin system to use as the top-level layout for Swagger UI.</p>
+</dd>
+<dt class="hdlist1"><code>plugins</code></dt>
+<dd>
+<p>A list of plugin functions to use in Swagger UI.</p>
+</dd>
+<dt class="hdlist1"><code>presets</code></dt>
+<dd>
+<p>A list of presets to use in Swagger UI.</p>
+</dd>
+</dl>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Default to JSON</summary>
+<div class="content">
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Default media type in Quarkus RestEasy is JSON.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Amazon IAM</summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn quarkus:add-extension
+    -Dextensions="quarkus-amazon-iam"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You need to set a HTTP client either <code>URL Connection</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;software.amazon.awssdk&lt;/groupId&gt;
+    &lt;artifactId&gt;url-connection-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or Apache HTTP:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;software.amazon.awssdk&lt;/groupId&gt;
+    &lt;artifactId&gt;apache-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And you need to add the asynchronous Netty client:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;software.amazon.awssdk&lt;/groupId&gt;
+    &lt;artifactId&gt;netty-nio-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+IamClient client;
+
+@Inject
+IamAsyncClient async;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.iam.endpoint-override=${iam.url}
+quarkus.iam.aws.region=us-east-1
+quarkus.iam.aws.credentials.type=static
+quarkus.iam.aws.credentials.static-provider.access-key-id=test-key
+quarkus.iam.aws.credentials.static-provider.secret-access-key=test-secret</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Configuration properties are the same as <a href="#_amazon_dynamodb">Amazon DynamoDB</a> but changing the prefix from <code>dynamodb</code> to <code>iam</code>.</p>
+</div>
+</div>
+</details>
+</div>
+<div class="sect2">
 <h3 id="_version_1_9_0_final"><a class="anchor" href="#_version_1_9_0_final"></a><a class="link" href="#_version_1_9_0_final">Version 1.9.0.Final</a></h3>
 <details>
 <summary class="title">JAXP</summary>
@@ -943,9 +1304,25 @@ Prefix is <code>quarkus.micrometer</code>:</p>
 <dd>
 <p>The path for the azure monitor instrumentationKey.</p>
 </dd>
+<dt class="hdlist1"><code>export.statsd.enabled</code></dt>
+<dd>
+<p>Support for export to StatsD.</p>
+</dd>
 <dt class="hdlist1"><code>export.stackdriver.enabled</code></dt>
 <dd>
 <p>Micrometer metrics support. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>export.signalfx.enabled</code></dt>
+<dd>
+<p>Micrometer metrics support. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>export.signalfx.uri</code></dt>
+<dd>
+<p>Signalfx URI.</p>
+</dd>
+<dt class="hdlist1"><code>export.signalfx.access-token</code></dt>
+<dd>
+<p>Access Token.</p>
 </dd>
 <dt class="hdlist1"><code>binder.vertx.match-patterns</code></dt>
 <dd>
@@ -1684,6 +2061,7 @@ void cronJob() {
 <ul class="sectlevel1">
 <li><a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a>
 <ul class="sectlevel2">
+<li><a href="#_version_1_10_0_final">Version 1.10.0.Final</a></li>
 <li><a href="#_version_1_9_0_final">Version 1.9.0.Final</a></li>
 <li><a href="#_version_1_8_0_final">Version 1.8.0.Final</a></li>
 <li><a href="#_version_1_7_0_final">Version 1.7.0.Final</a></li>
@@ -1724,6 +2102,7 @@ void cronJob() {
 <li><a href="#_neo4j">Neo4j</a></li>
 <li><a href="#_mongodb_client">MongoDB Client</a></li>
 <li><a href="#_mongodb_panache">MongoDB Panache</a></li>
+<li><a href="#_mongodb_rest_data_panache">MongoDB REST Data Panache</a></li>
 <li><a href="#_cassandra">Cassandra</a></li>
 <li><a href="#_reactive_programming">Reactive Programming</a></li>
 <li><a href="#_reactive_messaging">Reactive Messaging</a></li>
@@ -1737,6 +2116,7 @@ void cronJob() {
 <li><a href="#_vert_x_reactive_clients">Vert.X Reactive Clients</a></li>
 <li><a href="#_amazon_sqs_client">Amazon SQS Client</a></li>
 <li><a href="#_rbac">RBAC</a></li>
+<li><a href="#_bouncycastle">BouncyCastle</a></li>
 <li><a href="#_jwt">JWT</a></li>
 <li><a href="#_openid_connect">OpenId Connect</a></li>
 <li><a href="#_oauth2">OAuth2</a></li>
@@ -1747,6 +2127,7 @@ void cronJob() {
 <li><a href="#_security_with_ldap">Security with LDAP</a></li>
 <li><a href="#_vault">Vault</a></li>
 <li><a href="#_amazon_kms">Amazon KMS</a></li>
+<li><a href="#_amazon_iam">Amazon IAM</a></li>
 <li><a href="#_http_configuration">HTTP Configuration</a></li>
 <li><a href="#_jax_rs">JAX-RS</a></li>
 <li><a href="#_vert_x_filters_and_routes">Vert.X Filters and Routes</a></li>
@@ -1811,7 +2192,7 @@ void cronJob() {
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
 </div>
 <div class="paragraph">
-<p>Cheat-sheet tested with <strong>Quarkus 1.9.0.Final</strong>.</p>
+<p>Cheat-sheet tested with <strong>Quarkus 1.10.2.Final</strong>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1821,7 +2202,7 @@ Also focused on developer experience, making things just work with little to no 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.9.0.Final:create \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.10.2.Final:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=getting-started \
     -DclassName="org.acme.quickstart.GreetingResource" \
@@ -2887,6 +3268,18 @@ public class CustomObjectMapperConfig {
 }</code></pre>
 </div>
 </div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Default media type in Quarkus RestEasy is JSON.
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_xml_marshallingunmarshalling"><a class="anchor" href="#_xml_marshallingunmarshalling"></a><a class="link" href="#_xml_marshallingunmarshalling">XML Marshalling/Unmarshalling</a></h3>
@@ -3609,7 +4002,7 @@ org.acme.quickstart.WorldClockService/mp-rest/trustStorePassword=
 </dd>
 <dt class="hdlist1"><code>%s/mp-rest/hostnameVerifier</code></dt>
 <dd>
-<p>Custom hostname verifier class name.</p>
+<p>Custom hostname verifier class name. To disable SSL verification you can use <code>io.quarkus.restclient.NoopHostnameVerifier</code>.</p>
 </dd>
 <dt class="hdlist1"><code>%s/mp-rest/keyStore</code></dt>
 <dd>
@@ -7244,6 +7637,42 @@ Uni&lt;List&lt;PersonName&gt;&gt; persons = ReactivePersonEntity.find("lastname"
 </div>
 </div>
 <div class="sect2">
+<h3 id="_mongodb_rest_data_panache"><a class="anchor" href="#_mongodb_rest_data_panache"></a><a class="link" href="#_mongodb_rest_data_panache">MongoDB REST Data Panache</a></h3>
+<div class="paragraph">
+<p>MongoDB REST Data with Panache extension can generate the basic CRUD endpoints for your entities and repositories.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="mongodb-rest-data-panache"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You also need to add the JDBC driver extension and a JSON Marshaller (ie <code>resteasy-jackson</code>).</p>
+</div>
+<div class="paragraph">
+<p>Then you can define interfaces for defining endpoints:</p>
+</div>
+<div class="paragraph">
+<p>In case of Active Record pattern:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public interface DeveloperResource extends PanacheMongoEntityResource&lt;Developer, Long&gt; {
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In case of Repository:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public interface DeveloperResource extends PanacheMongoRepositoryResource&lt;DeveloperRepository, Developer, Long&gt; {
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_cassandra"><a class="anchor" href="#_cassandra"></a><a class="link" href="#_cassandra">Cassandra</a></h3>
 <div class="paragraph">
 <p>Quarkus integrates with Cassandra and DataStax Object Mapper.</p>
@@ -8440,6 +8869,9 @@ quarkus.http.auth.permission.deny1.policy=
 <p>You need to provide permissions set by using the <code>roles-allowed</code> property or use the built-in ones <code>deny</code>, <code>permit</code> or <code>authenticated</code>.</p>
 </div>
 <div class="paragraph">
+<p>You can use <code>enabled</code> property (ie <code>quarkus.http.auth.permission.permit1.enabled</code>) to enable the entire permission set.</p>
+</div>
+<div class="paragraph">
 <p><strong>Testing</strong></p>
 </div>
 <div class="paragraph">
@@ -8467,6 +8899,18 @@ void someTestMethod() {
 void someTestMethod() {
 ...
 }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_bouncycastle"><a class="anchor" href="#_bouncycastle"></a><a class="link" href="#_bouncycastle">BouncyCastle</a></h3>
+<div class="paragraph">
+<p>Quarkus supports BouncyCastle, you only need to add the BouncyCastle dependency and configure the security provider:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.security.security-providers=BC
+quarkus.security.security-providers=BCJSSE</code></pre>
 </div>
 </div>
 </div>
@@ -9089,6 +9533,10 @@ quarkus.security.users.embedded.auth-mechanism=BASIC</code></pre>
 </div>
 <div class="dlist">
 <dl>
+<dt class="hdlist1"><code>algorithm</code></dt>
+<dd>
+<p>Determine which algorithm to use. Possible values: <code>DIGEST_MD5</code>, <code>DIGEST_SHA</code>, <code>DIGEST_SHA_256</code>, <code>DIGEST_SHA_384</code>, <code>DIGEST_SHA_512</code>, <code>DIGEST_SHA_512_256</code>. (default: <code>DIGEST_MD5</code>)</p>
+</dd>
 <dt class="hdlist1"><code>file.enabled</code></dt>
 <dd>
 <p>The file realm is enabled. (default: <code>false</code>)</p>
@@ -9780,6 +10228,69 @@ Uni.createFrom().completionStage(
 </div>
 <div class="paragraph">
 <p>Configuration properties are the same as <a href="#_amazon_dynamodb">Amazon DynamoDB</a> but changing the prefix from <code>dynamodb</code> to <code>kms</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_amazon_iam"><a class="anchor" href="#_amazon_iam"></a><a class="link" href="#_amazon_iam">Amazon IAM</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn quarkus:add-extension
+    -Dextensions="quarkus-amazon-iam"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You need to set a HTTP client either <code>URL Connection</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;software.amazon.awssdk&lt;/groupId&gt;
+    &lt;artifactId&gt;url-connection-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or Apache HTTP:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;software.amazon.awssdk&lt;/groupId&gt;
+    &lt;artifactId&gt;apache-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And you need to add the asynchronous Netty client:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;software.amazon.awssdk&lt;/groupId&gt;
+    &lt;artifactId&gt;netty-nio-client&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+IamClient client;
+
+@Inject
+IamAsyncClient async;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.iam.endpoint-override=${iam.url}
+quarkus.iam.aws.region=us-east-1
+quarkus.iam.aws.credentials.type=static
+quarkus.iam.aws.credentials.static-provider.access-key-id=test-key
+quarkus.iam.aws.credentials.static-provider.secret-access-key=test-secret</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Configuration properties are the same as <a href="#_amazon_dynamodb">Amazon DynamoDB</a> but changing the prefix from <code>dynamodb</code> to <code>iam</code>.</p>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -11212,9 +11723,25 @@ Prefix is <code>quarkus.micrometer</code>:</p>
 <dd>
 <p>The path for the azure monitor instrumentationKey.</p>
 </dd>
+<dt class="hdlist1"><code>export.statsd.enabled</code></dt>
+<dd>
+<p>Support for export to StatsD.</p>
+</dd>
 <dt class="hdlist1"><code>export.stackdriver.enabled</code></dt>
 <dd>
 <p>Micrometer metrics support. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>export.signalfx.enabled</code></dt>
+<dd>
+<p>Micrometer metrics support. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>export.signalfx.uri</code></dt>
+<dd>
+<p>Signalfx URI.</p>
+</dd>
+<dt class="hdlist1"><code>export.signalfx.access-token</code></dt>
+<dd>
+<p>Access Token.</p>
 </dd>
 <dt class="hdlist1"><code>binder.vertx.match-patterns</code></dt>
 <dd>
@@ -11327,6 +11854,35 @@ quarkus.datasource.driver=
     io.opentracing.contrib.jdbc.TracingDriver
 quarkus.hibernate-orm.dialect=
     org.hibernate.dialect.PostgreSQLDialect</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Kafka Tracer</strong></p>
+</div>
+<div class="paragraph">
+<p>Adds a span for each message sent to or received from a Kafka topic.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+    &lt;groupId&gt;io.opentracing.contrib&lt;/groupId&gt;
+    &lt;artifactId&gt;opentracing-kafka-client&lt;&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And configure it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">...
+mp.messaging.outgoing.generated-price.topic=prices
+
+# For Produces
+mp.messaging.outgoing.generated-price.interceptor.classes=io.opentracing.contrib.kafka.TracingProducerInterceptor
+...
+# For consumers
+mp.messaging.incoming.prices.interceptor.classes=io.opentracing.contrib.kafka.TracingConsumerInterceptor</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -11644,7 +12200,12 @@ quarkus.kubernetes.expose=true
 
 quarkus.kubernetes.env.vars.my-env-var=foobar
 quarkus.kubernetes.env.configmaps=my-config-map,another-config-map
-quarkus.kubernetes.env.secrets=my-secret,my-other-secret</code></pre>
+quarkus.kubernetes.env.secrets=my-secret,my-other-secret
+
+quarkus.kubernetes.resources.requests.memory=64Mi
+quarkus.kubernetes.resources.requests.cpu=250m
+quarkus.kubernetes.resources.limits.memory=512Mi
+quarkus.kubernetes.resources.limits.cpu=1000m</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -11711,6 +12272,22 @@ prometheus.io/port: "8080"</code></pre>
 <div class="paragraph">
 <p>Possible values are <code>kubernetes</code>, <code>openshift</code> and <code>knative</code>.
 The default value is <code>kubernetes</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>Knative Properties</strong></p>
+</div>
+<div class="paragraph">
+<p>Most of the Kubernetes properties are valid in Knative output by just changing the <code>kubernetes</code> prefix to <code>knative</code> prefix (ie <code>quarkus.kubernetes.readiness-probe.period-seconds</code> to <code>quarkus.knative.readiness-probe.period-seconds</code>).</p>
+</div>
+<div class="paragraph">
+<p>There are also specific properties for Knative:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.kubernetes.deployment-target=knative
+quarkus.knative.revision-name=my-revision
+quarkus.knative.traffic.my-revision.percentage=80</code></pre>
+</div>
 </div>
 <div class="paragraph">
 <p>List of configuration options:</p>
@@ -12356,6 +12933,149 @@ If you want to use it in production mode you need to set <code>quarkus.swagger-u
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.swagger-ui.path=/my-custom-path</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Possible Swagger UI options with <code>quarkus.swagger-ui</code> prefix:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>urls</code></dt>
+<dd>
+<p>The urls that will be included as options. (ie <code>quarkus.swagger-ui.urls.petstore=https://petstore.swagger.io/v2/swagger.json</code>)</p>
+</dd>
+<dt class="hdlist1"><code>urls-primary-name</code></dt>
+<dd>
+<p>If urls option is used, this will be the name of the default selection.</p>
+</dd>
+<dt class="hdlist1"><code>title</code></dt>
+<dd>
+<p>The html title for the page.</p>
+</dd>
+<dt class="hdlist1"><code>theme</code></dt>
+<dd>
+<p>Swagger UI theme to be used.</p>
+</dd>
+<dt class="hdlist1"><code>footer</code></dt>
+<dd>
+<p>A footer for the html page. Nothing by default.</p>
+</dd>
+<dt class="hdlist1"><code>deep-linking</code></dt>
+<dd>
+<p>Enables deep linking for tags and operations.</p>
+</dd>
+<dt class="hdlist1"><code>display-operation-id</code></dt>
+<dd>
+<p>Controls the display of operationId in operations list.</p>
+</dd>
+<dt class="hdlist1"><code>default-models-expand-depth</code></dt>
+<dd>
+<p>The default expansion depth for models.</p>
+</dd>
+<dt class="hdlist1"><code>default-model-expand-depth</code></dt>
+<dd>
+<p>The default expansion depth for the model on the model-example section.</p>
+</dd>
+<dt class="hdlist1"><code>default-model-rendering</code></dt>
+<dd>
+<p>Controls how the model is shown when the API is first rendered.</p>
+</dd>
+<dt class="hdlist1"><code>display-request-duration</code></dt>
+<dd>
+<p>Controls the display of the request duration (in milliseconds) for "Try it out" requests.</p>
+</dd>
+<dt class="hdlist1"><code>doc-expansion</code></dt>
+<dd>
+<p>Controls the default expansion setting for the operations and tags.</p>
+</dd>
+<dt class="hdlist1"><code>filter</code></dt>
+<dd>
+<p>Enables filtering.</p>
+</dd>
+<dt class="hdlist1"><code>max-displayed-tags</code></dt>
+<dd>
+<p>Limits the number of tagged operations displayed to at most this many.</p>
+</dd>
+<dt class="hdlist1"><code>operations-sorter</code></dt>
+<dd>
+<p>Apply a sort to the operation list of each API. (<code>alpha</code>, <code>method</code>, <code>function</code>)</p>
+</dd>
+<dt class="hdlist1"><code>show-extensions</code></dt>
+<dd>
+<p>Controls the display of vendor extension.</p>
+</dd>
+<dt class="hdlist1"><code>show-common-extensions</code></dt>
+<dd>
+<p>Controls the display of extensions.</p>
+</dd>
+<dt class="hdlist1"><code>tag-sorter</code></dt>
+<dd>
+<p>Apply a sort to the tag list of each API.</p>
+</dd>
+<dt class="hdlist1"><code>on-complete</code></dt>
+<dd>
+<p>Provides a mechanism to be notified when Swagger UI has finished rendering a newly provided definition.</p>
+</dd>
+<dt class="hdlist1"><code>syntax-highlight</code></dt>
+<dd>
+<p>Set to false to deactivate syntax highlighting of payloads and cURL command.</p>
+</dd>
+<dt class="hdlist1"><code>oauth2-redirect-url</code></dt>
+<dd>
+<p>OAuth redirect URL.</p>
+</dd>
+<dt class="hdlist1"><code>request-interceptor</code></dt>
+<dd>
+<p>Function to intercept remote definition, "Try it out", and OAuth 2.0 requests.</p>
+</dd>
+<dt class="hdlist1"><code>request-curl-options</code></dt>
+<dd>
+<p>Array of command line options available to the curl command.</p>
+</dd>
+<dt class="hdlist1"><code>response-interceptor</code></dt>
+<dd>
+<p>Function to intercept remote definition, "Try it out", and OAuth 2.0 responses.</p>
+</dd>
+<dt class="hdlist1"><code>show-mutated-request</code></dt>
+<dd>
+<p>Uses the mutated request returned from a requestInterceptor to produce the curl command in the UI.</p>
+</dd>
+<dt class="hdlist1"><code>supported-submit-methods</code></dt>
+<dd>
+<p>List of HTTP methods that have the "Try it out" feature enabled.</p>
+</dd>
+<dt class="hdlist1"><code>validator-url</code></dt>
+<dd>
+<p>Swagger UI attempts to validate specs against swagger.io&#8217;s online validator.</p>
+</dd>
+<dt class="hdlist1"><code>with-credentials</code></dt>
+<dd>
+<p>Enables passing credentials, as defined in the Fetch standard, in CORS requests that are sent by the browser.</p>
+</dd>
+<dt class="hdlist1"><code>model-property-macro</code></dt>
+<dd>
+<p>Function to set default values to each property in model.</p>
+</dd>
+<dt class="hdlist1"><code>parameter-macro</code></dt>
+<dd>
+<p>Function to set default value to parameters.</p>
+</dd>
+<dt class="hdlist1"><code>persist-authorization</code></dt>
+<dd>
+<p>It persists authorization data and it would not be lost on browser close/refresh.</p>
+</dd>
+<dt class="hdlist1"><code>layout</code></dt>
+<dd>
+<p>The name of a component available via the plugin system to use as the top-level layout for Swagger UI.</p>
+</dd>
+<dt class="hdlist1"><code>plugins</code></dt>
+<dd>
+<p>A list of plugin functions to use in Swagger UI.</p>
+</dd>
+<dt class="hdlist1"><code>presets</code></dt>
+<dd>
+<p>A list of presets to use in Swagger UI.</p>
+</dd>
+</dl>
 </div>
 <div class="paragraph">
 <p>You can customize the output by using Open API v3 annotations.</p>
@@ -14111,7 +14831,7 @@ public class GreetingController {
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.9.0.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
+If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.10.2.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
 </td>
 </tr>
 </table>

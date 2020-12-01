@@ -891,6 +891,12 @@ public class CustomObjectMapperConfig {
 ----
 // end::update_6_1[]
 
+// tag::update_21_8[]
+
+IMPORTANT: Default media type in Quarkus RestEasy is JSON.
+
+// end::update_21_8[]
+
 == XML Marshalling/Unmarshalling
 
 // tag::update_9_8[]
@@ -1138,6 +1144,8 @@ Indicates rotate logs at bootup (default: `true`)
 
 `file.async`::
 Log asynchronously (default: `false`)
+
+<<<
 
 `file.async.queue-length`::
 The queue length to use before flushing writing (default: `512`)
@@ -1487,7 +1495,7 @@ Trust store password.
 Trust store type (default: `JKS`)
 
 `%s/mp-rest/hostnameVerifier`::
-Custom hostname verifier class name.
+Custom hostname verifier class name. To disable SSL verification you can use `io.quarkus.restclient.NoopHostnameVerifier`.
 
 `%s/mp-rest/keyStore`::
 Key store location defined with `classpath:` or `file:` prefix.
