@@ -435,6 +435,12 @@ You can inject `EntityManager` in your classes:
 @Inject
 EntityManager em;
 
+@Inject
+org.hibernate.Session session;
+
+@Inject
+org.hibernate.SessionFactory sessionFactory;
+
 em.persist(car);
 ----
 // end::update_5_2[]
@@ -683,7 +689,7 @@ You can customize these defaults by using `@ResourceProperties` and `@MethodProp
 
 [source, java]
 ----
-@ResourceProperties(hal = true, path = "my-developer")
+@ResourceProperties(hal = true, path = "my-developer", halCollectionName = "dev-collections")
 public interface DeveloperResource extends PanacheEntityResource<Developer, Long> {
     @MethodProperties(path = "all")
     List<Developer> list();
@@ -1088,6 +1094,11 @@ Prefix of every placeholder (default: `${`)
 `placeholder-suffix`::
 Suffix of every placeholder (default: `}`)
 // end::update_18_6[]
+
+// tag::update_22_9[]
+`callbacks`::
+Comma-separated list of fully qualified class names of Callback implementations.
+// end::update_22_9[]
 
 *Multiple Datasources*
 // tag::update_12_7[]
@@ -2344,6 +2355,8 @@ Quarkus integrates with Cassandra and DataStax Object Mapper.
   <artifactId>cassandra-quarkus-client</artifactId>
 </dependency>
 ----
+
+<<<
 
 Enities and DAOs are generated as you have been doing with DataStax Object Mapper.
 

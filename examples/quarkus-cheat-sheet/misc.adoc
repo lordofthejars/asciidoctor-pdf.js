@@ -712,6 +712,9 @@ Thread priority of worker threads in the pool. (default: `5`)
 
 `force-start`::
 The scheduler will be started even if no scheduled business methods are found.
+
+`start-mode`::
+Scheduler can be started in different modes: `normal`, `forced` or `halted`. (default: `normal`)
 // end::update_19_5[]
 
 == Qute
@@ -873,6 +876,34 @@ The next number methods are supported:
 ----
 // end::update_14_27[]
 
+*Switch/When*
+
+// tag::update_22_3[]
+[source, html]
+----
+{#switch person.name}
+  {#case 'John'}
+    Hey John!
+  {#case 'Mary'}
+    Hey Mary!
+{/switch}
+----
+
+[source, html]
+----
+{#when items.size}
+  {#is 1} <1>
+    There is exactly one item!
+  {#is > 10} <2>
+    There are more than 10 items!
+  {#else} <3>
+    There are 2 -10 items!
+{/when}
+----
+
+Following operators can be used either in `when` and `switch`: `not, ne, !=`, `gt, >`, `ge, >=`, `lt, <`, `le, \<=`, `in`, `ni, !in`.
+// end::update_22_3[]
+
 *Message Bundling*
 
 // tag::update_20_5[]
@@ -1008,6 +1039,9 @@ Where to send events.
 
 `sentry.level`::
 Log level (default: `WARN`)
+
+`sentry.server-name`::
+Sets the server name that will be sent with each event.
 
 `sentry.in-app-packages`::
 Configure which package prefixes your application uses.
@@ -1417,3 +1451,12 @@ To run the script:
 jbang quarkusapp.java
 ----
 // end::update_19_6[]
+
+// tag::update_22_6[]
+A Maven goal is provided to scaffold a project:
+
+[source, bash]
+----
+mvn io.quarkus:quarkus-maven-plugin:<version>:create-jbang
+----
+// end::update_22_6[]

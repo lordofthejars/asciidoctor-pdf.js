@@ -82,6 +82,17 @@ quarkus.native.resources.includes=foo/**
 ----
 // end::update_16_2[]
 
+*Exclusion of resources*
+
+// tag::update_22_8[]
+By default, no resources are excluded.
+
+[source, properties]
+----
+quarkus.native.resources.excludes = foo/**
+----
+// end::update_22_8[]
+
 == Container Images Creation
 
 // tag::update_14_22[]
@@ -166,6 +177,21 @@ A custom entry point of the container image in JVM mode.
 `native-entrypoint`::
 A custom entry point of the container image in native mode.
 // end::update_17_7[]
+
+`labels`::
+Custom labels to add to the generated image.
+
+`base-registry-username`::
+The username to use to authenticate with the registry used to pull the base JVM image.
+
+`base-registry-password`::
+The password to use to authenticate with the registry used to pull the base JVM image.
+
+`ports`::
+The ports to expose.
+
+`user`::
+The user to use in generated image.
 
 *Docker* 
 
