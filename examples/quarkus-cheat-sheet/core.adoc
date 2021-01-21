@@ -303,6 +303,14 @@ Endpoints are registered automatically to provide some basic debug info in dev m
 * `HTTP GET /quarkus/arc/observers`
 // end::update_17_14[]
 
+== Dev UI
+
+// tag::update_22_11[]
+Quarkus adds a Dev UI console to expose extension features.
+
+The Dev UI is available in dev mode only and accessible at the `/q/dev` endpoint by default.
+// end::update_22_11[]
+
 == Adding Configuration Parameters
 
 To add configuration to your application, Quarkus relies on https://github.com/eclipse/microprofile-config[MicroProfile Config, window="_blank"] spec.
@@ -412,6 +420,24 @@ Special properties are set in *prod* mode: `quarkus.application.version` and `qu
 String applicationName;
 ----
 // end::update_13_7[]
+
+*Additional locations*
+
+// tag::update_22_5[]
+You can use `smallrye.config.locations` property to set additional configuration files.
+
+[source, properties]
+----
+smallrye.config.locations=config.properties
+----
+
+or 
+
+[source, bash]
+----
+java -jar -Dsmallrye.config.locations=config.properties
+----
+// end::update_22_5[]
 
 // tag::update_9_1[]
 *@ConfigProperties*
@@ -1199,6 +1225,26 @@ The queue length to use before flushing writing (default: `512`)
 `syslog.async.overflow`::
 Action when queue is full (default: `BLOCK`)
 
+// tag::update_22_4[]
+You can inject logger instance:
+
+[source, java]
+----
+import org.jboss.logging.Logger;
+import io.quarkus.arc.log.LoggerName;
+
+@Inject
+Logger log;
+
+@LoggerName("foo")
+Logger fooLog;
+
+public void ping() {
+    log.info("Simple!");
+}
+----
+// end::update_22_4[]
+
 *Gelf ouput*
 // tag::update_13_4[]
 
@@ -1242,6 +1288,18 @@ Name of the facility. (default: `jboss-logmanage`)
 
 `handler.gelf.additional-field.<field>.<subfield>`::
 Post additional fields. `quarkus.log.handler.gelf.additional-field.field1.type=String`
+
+`handler.gelf.include-full-mdc`::
+Include all fields from the MDC.
+
+`handler.gelf.maximum-message-size`::
+Maximum message size (in bytes). (default: `8192`)
+
+`handler.gelf.include-log-message-parameters`::
+Include message parameters from the log event. (default: `true`)
+
+`handler.gelf.include-location`::
+Include source code location. (default: `true`)
 // end::update_13_4[]
 
 *JSON output*

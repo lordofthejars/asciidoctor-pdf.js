@@ -470,7 +470,7 @@ svg:not(:root).svg-inline--fa {
 <div class="sectionbody">
 <p class=""><a href="https://quarkus.io/">Quarkus</a> is a Kubernetes Native Java stack tailored for GraalVM &amp; OpenJDK HotSpot, crafted from the best of breed Java libraries and standards.
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
-<p class="">Cheat-sheet tested with <strong>Quarkus 1.10.2.Final</strong>.</p>
+<p class="">Cheat-sheet tested with <strong>Quarkus 1.11.0.Final</strong>.</p>
 </div>
 </div>
 <div class="sect1">
@@ -479,7 +479,7 @@ Also focused on developer experience, making things just work with little to no 
 <p class="">Quarkus comes with a Maven archetype to scaffold a very simple starting project.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.10.2.Final:create \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.11.0.Final:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=getting-started \
     -DclassName="org.acme.quickstart.GreetingResource" \
@@ -794,6 +794,13 @@ By default there is no timeout but can be set by using the <code>quarkus.shutdow
 </div>
 </div>
 <div class="sect1">
+<h2 id="_dev_ui"><a class="anchor" href="#_dev_ui"></a><a class="link" href="#_dev_ui">Dev UI</a></h2>
+<div class="sectionbody">
+<p class="">Quarkus adds a Dev UI console to expose extension features.</p>
+<p class="">The Dev UI is available in dev mode only and accessible at the <code>/q/dev</code> endpoint by default.</p>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_adding_configuration_parameters"><a class="anchor" href="#_adding_configuration_parameters"></a><a class="link" href="#_adding_configuration_parameters">Adding Configuration Parameters</a></h2>
 <div class="sectionbody">
 <p class="">To add configuration to your application, Quarkus relies on <a href="https://github.com/eclipse/microprofile-config" target="_blank" rel="noopener">MicroProfile Config</a> spec.</p>
@@ -931,6 +938,19 @@ Same for <code>maven-failsafe-plugin</code>.
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperty(name = "quarkus.application.name")
 String applicationName;</code></pre>
+</div>
+</div>
+<p class=""><strong>Additional locations</strong></p>
+<p class="">You can use <code>smallrye.config.locations</code> property to set additional configuration files.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">smallrye.config.locations=config.properties</code></pre>
+</div>
+</div>
+<p class="">or</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">java -jar -Dsmallrye.config.locations=config.properties</code></pre>
 </div>
 </div>
 <p class=""><strong>@ConfigProperties</strong></p>
@@ -1680,6 +1700,11 @@ quarkus.log.category."com.lordofthejars".level=DEBUG</code></pre>
 <dd>
 <p>Log asynchronously (default: <code>false</code>)</p>
 </dd>
+</dl>
+</div>
+<div class="page-break"></div>
+<div class="dlist">
+<dl>
 <dt class="hdlist1"><code>file.async.queue-length</code></dt>
 <dd>
 <p>The queue length to use before flushing writing (default: <code>512</code>)</p>
@@ -1751,6 +1776,23 @@ quarkus.log.category."com.lordofthejars".level=DEBUG</code></pre>
 </dd>
 </dl>
 </div>
+<p class="">You can inject logger instance:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">import org.jboss.logging.Logger;
+import io.quarkus.arc.log.LoggerName;
+
+@Inject
+Logger log;
+
+@LoggerName("foo")
+Logger fooLog;
+
+public void ping() {
+    log.info("Simple!");
+}</code></pre>
+</div>
+</div>
 <p class=""><strong>Gelf ouput</strong></p>
 <p class="">You can configure the output to be in <em>GELF</em> format instead of plain text.</p>
 <div class="listingblock">
@@ -1804,6 +1846,22 @@ quarkus.log.category."com.lordofthejars".level=DEBUG</code></pre>
 <dt class="hdlist1"><code>handler.gelf.additional-field.&lt;field&gt;.&lt;subfield&gt;</code></dt>
 <dd>
 <p>Post additional fields. <code>quarkus.log.handler.gelf.additional-field.field1.type=String</code></p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.include-full-mdc</code></dt>
+<dd>
+<p>Include all fields from the MDC.</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.maximum-message-size</code></dt>
+<dd>
+<p>Maximum message size (in bytes). (default: <code>8192</code>)</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.include-log-message-parameters</code></dt>
+<dd>
+<p>Include message parameters from the log event. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>handler.gelf.include-location</code></dt>
+<dd>
+<p>Include source code location. (default: <code>true</code>)</p>
 </dd>
 </dl>
 </div>
@@ -2856,6 +2914,12 @@ You can inject <code>EntityManager</code> in your classes:</p>
 <pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
 EntityManager em;
 
+@Inject
+org.hibernate.Session session;
+
+@Inject
+org.hibernate.SessionFactory sessionFactory;
+
 em.persist(car);</code></pre>
 </div>
 </div>
@@ -3089,7 +3153,7 @@ quarkus.flyway.mycompany.locations=classpath:database/mycompany
 <p class="">You can customize these defaults by using <code>@ResourceProperties</code> and <code>@MethodProperties</code> annotations.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ResourceProperties(hal = true, path = "my-developer")
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ResourceProperties(hal = true, path = "my-developer", halCollectionName = "dev-collections")
 public interface DeveloperResource extends PanacheEntityResource&lt;Developer, Long&gt; {
     @MethodProperties(path = "all")
     List&lt;Developer&gt; list();
@@ -3493,6 +3557,14 @@ Prefix for repeatable SQL migrations (default: <code>R</code>)</p>
 <dt class="hdlist1"><code>placeholder-suffix</code></dt>
 <dd>
 <p>Suffix of every placeholder (default: <code>}</code>)</p>
+</dd>
+</dl>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>callbacks</code></dt>
+<dd>
+<p>Comma-separated list of fully qualified class names of Callback implementations.</p>
 </dd>
 </dl>
 </div>
@@ -4969,6 +5041,7 @@ Uni&lt;List&lt;PersonName&gt;&gt; persons = ReactivePersonEntity.find("lastname"
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+<div class="page-break"></div>
 <p class="">Enities and DAOs are generated as you have been doing with DataStax Object Mapper.</p>
 <p class="">You need to create a DaoProducer:</p>
 <div class="listingblock">
@@ -5206,6 +5279,49 @@ CompletationStage&lt;String&gt; cs = Uni
 </div>
 </div>
 <p class=""><code>Multi</code> implements <code>Publisher</code>.</p>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_resteasy_reactive"><a class="anchor" href="#_resteasy_reactive"></a><a class="link" href="#_resteasy_reactive">RESTEasy Reactive</a></h2>
+<div class="sectionbody">
+<p class="">RESTEasy Reactive is a new implementation of JAX-RS but fully reactive.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn quarkus:add-extension
+    -Dextensions="quarkus-resteasy-reactive"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">package org.acme.rest;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+@Path("rest")
+public class Endpoint {
+
+    @Path("hello")
+    @GET
+    public String hello(){
+        // executed in event-loop
+        return "Hello, World!";
+    }
+
+    @GET
+    public Uni&lt;Book&gt; culinaryGuide(){
+        // executed in event-loop but not blocking
+        return Book.findByIsbn("978-2081229297");
+    }
+
+    @io.smallrye.common.annotation.Blocking
+    @GET
+    public String blockingHello() throws InterruptedException {
+        // executed in worker-thread
+        return "Yaaaawwwwnnnnnn…";
+    }
+
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -5908,6 +6024,12 @@ return Uni.createFrom()
 </div>
 </div>
 <div class="sect1">
+<h2 id="_tls"><a class="anchor" href="#_tls"></a><a class="link" href="#_tls">TLS</a></h2>
+<div class="sectionbody">
+<p class="">You can trust all certificates globally by using <code>quarkus.tls.trust-all=true</code></p>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_rbac"><a class="anchor" href="#_rbac"></a><a class="link" href="#_rbac">RBAC</a></h2>
 <div class="sectionbody">
 <p class="">You can set RBAC using annotations or in <code>application.properties</code>.</p>
@@ -5964,7 +6086,6 @@ quarkus.http.auth.permission.deny1.policy=
     deny</code></pre>
 </div>
 </div>
-<div class="page-break"></div>
 <p class="">You need to provide permissions set by using the <code>roles-allowed</code> property or use the built-in ones <code>deny</code>, <code>permit</code> or <code>authenticated</code>.</p>
 <p class="">You can use <code>enabled</code> property (ie <code>quarkus.http.auth.permission.permit1.enabled</code>) to enable the entire permission set.</p>
 <p class=""><strong>Testing</strong></p>
@@ -6002,7 +6123,9 @@ void someTestMethod() {
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.security.security-providers=BC
-quarkus.security.security-providers=BCJSSE</code></pre>
+quarkus.security.security-providers=BCJSSE
+quarkus.security.security-providers=BCFIPS
+quarkus.security.security-providers=BCFIPSJSSE</code></pre>
 </div>
 </div>
 </div>
@@ -6883,12 +7006,12 @@ quarkus.vault.authentication.userpass.password=
 # path within the kv secret engine
 quarkus.vault.secret-config-kv-path=
     myapps/vault-quickstart/config
-quarkus.vault.secret-config-kv-path.singer=
-    multi/singer</code></pre>
+quarkus.vault.secret-config-kv-prefix.singer.paths=
+    multi/singer1, multi/singer2</code></pre>
 </div>
 </div>
 <p class=""><code>vault kv put secret/myapps/vault-quickstart/config a-private-key=123456</code></p>
-<p class=""><code>vault kv put secret/multi/singer firstname=paul</code></p>
+<p class=""><code>vault kv put secret/multi/singer1 firstname=paul</code></p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ConfigProperty(name = "a-private-key")
@@ -6957,6 +7080,20 @@ VaultTransitSecretEngine transit;
 transit.encrypt("my_encryption", text);
 transit.decrypt("my_encryption", text).asString();
 transit.sign("my-sign-key", text);</code></pre>
+</div>
+</div>
+<p class=""><strong>Transit Key</strong></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Inject
+VaultTransitSecretEngine transit;
+
+transit.createKey(KEY_NAME, new KeyCreationRequestDetail().setExportable(true));
+transit.readKey(KEY_NAME);
+transit.listKeys();
+transit.exportKey(KEY_NAME, VaultTransitExportKeyType.encryption, null);
+transit.updateKeyConfiguration(KEY_NAME, new KeyConfigRequestDetail().setDeletionAllowed(true));
+transit.deleteKey(KEY_NAME);</code></pre>
 </div>
 </div>
 <p class=""><strong>Vault TOTP</strong></p>
@@ -8719,6 +8856,13 @@ CMD ["./application", "-Dquarkus.http.host=0.0.0.0", "-Djava.library.path=/work/
 <pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.native.resources.includes=foo/**</code></pre>
 </div>
 </div>
+<p class=""><strong>Exclusion of resources</strong></p>
+<p class="">By default, no resources are excluded.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.native.resources.excludes = foo/**</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -8825,6 +8969,26 @@ It provides several extensions to make it so.</p>
 <dt class="hdlist1"><code>native-entrypoint</code></dt>
 <dd>
 <p>A custom entry point of the container image in native mode.</p>
+</dd>
+<dt class="hdlist1"><code>labels</code></dt>
+<dd>
+<p>Custom labels to add to the generated image.</p>
+</dd>
+<dt class="hdlist1"><code>base-registry-username</code></dt>
+<dd>
+<p>The username to use to authenticate with the registry used to pull the base JVM image.</p>
+</dd>
+<dt class="hdlist1"><code>base-registry-password</code></dt>
+<dd>
+<p>The password to use to authenticate with the registry used to pull the base JVM image.</p>
+</dd>
+<dt class="hdlist1"><code>ports</code></dt>
+<dd>
+<p>The ports to expose.</p>
+</dd>
+<dt class="hdlist1"><code>user</code></dt>
+<dd>
+<p>The user to use in generated image.</p>
 </dd>
 </dl>
 </div>
@@ -10298,6 +10462,10 @@ You need to define the datasource used by clustered mode and also import the dat
 <dd>
 <p>The scheduler will be started even if no scheduled business methods are found.</p>
 </dd>
+<dt class="hdlist1"><code>start-mode</code></dt>
+<dd>
+<p>Scheduler can be started in different modes: <code>normal</code>, <code>forced</code> or <code>halted</code>. (default: <code>normal</code>)</p>
+</dd>
 </dl>
 </div>
 </div>
@@ -10441,6 +10609,30 @@ public class MyExtensions {
 <pre class="highlightjs highlight"><code data-lang="html" class="language-html hljs">{#if counter.mod(5) == 0}</code></pre>
 </div>
 </div>
+<p class=""><strong>Switch/When</strong></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="html" class="language-html hljs">{#switch person.name}
+  {#case 'John'}
+    Hey John!
+  {#case 'Mary'}
+    Hey Mary!
+{/switch}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="html" class="language-html hljs">{#when items.size}
+  {#is 1} <i class="conum" data-value="1"></i><b>(1)</b>
+    There is exactly one item!
+  {#is &gt; 10} <i class="conum" data-value="2"></i><b>(2)</b>
+    There are more than 10 items!
+  {#else} <i class="conum" data-value="3"></i><b>(3)</b>
+    There are 2 -10 items!
+{/when}</code></pre>
+</div>
+</div>
+<p class="">Following operators can be used either in <code>when</code> and <code>switch</code>: <code>not, ne, !=</code>, <code>gt, &gt;</code>, <code>ge, &gt;=</code>, <code>lt, &lt;</code>, <code>le, &lt;=</code>, <code>in</code>, <code>ni, !in</code>.</p>
 <p class=""><strong>Message Bundling</strong></p>
 <div class="listingblock">
 <div class="content">
@@ -10561,6 +10753,10 @@ quarkus.log.sentry.in-app-packages=org.example</code></pre>
 <dt class="hdlist1"><code>sentry.level</code></dt>
 <dd>
 <p>Log level (default: <code>WARN</code>)</p>
+</dd>
+<dt class="hdlist1"><code>sentry.server-name</code></dt>
+<dd>
+<p>Sets the server name that will be sent with each event.</p>
 </dd>
 <dt class="hdlist1"><code>sentry.in-app-packages</code></dt>
 <dd>
@@ -11005,6 +11201,12 @@ public class quarkusapp {
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">jbang quarkusapp.java</code></pre>
 </div>
 </div>
+<p class="">A Maven goal is provided to scaffold a project:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:&lt;version&gt;:create-jbang</code></pre>
+</div>
+</div>
 <div class="page-break"></div>
 </div>
 </div>
@@ -11159,6 +11361,10 @@ String greeting;</code></pre>
 <dd>
 <p>The amount of time to wait for a read on a socket before an exception is thrown. (default: <code>60S</code>)</p>
 </dd>
+<dt class="hdlist1"><code>label</code></dt>
+<dd>
+<p>The label to be used to pull remote configuration properties.</p>
+</dd>
 </dl>
 </div>
 </div>
@@ -11203,7 +11409,7 @@ public class GreetingController {
 <span class="fa-layers"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle" class="svg-inline--fa fa-circle fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path></svg><svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="lightbulb" class="svg-inline--fa fa-lightbulb fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" style="transform-origin: 0.34375em 0.5em;"><g transform="translate(176 256)"><g transform="translate(0, 0)  scale(0.625, 0.625)  rotate(0 0 0)"><path fill="currentColor" d="M176 80c-52.94 0-96 43.06-96 96 0 8.84 7.16 16 16 16s16-7.16 16-16c0-35.3 28.72-64 64-64 8.84 0 16-7.16 16-16s-7.16-16-16-16zM96.06 459.17c0 3.15.93 6.22 2.68 8.84l24.51 36.84c2.97 4.46 7.97 7.14 13.32 7.14h78.85c5.36 0 10.36-2.68 13.32-7.14l24.51-36.84c1.74-2.62 2.67-5.7 2.68-8.84l.05-43.18H96.02l.04 43.18zM176 0C73.72 0 0 82.97 0 176c0 44.37 16.45 84.85 43.56 115.78 16.64 18.99 42.74 58.8 52.42 92.16v.06h48v-.12c-.01-4.77-.72-9.51-2.15-14.07-5.59-17.81-22.82-64.77-62.17-109.67-20.54-23.43-31.52-53.15-31.61-84.14-.2-73.64 59.67-128 127.95-128 70.58 0 128 57.42 128 128 0 30.97-11.24 60.85-31.65 84.14-39.11 44.61-56.42 91.47-62.1 109.46a47.507 47.507 0 0 0-2.22 14.3v.1h48v-.05c9.68-33.37 35.78-73.18 52.42-92.16C335.55 260.85 352 220.37 352 176 352 78.8 273.2 0 176 0z" transform="translate(-176 -256)"></path></g></g></svg></span>
 </td>
 <td class="content">
-If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.10.2.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
+If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.11.0.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
 </td>
 </tr>
 </table>
@@ -11297,6 +11503,49 @@ interface BookCountByYear {
 </li>
 <li>
 <p>Native and named queries when using <code>@Query</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_spring_data_rest"><a class="anchor" href="#_spring_data_rest"></a><a class="link" href="#_spring_data_rest">Spring Data Rest</a></h2>
+<div class="sectionbody">
+<p class="">While users are encouraged to use REST Data with Panache for the REST data access endpoints generation, Quarkus provides a compatibility layer for Spring Data REST in the form of the <code>spring-data-rest</code> extension.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="spring-data-rest"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">import java.util.Optional;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.rest.core.annotation.RestResource;
+
+@RepositoryRestResource(exported = false, path = "/my-fruits")
+public interface FruitsRepository extends CrudRepository&lt;Fruit, Long&gt; {
+    @RestResource(exported = true)
+    Optional&lt;Fruit&gt; findById(Long id);
+    @RestResource(exported = true)
+    Iterable&lt;Fruit&gt; findAll();
+}</code></pre>
+</div>
+</div>
+<p class="">The <code>spring-data-jpa</code> extension will generate an implementation for this repository. Then the <code>spring-data-rest</code> extension will generate a REST CRUD resource for it.</p>
+<p class="">The following interfaces are supported:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>org.springframework.data.repository.CrudRepository</code></p>
+</li>
+<li>
+<p><code>org.springframework.data.repository.PagingAndSortingRepository</code></p>
+</li>
+<li>
+<p><code>org.springframework.data.jpa.repository.JpaRepository</code></p>
 </li>
 </ul>
 </div>
@@ -11494,7 +11743,7 @@ void cronJob() {
 <div class="author-bio">Java Champion and Director of DevExp at Red Hat</div>
 </div>
 
-<div class="author-bio">1.10.2.Final</div>
+<div class="author-bio">1.11.0.Final</div>
 <img src="./redhat/assets/by-nc-sa.png"/>
 </div>
 

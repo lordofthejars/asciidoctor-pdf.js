@@ -192,6 +192,50 @@ CompletationStage<String> cs = Uni
 `Multi` implements `Publisher`.
 // end::update_14_7[]
 
+== RESTEasy Reactive 
+
+// tag::update_22_7[]
+RESTEasy Reactive is a new implementation of JAX-RS but fully reactive.
+
+[source, bash]
+----
+mvn quarkus:add-extension 
+    -Dextensions="quarkus-resteasy-reactive"
+----
+
+[source,java]
+----
+package org.acme.rest;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+@Path("rest")
+public class Endpoint {
+    
+    @Path("hello")
+    @GET
+    public String hello(){
+        // executed in event-loop
+        return "Hello, World!";
+    }
+
+    @GET
+    public Uni<Book> culinaryGuide(){
+        // executed in event-loop but not blocking
+        return Book.findByIsbn("978-2081229297");
+    }
+
+    @io.smallrye.common.annotation.Blocking
+    @GET
+    public String blockingHello() throws InterruptedException {
+        // executed in worker-thread
+        return "Yaaaawwwwnnnnnn…";
+    }
+
+}
+----
+// end::update_22_7[]
+
+
 == Reactive Messaging
 // tag::update_1_4[]
 Quarkus relies on MicroProfile https://github.com/eclipse/microprofile-reactive-messaging[Reactive Messaging spec, window="_blank"] to implement reactive messaging streams.

@@ -15,6 +15,74 @@ In this page you can either read what has been added in each version of the chea
 [[whatsnew]]
 == What's New in Cheat-Sheet
 
+=== Version 1.11.0.Final
+
+.Trust All
+[%collapsible]
+====
+include::security.adoc[tag=update_22_1]
+====
+
+.Vault Transit Key
+[%collapsible]
+====
+include::security.adoc[tag=update_22_2]
+====
+
+.Switch/When Qute
+[%collapsible]
+====
+include::misc.adoc[tag=update_22_3]
+====
+
+.Injectable Logger
+[%collapsible]
+====
+include::core.adoc[tag=update_22_4]
+====
+
+.Additional Configuration Locations
+[%collapsible]
+====
+include::core.adoc[tag=update_22_5]
+====
+
+.JBang Maven creator
+[%collapsible]
+====
+include::misc.adoc[tag=update_22_6]
+====
+
+.RESTEasy Reactive
+[%collapsible]
+====
+include::reactive.adoc[tag=update_22_7]
+====
+
+.Exclusions in Native compilation
+[%collapsible]
+====
+include::cloud.adoc[tag=update_22_8]
+====
+
+.Flyway Callbacks support
+[%collapsible]
+====
+include::persistence.adoc[tag=update_22_9]
+====
+
+.Spring Data Rest
+[%collapsible]
+====
+include::spring.adoc[tag=update_22_10]
+====
+
+.Dev UI
+[%collapsible]
+====
+include::core.adoc[tag=update_22_11]
+====
+
 === Version 1.10.0.Final
 
 .Add algorithms to hash passwords in embeded mode
@@ -152,155 +220,3 @@ include::misc.adoc[tag=update_19_6]
 ====
 include::network.adoc[tag=update_19_7]
 ====
-
-=== Version 1.7.0.Final
-
-.Hibernate Envers
-[%collapsible]
-====
-include::persistence.adoc[tag=update_18_1]
-====
-
-.Test Security
-[%collapsible]
-====
-include::security.adoc[tag=update_18_2]
-====
-
-.Kubernetes & Prometheus
-[%collapsible]
-====
-include::cloud.adoc[tag=update_18_3]
-====
-
-.Redis
-[%collapsible]
-====
-include::persistence.adoc[tag=update_18_4]
-====
-
-.Quarkus Test Profile
-[%collapsible]
-====
-include::core.adoc[tag=update_18_5]
-====
-
-.Flyway Suffix/Prefix
-[%collapsible]
-====
-include::persistence.adoc[tag=update_18_6]
-====
-
-.Vault Provisioning
-[%collapsible]
-====
-include::security.adoc[tag=update_18_7]
-====
-
-.Container-managed Concurrency
-[%collapsible]
-====
-include::core.adoc[tag=update_18_8]
-====
-
-.Specify Endpoints in tests
-[%collapsible]
-====
-include::core.adoc[tag=update_18_9]
-====
-
-.Kubernetes ConfigMap & Secrets
-[%collapsible]
-====
-include::cloud.adoc[tag=update_18_10]
-====
-
-=== Version 1.6.0.Final
-
-.Configure CDI beans with PicoCLI
-[%collapsible]
-====
-include::core.adoc[tag=update_17_1]
-====
-
-.ConfigIgnore
-[%collapsible]
-====
-include::core.adoc[tag=update_17_2]
-====
-
-.Reactive DB2
-[%collapsible]
-====
-include::reactive.adoc[tag=update_17_3]
-====
-
-.Hibernate Reactive
-[%collapsible]
-====
-include::persistence.adoc[tag=update_17_4]
-====
-
-.Package types
-[%collapsible]
-====
-include::core.adoc[tag=update_17_5]
-====
-
-.Including Extra Files in JiB
-[%collapsible]
-====
-include::cloud.adoc[tag=update_17_6]
-====
-
-.Custom Entrypoint for JiB
-[%collapsible]
-====
-include::cloud.adoc[tag=update_17_7]
-====
-
-.SSL Client Auth for Consul
-[%collapsible]
-====
-include::misc.adoc[tag=update_17_8]
-====
-
-.Reactive Transactions
-[%collapsible]
-====
-include::reactive.adoc[tag=update_17_9]
-====
-
-.RESTEasy Metrics
-[%collapsible]
-====
-include::network.adoc[tag=update_17_10]
-====
-
-.AppCDS
-[%collapsible]
-====
-include::core.adoc[tag=update_17_11]
-====
-
-.Apache Cassandra
-[%collapsible]
-====
-include::persistence.adoc[tag=update_17_12]
-====
-
-.Spring Scheduled
-[%collapsible]
-====
-include::spring.adoc[tag=update_17_13]
-====
-
-.Dev Mode
-[%collapsible]
-====
-include::core.adoc[tag=update_17_14]
-====
-
-:leveloffset: +1
-[[quarkuscheatsheet]]
-include::quarkus-cheat-sheet.adoc[]

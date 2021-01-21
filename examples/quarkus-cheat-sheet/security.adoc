@@ -1,3 +1,9 @@
+== TLS
+
+// tag::update_22_1[]
+You can trust all certificates globally by using `quarkus.tls.trust-all=true`
+// end::update_22_1[]
+
 == RBAC
 
 // tag::update_10_4[]
@@ -63,8 +69,6 @@ quarkus.http.auth.permission.deny1.policy=
     deny
 ----
 
-<<<
-
 You need to provide permissions set by using the `roles-allowed` property or use the built-in ones `deny`, `permit` or `authenticated`. 
 // end::update_10_4[]
 
@@ -111,6 +115,8 @@ Quarkus supports BouncyCastle, you only need to add the BouncyCastle dependency 
 ----
 quarkus.security.security-providers=BC
 quarkus.security.security-providers=BCJSSE
+quarkus.security.security-providers=BCFIPS
+quarkus.security.security-providers=BCFIPSJSSE
 ----
 // end::update_21_5[]
 
@@ -673,6 +679,8 @@ The index of column containing password hash. (default: `0`)
 `principal-query.bcrypt-password-mapper.hash-encoding`::
 A string referencing the password hash encoding (`BASE64` or `HEX`). (default: `BASE64`)
 
+<<<
+
 `principal-query.bcrypt-password-mapper.salt-index`::
 The index column containing the Bcrypt salt. (default: `0`)
 
@@ -863,13 +871,13 @@ quarkus.vault.authentication.userpass.password=
 # path within the kv secret engine
 quarkus.vault.secret-config-kv-path=
     myapps/vault-quickstart/config
-quarkus.vault.secret-config-kv-path.singer=
-    multi/singer
+quarkus.vault.secret-config-kv-prefix.singer.paths=
+    multi/singer1, multi/singer2
 ----
 
 `vault kv put secret/myapps/vault-quickstart/config a-private-key=123456`
 
-`vault kv put secret/multi/singer firstname=paul`
+`vault kv put secret/multi/singer1 firstname=paul`
 
 [source, java]
 ----
@@ -952,6 +960,23 @@ transit.decrypt("my_encryption", text).asString();
 transit.sign("my-sign-key", text);
 ----
 // end::update_13_14[]
+
+*Transit Key*
+
+// tag::update_22_2[]
+[source, java]
+----
+@Inject
+VaultTransitSecretEngine transit;
+
+transit.createKey(KEY_NAME, new KeyCreationRequestDetail().setExportable(true));
+transit.readKey(KEY_NAME);
+transit.listKeys();
+transit.exportKey(KEY_NAME, VaultTransitExportKeyType.encryption, null);
+transit.updateKeyConfiguration(KEY_NAME, new KeyConfigRequestDetail().setDeletionAllowed(true));
+transit.deleteKey(KEY_NAME);
+----
+// end::update_22_2[]
 
 *Vault TOTP*
 

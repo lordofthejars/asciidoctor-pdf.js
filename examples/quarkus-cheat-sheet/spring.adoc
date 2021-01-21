@@ -147,6 +147,9 @@ The amount of time to wait when initially establishing a connection before givin
 
 `read-timeout`::
 The amount of time to wait for a read on a socket before an exception is thrown. (default: `60S`)
+
+`label`::
+The label to be used to pull remote configuration properties.
 // end::update_14_11[]
 
 == Spring Web
@@ -268,6 +271,42 @@ What is currently unsupported:
 * `java.util.concurrent.Future` as return type
 * Native and named queries when using `@Query`
 // end::update_8_2[]
+
+== Spring Data Rest
+
+// tag::update_22_10[]
+While users are encouraged to use REST Data with Panache for the REST data access endpoints generation, Quarkus provides a compatibility layer for Spring Data REST in the form of the `spring-data-rest` extension.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension 
+  -Dextensions="spring-data-rest"
+----
+
+[source,java]
+----
+import java.util.Optional;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.rest.core.annotation.RestResource;
+
+@RepositoryRestResource(exported = false, path = "/my-fruits")
+public interface FruitsRepository extends CrudRepository<Fruit, Long> {
+    @RestResource(exported = true)
+    Optional<Fruit> findById(Long id);
+    @RestResource(exported = true)
+    Iterable<Fruit> findAll();
+}
+----
+
+The `spring-data-jpa` extension will generate an implementation for this repository. Then the `spring-data-rest` extension will generate a REST CRUD resource for it.
+
+The following interfaces are supported:
+
+* `org.springframework.data.repository.CrudRepository`
+* `org.springframework.data.repository.PagingAndSortingRepository`
+* `org.springframework.data.jpa.repository.JpaRepository`
+// end::update_22_10[]
 
 == Spring Security
 // tag::update_12_11[]
