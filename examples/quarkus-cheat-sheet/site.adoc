@@ -220,3 +220,7 @@ include::misc.adoc[tag=update_19_6]
 ====
 include::network.adoc[tag=update_19_7]
 ====
+
+:leveloffset: +1
+[[quarkuscheatsheet]]
+include::quarkus-cheat-sheet.adoc[]
