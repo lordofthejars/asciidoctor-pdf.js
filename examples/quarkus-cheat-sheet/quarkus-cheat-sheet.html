@@ -8193,7 +8193,7 @@ WorldClock getNow(){}</code></pre>
 </div>
 <p class="">If 3 <code>(4 x 0.75)</code> failures occur among the rolling window of 4 consecutive invocations then the circuit is opened for 1000 ms and then be back to half open.
 If the invocation succeeds then the circuit is back to closed again.</p>
-<p class="">You can use <strong>bulkahead</strong> pattern to limit the number of concurrent access to the same resource.
+<p class="">You can use <strong>bulkhead</strong> pattern to limit the number of concurrent access to the same resource.
 If the operation is synchronous it uses a semaphore approach, if it is asynchronous a thread-pool one.
 When a request cannot be processed <code>BulkheadException</code> is thrown.
 It can be used together with any other fault tolerance annotation.</p>

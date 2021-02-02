@@ -562,7 +562,7 @@ WorldClock getNow(){}</code></pre>
 If the invocation succeeds then the circuit is back to closed again.</p>
 </div>
 <div class="paragraph">
-<p>You can use <strong>bulkahead</strong> pattern to limit the number of concurrent access to the same resource.
+<p>You can use <strong>bulkhead</strong> pattern to limit the number of concurrent access to the same resource.
 If the operation is synchronous it uses a semaphore approach, if it is asynchronous a thread-pool one.
 When a request cannot be processed <code>BulkheadException</code> is thrown.
 It can be used together with any other fault tolerance annotation.</p>
@@ -2805,7 +2805,7 @@ WorldClock getNow(){}</code></pre>
 If the invocation succeeds then the circuit is back to closed again.</p>
 </div>
 <div class="paragraph">
-<p>You can use <strong>bulkahead</strong> pattern to limit the number of concurrent access to the same resource.
+<p>You can use <strong>bulkhead</strong> pattern to limit the number of concurrent access to the same resource.
 If the operation is synchronous it uses a semaphore approach, if it is asynchronous a thread-pool one.
 When a request cannot be processed <code>BulkheadException</code> is thrown.
 It can be used together with any other fault tolerance annotation.</p>
