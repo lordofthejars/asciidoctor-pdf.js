@@ -797,7 +797,7 @@ Quarkus relies on https://github.com/eclipse/microprofile-health[MicroProfile He
   -Dextensions="io.quarkus:quarkus-smallrye-health"
 ----
 
-By just adding this extension, an endpoint is registered to `/health` providing a default health check.
+By just adding this extension, an endpoint is registered to `/q/health` providing a default health check.
 
 [source, json]
 ----
@@ -874,7 +874,7 @@ public class DatabaseHealthCheck {
 }
 ----
 
-You can ping liveness or readiness health checks individually by querying `/health/live` or `/health/ready`.
+You can ping liveness or readiness health checks individually by querying `/q/health/live` or `/q/health/ready`.
 
 // tag::update_8_14[]
 Quarkus comes with some `HealthCheck` implementations for checking service status.
@@ -973,7 +973,7 @@ Quarkus can utilize the https://github.com/eclipse/microprofile-metrics[MicroPro
 ----
 
 The metrics can be read with JSON or the OpenMetrics format.
-An endpoint is registered automatically at `/metrics` providing default metrics.
+An endpoint is registered automatically at `/q/metrics` providing default metrics.
 
 MicroProfile Metrics annotations:
 
@@ -1044,7 +1044,7 @@ quarkus.smallrye-metrics.path=/mymetrics
 Prefix is `quarkus.smallrye-metrics`.
 
 `path`::
-The path to the metrics handler. (default: `/metrics`)
+The path to the metrics handler. (default: `/q/metrics`)
 
 `extensions.enabled`::
 Metrics are enabled or not. (default: `true`)
@@ -1131,7 +1131,7 @@ Support for export to JMX Support for JMX.
 Support for export to Prometheus.
 
 `export.prometheus.path`::
-The path for the prometheus metrics endpoint (produces text/plain). (default: `/metrics`)
+The path for the prometheus metrics endpoint (produces text/plain). (default: `/q/metrics`)
 
 `export.azuremonitor.enabled`::
 Support for export to Azure Monitor.
