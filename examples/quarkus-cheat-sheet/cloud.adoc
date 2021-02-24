@@ -193,6 +193,12 @@ The ports to expose.
 `user`::
 The user to use in generated image.
 
+`always-cache-base-image`::
+Controls the optimization which skips downloading base image layers that exist in a target registry (default: `false`).
+
+`appcds-builder-image`::
+When AppCDS generation is enabled, if this property is set, then the JVM used to generate the AppCDS file will be the JVM present in the container image.
+
 *Docker* 
 
 [source, bash]

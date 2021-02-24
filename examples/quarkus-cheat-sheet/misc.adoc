@@ -979,6 +979,40 @@ String output = report
 ----
 // end::update_12_8[]
 
+*Value Resolvers*
+
+// tag::update_23_1[]
+Value resolvers are invoked when evaluating expressions.
+
+[source, java]
+----
+void configureEngine(@Observes EngineBuilder builder) {
+  builder.addValueResolver(ValueResolver.builder()
+      .appliesTo(ctx -> ctx.getBase() instanceof Long && ctx.getName().equals("tenTimes"))
+      .resolveSync(ctx -> (Long) ctx.getBase() * 10)
+      .build());
+}
+----
+// end::update_23_1[]
+
+*Content Filters*
+
+// tag::update_23_2[]
+Content filters can be used to modify the template contents before parsing.
+
+[source, java]
+----
+void configureEngine(@Observes EngineBuilder builder) {
+  builder.addParserHook(new ParserHook() {
+      @Override
+      public void beforeParsing(ParserHelper parserHelper) {
+          parserHelper.addContentFilter(contents -> contents.replace("${", "$\\{"));
+      }
+  });
+}
+----
+// end::update_23_2[]
+
 *Reactive and Async*
 
 // tag::update_14_13[]
