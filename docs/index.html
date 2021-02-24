@@ -450,20 +450,83 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.22/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
+<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.23/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
 </div>
 <div class="paragraph">
 <p>Quarkus (<a href="https://quarkus.io/" class="bare">https://quarkus.io/</a>) is a Kubernetes Native Java stack tailored for GraalVM &amp; OpenJDK HotSpot, crafted from the best of breed Java libraries and standards.
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
 </div>
 <div class="paragraph">
-<p>In this page you can either read what has been added in each version of the cheat-sheet individually in <a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a> section, see the full cheat-sheet as HTML <span class="icon"><i class="fa fa-html5"></i></span> <a href="#quarkuscheatsheet">Quarkus Cheat-Sheet</a> format or <span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.22/quarkus-cheat-sheet.pdf">download the full cheat-sheet as PDF</a>.</p>
+<p>In this page you can either read what has been added in each version of the cheat-sheet individually in <a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a> section, see the full cheat-sheet as HTML <span class="icon"><i class="fa fa-html5"></i></span> <a href="#quarkuscheatsheet">Quarkus Cheat-Sheet</a> format or <span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.23/quarkus-cheat-sheet.pdf">download the full cheat-sheet as PDF</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="whatsnew"><a class="anchor" href="#whatsnew"></a><a class="link" href="#whatsnew">What&#8217;s New in Cheat-Sheet</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_version_1_12_0_final"><a class="anchor" href="#_version_1_12_0_final"></a><a class="link" href="#_version_1_12_0_final">Version 1.12.0.Final</a></h3>
+<details>
+<summary class="title">Qute Value Resolvers</summary>
+<div class="content">
+<div class="paragraph">
+<p>Value resolvers are invoked when evaluating expressions.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">void configureEngine(@Observes EngineBuilder builder) {
+  builder.addValueResolver(ValueResolver.builder()
+      .appliesTo(ctx -&gt; ctx.getBase() instanceof Long &amp;&amp; ctx.getName().equals("tenTimes"))
+      .resolveSync(ctx -&gt; (Long) ctx.getBase() * 10)
+      .build());
+}</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Qute Content Filter</summary>
+<div class="content">
+<div class="paragraph">
+<p>Content filters can be used to modify the template contents before parsing.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">void configureEngine(@Observes EngineBuilder builder) {
+  builder.addParserHook(new ParserHook() {
+      @Override
+      public void beforeParsing(ParserHelper parserHelper) {
+          parserHelper.addContentFilter(contents -&gt; contents.replace("${", "$\\{"));
+      }
+  });
+}</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Start multiple test resources concurrently</summary>
+<div class="content">
+<div class="paragraph">
+<p>When using multiple <code>QuarkusTestResource</code> you can set <code>parallel</code> attribute to <code>true</code> to start them concurrently.</p>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Running specific tests</summary>
+<div class="content">
+<div class="paragraph">
+<p><code>quarkus.test.profile.tags</code> property can be set to limit test execution of test profiles.
+If not set all tests are executed.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.test.profile.tags=test1</code></pre>
+</div>
+</div>
+</div>
+</details>
+</div>
 <div class="sect2">
 <h3 id="_version_1_11_0_final"><a class="anchor" href="#_version_1_11_0_final"></a><a class="link" href="#_version_1_11_0_final">Version 1.11.0.Final</a></h3>
 <details>
@@ -1548,7 +1611,7 @@ Prefix is <code>quarkus.micrometer</code>:</p>
 </dd>
 <dt class="hdlist1"><code>export.prometheus.path</code></dt>
 <dd>
-<p>The path for the prometheus metrics endpoint (produces text/plain). (default: <code>/metrics</code>)</p>
+<p>The path for the prometheus metrics endpoint (produces text/plain). (default: <code>/q/metrics</code>)</p>
 </dd>
 <dt class="hdlist1"><code>export.azuremonitor.enabled</code></dt>
 <dd>
@@ -1613,13 +1676,14 @@ Prefix is <code>quarkus.micrometer</code>:</p>
 <h2 id="quarkuscheatsheet"><a class="anchor" href="#quarkuscheatsheet"></a><a class="link" href="#quarkuscheatsheet">Quarkus Cheat-Sheet</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.22/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
+<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.23/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
 </div>
 <div id="toc" class="toc">
 <div id="toctitle" class="title">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a>
 <ul class="sectlevel2">
+<li><a href="#_version_1_12_0_final">Version 1.12.0.Final</a></li>
 <li><a href="#_version_1_11_0_final">Version 1.11.0.Final</a></li>
 <li><a href="#_version_1_10_0_final">Version 1.10.0.Final</a></li>
 <li><a href="#_version_1_9_0_final">Version 1.9.0.Final</a></li>
@@ -1754,7 +1818,7 @@ Prefix is <code>quarkus.micrometer</code>:</p>
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
 </div>
 <div class="paragraph">
-<p>Cheat-sheet tested with <strong>Quarkus 1.11.0.Final</strong>.</p>
+<p>Cheat-sheet tested with <strong>Quarkus 1.12.0.Final</strong>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1764,7 +1828,7 @@ Also focused on developer experience, making things just work with little to no 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.11.0.Final:create \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.12.0.Final:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=getting-started \
     -DclassName="org.acme.quickstart.GreetingResource" \
@@ -1839,19 +1903,19 @@ dependencies {
 </div>
 </div>
 <div class="paragraph">
-<p>You need to distribute the <code>-runner.jar</code> file together with <code>lib</code> directory.</p>
+<p>You need to distribute the <code>-runner.jar</code> file together with <code>quarkus-app</code> directory.</p>
 </div>
 <div class="paragraph">
 <p>If <code>quarkus.package.uber-jar</code> property is set to true, then a uber-jar is created with all dependencies bundled inside the JAR.</p>
 </div>
 <div class="paragraph">
-<p>If <code>quarkus.package.type</code> property is set to <code>fast-jar</code> then Quarkus brings a JAR with faster startup times.</p>
+<p>By default, Quarkus uses fast jar packaging, if <code>quarkus.package.type</code> property is set to <code>legacy-jar</code> then Quarkus creates the old standard jar file.</p>
 </div>
 <div class="listingblock">
 <div class="title">application.properties</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.package.uber-jar=true
-quarkus.package.type=fast-jar</code></pre>
+quarkus.package.type=legacy-jar</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1865,7 +1929,7 @@ quarkus.package.type=fast-jar</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Possible <code>quarkus.package.type</code> are: <code>jar</code>, <code>fast-jar</code>, <code>uber-jar</code> and <code>native</code>.</p>
+<p>Possible <code>quarkus.package.type</code> are: <code>jar</code>, <code>legacy-jar</code>, <code>uber-jar</code> and <code>native</code>.</p>
 </div>
 <div class="paragraph">
 <p><strong>AppCDS</strong></p>
@@ -2307,6 +2371,10 @@ String applicationName;</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">java -jar -Dsmallrye.config.locations=config.properties</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>You can embed configuration files inside a dependency by adding <code>META-INF/microprofile.properties</code> inside the JAR.
+When dependency is added to the application, configuration properties are merged with current configuration.</p>
 </div>
 <div class="paragraph">
 <p><strong>@ConfigProperties</strong></p>
@@ -3767,6 +3835,11 @@ This implies that the Quarkus service is restarted.
     public String getConfigProfile() {
         return "my-test-profile";
     }
+
+    @Override
+    public Set&lt;String&gt; tags() {
+        return Collections.singleton("test1");
+    }
 }
 
 @QuarkusTest
@@ -3776,12 +3849,20 @@ public class MyTestClass {
 </div>
 </div>
 <div class="paragraph">
+<p><code>quarkus.test.profile.tags</code> property can be set to limit test execution of test profiles.
+If not set all tests are executed.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.test.profile.tags=test1</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p><strong>Quarkus Test Resource</strong></p>
 </div>
 <div class="paragraph">
 <p>You can execute some logic before the first test run (<code>start</code>) and execute some logic at the end of the test suite (<code>stop</code>).</p>
 </div>
-<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>You need to create a class implementing <code>QuarkusTestResourceLifecycleManager</code> interface and register it in the test via <code>@QuarkusTestResource</code> annotation.</p>
 </div>
@@ -3835,6 +3916,9 @@ Returning new system properties implies running parallel tests in different JVMs
 public class MyTest {
 }</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>When using multiple <code>QuarkusTestResource</code> you can set <code>parallel</code> attribute to <code>true</code> to start them concurrently.</p>
 </div>
 <div class="paragraph">
 <p><strong>Testing Callbacks</strong></p>
@@ -11013,7 +11097,7 @@ MicroProfile Fault Tolerance integrates with MicroProfile Metrics spec. You can 
 </div>
 </div>
 <div class="paragraph">
-<p>By just adding this extension, an endpoint is registered to <code>/health</code> providing a default health check.</p>
+<p>By just adding this extension, an endpoint is registered to <code>/q/health</code> providing a default health check.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -11094,7 +11178,7 @@ public class DatabaseHealthCheck {
 </div>
 </div>
 <div class="paragraph">
-<p>You can ping liveness or readiness health checks individually by querying <code>/health/live</code> or <code>/health/ready</code>.</p>
+<p>You can ping liveness or readiness health checks individually by querying <code>/q/health/live</code> or <code>/q/health/ready</code>.</p>
 </div>
 <div class="paragraph">
 <p>Quarkus comes with some <code>HealthCheck</code> implementations for checking service status.</p>
@@ -11236,7 +11320,7 @@ public class SimpleHealthGroupCheck implements HealthCheck {
 </div>
 <div class="paragraph">
 <p>The metrics can be read with JSON or the OpenMetrics format.
-An endpoint is registered automatically at <code>/metrics</code> providing default metrics.</p>
+An endpoint is registered automatically at <code>/q/metrics</code> providing default metrics.</p>
 </div>
 <div class="paragraph">
 <p>MicroProfile Metrics annotations:</p>
@@ -11327,7 +11411,7 @@ Histogram historgram;</code></pre>
 <dl>
 <dt class="hdlist1"><code>path</code></dt>
 <dd>
-<p>The path to the metrics handler. (default: <code>/metrics</code>)</p>
+<p>The path to the metrics handler. (default: <code>/q/metrics</code>)</p>
 </dd>
 <dt class="hdlist1"><code>extensions.enabled</code></dt>
 <dd>
@@ -11429,7 +11513,7 @@ Prefix is <code>quarkus.micrometer</code>:</p>
 </dd>
 <dt class="hdlist1"><code>export.prometheus.path</code></dt>
 <dd>
-<p>The path for the prometheus metrics endpoint (produces text/plain). (default: <code>/metrics</code>)</p>
+<p>The path for the prometheus metrics endpoint (produces text/plain). (default: <code>/q/metrics</code>)</p>
 </dd>
 <dt class="hdlist1"><code>export.azuremonitor.enabled</code></dt>
 <dd>
@@ -11840,6 +11924,14 @@ It provides several extensions to make it so.</p>
 <dt class="hdlist1"><code>user</code></dt>
 <dd>
 <p>The user to use in generated image.</p>
+</dd>
+<dt class="hdlist1"><code>always-cache-base-image</code></dt>
+<dd>
+<p>Controls the optimization which skips downloading base image layers that exist in a target registry (default: <code>false</code>).</p>
+</dd>
+<dt class="hdlist1"><code>appcds-builder-image</code></dt>
+<dd>
+<p>When AppCDS generation is enabled, if this property is set, then the JVM used to generate the AppCDS file will be the JVM present in the container image.</p>
 </dd>
 </dl>
 </div>
@@ -13849,6 +13941,40 @@ String output = report
 </div>
 </div>
 <div class="paragraph">
+<p><strong>Value Resolvers</strong></p>
+</div>
+<div class="paragraph">
+<p>Value resolvers are invoked when evaluating expressions.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">void configureEngine(@Observes EngineBuilder builder) {
+  builder.addValueResolver(ValueResolver.builder()
+      .appliesTo(ctx -&gt; ctx.getBase() instanceof Long &amp;&amp; ctx.getName().equals("tenTimes"))
+      .resolveSync(ctx -&gt; (Long) ctx.getBase() * 10)
+      .build());
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Content Filters</strong></p>
+</div>
+<div class="paragraph">
+<p>Content filters can be used to modify the template contents before parsing.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">void configureEngine(@Observes EngineBuilder builder) {
+  builder.addParserHook(new ParserHook() {
+      @Override
+      public void beforeParsing(ParserHelper parserHelper) {
+          parserHelper.addContentFilter(contents -&gt; contents.replace("${", "$\\{"));
+      }
+  });
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p><strong>Reactive and Async</strong></p>
 </div>
 <div class="listingblock">
@@ -14626,7 +14752,7 @@ public class GreetingController {
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.11.0.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
+If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.12.0.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
 </td>
 </tr>
 </table>

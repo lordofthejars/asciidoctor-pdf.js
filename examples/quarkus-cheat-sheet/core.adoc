@@ -76,17 +76,17 @@ dependencies {
 mvn clean package
 ----
 
-You need to distribute the `-runner.jar` file together with `lib` directory.
+You need to distribute the `-runner.jar` file together with `quarkus-app` directory.
 
 If `quarkus.package.uber-jar` property is set to true, then a uber-jar is created with all dependencies bundled inside the JAR.
 
-If `quarkus.package.type` property is set to `fast-jar` then Quarkus brings a JAR with faster startup times.
+By default, Quarkus uses fast jar packaging, if `quarkus.package.type` property is set to `legacy-jar` then Quarkus creates the old standard jar file.
 
 [source, properties]
 .application.properties
 ----
 quarkus.package.uber-jar=true
-quarkus.package.type=fast-jar
+quarkus.package.type=legacy-jar
 ----
 
 To compile to native, you need to set `GRAALVM_HOME` environment variable and run the `native` profile.
@@ -100,7 +100,7 @@ mvn clean package -Pnative
 // end::update_16_26[]
 
 // tag::update_17_5[]
-Possible `quarkus.package.type` are: `jar`, `fast-jar`, `uber-jar` and `native`.
+Possible `quarkus.package.type` are: `jar`, `legacy-jar`, `uber-jar` and `native`.
 // end::update_17_5[]
 
 *AppCDS*
@@ -438,6 +438,9 @@ or
 java -jar -Dsmallrye.config.locations=config.properties
 ----
 // end::update_22_5[]
+
+You can embed configuration files inside a dependency by adding `META-INF/microprofile.properties` inside the JAR.
+When dependency is added to the application, configuration properties are merged with current configuration.
 
 // tag::update_9_1[]
 *@ConfigProperties*
@@ -1672,6 +1675,11 @@ public class MyProfile implements io.quarkus.test.junit.QuarkusTestProfile {
     public String getConfigProfile() {
         return "my-test-profile";
     }
+
+    @Override
+    public Set<String> tags() {
+        return Collections.singleton("test1");
+    }
 }
 
 @QuarkusTest
@@ -1681,12 +1689,20 @@ public class MyTestClass {
 ----
 // end::update_18_5[]
 
+// tag::update_23_4[]
+`quarkus.test.profile.tags` property can be set to limit test execution of test profiles.
+If not set all tests are executed.
+
+[source, properties]
+----
+quarkus.test.profile.tags=test1
+----
+// end::update_23_4[]
+
 *Quarkus Test Resource*
 
 // tag::update_4_2[]
 You can execute some logic before the first test run (`start`) and execute some logic at the end of the test suite (`stop`).
-
-<<<
 
 You need to create a class implementing `QuarkusTestResourceLifecycleManager` interface and register it in the test via `@QuarkusTestResource` annotation.
 
@@ -1729,6 +1745,10 @@ And the usage:
 public class MyTest {
 }
 ----
+
+// tag::update_23_3[]
+When using multiple `QuarkusTestResource` you can set `parallel` attribute to `true` to start them concurrently.
+// end::update_23_3[]
 
 *Testing Callbacks*
 

@@ -15,6 +15,32 @@ In this page you can either read what has been added in each version of the chea
 [[whatsnew]]
 == What's New in Cheat-Sheet
 
+=== Version 1.12.0.Final
+
+.Qute Value Resolvers
+[%collapsible]
+====
+include::misc.adoc[tag=update_23_1]
+====
+
+.Qute Content Filter
+[%collapsible]
+====
+include::misc.adoc[tag=update_23_2]
+====
+
+.Start multiple test resources concurrently
+[%collapsible]
+====
+include::core.adoc[tag=update_23_3]
+====
+
+.Running specific tests
+[%collapsible]
+====
+include::core.adoc[tag=update_23_4]
+====
+
 === Version 1.11.0.Final
 
 .Trust All

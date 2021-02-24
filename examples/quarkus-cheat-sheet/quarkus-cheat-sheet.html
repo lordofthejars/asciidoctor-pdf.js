@@ -470,7 +470,7 @@ svg:not(:root).svg-inline--fa {
 <div class="sectionbody">
 <p class=""><a href="https://quarkus.io/">Quarkus</a> is a Kubernetes Native Java stack tailored for GraalVM &amp; OpenJDK HotSpot, crafted from the best of breed Java libraries and standards.
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
-<p class="">Cheat-sheet tested with <strong>Quarkus 1.11.0.Final</strong>.</p>
+<p class="">Cheat-sheet tested with <strong>Quarkus 1.12.0.Final</strong>.</p>
 </div>
 </div>
 <div class="sect1">
@@ -479,7 +479,7 @@ Also focused on developer experience, making things just work with little to no 
 <p class="">Quarkus comes with a Maven archetype to scaffold a very simple starting project.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.11.0.Final:create \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.12.0.Final:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=getting-started \
     -DclassName="org.acme.quickstart.GreetingResource" \
@@ -551,14 +551,14 @@ dependencies {
 <pre class="highlightjs highlight"><code data-lang="bash-shell" class="language-bash-shell hljs">mvn clean package</code></pre>
 </div>
 </div>
-<p class="">You need to distribute the <code>-runner.jar</code> file together with <code>lib</code> directory.</p>
+<p class="">You need to distribute the <code>-runner.jar</code> file together with <code>quarkus-app</code> directory.</p>
 <p class="">If <code>quarkus.package.uber-jar</code> property is set to true, then a uber-jar is created with all dependencies bundled inside the JAR.</p>
-<p class="">If <code>quarkus.package.type</code> property is set to <code>fast-jar</code> then Quarkus brings a JAR with faster startup times.</p>
+<p class="">By default, Quarkus uses fast jar packaging, if <code>quarkus.package.type</code> property is set to <code>legacy-jar</code> then Quarkus creates the old standard jar file.</p>
 <div class="listingblock">
 <div class="title">application.properties</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.package.uber-jar=true
-quarkus.package.type=fast-jar</code></pre>
+quarkus.package.type=legacy-jar</code></pre>
 </div>
 </div>
 <p class="">To compile to native, you need to set <code>GRAALVM_HOME</code> environment variable and run the <code>native</code> profile.</p>
@@ -569,7 +569,7 @@ quarkus.package.type=fast-jar</code></pre>
 ./gradlew build -Dquarkus.package.type=native</code></pre>
 </div>
 </div>
-<p class="">Possible <code>quarkus.package.type</code> are: <code>jar</code>, <code>fast-jar</code>, <code>uber-jar</code> and <code>native</code>.</p>
+<p class="">Possible <code>quarkus.package.type</code> are: <code>jar</code>, <code>legacy-jar</code>, <code>uber-jar</code> and <code>native</code>.</p>
 <p class=""><strong>AppCDS</strong></p>
 <p class="">Automatically generate AppCDS as part of the build process set the next property: <code>quarkus.package.create-appcds=true</code>.</p>
 <p class="">To make use of it, just run <code>java -jar -XX:SharedArchiveFile=app-cds.jsa myapp.jar</code>.</p>
@@ -953,6 +953,8 @@ String applicationName;</code></pre>
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">java -jar -Dsmallrye.config.locations=config.properties</code></pre>
 </div>
 </div>
+<p class="">You can embed configuration files inside a dependency by adding <code>META-INF/microprofile.properties</code> inside the JAR.
+When dependency is added to the application, configuration properties are merged with current configuration.</p>
 <p class=""><strong>@ConfigProperties</strong></p>
 <p class="">As an alternative to injecting multiple related configuration values, you can also use the <code>@io.quarkus.arc.config.ConfigProperties</code> annotation to group properties.</p>
 <div class="listingblock">
@@ -2230,6 +2232,11 @@ This implies that the Quarkus service is restarted.
     public String getConfigProfile() {
         return "my-test-profile";
     }
+
+    @Override
+    public Set&lt;String&gt; tags() {
+        return Collections.singleton("test1");
+    }
 }
 
 @QuarkusTest
@@ -2238,9 +2245,15 @@ public class MyTestClass {
 }</code></pre>
 </div>
 </div>
+<p class=""><code>quarkus.test.profile.tags</code> property can be set to limit test execution of test profiles.
+If not set all tests are executed.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.test.profile.tags=test1</code></pre>
+</div>
+</div>
 <p class=""><strong>Quarkus Test Resource</strong></p>
 <p class="">You can execute some logic before the first test run (<code>start</code>) and execute some logic at the end of the test suite (<code>stop</code>).</p>
-<div class="page-break"></div>
 <p class="">You need to create a class implementing <code>QuarkusTestResourceLifecycleManager</code> interface and register it in the test via <code>@QuarkusTestResource</code> annotation.</p>
 <div class="listingblock">
 <div class="content">
@@ -2291,6 +2304,7 @@ public class MyTest {
 }</code></pre>
 </div>
 </div>
+<p class="">When using multiple <code>QuarkusTestResource</code> you can set <code>parallel</code> attribute to <code>true</code> to start them concurrently.</p>
 <p class=""><strong>Testing Callbacks</strong></p>
 <p class="">You can enrich <strong>all</strong> your <code>@QuarkusTest</code> classes by implementing the following callback interfaces:</p>
 <div class="ulist">
@@ -8288,7 +8302,7 @@ MicroProfile Fault Tolerance integrates with MicroProfile Metrics spec. You can 
   -Dextensions="io.quarkus:quarkus-smallrye-health"</code></pre>
 </div>
 </div>
-<p class="">By just adding this extension, an endpoint is registered to <code>/health</code> providing a default health check.</p>
+<p class="">By just adding this extension, an endpoint is registered to <code>/q/health</code> providing a default health check.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
@@ -8361,7 +8375,7 @@ public class DatabaseHealthCheck {
 }</code></pre>
 </div>
 </div>
-<p class="">You can ping liveness or readiness health checks individually by querying <code>/health/live</code> or <code>/health/ready</code>.</p>
+<p class="">You can ping liveness or readiness health checks individually by querying <code>/q/health/live</code> or <code>/q/health/ready</code>.</p>
 <p class="">Quarkus comes with some <code>HealthCheck</code> implementations for checking service status.</p>
 <div class="ulist">
 <ul>
@@ -8479,7 +8493,7 @@ public class SimpleHealthGroupCheck implements HealthCheck {
 </div>
 </div>
 <p class="">The metrics can be read with JSON or the OpenMetrics format.
-An endpoint is registered automatically at <code>/metrics</code> providing default metrics.</p>
+An endpoint is registered automatically at <code>/q/metrics</code> providing default metrics.</p>
 <p class="">MicroProfile Metrics annotations:</p>
 <div class="dlist">
 <dl>
@@ -8559,7 +8573,7 @@ Histogram historgram;</code></pre>
 <dl>
 <dt class="hdlist1"><code>path</code></dt>
 <dd>
-<p>The path to the metrics handler. (default: <code>/metrics</code>)</p>
+<p>The path to the metrics handler. (default: <code>/q/metrics</code>)</p>
 </dd>
 <dt class="hdlist1"><code>extensions.enabled</code></dt>
 <dd>
@@ -8649,7 +8663,7 @@ Prefix is <code>quarkus.micrometer</code>:</p>
 </dd>
 <dt class="hdlist1"><code>export.prometheus.path</code></dt>
 <dd>
-<p>The path for the prometheus metrics endpoint (produces text/plain). (default: <code>/metrics</code>)</p>
+<p>The path for the prometheus metrics endpoint (produces text/plain). (default: <code>/q/metrics</code>)</p>
 </dd>
 <dt class="hdlist1"><code>export.azuremonitor.enabled</code></dt>
 <dd>
@@ -8994,6 +9008,14 @@ It provides several extensions to make it so.</p>
 <dt class="hdlist1"><code>user</code></dt>
 <dd>
 <p>The user to use in generated image.</p>
+</dd>
+<dt class="hdlist1"><code>always-cache-base-image</code></dt>
+<dd>
+<p>Controls the optimization which skips downloading base image layers that exist in a target registry (default: <code>false</code>).</p>
+</dd>
+<dt class="hdlist1"><code>appcds-builder-image</code></dt>
+<dd>
+<p>When AppCDS generation is enabled, if this property is set, then the JVM used to generate the AppCDS file will be the JVM present in the container image.</p>
 </dd>
 </dl>
 </div>
@@ -10700,6 +10722,32 @@ String output = report
     .render();</code></pre>
 </div>
 </div>
+<p class=""><strong>Value Resolvers</strong></p>
+<p class="">Value resolvers are invoked when evaluating expressions.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">void configureEngine(@Observes EngineBuilder builder) {
+  builder.addValueResolver(ValueResolver.builder()
+      .appliesTo(ctx -&gt; ctx.getBase() instanceof Long &amp;&amp; ctx.getName().equals("tenTimes"))
+      .resolveSync(ctx -&gt; (Long) ctx.getBase() * 10)
+      .build());
+}</code></pre>
+</div>
+</div>
+<p class=""><strong>Content Filters</strong></p>
+<p class="">Content filters can be used to modify the template contents before parsing.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">void configureEngine(@Observes EngineBuilder builder) {
+  builder.addParserHook(new ParserHook() {
+      @Override
+      public void beforeParsing(ParserHelper parserHelper) {
+          parserHelper.addContentFilter(contents -&gt; contents.replace("${", "$\\{"));
+      }
+  });
+}</code></pre>
+</div>
+</div>
 <p class=""><strong>Reactive and Async</strong></p>
 <div class="listingblock">
 <div class="content">
@@ -11414,7 +11462,7 @@ public class GreetingController {
 <span class="fa-layers"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle" class="svg-inline--fa fa-circle fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path></svg><svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="lightbulb" class="svg-inline--fa fa-lightbulb fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" style="transform-origin: 0.34375em 0.5em;"><g transform="translate(176 256)"><g transform="translate(0, 0)  scale(0.625, 0.625)  rotate(0 0 0)"><path fill="currentColor" d="M176 80c-52.94 0-96 43.06-96 96 0 8.84 7.16 16 16 16s16-7.16 16-16c0-35.3 28.72-64 64-64 8.84 0 16-7.16 16-16s-7.16-16-16-16zM96.06 459.17c0 3.15.93 6.22 2.68 8.84l24.51 36.84c2.97 4.46 7.97 7.14 13.32 7.14h78.85c5.36 0 10.36-2.68 13.32-7.14l24.51-36.84c1.74-2.62 2.67-5.7 2.68-8.84l.05-43.18H96.02l.04 43.18zM176 0C73.72 0 0 82.97 0 176c0 44.37 16.45 84.85 43.56 115.78 16.64 18.99 42.74 58.8 52.42 92.16v.06h48v-.12c-.01-4.77-.72-9.51-2.15-14.07-5.59-17.81-22.82-64.77-62.17-109.67-20.54-23.43-31.52-53.15-31.61-84.14-.2-73.64 59.67-128 127.95-128 70.58 0 128 57.42 128 128 0 30.97-11.24 60.85-31.65 84.14-39.11 44.61-56.42 91.47-62.1 109.46a47.507 47.507 0 0 0-2.22 14.3v.1h48v-.05c9.68-33.37 35.78-73.18 52.42-92.16C335.55 260.85 352 220.37 352 176 352 78.8 273.2 0 176 0z" transform="translate(-176 -256)"></path></g></g></svg></span>
 </td>
 <td class="content">
-If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.11.0.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
+If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.12.0.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
 </td>
 </tr>
 </table>
@@ -11748,7 +11796,7 @@ void cronJob() {
 <div class="author-bio">Java Champion and Director of DevExp at Red Hat</div>
 </div>
 
-<div class="author-bio">1.11.0.Final</div>
+<div class="author-bio">1.12.0.Final</div>
 <img src="./redhat/assets/by-nc-sa.png"/>
 </div>
 
