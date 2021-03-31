@@ -450,20 +450,378 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.23/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
+<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.24/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
 </div>
 <div class="paragraph">
 <p>Quarkus (<a href="https://quarkus.io/" class="bare">https://quarkus.io/</a>) is a Kubernetes Native Java stack tailored for GraalVM &amp; OpenJDK HotSpot, crafted from the best of breed Java libraries and standards.
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
 </div>
 <div class="paragraph">
-<p>In this page you can either read what has been added in each version of the cheat-sheet individually in <a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a> section, see the full cheat-sheet as HTML <span class="icon"><i class="fa fa-html5"></i></span> <a href="#quarkuscheatsheet">Quarkus Cheat-Sheet</a> format or <span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.23/quarkus-cheat-sheet.pdf">download the full cheat-sheet as PDF</a>.</p>
+<p>In this page you can either read what has been added in each version of the cheat-sheet individually in <a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a> section, see the full cheat-sheet as HTML <span class="icon"><i class="fa fa-html5"></i></span> <a href="#quarkuscheatsheet">Quarkus Cheat-Sheet</a> format or <span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.24/quarkus-cheat-sheet.pdf">download the full cheat-sheet as PDF</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="whatsnew"><a class="anchor" href="#whatsnew"></a><a class="link" href="#whatsnew">What&#8217;s New in Cheat-Sheet</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_version_1_13_0_final"><a class="anchor" href="#_version_1_13_0_final"></a><a class="link" href="#_version_1_13_0_final">Version 1.13.0.Final</a></h3>
+<details>
+<summary class="title">DevServices</summary>
+<div class="content">
+<div class="paragraph">
+<p>When testing or running in dev mode Quarkus can even provide you with a zero config database out of the box.
+Depending on your database type you may need docker installed in order to use this feature.</p>
+</div>
+<div class="paragraph">
+<p>The following open source databases:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Postgresql (container)</p>
+</li>
+<li>
+<p>MySQL (container)</p>
+</li>
+<li>
+<p>MariaDB (container)</p>
+</li>
+<li>
+<p>H2 (in-process)</p>
+</li>
+<li>
+<p>Apache Derby (in-process)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To use DevServices don’t configure a database URL, username and password, Quarkus will provide the database and you can just start coding without worrying about config.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.datasource.db-kind=mariadb
+%prod.quarkus.datasource.jdbc.url=jdbc:mariadb://db:3306/mydb
+%prod.quarkus.datasource.username=developer
+%prod.quarkus.datasource.password=developer</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Possible configuration values prefixed with <code>quarkus.datasource</code>:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>devservices</code></dt>
+<dd>
+<p>If devservices is enabled or not. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>devservices.image-name</code></dt>
+<dd>
+<p>The container image name to use instead of the default one.</p>
+</dd>
+<dt class="hdlist1"><code>devservices.properties</code></dt>
+<dd>
+<p>Generic properties that are added to the database connection URL.</p>
+</dd>
+</dl>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Quarkus Integration Tests</summary>
+<div class="content">
+<div class="paragraph">
+<p><code>@QuarkusIntegrationTest</code> should be used to launch and test the artifact produced by the Quarkus build.
+If the result of a Quarkus build is a JAR then the app is launched as <code>java -jar</code>, if native is launched as <code>./application</code>, if container image is created (JiB, Docker extensions) is launched as <code>docker run</code>.</p>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Native configuration properties</summary>
+<div class="content">
+<div class="paragraph">
+<p>Native configuration properties prefixed with <code>quarkus.native</code>:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>additional-build-args</code></dt>
+<dd>
+<p>Additional arguments to pass to the build process.</p>
+</dd>
+<dt class="hdlist1"><code>enable-http-url-handler</code></dt>
+<dd>
+<p>If the HTTP url handler should be enabled. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>enable-https-url-handler</code></dt>
+<dd>
+<p>If the HTTPS url handler should be enabled.</p>
+</dd>
+<dt class="hdlist1"><code>enable-all-security-services</code></dt>
+<dd>
+<p>If all security services should be added to the native image.</p>
+</dd>
+<dt class="hdlist1"><code>user-language</code></dt>
+<dd>
+<p>Defines the user language used for building the native executable.</p>
+</dd>
+<dt class="hdlist1"><code>user-country</code></dt>
+<dd>
+<p>Defines the user country used for building the native executable.</p>
+</dd>
+<dt class="hdlist1"><code>file-encoding</code></dt>
+<dd>
+<p>Defines the file encoding.</p>
+</dd>
+<dt class="hdlist1"><code>add-all-charsets</code></dt>
+<dd>
+<p>If all character sets should be added to the native image.</p>
+</dd>
+<dt class="hdlist1"><code>graalvm-home</code></dt>
+<dd>
+<p>The location of the Graal distribution.</p>
+</dd>
+<dt class="hdlist1"><code>java-home</code></dt>
+<dd>
+<p>The location of the JDK.</p>
+</dd>
+<dt class="hdlist1"><code>native-image-xmx</code></dt>
+<dd>
+<p>The maximum Java heap to be used during the native image generation.</p>
+</dd>
+<dt class="hdlist1"><code>debug-build-process</code></dt>
+<dd>
+<p>If the native image build should wait for a debugger to be attached before running.</p>
+</dd>
+<dt class="hdlist1"><code>publish-debug-build-process-port</code></dt>
+<dd>
+<p>If the debug port should be published when building with docker and debug-build-process. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>cleanup-server</code></dt>
+<dd>
+<p>If the native image server should be restarted.</p>
+</dd>
+<dt class="hdlist1"><code>enable-isolates</code></dt>
+<dd>
+<p>If isolates should be enabled. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>enable-fallback-images</code></dt>
+<dd>
+<p>If a JVM based 'fallback image' should be created if native image fails.</p>
+</dd>
+<dt class="hdlist1"><code>enable-server</code></dt>
+<dd>
+<p>If the native image server should be used.</p>
+</dd>
+<dt class="hdlist1"><code>auto-service-loader-registration</code></dt>
+<dd>
+<p>If all META-INF/services entries should be automatically registered.</p>
+</dd>
+<dt class="hdlist1"><code>dump-proxies</code></dt>
+<dd>
+<p>If the bytecode of all proxies should be dumped for inspection.</p>
+</dd>
+<dt class="hdlist1"><code>container-build</code></dt>
+<dd>
+<p>If this build should be done using a container runtime.</p>
+</dd>
+<dt class="hdlist1"><code>remote-container-build</code></dt>
+<dd>
+<p>If this build is done using a remote docker daemon.</p>
+</dd>
+<dt class="hdlist1"><code>builder-image</code></dt>
+<dd>
+<p>The docker image to use to do the image build.</p>
+</dd>
+<dt class="hdlist1"><code>container-runtime</code></dt>
+<dd>
+<p>The container runtime that is used to do an image based build. (<code>docker</code>, <code>podman</code>)</p>
+</dd>
+<dt class="hdlist1"><code>container-runtime-options</code></dt>
+<dd>
+<p>Options to pass to the container runtime.</p>
+</dd>
+<dt class="hdlist1"><code>enable-vm-inspection</code></dt>
+<dd>
+<p>If the resulting image should allow VM introspection.</p>
+</dd>
+<dt class="hdlist1"><code>full-stack-traces</code></dt>
+<dd>
+<p>If full stack traces are enabled in the resulting image.</p>
+</dd>
+<dt class="hdlist1"><code>enable-reports</code></dt>
+<dd>
+<p>If the reports on call paths and included packages/classes/methods should be generated.</p>
+</dd>
+<dt class="hdlist1"><code>report-exception-stack-traces</code></dt>
+<dd>
+<p>If exceptions should be reported with a full stack trace.</p>
+</dd>
+<dt class="hdlist1"><code>report-errors-at-runtime</code></dt>
+<dd>
+<p>If errors should be reported at runtime.</p>
+</dd>
+<dt class="hdlist1"><code>enable-dashboard-dump</code></dt>
+<dd>
+<p>Generate the report files for GraalVM Dashboard.</p>
+</dd>
+<dt class="hdlist1"><code>resources.includes</code></dt>
+<dd>
+<p>A comma separated list of globs to match resource paths that should be added to the native image.</p>
+</dd>
+<dt class="hdlist1"><code>resources.excludes</code></dt>
+<dd>
+<p>A comma separated list of globs to match resource paths that should exclude to the native image.</p>
+</dd>
+<dt class="hdlist1"><code>debug.enabled</code></dt>
+<dd>
+<p>If debug is enabled and debug symbols are generated.</p>
+</dd>
+</dl>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">OpenId properties</summary>
+<div class="content">
+<div class="paragraph">
+<p>Possible OpenAPI options with <code>quarkus.smallrye-openapi</code> prefix:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">path</dt>
+<dd>
+<p>The path at which to register the OpenAPI Servlet. (default: <code>openapi</code>)</p>
+</dd>
+<dt class="hdlist1">store-schema-directory</dt>
+<dd>
+<p>The generated OpenAPI schema documents will be stored here on build.</p>
+</dd>
+<dt class="hdlist1">security-scheme</dt>
+<dd>
+<p>Add a certain SecurityScheme with config. (<code>basic</code>, <code>jwt</code>, <code>oidc</code>, <code>oauth2Implicit</code>)</p>
+</dd>
+<dt class="hdlist1">security-scheme-name</dt>
+<dd>
+<p>Add a Security Scheme name to the generated OpenAPI document. (default: <code>SecurityScheme</code>)</p>
+</dd>
+<dt class="hdlist1">security-scheme-description</dt>
+<dd>
+<p>Add a description to the Security Scheme. (default: <code>Authentication</code>)</p>
+</dd>
+<dt class="hdlist1">basic-security-scheme-value</dt>
+<dd>
+<p>Add a scheme value to the Basic HTTP Security Scheme. (default: <code>basic</code>)</p>
+</dd>
+<dt class="hdlist1">jwt-security-scheme-value</dt>
+<dd>
+<p>Add a scheme value to the JWT Security Scheme. (default: <code>bearer</code>)</p>
+</dd>
+<dt class="hdlist1">jwt-bearer-format</dt>
+<dd>
+<p>Add a bearer format to the JWT Security Scheme. (default: <code>JWT</code>)</p>
+</dd>
+<dt class="hdlist1">oidc-open-id-connect-url</dt>
+<dd>
+<p>Add a openIdConnectUrl value to the OIDC Security Scheme</p>
+</dd>
+<dt class="hdlist1">oauth2-implicit-refresh-url</dt>
+<dd>
+<p>Add a implicit flow refreshUrl value to the OAuth2 Security Scheme</p>
+</dd>
+<dt class="hdlist1">oauth2-implicit-authorization-url</dt>
+<dd>
+<p>Add an implicit flow authorizationUrl value to the OAuth2 Security Scheme</p>
+</dd>
+<dt class="hdlist1">oauth2-implicit-token-url</dt>
+<dd>
+<p>Add an implicit flow tokenUrl value to the OAuth2 Security Scheme</p>
+</dd>
+</dl>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">JsonbConfig</summary>
+<div class="content">
+<div class="paragraph">
+<p>To provide custom  JsonBConfig object:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Dependent
+JsonbConfig jsonConfig(Instance&lt;JsonbConfigCustomizer&gt; customizers) {
+    JsonbConfig config = myJsonbConfig(); // Custom `JsonbConfig`
+    for (JsonbConfigCustomizer customizer : customizers) {
+        customizer.customize(config);
+    }
+
+    return config;
+}</code></pre>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">OpenTelemetry</summary>
+<div class="content">
+<div class="paragraph">
+<p>Quarkus integrates with the OpenTelemetry project.
+For exporting traces to a Jaeger collector, use the <code>quarkus-opentelemetry-exporter-jaeger</code> extension.</p>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">Kubernetes Service Binding</summary>
+<div class="content">
+<div class="paragraph">
+<p>Quarkus supports binding services to applications via the Service Binding Specification for Kubernetes.</p>
+</div>
+<div class="paragraph">
+<p>The following Quarkus extensions support this feature:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>quarkus-jdbc-mariadb</p>
+</li>
+<li>
+<p>quarkus-jdbc-mssql</p>
+</li>
+<li>
+<p>quarkus-jdbc-mysql</p>
+</li>
+<li>
+<p>quarkus-jdbc-postgresql</p>
+</li>
+<li>
+<p>quarkus-kafka-client</p>
+</li>
+<li>
+<p>quarkus-smallrye-reactive-messaging-kafka</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extensions
+    -Dextensions="quarkus-kubernetes-service-binding"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Datasource configuration part is absent as it is aut-discovered by Quarkus.</p>
+</div>
+</div>
+</details>
+<details>
+<summary class="title">RESTEasy Reactive-based REST Client</summary>
+<div class="content">
+<div class="paragraph">
+<p>A RESTEasy Reactive-based REST Client extension.
+You only need to replace the <code>quarkus-rest-client</code> to  <code>quarkus-rest-client-reactive</code>.</p>
+</div>
+</div>
+</details>
+</div>
 <div class="sect2">
 <h3 id="_version_1_12_0_final"><a class="anchor" href="#_version_1_12_0_final"></a><a class="link" href="#_version_1_12_0_final">Version 1.12.0.Final</a></h3>
 <details>
@@ -1676,13 +2034,14 @@ Prefix is <code>quarkus.micrometer</code>:</p>
 <h2 id="quarkuscheatsheet"><a class="anchor" href="#quarkuscheatsheet"></a><a class="link" href="#quarkuscheatsheet">Quarkus Cheat-Sheet</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.23/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
+<p><span class="icon"><i class="fa fa-file-pdf-o"></i></span> <a href="https://github.com/lordofthejars/quarkus-cheat-sheet/releases/download/1.0.24/quarkus-cheat-sheet.pdf">Download the Cheat-Sheet as PDF</a>.</p>
 </div>
 <div id="toc" class="toc">
 <div id="toctitle" class="title">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#whatsnew">What&#8217;s New in Cheat-Sheet</a>
 <ul class="sectlevel2">
+<li><a href="#_version_1_13_0_final">Version 1.13.0.Final</a></li>
 <li><a href="#_version_1_12_0_final">Version 1.12.0.Final</a></li>
 <li><a href="#_version_1_11_0_final">Version 1.11.0.Final</a></li>
 <li><a href="#_version_1_10_0_final">Version 1.10.0.Final</a></li>
@@ -1818,7 +2177,7 @@ Prefix is <code>quarkus.micrometer</code>:</p>
 Also focused on developer experience, making things just work with little to no configuration and allowing to do live coding.</p>
 </div>
 <div class="paragraph">
-<p>Cheat-sheet tested with <strong>Quarkus 1.12.0.Final</strong>.</p>
+<p>Cheat-sheet tested with <strong>Quarkus 1.13.0.Final</strong>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1828,7 +2187,7 @@ Also focused on developer experience, making things just work with little to no 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.12.0.Final:create \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">mvn io.quarkus:quarkus-maven-plugin:1.13.0.Final:create \
     -DprojectGroupId=org.acme \
     -DprojectArtifactId=getting-started \
     -DclassName="org.acme.quickstart.GreetingResource" \
@@ -2901,6 +3260,22 @@ public Response create(Sauce sauce) {
 </div>
 </div>
 <div class="paragraph">
+<p>To provide custom  JsonBConfig object:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Dependent
+JsonbConfig jsonConfig(Instance&lt;JsonbConfigCustomizer&gt; customizers) {
+    JsonbConfig config = myJsonbConfig(); // Custom `JsonbConfig`
+    for (JsonbConfigCustomizer customizer : customizers) {
+        customizer.customize(config);
+    }
+
+    return config;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>To work with <code>Jackson</code> you need to add:</p>
 </div>
 <div class="listingblock">
@@ -2918,9 +3293,13 @@ public Response create(Sauce sauce) {
 public class CustomObjectMapperConfig {
     @Singleton
     @Produces
-    public ObjectMapper objectMapper() {
+    public ObjectMapper objectMapper(Instance&lt;ObjectMapperCustomizer&gt; customizers) {
         ObjectMapper objectMapper = new ObjectMapper();
         // perform configuration
+
+        for (ObjectMapperCustomizer customizer : customizers) {
+            customizer.customize(mapper);
+        }
         return objectMapper;
     }
 }</code></pre>
@@ -3235,11 +3614,6 @@ quarkus.log.category."com.lordofthejars".level=DEBUG</code></pre>
 <dd>
 <p>Log asynchronously (default: <code>false</code>)</p>
 </dd>
-</dl>
-</div>
-<div style="page-break-after: always;"></div>
-<div class="dlist">
-<dl>
 <dt class="hdlist1"><code>file.async.queue-length</code></dt>
 <dd>
 <p>The queue length to use before flushing writing (default: <code>512</code>)</p>
@@ -3604,6 +3978,10 @@ To start using it you need to add the <code>quarkus-rest-client-mutiny</code>.</
 @Produces(MediaType.APPLICATION_JSON)
 Uni&lt;WorldClock&gt; getNow();</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>A RESTEasy Reactive-based REST Client extension.
+You only need to replace the <code>quarkus-rest-client</code> to  <code>quarkus-rest-client-reactive</code>.</p>
 </div>
 <div class="paragraph">
 <p><strong>Multipart</strong></p>
@@ -4069,15 +4447,72 @@ public class TestStereotypeTestCase {}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p><strong>Test Coverage</strong>
-Due the nature of Quarkus to calculate correctly the coverage information with JaCoCo, you might need offline instrumentation.
-I recommend reading <a href="https://quarkus.io/guides/tests-with-coverage-guide" target="_blank" rel="noopener">this document</a> to understand how JaCoCo and Quarkus works and how you can configure JaCoCo to get correct data.</p>
+<p><strong>Test Coverage</strong></p>
+</div>
+<div class="paragraph">
+<p>Due the nature of Quarkus to calculate correctly the coverage information with JaCoCo, you might need offline instrumentation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
+  -Dextensions="quarkus-jacoco "</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Possible configuration parameters prefixed <code>quarkus.jacoco</code>:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>data-file</code></dt>
+<dd>
+<p>The jacoco data file. (default: <code>jacoco-quarkus.exec</code>)</p>
+</dd>
+<dt class="hdlist1"><code>report</code></dt>
+<dd>
+<p>If Quarkus should generate the Jacoco report. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>output-encoding</code></dt>
+<dd>
+<p>Encoding of the generated reports. (default: <code>UTF-8</code>)</p>
+</dd>
+<dt class="hdlist1"><code>title</code></dt>
+<dd>
+<p>Name of the root node HTML report pages.</p>
+</dd>
+<dt class="hdlist1"><code>footer</code></dt>
+<dd>
+<p>Footer text used in HTML report pages.</p>
+</dd>
+<dt class="hdlist1"><code>source-encoding</code></dt>
+<dd>
+<p>Encoding of the source files. (default: <code>UTF-8</code>)</p>
+</dd>
+<dt class="hdlist1"><code>includes</code></dt>
+<dd>
+<p>A list of class files to include in the report. (default: <code>**</code>)</p>
+</dd>
+<dt class="hdlist1"><code>excludes</code></dt>
+<dd>
+<p>A list of class files to exclude from the report.</p>
+</dd>
+<dt class="hdlist1"><code>report-location</code></dt>
+<dd>
+<p>The location of the report files. (default: <code>jacoco-report</code>)</p>
+</dd>
+</dl>
 </div>
 <div class="paragraph">
 <p><strong>Native Testing</strong></p>
 </div>
 <div class="paragraph">
 <p>To test native executables annotate the test with <code>@NativeImageTest</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>Quarkus Integration Tests</strong></p>
+</div>
+<div class="paragraph">
+<p><code>@QuarkusIntegrationTest</code> should be used to launch and test the artifact produced by the Quarkus build.
+If the result of a Quarkus build is a JAR then the app is launched as <code>java -jar</code>, if native is launched as <code>./application</code>, if container image is created (JiB, Docker extensions) is launched as <code>docker run</code>.</p>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -4597,6 +5032,65 @@ public void testPanacheMocking() {
 </div>
 </div>
 <div class="paragraph">
+<p><strong>DevServices</strong></p>
+</div>
+<div class="paragraph">
+<p>When testing or running in dev mode Quarkus can even provide you with a zero config database out of the box.
+Depending on your database type you may need docker installed in order to use this feature.</p>
+</div>
+<div class="paragraph">
+<p>The following open source databases:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Postgresql (container)</p>
+</li>
+<li>
+<p>MySQL (container)</p>
+</li>
+<li>
+<p>MariaDB (container)</p>
+</li>
+<li>
+<p>H2 (in-process)</p>
+</li>
+<li>
+<p>Apache Derby (in-process)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To use DevServices don’t configure a database URL, username and password, Quarkus will provide the database and you can just start coding without worrying about config.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.datasource.db-kind=mariadb
+%prod.quarkus.datasource.jdbc.url=jdbc:mariadb://db:3306/mydb
+%prod.quarkus.datasource.username=developer
+%prod.quarkus.datasource.password=developer</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Possible configuration values prefixed with <code>quarkus.datasource</code>:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>devservices</code></dt>
+<dd>
+<p>If devservices is enabled or not. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>devservices.image-name</code></dt>
+<dd>
+<p>The container image name to use instead of the default one.</p>
+</dd>
+<dt class="hdlist1"><code>devservices.properties</code></dt>
+<dd>
+<p>Generic properties that are added to the database connection URL.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
 <p><strong>DAO pattern</strong></p>
 </div>
 <div class="paragraph">
@@ -4644,8 +5138,9 @@ quarkus.datasource.db-kind=h2
 quarkus.datasource.jdbc.url=jdbc:h2:tcp://localhost/mem:default
 ....
 # users datasource
+quarkus.datasource.users.devservices=false
 quarkus.datasource.users.db-kind=h2
-quarkus.datasource.users..jdbc.url=jdbc:h2:tcp://localhost/mem:users</code></pre>
+quarkus.datasource.users.jdbc.url=jdbc:h2:tcp://localhost/mem:users</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5391,6 +5886,10 @@ Prefix for repeatable SQL migrations (default: <code>R</code>)</p>
 <dt class="hdlist1"><code>callbacks</code></dt>
 <dd>
 <p>Comma-separated list of fully qualified class names of Callback implementations.</p>
+</dd>
+<dt class="hdlist1"><code>ignore-future-migrations</code></dt>
+<dd>
+<p>Ignore future migrations when reading the history table.</p>
 </dd>
 </dl>
 </div>
@@ -6796,8 +7295,9 @@ quarkus.mongodb.inventory.connection-string = mongodb://mongo3:27017/invdb</code
 MongoClient mongoClient1;</code></pre>
 </div>
 </div>
+<div style="page-break-after: always;"></div>
 <div class="paragraph">
-<p><code>quarkus.mongodb</code> as prefix is skipped in the next table.</p>
+<p><code>quarkus.mongodb</code> as prefix is skipped in the following table.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -7413,7 +7913,6 @@ Uni&lt;List&lt;PersonName&gt;&gt; persons = ReactivePersonEntity.find("lastname"
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
-<div style="page-break-after: always;"></div>
 <div class="paragraph">
 <p>Enities and DAOs are generated as you have been doing with DataStax Object Mapper.</p>
 </div>
@@ -11657,6 +12156,13 @@ quarkus.hibernate-orm.dialect=
 </div>
 </div>
 <div class="paragraph">
+<p><strong>OpenTelemetry</strong></p>
+</div>
+<div class="paragraph">
+<p>Quarkus integrates with the OpenTelemetry project.
+For exporting traces to a Jaeger collector, use the <code>quarkus-opentelemetry-exporter-jaeger</code> extension.</p>
+</div>
+<div class="paragraph">
 <p><strong>Kafka Tracer</strong></p>
 </div>
 <div class="paragraph">
@@ -11789,6 +12295,145 @@ CMD ["./application", "-Dquarkus.http.host=0.0.0.0", "-Djava.library.path=/work/
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">quarkus.native.resources.excludes = foo/**</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Native configuration properties prefixed with <code>quarkus.native</code>:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>additional-build-args</code></dt>
+<dd>
+<p>Additional arguments to pass to the build process.</p>
+</dd>
+<dt class="hdlist1"><code>enable-http-url-handler</code></dt>
+<dd>
+<p>If the HTTP url handler should be enabled. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>enable-https-url-handler</code></dt>
+<dd>
+<p>If the HTTPS url handler should be enabled.</p>
+</dd>
+<dt class="hdlist1"><code>enable-all-security-services</code></dt>
+<dd>
+<p>If all security services should be added to the native image.</p>
+</dd>
+<dt class="hdlist1"><code>user-language</code></dt>
+<dd>
+<p>Defines the user language used for building the native executable.</p>
+</dd>
+<dt class="hdlist1"><code>user-country</code></dt>
+<dd>
+<p>Defines the user country used for building the native executable.</p>
+</dd>
+<dt class="hdlist1"><code>file-encoding</code></dt>
+<dd>
+<p>Defines the file encoding.</p>
+</dd>
+<dt class="hdlist1"><code>add-all-charsets</code></dt>
+<dd>
+<p>If all character sets should be added to the native image.</p>
+</dd>
+<dt class="hdlist1"><code>graalvm-home</code></dt>
+<dd>
+<p>The location of the Graal distribution.</p>
+</dd>
+<dt class="hdlist1"><code>java-home</code></dt>
+<dd>
+<p>The location of the JDK.</p>
+</dd>
+<dt class="hdlist1"><code>native-image-xmx</code></dt>
+<dd>
+<p>The maximum Java heap to be used during the native image generation.</p>
+</dd>
+<dt class="hdlist1"><code>debug-build-process</code></dt>
+<dd>
+<p>If the native image build should wait for a debugger to be attached before running.</p>
+</dd>
+<dt class="hdlist1"><code>publish-debug-build-process-port</code></dt>
+<dd>
+<p>If the debug port should be published when building with docker and debug-build-process. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>cleanup-server</code></dt>
+<dd>
+<p>If the native image server should be restarted.</p>
+</dd>
+<dt class="hdlist1"><code>enable-isolates</code></dt>
+<dd>
+<p>If isolates should be enabled. (default: <code>true</code>)</p>
+</dd>
+<dt class="hdlist1"><code>enable-fallback-images</code></dt>
+<dd>
+<p>If a JVM based 'fallback image' should be created if native image fails.</p>
+</dd>
+<dt class="hdlist1"><code>enable-server</code></dt>
+<dd>
+<p>If the native image server should be used.</p>
+</dd>
+<dt class="hdlist1"><code>auto-service-loader-registration</code></dt>
+<dd>
+<p>If all META-INF/services entries should be automatically registered.</p>
+</dd>
+<dt class="hdlist1"><code>dump-proxies</code></dt>
+<dd>
+<p>If the bytecode of all proxies should be dumped for inspection.</p>
+</dd>
+<dt class="hdlist1"><code>container-build</code></dt>
+<dd>
+<p>If this build should be done using a container runtime.</p>
+</dd>
+<dt class="hdlist1"><code>remote-container-build</code></dt>
+<dd>
+<p>If this build is done using a remote docker daemon.</p>
+</dd>
+<dt class="hdlist1"><code>builder-image</code></dt>
+<dd>
+<p>The docker image to use to do the image build.</p>
+</dd>
+<dt class="hdlist1"><code>container-runtime</code></dt>
+<dd>
+<p>The container runtime that is used to do an image based build. (<code>docker</code>, <code>podman</code>)</p>
+</dd>
+<dt class="hdlist1"><code>container-runtime-options</code></dt>
+<dd>
+<p>Options to pass to the container runtime.</p>
+</dd>
+<dt class="hdlist1"><code>enable-vm-inspection</code></dt>
+<dd>
+<p>If the resulting image should allow VM introspection.</p>
+</dd>
+<dt class="hdlist1"><code>full-stack-traces</code></dt>
+<dd>
+<p>If full stack traces are enabled in the resulting image.</p>
+</dd>
+<dt class="hdlist1"><code>enable-reports</code></dt>
+<dd>
+<p>If the reports on call paths and included packages/classes/methods should be generated.</p>
+</dd>
+<dt class="hdlist1"><code>report-exception-stack-traces</code></dt>
+<dd>
+<p>If exceptions should be reported with a full stack trace.</p>
+</dd>
+<dt class="hdlist1"><code>report-errors-at-runtime</code></dt>
+<dd>
+<p>If errors should be reported at runtime.</p>
+</dd>
+<dt class="hdlist1"><code>enable-dashboard-dump</code></dt>
+<dd>
+<p>Generate the report files for GraalVM Dashboard.</p>
+</dd>
+<dt class="hdlist1"><code>resources.includes</code></dt>
+<dd>
+<p>A comma separated list of globs to match resource paths that should be added to the native image.</p>
+</dd>
+<dt class="hdlist1"><code>resources.excludes</code></dt>
+<dd>
+<p>A comma separated list of globs to match resource paths that should exclude to the native image.</p>
+</dd>
+<dt class="hdlist1"><code>debug.enabled</code></dt>
+<dd>
+<p>If debug is enabled and debug symbols are generated.</p>
+</dd>
+</dl>
 </div>
 </div>
 <div class="sect2">
@@ -11933,6 +12578,10 @@ It provides several extensions to make it so.</p>
 <dd>
 <p>When AppCDS generation is enabled, if this property is set, then the JVM used to generate the AppCDS file will be the JVM present in the container image.</p>
 </dd>
+<dt class="hdlist1"><code>platforms</code></dt>
+<dd>
+<p>List of target platforms. (ie <code>linux/amd64</code>).</p>
+</dd>
 </dl>
 </div>
 <div class="paragraph">
@@ -11987,7 +12636,7 @@ It provides several extensions to make it so.</p>
 <div class="sect2">
 <h3 id="_kubernetes"><a class="anchor" href="#_kubernetes"></a><a class="link" href="#_kubernetes">Kubernetes</a></h3>
 <div class="paragraph">
-<p>Quarks can use <a href="https://github.com/dekorateio/dekorate">Dekorate</a> to generate Kubernetes resources.</p>
+<p>Quarkus can use <a href="https://github.com/dekorateio/dekorate">Dekorate</a> to generate Kubernetes resources.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -12036,6 +12685,8 @@ quarkus.kubernetes.secret-volumes.github-token.default-mode=420
 quarkus.kubernetes.config-map-volumes.github-token.config-map-name=my-secret
 
 quarkus.kubernetes.expose=true
+quarkus.kubernetes.ingress.expose=true
+quarkus.kubernetes.ingress.host=example.com
 
 quarkus.kubernetes.env.vars.my-env-var=foobar
 quarkus.kubernetes.env.configmaps=my-config-map,another-config-map
@@ -12187,6 +12838,46 @@ If you set this flag to <code>true</code>, the <code>build</code> and <code>push
 <div class="paragraph">
 <p>To deploy the application, the extension uses the <a href="https://github.com/fabric8io/kubernetes-client" class="bare">https://github.com/fabric8io/kubernetes-client</a>.
 All options described at <a href="#_kubernetes_client">Kubernetes Client</a> are valid here.</p>
+</div>
+<div class="paragraph">
+<p><strong>Kubernetes Service Binding</strong></p>
+</div>
+<div class="paragraph">
+<p>Quarkus supports binding services to applications via the Service Binding Specification for Kubernetes.</p>
+</div>
+<div class="paragraph">
+<p>The following Quarkus extensions support this feature:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>quarkus-jdbc-mariadb</p>
+</li>
+<li>
+<p>quarkus-jdbc-mssql</p>
+</li>
+<li>
+<p>quarkus-jdbc-mysql</p>
+</li>
+<li>
+<p>quarkus-jdbc-postgresql</p>
+</li>
+<li>
+<p>quarkus-kafka-client</p>
+</li>
+<li>
+<p>quarkus-smallrye-reactive-messaging-kafka</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extensions
+    -Dextensions="quarkus-kubernetes-service-binding"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Datasource configuration part is absent as it is aut-discovered by Quarkus.</p>
 </div>
 </div>
 <div class="sect2">
@@ -12715,7 +13406,7 @@ spec:
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">./mvnw quarkus:add-extension
-  -Dextensions="io.quarkus:quarkus-undertow-websockets"</code></pre>
+  -Dextensions="quarkus-websockets"</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -12958,6 +13649,61 @@ You can disable the scanning documents by adding the next configuration property
 </div>
 <div class="paragraph">
 <p>You can store generated OpenAPI schema if <code>quarkus.swagger-ui.store-schema-directory</code> is set.</p>
+</div>
+<div class="paragraph">
+<p>Possible OpenAPI options with <code>quarkus.smallrye-openapi</code> prefix:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">path</dt>
+<dd>
+<p>The path at which to register the OpenAPI Servlet. (default: <code>openapi</code>)</p>
+</dd>
+<dt class="hdlist1">store-schema-directory</dt>
+<dd>
+<p>The generated OpenAPI schema documents will be stored here on build.</p>
+</dd>
+<dt class="hdlist1">security-scheme</dt>
+<dd>
+<p>Add a certain SecurityScheme with config. (<code>basic</code>, <code>jwt</code>, <code>oidc</code>, <code>oauth2Implicit</code>)</p>
+</dd>
+<dt class="hdlist1">security-scheme-name</dt>
+<dd>
+<p>Add a Security Scheme name to the generated OpenAPI document. (default: <code>SecurityScheme</code>)</p>
+</dd>
+<dt class="hdlist1">security-scheme-description</dt>
+<dd>
+<p>Add a description to the Security Scheme. (default: <code>Authentication</code>)</p>
+</dd>
+<dt class="hdlist1">basic-security-scheme-value</dt>
+<dd>
+<p>Add a scheme value to the Basic HTTP Security Scheme. (default: <code>basic</code>)</p>
+</dd>
+<dt class="hdlist1">jwt-security-scheme-value</dt>
+<dd>
+<p>Add a scheme value to the JWT Security Scheme. (default: <code>bearer</code>)</p>
+</dd>
+<dt class="hdlist1">jwt-bearer-format</dt>
+<dd>
+<p>Add a bearer format to the JWT Security Scheme. (default: <code>JWT</code>)</p>
+</dd>
+<dt class="hdlist1">oidc-open-id-connect-url</dt>
+<dd>
+<p>Add a openIdConnectUrl value to the OIDC Security Scheme</p>
+</dd>
+<dt class="hdlist1">oauth2-implicit-refresh-url</dt>
+<dd>
+<p>Add a implicit flow refreshUrl value to the OAuth2 Security Scheme</p>
+</dd>
+<dt class="hdlist1">oauth2-implicit-authorization-url</dt>
+<dd>
+<p>Add an implicit flow authorizationUrl value to the OAuth2 Security Scheme</p>
+</dd>
+<dt class="hdlist1">oauth2-implicit-token-url</dt>
+<dd>
+<p>Add an implicit flow tokenUrl value to the OAuth2 Security Scheme</p>
+</dd>
+</dl>
 </div>
 </div>
 <div class="sect2">
@@ -14752,7 +15498,7 @@ public class GreetingController {
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.12.0.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
+If you scaffold the project with <code>spring-web</code> extension, then Spring Web annotations are sed in the generated project. <code>mvn io.quarkus:quarkus-maven-plugin:1.13.0.Final:create &#8230;&#8203; -Dextensions="spring-web"</code>.
 </td>
 </tr>
 </table>

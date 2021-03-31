@@ -93,6 +93,109 @@ quarkus.native.resources.excludes = foo/**
 ----
 // end::update_22_8[]
 
+// tag::update_24_3[]
+Native configuration properties prefixed with `quarkus.native`:
+
+`additional-build-args`::
+Additional arguments to pass to the build process.
+
+`enable-http-url-handler`::
+If the HTTP url handler should be enabled. (default: `true`)
+
+`enable-https-url-handler`::
+If the HTTPS url handler should be enabled.
+
+`enable-all-security-services`::
+If all security services should be added to the native image.
+
+`user-language`::
+Defines the user language used for building the native executable.
+
+`user-country`::
+Defines the user country used for building the native executable.
+
+`file-encoding`::
+Defines the file encoding.
+
+`add-all-charsets`::
+If all character sets should be added to the native image.
+
+`graalvm-home`::
+The location of the Graal distribution.
+
+`java-home`::
+The location of the JDK.
+
+`native-image-xmx`::
+The maximum Java heap to be used during the native image generation.
+
+`debug-build-process`::
+If the native image build should wait for a debugger to be attached before running.
+
+`publish-debug-build-process-port`::
+If the debug port should be published when building with docker and debug-build-process. (default: `true`)
+
+`cleanup-server`::
+If the native image server should be restarted.
+
+`enable-isolates`::
+If isolates should be enabled. (default: `true`)
+
+`enable-fallback-images`::
+If a JVM based 'fallback image' should be created if native image fails.
+
+`enable-server`::
+If the native image server should be used. 
+
+`auto-service-loader-registration`::
+If all META-INF/services entries should be automatically registered.
+
+`dump-proxies`::
+If the bytecode of all proxies should be dumped for inspection.
+
+`container-build`::
+If this build should be done using a container runtime.
+
+`remote-container-build`::
+If this build is done using a remote docker daemon.
+
+`builder-image`::
+The docker image to use to do the image build.
+
+`container-runtime`::
+The container runtime that is used to do an image based build. (`docker`, `podman`)
+
+`container-runtime-options`::
+Options to pass to the container runtime.
+
+`enable-vm-inspection`::
+If the resulting image should allow VM introspection.
+
+`full-stack-traces`::
+If full stack traces are enabled in the resulting image.
+
+`enable-reports`::
+If the reports on call paths and included packages/classes/methods should be generated.
+
+`report-exception-stack-traces`::
+If exceptions should be reported with a full stack trace.
+
+`report-errors-at-runtime`::
+If errors should be reported at runtime.
+
+`enable-dashboard-dump`::
+Generate the report files for GraalVM Dashboard.
+
+`resources.includes`::
+A comma separated list of globs to match resource paths that should be added to the native image.
+
+`resources.excludes`::
+A comma separated list of globs to match resource paths that should exclude to the native image.
+
+`debug.enabled`::
+If debug is enabled and debug symbols are generated.
+// end::update_24_3[]
+
 == Container Images Creation
 
 // tag::update_14_22[]
@@ -199,6 +302,9 @@ Controls the optimization which skips downloading base image layers that exist i
 `appcds-builder-image`::
 When AppCDS generation is enabled, if this property is set, then the JVM used to generate the AppCDS file will be the JVM present in the container image.
 
+`platforms`::
+List of target platforms. (ie `linux/amd64`).
+
 *Docker* 
 
 [source, bash]
@@ -234,7 +340,7 @@ The base image to use for the native build. (default: `registry.access.redhat.co
 
 == Kubernetes
 
-Quarks can use https://github.com/dekorateio/dekorate[Dekorate] to generate Kubernetes resources.
+Quarkus can use https://github.com/dekorateio/dekorate[Dekorate] to generate Kubernetes resources.
 
 [source, bash]
 ----
@@ -271,6 +377,8 @@ quarkus.kubernetes.secret-volumes.github-token.default-mode=420
 quarkus.kubernetes.config-map-volumes.github-token.config-map-name=my-secret
 
 quarkus.kubernetes.expose=true
+quarkus.kubernetes.ingress.expose=true
+quarkus.kubernetes.ingress.host=example.com
 
 quarkus.kubernetes.env.vars.my-env-var=foobar
 quarkus.kubernetes.env.configmaps=my-config-map,another-config-map
@@ -394,6 +502,29 @@ TIP: If you set this flag to `true`, the `build` and `push` flags from container
 To deploy the application, the extension uses the https://github.com/fabric8io/kubernetes-client.
 All options described at <<Kubernetes Client>> are valid here.
 // end::update_14_24[]
+
+*Kubernetes Service Binding*
+
+// tag::update_24_7[]
+Quarkus supports binding services to applications via the Service Binding Specification for Kubernetes.
+
+The following Quarkus extensions support this feature:
+
+* quarkus-jdbc-mariadb
+* quarkus-jdbc-mssql
+* quarkus-jdbc-mysql
+* quarkus-jdbc-postgresql
+* quarkus-kafka-client
+* quarkus-smallrye-reactive-messaging-kafka
+
+[source, bash]
+----
+./mvnw quarkus:add-extensions 
+    -Dextensions="quarkus-kubernetes-service-binding"
+----
+
+Datasource configuration part is absent as it is aut-discovered by Quarkus.
+// end::update_24_7[]
 
 == Minikube
 

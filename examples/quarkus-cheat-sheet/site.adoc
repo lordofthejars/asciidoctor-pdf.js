@@ -15,6 +15,56 @@ In this page you can either read what has been added in each version of the chea
 [[whatsnew]]
 == What's New in Cheat-Sheet
 
+=== Version 1.13.0.Final
+
+.DevServices
+[%collapsible]
+====
+include::persistence.adoc[tag=update_24_1]
+====
+
+.Quarkus Integration Tests
+[%collapsible]
+====
+include::core.adoc[tag=update_24_2]
+====
+
+.Native configuration properties
+[%collapsible]
+====
+include::cloud.adoc[tag=update_24_3]
+====
+
+.OpenId properties
+[%collapsible]
+====
+include::misc.adoc[tag=update_24_4]
+====
+
+.JsonbConfig
+[%collapsible]
+====
+include::core.adoc[tag=update_24_5]
+====
+
+.OpenTelemetry
+[%collapsible]
+====
+include::network.adoc[tag=update_24_6]
+====
+
+.Kubernetes Service Binding
+[%collapsible]
+====
+include::cloud.adoc[tag=update_24_7]
+====
+
+.RESTEasy Reactive-based REST Client
+[%collapsible]
+====
+include::core.adoc[tag=update_24_8]
+====
+
 === Version 1.12.0.Final
 
 .Qute Value Resolvers

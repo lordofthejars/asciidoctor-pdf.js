@@ -10,7 +10,7 @@ Quarkus can be used to handling web sockets.
 [source, bash]
 ----
 ./mvnw quarkus:add-extension 
-  -Dextensions="io.quarkus:quarkus-undertow-websockets"
+  -Dextensions="quarkus-websockets"
 ----
 
 And web sockets classes can be used:
@@ -212,6 +212,47 @@ Other valid document paths are: `META-INF/openapi.yml`, `META-INF/openapi.json`,
 // tag::update_19_4[]
 You can store generated OpenAPI schema if `quarkus.swagger-ui.store-schema-directory` is set.
 // end::update_19_4[]
+
+// tag::update_24_4[]
+Possible OpenAPI options with `quarkus.smallrye-openapi` prefix:
+
+path::
+The path at which to register the OpenAPI Servlet. (default: `openapi`)
+
+store-schema-directory::
+The generated OpenAPI schema documents will be stored here on build.
+
+security-scheme::
+Add a certain SecurityScheme with config. (`basic`, `jwt`, `oidc`, `oauth2Implicit`)
+
+security-scheme-name::
+Add a Security Scheme name to the generated OpenAPI document. (default: `SecurityScheme`)
+
+security-scheme-description::
+Add a description to the Security Scheme. (default: `Authentication`)
+
+basic-security-scheme-value::
+Add a scheme value to the Basic HTTP Security Scheme. (default: `basic`)
+
+jwt-security-scheme-value::
+Add a scheme value to the JWT Security Scheme. (default: `bearer`)
+
+jwt-bearer-format::
+Add a bearer format to the JWT Security Scheme. (default: `JWT`)
+
+oidc-open-id-connect-url::
+Add a openIdConnectUrl value to the OIDC Security Scheme
+
+oauth2-implicit-refresh-url::
+Add a implicit flow refreshUrl value to the OAuth2 Security Scheme
+
+oauth2-implicit-authorization-url::
+Add an implicit flow authorizationUrl value to the OAuth2 Security Scheme
+
+oauth2-implicit-token-url::
+Add an implicit flow tokenUrl value to the OAuth2 Security Scheme
+// end::update_24_4[]
+
 
 == Mail Sender
 // tag::update_2_5[]
