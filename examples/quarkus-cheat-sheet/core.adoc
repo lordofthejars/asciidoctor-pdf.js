@@ -894,6 +894,23 @@ public Response create(Sauce sauce) {
 }
 ----
 
+// tag::update_24_5[]
+To provide custom  JsonBConfig object:
+
+[source, java]
+----
+@Dependent
+JsonbConfig jsonConfig(Instance<JsonbConfigCustomizer> customizers) {
+    JsonbConfig config = myJsonbConfig(); // Custom `JsonbConfig`
+    for (JsonbConfigCustomizer customizer : customizers) {
+        customizer.customize(config);
+    }
+
+    return config;
+}
+----
+// end::update_24_5[]
+
 // tag::update_6_1[]
 To work with `Jackson` you need to add:
 
@@ -911,9 +928,13 @@ If you don't want to use the default `ObjectMapper` you can customize it by:
 public class CustomObjectMapperConfig {
     @Singleton
     @Produces
-    public ObjectMapper objectMapper() {
+    public ObjectMapper objectMapper(Instance<ObjectMapperCustomizer> customizers) {
         ObjectMapper objectMapper = new ObjectMapper();
         // perform configuration
+
+        for (ObjectMapperCustomizer customizer : customizers) {
+            customizer.customize(mapper);
+        }
         return objectMapper;
     }
 }
@@ -1173,8 +1194,6 @@ Indicates rotate logs at bootup (default: `true`)
 
 `file.async`::
 Log asynchronously (default: `false`)
-
-<<<
 
 `file.async.queue-length`::
 The queue length to use before flushing writing (default: `512`)
@@ -1470,6 +1489,11 @@ After that, a methodon a client interface can return a `io.smallrye.mutiny.Uni` 
 Uni<WorldClock> getNow();
 ----
 // end::update_14_15[]
+
+// tag::update_24_8[]
+A RESTEasy Reactive-based REST Client extension.
+You only need to replace the `quarkus-rest-client` to  `quarkus-rest-client-reactive`.
+// end::update_24_8[]
 
 *Multipart*
 
@@ -1876,11 +1900,53 @@ public class TestStereotypeTestCase {}
 // end::update_5_5[]
 
 *Test Coverage*
+
 // tag::update_6_3[]
 Due the nature of Quarkus to calculate correctly the coverage information with JaCoCo, you might need offline instrumentation.
-I recommend reading https://quarkus.io/guides/tests-with-coverage-guide[this document, window="_blank"] to understand how JaCoCo and Quarkus works and how you can configure JaCoCo to get correct data.
+
+[source, bash]
+----
+./mvnw quarkus:add-extension
+  -Dextensions="quarkus-jacoco "
+----
+
+Possible configuration parameters prefixed `quarkus.jacoco`:
+
+`data-file`::
+The jacoco data file. (default: `jacoco-quarkus.exec`)
+
+`report`::
+If Quarkus should generate the Jacoco report. (default: `true`)
+
+`output-encoding`::
+Encoding of the generated reports. (default: `UTF-8`)
+
+`title`::
+Name of the root node HTML report pages.
+
+`footer`::
+Footer text used in HTML report pages.
+
+`source-encoding`::
+Encoding of the source files. (default: `UTF-8`)
+
+`includes`::
+A list of class files to include in the report. (default: `**`)
+
+`excludes`::
+A list of class files to exclude from the report.
+
+`report-location`::
+The location of the report files. (default: `jacoco-report`)
 // end::update_6_3[]
 
 *Native Testing*
 
 To test native executables annotate the test with `@NativeImageTest`.
+
+*Quarkus Integration Tests*
+
+// tag::update_24_2[]
+`@QuarkusIntegrationTest` should be used to launch and test the artifact produced by the Quarkus build.
+If the result of a Quarkus build is a JAR then the app is launched as `java -jar`, if native is launched as `./application`, if container image is created (JiB, Docker extensions) is launched as `docker run`.
+// end::update_24_2[]

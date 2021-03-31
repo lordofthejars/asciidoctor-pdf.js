@@ -1253,6 +1253,13 @@ quarkus.hibernate-orm.dialect=
 ----
 // end::update_8_12[]
 
+*OpenTelemetry*
+
+// tag::update_24_6[]
+Quarkus integrates with the OpenTelemetry project.
+For exporting traces to a Jaeger collector, use the `quarkus-opentelemetry-exporter-jaeger` extension.
+// end::update_24_6[]
+
 // tag::update_21_4[]
 *Kafka Tracer*
 

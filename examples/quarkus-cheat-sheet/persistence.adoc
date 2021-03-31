@@ -409,6 +409,43 @@ public void testPanacheMocking() {
 ----
 // end::update_16_3[]
 
+*DevServices*
+
+// tag::update_24_1[]
+When testing or running in dev mode Quarkus can even provide you with a zero config database out of the box.
+Depending on your database type you may need docker installed in order to use this feature.
+
+The following open source databases:
+
+* Postgresql (container)
+* MySQL (container)
+* MariaDB (container)
+* H2 (in-process)
+* Apache Derby (in-process)
+
+To use DevServices don’t configure a database URL, username and password, Quarkus will provide the database and you can just start coding without worrying about config.
+
+[source, properties]
+----
+quarkus.datasource.db-kind=mariadb
+%prod.quarkus.datasource.jdbc.url=jdbc:mariadb://db:3306/mydb
+%prod.quarkus.datasource.username=developer
+%prod.quarkus.datasource.password=developer
+----
+
+Possible configuration values prefixed with `quarkus.datasource`:
+
+`devservices`::
+If devservices is enabled or not. (default: `true`)
+
+`devservices.image-name`::
+The container image name to use instead of the default one.
+
+`devservices.properties`::
+Generic properties that are added to the database connection URL.
+
+// end::update_24_1[]
+
 *DAO pattern*
 
 // tag::update_2_12[]
@@ -457,8 +494,9 @@ quarkus.datasource.db-kind=h2
 quarkus.datasource.jdbc.url=jdbc:h2:tcp://localhost/mem:default
 ....
 # users datasource
+quarkus.datasource.users.devservices=false
 quarkus.datasource.users.db-kind=h2
-quarkus.datasource.users..jdbc.url=jdbc:h2:tcp://localhost/mem:users
+quarkus.datasource.users.jdbc.url=jdbc:h2:tcp://localhost/mem:users
 ----
 
 Notice that after `datasource` you set the datasource name, in previous case `users`.
@@ -1099,6 +1137,9 @@ Suffix of every placeholder (default: `}`)
 `callbacks`::
 Comma-separated list of fully qualified class names of Callback implementations.
 // end::update_22_9[]
+
+`ignore-future-migrations`::
+Ignore future migrations when reading the history table.
 
 *Multiple Datasources*
 // tag::update_12_7[]
@@ -1970,7 +2011,9 @@ MongoClient mongoClient1;
 ----
 // end::update_14_5[]
 
-`quarkus.mongodb` as prefix is skipped in the next table.
+<<<
+
+`quarkus.mongodb` as prefix is skipped in the following table.
 
 |===	
 |Parameter | Type | Description
@@ -2355,8 +2398,6 @@ Quarkus integrates with Cassandra and DataStax Object Mapper.
   <artifactId>cassandra-quarkus-client</artifactId>
 </dependency>
 ----
-
-<<<
 
 Enities and DAOs are generated as you have been doing with DataStax Object Mapper.
 
