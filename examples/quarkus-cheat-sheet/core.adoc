@@ -29,26 +29,19 @@ public class GreetingResource {
 == Gradle
 
 // tag::update_10_8[]
-There is no way to scaffold a project in Gradle but you only need to do:
-
-[source, groovy]
+[source, bash, subs=attributes+]
 ----
-plugins {
-    id 'java'
-    id 'io.quarkus' version '0.26.1' 
-}
-
-repositories {
-    mavenCentral()
-}
-
-dependencies { 
-    implementation enforcedPlatform('io.quarkus:quarkus-bom:0.26.1')
-    implementation 'io.quarkus:quarkus-resteasy'
-}
+mvn io.quarkus:quarkus-maven-plugin:{version}:create \
+    -DprojectGroupId=org.acme \
+    -DprojectArtifactId=getting-started \
+    -DclassName="org.acme.quickstart.GreetingResource" \
+    -Dpath="/hello"
+    -DbuildTool="gradle"
 ----
 
-Or in Kotlin:
+This generates a `build.gradle` Gradle Script and a simple JAX-RS resource called `GreetingResource`.
+
+To add Quarkus to a `build.gradle.kts` Kotlin build script file:
 
 [source, kotlin]
 ----
